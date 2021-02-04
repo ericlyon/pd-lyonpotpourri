@@ -8,7 +8,6 @@ lib.name = lyonpotpourri
 # sources for the objectclasses
 class.sources = \
 	adsr~.c \
-	bashfest~.c \
 	buffet~.c \
 	bvplay~.c \
 	channel~.c \
@@ -63,11 +62,15 @@ class.sources = \
 	splitbank~.c \
 	$(empty)
 
-# sources for the shared library
-shared.sources = \
+bashfest~.class.sources = \
+	bashfest~.c \
 	bashfest_dsp.c \
 	bashfest_helper.c \
 	ellipse.c \
+	$(empty)
+
+# sources for the shared library
+shared.sources = \
 	PenroseOscil.c \
 	PenroseRand.c \
 	bloscbank.c \
