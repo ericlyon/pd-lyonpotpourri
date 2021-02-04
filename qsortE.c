@@ -44,7 +44,7 @@ Boston, MA 02111-1307, USA. */
 #define STACK_SIZE (BYTES_PER_WORD * sizeof (long))
 #define PUSH(LOW,HIGH) do {top->lo = LOW;top++->hi = HIGH;} while (0)
 #define POP(LOW,HIGH)  do {LOW = (--top)->lo;HIGH = top->hi;} while (0)
-#define STACK_NOT_EMPTY (stack < top)                
+#define STACK_NOT_EMPTY (stack < top)
 
 /* Discontinue quicksort algorithm when partition gets below this size.
    This particular magic number was chosen to work best on a Sun 4/260. */
@@ -58,39 +58,39 @@ int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)());
 
 
 /* Stack node declarations used to store unfulfilled partition obligations. */
-typedef struct 
+typedef struct
 {
   char *lo;
   char *hi;
-  
+
 } stack_node;
 
 /* Order size using quicksort.  This implementation incorporates
    four optimizations discussed in Sedgewick:
-   
-   1. Non-recursive, using an explicit stack of pointer that store the 
-      next array partition to sort.  To save time, this maximum amount 
-      of space required to store an array of MAX_INT is allocated on the 
-      stack.  Assuming a 32-bit integer, this needs only 32 * 
+
+   1. Non-recursive, using an explicit stack of pointer that store the
+      next array partition to sort.  To save time, this maximum amount
+      of space required to store an array of MAX_INT is allocated on the
+      stack.  Assuming a 32-bit integer, this needs only 32 *
       sizeof (stack_node) == 136 bits.  Pretty cheap, actually.
 
    2. Choose the pivot element using a median-of-three decision tree.
-      This reduces the probability of selecting a bad pivot value and 
+      This reduces the probability of selecting a bad pivot value and
       eliminates certain extraneous comparisons.
 
    3. Only quicksorts TOTAL_ELEMS / MAX_THRESH partitions, leaving
-      insertion sort to order the MAX_THRESH items within each partition.  
+      insertion sort to order the MAX_THRESH items within each partition.
       This is a big win, since insertion sort is faster for small, mostly
       sorted array segments.
-   
+
    4. The larger of the two sub-partitions is always pushed onto the
       stack first, with the algorithm then concentrating on the
       smaller partition.  This *guarantees* no more than log (n)
       stack size is needed (actually O(1) in this case)! */
-      
+
 int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)())
 {
-  /* Allocating SIZE bytes for a pivot buffer facilitates a better 
+  /* Allocating SIZE bytes for a pivot buffer facilitates a better
      algorithm below since we can do comparisons directly on the pivot. */
   char *pivot_buffer = (char *)  malloc(size);
   int   max_thresh   = MAX_THRESH * size;
@@ -110,8 +110,8 @@ int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)())
             char *pivot = pivot_buffer;
             {
               /* Select median value from among LO, MID, and HI. Rearrange
-                 LO and HI so the three values are sorted. This lowers the 
-                 probability of picking a pathological pivot value and 
+                 LO and HI so the three values are sorted. This lowers the
+                 probability of picking a pathological pivot value and
                  skips a comparison for both the LEFT_PTR and RIGHT_PTR. */
 
               char *mid = lo + size * ((hi - lo) / size >> 1);
@@ -120,7 +120,7 @@ int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)())
                 SWAP (mid, lo, size);
               if (CMP (hi, mid) < 0)
                 SWAP (mid, hi, size);
-              else 
+              else
                 goto jump_over;
               if (CMP (mid, lo) < 0)
                 SWAP (mid, lo, size);
@@ -129,12 +129,12 @@ int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)())
               pivot = pivot_buffer;
             }
             left_ptr  = lo + size;
-            right_ptr = hi - size; 
+            right_ptr = hi - size;
 
-            /* Here's the famous ``collapse the walls'' section of quicksort.  
-               Gotta like those tight inner loops!  They are the main reason 
+            /* Here's the famous ``collapse the walls'' section of quicksort.
+               Gotta like those tight inner loops!  They are the main reason
                that this algorithm runs much faster than others. */
-            do 
+            do
               {
                 while (CMP (left_ptr, pivot) < 0)
                   left_ptr += size;
@@ -142,44 +142,44 @@ int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)())
                 while (CMP (pivot, right_ptr) < 0)
                   right_ptr -= size;
 
-                if (left_ptr < right_ptr) 
+                if (left_ptr < right_ptr)
                   {
                     SWAP (left_ptr, right_ptr, size);
                     left_ptr += size;
                     right_ptr -= size;
                   }
-                else if (left_ptr == right_ptr) 
+                else if (left_ptr == right_ptr)
                   {
                     left_ptr += size;
                     right_ptr -= size;
                     break;
                   }
-              } 
+              }
             while (left_ptr <= right_ptr);
 
           }
 
           /* Set up pointers for next iteration.  First determine whether
-             left and right partitions are below the threshold size. If so, 
+             left and right partitions are below the threshold size. If so,
              ignore one or both.  Otherwise, push the larger partition's
              bounds on the stack and continue sorting the smaller one. */
 
           if ((right_ptr - lo) <= max_thresh)
             {
               if ((hi - left_ptr) <= max_thresh) /* Ignore both small partitions. */
-                POP (lo, hi); 
-              else              /* Ignore small left partition. */  
+                POP (lo, hi);
+              else              /* Ignore small left partition. */
                 lo = left_ptr;
             }
           else if ((hi - left_ptr) <= max_thresh) /* Ignore small right partition. */
             hi = right_ptr;
           else if ((right_ptr - lo) > (hi - left_ptr)) /* Push larger left partition indices. */
-            {                   
+            {
               PUSH (lo, right_ptr);
               lo = left_ptr;
             }
           else                  /* Push larger right partition indices. */
-            {                   
+            {
               PUSH (left_ptr, hi);
               hi = right_ptr;
             }
@@ -187,8 +187,8 @@ int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)())
     }
 
   /* Once the BASE_PTR array is partially sorted by quicksort the rest
-     is completely sorted using insertion sort, since this is efficient 
-     for partitions below MAX_THRESH size. BASE_PTR points to the beginning 
+     is completely sorted using insertion sort, since this is efficient
+     for partitions below MAX_THRESH size. BASE_PTR points to the beginning
      of the array to sort, and END_PTR points at the very last element in
      the array (*not* one beyond it!). */
 
@@ -211,7 +211,7 @@ int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)())
     if (tmp_ptr != base_ptr)
       SWAP (tmp_ptr, base_ptr, size);
 
-    /* Insertion sort, running from left-hand-side up to `right-hand-side.' 
+    /* Insertion sort, running from left-hand-side up to `right-hand-side.'
        Pretty much straight out of the original GNU qsort routine. */
 
     for (run_ptr = base_ptr + size; (tmp_ptr = run_ptr += size) <= end_ptr; )

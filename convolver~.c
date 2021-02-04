@@ -42,7 +42,7 @@ typedef struct _convolver
 	long N2;
 	long last_N;
 	// for fast fft
-	float mult; 
+	float mult;
 	float *trigland;
 	int *bitshuffle;
 	short static_memory; // flag to avoid dynamic memory manipulation
@@ -74,7 +74,7 @@ void convolver_static_memory(t_convolver *x, t_floatarg toggle);
 
 
 void convolver_tilde_setup(void){
-	convolver_class = class_new(gensym("convolver~"), (t_newmethod)convolver_new, 
+	convolver_class = class_new(gensym("convolver~"), (t_newmethod)convolver_new,
 								(t_method)convolver_dsp_free,sizeof(t_convolver), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(convolver_class, t_convolver, x_f);
 	// class_addmethod(convolver_class,(t_method)convolver_dsp,gensym("dsp"),0);
@@ -156,7 +156,7 @@ void convolver_convolve(t_convolver *x)
 			SETFLOAT(data+2, i+1); // destination
 			convolver_convolvechans(x, mymsg, myargc, data);
 		}
-	} 
+	}
 	else if(x->source->b_nchans == 1 && x->impulse->b_nchans == x->dest->b_nchans){
 		//post("case 2");
 		for(i = 0; i < x->impulse->b_nchans; i++){
@@ -279,7 +279,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
 	
 	if (max != 0.) {
 		max = gain/(sqrt(max));
-	} 
+	}
 	else {
 		error("%s: impulse response is all zeros",OBJECT_NAME);
 		return;
@@ -373,7 +373,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
 	// now normalize output buffer
   	
 
-	// OK 
+	// OK
 //	post("first rescale: %f", rescale);
 	max = 0.0;
 	for(i = 0, j = 0; i < dest->b_frames; i++, j += dest->b_nchans){
@@ -524,7 +524,7 @@ void *convolver_new(t_symbol *msg, short argc, t_atom *argv)
 	t_convolver *x = (t_convolver *)pd_new(convolver_class);
     t_symbol *fraud;
     fraud = msg;
-	x->bang = outlet_new(&x->x_obj, gensym("bang"));  
+	x->bang = outlet_new(&x->x_obj, gensym("bang"));
 	srand(time(0)); //need "seed" message
 	x->impulse = (t_buffy *)malloc(sizeof(t_buffy));
 	x->source = (t_buffy *)malloc(sizeof(t_buffy));
@@ -547,7 +547,7 @@ void *convolver_new(t_symbol *msg, short argc, t_atom *argv)
 }
 
 
-void convolver_attach_buffers(t_convolver *x) 
+void convolver_attach_buffers(t_convolver *x)
 {
 	convolver_setbuf(x->source);
 	convolver_setbuf(x->impulse);
@@ -708,10 +708,10 @@ void rdft(int n, int isgn, float *a, int *ip, float *w)
 //		cftsub(int n, float *a, float *w),
 //		rftsub(int n, float *a, int nc, float *c);
 
-    
+
   nw = ip[0];
   nc = ip[1];
-  
+
   if (isgn < 0) {
     a[1] = 0.5 * (a[1] - a[0]);
     a[0] += a[1];
@@ -755,7 +755,7 @@ void bitrv2(int n, int *ip, float *a)
 {
   int j, jj1, k, k1, l, m, m2;
   float xr, xi;
-    
+
   ip[0] = 0;
   l = n;
   m = 1;
@@ -818,7 +818,7 @@ void cftsub(int n, float *a, float *w)
   int j, jj1, j2, j3, k, k1, ks, l, m;
   float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
   float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
-    
+
   l = 2;
 
   while ((l << 1) < n) {
@@ -940,7 +940,7 @@ void rftsub(int n, float *a, int nc, float *c)
 {
   int j, k, kk, ks;
   float wkr, wki, xr, xi, yr, yi;
-    
+
   ks = (nc << 2) / n;
   kk = 0;
 
@@ -966,7 +966,7 @@ void makewt(int nw, int *ip, float *w)
 //    void bitrv2(int n, int *ip, float *a);
     int nwh, j;
     float delta, x, y;
-    
+
     ip[0] = nw;
     ip[1] = 1;
     if (nw > 2) {
@@ -993,7 +993,7 @@ void makect(int nc, int *ip, float *c)
 {
     int nch, j;
     float delta;
-    
+
     ip[1] = nc;
     if (nc > 1) {
         nch = nc >> 1;

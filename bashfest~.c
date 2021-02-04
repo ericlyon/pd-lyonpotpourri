@@ -103,9 +103,9 @@ void bashfest_tilde_setup(void)
 
 void bashfest_block_dsp(t_bashfest *x, t_floatarg t)
 {
-    
+
     x->block_dsp = (short)t;
-    
+
 }
 void bashfest_maximum_process(t_bashfest *x, t_floatarg n)
 {
@@ -197,7 +197,7 @@ void bashfest_gozero(t_bashfest *x)
 void bashfest_setodds(t_bashfest *x,t_symbol *msg, short argc, t_atom *argv)
 {
     int i;
-    
+
     if(argc > PROCESS_COUNT){
         error("there are only %d processes",PROCESS_COUNT);
         return;
@@ -205,12 +205,12 @@ void bashfest_setodds(t_bashfest *x,t_symbol *msg, short argc, t_atom *argv)
     for(i=0;i<PROCESS_COUNT;i++){
         x->odds[i] = 0.0;
     }
-    
-    
+
+
     for(i=0;i<argc;i++){
         x->odds[i] = atom_getfloatarg(i,argc,argv);
     }
-    
+
     setweights(x->odds,PROCESS_COUNT);
 }
 
@@ -255,18 +255,18 @@ void *bashfest_new(t_symbol *msg, short argc, t_atom *argv)
 
     t_bashfest *x = (t_bashfest *)pd_new(bashfest_class);
     //  outlet_new(&x->x_obj, gensym("signal"));
-    
+
     int i;
     long membytes = 0;
     float tmpfloat;
     srand(time(0));
-    
+
     x->sr = sys_getsr();
     x->vs = sys_getblksize();
     if(! x->sr)
         x->sr = 44100;
-    
-    
+
+
     x->work_buffer_size = DEFAULT_BUFFER_SIZE;
     //  x->latency_samples = DEFAULT_LATENCY;
     //  x->overlap_max = DEFAULT_MAX_OVERLAP;
@@ -283,9 +283,9 @@ void *bashfest_new(t_symbol *msg, short argc, t_atom *argv)
 
     outlet_new(&x->x_obj, gensym("signal"));
     outlet_new(&x->x_obj, gensym("signal"));
-    
+
     x->sinelen = 8192;
-    
+
     x->verbose = 0;
     x->most_recent_event = 0;
     x->active_events = 0;
@@ -302,7 +302,7 @@ void *bashfest_new(t_symbol *msg, short argc, t_atom *argv)
      */
     /* buffer contains space for both input and output, thus factor of 2 */
     x->buf_frames = 2 * x->work_buffer_size * .001 * x->sr;
-    
+
     x->buf_samps = x->buf_frames * 2;
     x->halfbuffer = x->buf_samps / 2;
 	
@@ -314,7 +314,7 @@ void *bashfest_new(t_symbol *msg, short argc, t_atom *argv)
     x->params = t_getbytes(MAX_PARAMETERS * sizeof(float));
     x->odds = t_getbytes(64 * sizeof(float));
     //  x->trigger_buffer = calloc(x->latency_samples, sizeof(float));
-    
+
     for(i=0;i<64;i++)
         x->odds[i] = 0;
     putsine(x->sinewave, x->sinelen);
@@ -330,7 +330,7 @@ void *bashfest_new(t_symbol *msg, short argc, t_atom *argv)
         (float *) t_getbytes(((int)(x->sr * x->max_mini_delay) + 1)  * sizeof(float));
     }
     x->reverb_ellipse_data = (float *) t_getbytes(16 * sizeof(float));
-    
+
     x->ellipse_data = (float **) t_getbytes(MAXFILTER * sizeof(float *));
     for(i=0;i<MAXFILTER;i++){
         x->ellipse_data[i] = (float *) t_getbytes(MAX_COEF * sizeof(float));
@@ -361,7 +361,7 @@ void *bashfest_new(t_symbol *msg, short argc, t_atom *argv)
     for(i=0;i<x->overlap_max;i++){
         x->events[i].phasef = x->events[i].phase = 0.0;
     }
-    
+
     membytes = x->overlap_max * sizeof(t_event);
     membytes += x->sinelen * sizeof(float);
     membytes += MAX_PARAMETERS * sizeof(float);
@@ -382,30 +382,30 @@ void *bashfest_new(t_symbol *msg, short argc, t_atom *argv)
     membytes += x->adsr->len * sizeof(float);
     membytes += 16 * sizeof(float);
     membytes += CYCLE_MAX * sizeof(float);
-    
+
     // post("total memory for this bashfest %.2f MBytes",(float)membytes/1000000.);
-    
+
     /* be sure to finish clearing memory */
     set_dcflt(x->dcflt);
     init_reverb_data(x->reverb_ellipse_data);
     init_ellipse_data(x->ellipse_data);
-    
+
     for(i=0;i<PROCESS_COUNT;i++){
         x->odds[i] = 1;
     }
-    
-    
+
+
     x->max_process_per_note = 2;
     setweights(x->odds,PROCESS_COUNT);
-    
-    
+
+
     x->mute = 0;
 	
     for(i = 0; i < x->overlap_max; i++){
         x->events[i].status = INACTIVE;
     }
-    
-    
+
+
     return (x);
 }
 
@@ -437,26 +437,26 @@ void bashfest_setbuf(t_bashfest *x, t_symbol *wavename)
         garray_usedindsp(a);
         x->b_valid = 1;
     }
-    
+
 }
 
 
 
 t_int *bashfest_perform_hosed(t_int *w)
 {
-    
+
     //  t_bashfest *x = (t_bashfest *) (w[1]);
     //  float *trigger = (t_float *)(w[2]);
     float *outchanL = (t_float *)(w[3]);
     float *outchanR = (t_float *)(w[4]);
     int n = (int) w[5];
-    
+
     // try bzero
     //  while(n--) *outchanL++ = *outchanR++ = 0.0;
     memset((char *)outchanL, 0, sizeof(float) * n);
     memset((char *)outchanR, 0, sizeof(float) * n);
     return(w+6);
-    
+
 }
 
 /* modified for dsp turnoff*/
@@ -473,7 +473,7 @@ t_int *bashfest_perform(t_int *w)
     long b_nchans;
 //    long b_valid;
     long b_frames;
-    
+
     t_event *events = x->events;
     //  int active_events = x->active_events;
     float increment = x->increment;
@@ -493,13 +493,13 @@ t_int *bashfest_perform(t_int *w)
     int out_channels;
     float *processed_drum;
     char *sound_name = x->sound_name;
-    
+
     int latency_samples = x->latency_samples;
     float *trigger_vec = x->trigger_vec;
-    
+
 	for(i = 0; i < n; i++)
 		trigger_vec[i] = t_vec[i];
-    
+
     if(x->mute || x->hosed){
         while(n--) {
             *outchanL++ = *outchanR++ = 0.0;
@@ -514,17 +514,17 @@ t_int *bashfest_perform(t_int *w)
         }
         return(w+6);
     }
-    
+
     b_samples = x->b_samples;
     b_frames = x->b_frames;
     b_nchans = 1; // for Pd
-    
+
     if(x->block_dsp){
         /* computation savings if processing is blocked */
-        
-        
+
+
         /* preliminary transposition will be set here */
-        
+
         if(tcycle.len > 0){
             increment = tcycle.data[tcycle.p];
             // post("position %d, increment %f",tcycle.p,increment );
@@ -540,18 +540,18 @@ t_int *bashfest_perform(t_int *w)
         for(i = 0; i < overlap_max; i++){
             if(events[i].status == ACTIVE){
                 gain = events[i].gain;
-                
+
                 if(b_nchans == 1){ /* mono */
-                    
+
                     flimit = (b_frames - 1);
                     for(j = 0; j < n; j++){
                         if(events[i].countdown > 0){
                             --events[i].countdown;
                         } else {
-                            
+
                             iphase = events[i].phasef;
                             frac = events[i].phasef - iphase;
-                            
+
                             if(increment > 0){
                                 if(iphase == flimit || increment == 1.0){
                                     outchanL[j] += b_samples[iphase].w_float * gain;
@@ -576,7 +576,7 @@ t_int *bashfest_perform(t_int *w)
                                 }
                             }
                             events[i].phasef += increment;
-                            
+
                             if( events[i].phasef < 0.0 || events[i].phasef >= b_frames){
                                 events[i].status = INACTIVE;
                                 events[i].phasef = 0;
@@ -587,7 +587,7 @@ t_int *bashfest_perform(t_int *w)
                     }
                 } else if(b_nchans == 2){
 /*
-                    
+
                     for(j = 0; j < n; j++){
                         if(events[i].countdown > 0){
                             --events[i].countdown;
@@ -621,7 +621,7 @@ t_int *bashfest_perform(t_int *w)
                                 }
                             }
                             events[i].phasef += increment;
-                            
+
                             if( events[i].phasef < 0.0 || events[i].phasef >= b_frames){
                                 events[i].status = INACTIVE;
                                 break;
@@ -631,11 +631,11 @@ t_int *bashfest_perform(t_int *w)
                 }
             }
         }
-        
+
         for(i=0; i<n; i++){
             if(trigger_vec[i]){
                 gain = trigger_vec[i];
-                
+
                 insert_success = 0;
                 for(j=0; j<overlap_max; j++){
                     if(events[j].status == INACTIVE){
@@ -653,7 +653,7 @@ t_int *bashfest_perform(t_int *w)
                 }
 				
                 if(!insert_success){ // steal a note
-                    
+
                     maxphase = 0;
                     theft_candidate = 0;
                     for(k = 0; k < overlap_max; k++){
@@ -686,14 +686,14 @@ t_int *bashfest_perform(t_int *w)
                 } else {
                     increment = 1.0;
                 }
-                
+
                 for(k=i; k<n; k++){
                     //roll out for remaining portion of vector
                     if(events[new_insert].countdown > 0){
                         --events[new_insert].countdown;
                     } else {
                         if(b_nchans == 1){
-                            
+
                             iphase = events[new_insert].phasef;
                             frac = events[new_insert].phasef - iphase;
                             if(iphase < 0 || iphase >= b_frames){
@@ -724,7 +724,7 @@ t_int *bashfest_perform(t_int *w)
                                 }
                             }
                             events[new_insert].phasef += increment;
-                            
+
                             if( events[new_insert].phasef < 0.0 || events[new_insert].phasef >= b_frames){
                                 events[new_insert].status = INACTIVE;
                                 break;
@@ -760,7 +760,7 @@ t_int *bashfest_perform(t_int *w)
                                 }
                             }
                             events[new_insert].phasef += increment;
-                            
+
                             if( events[new_insert].phasef < 0.0 || events[new_insert].phasef >= b_frames){
                                 events[new_insert].status = INACTIVE;
                                 break;
@@ -776,14 +776,14 @@ t_int *bashfest_perform(t_int *w)
         return(w+6);
         /* end of block_dsp contingecy code */
     }
-    
+
     /* main body of bashfest processing */
-    
-    
+
+
     for(i=0; i<n; i++){ /* pre-clean buffers*/
         outchanL[i] = outchanR[i] = 0.0;
     }
-    
+
     /* add output from all active buffers into global outlet buffers */
 	
 	
@@ -791,9 +791,9 @@ t_int *bashfest_perform(t_int *w)
         if( events[i].status == ACTIVE){
             out_channels = events[i].out_channels;
             /* assign the output part of work buffer to the local float buffer */
-            
+
             processed_drum = events[i].workbuffer + events[i].in_start;
-            
+
             for(j = 0; j < n; j++){
                 if(x->grab){
                     x->grab = 0;
@@ -811,9 +811,9 @@ t_int *bashfest_perform(t_int *w)
                         outchanL[j] += processed_drum[iphase] * events[i].gainL;
                         outchanR[j] += processed_drum[iphase+1] * events[i].gainR;
                     }
-                    
+
                     events[i].phase++;
-                    
+
                     if(events[i].phase >= events[i].sample_frames){
                         events[i].status = INACTIVE;
                         break;
@@ -829,7 +829,7 @@ t_int *bashfest_perform(t_int *w)
     for(i=0; i<n; i++){
         if(trigger_vec[i]){
             gain = trigger_vec[i];
-            
+
             /*look for an open slot*/
             insert_success = 0;
             for(j=0; j<overlap_max; j++){
@@ -859,16 +859,16 @@ t_int *bashfest_perform(t_int *w)
                 events[new_insert].gain = gain;
                 insert_success = 1;
             }
-            
+
             events[new_insert].countdown = x->latency_samples;
             x->new_slot = new_insert;
             x->new_gain = gain;
-            
+
             bashfest_deploy_dsp(x);
-            
-            
+
+
             /* now begin output from the new note */
-            
+
             out_channels = events[new_insert].out_channels;
             processed_drum = events[new_insert].workbuffer + events[new_insert].in_start;
  			
@@ -891,9 +891,9 @@ t_int *bashfest_perform(t_int *w)
                         outchanL[j] += processed_drum[iphase] * events[new_insert].gainL;
                         outchanR[j] += processed_drum[iphase+1] * events[new_insert].gainR;
                     }
-                    
+
                     events[new_insert].phase++;
-                    
+
                     if(events[new_insert].phase >= events[new_insert].sample_frames){
                         events[new_insert].status = INACTIVE;
                         break;
@@ -913,9 +913,9 @@ void bashfest_copy_to_MSP_buffer(t_bashfest *x, int slot)
 	long b_frames = x->b_frames;
 	t_word *b_samples = x->b_samples;
 	float *processed_drum;
-    
+
 	processed_drum = events[slot].workbuffer + events[slot].in_start;
-    
+
 	if(events[slot].out_channels == b_nchans){
 		if(b_nchans == 1){
 			for(i=0;i<b_frames;i++){
@@ -962,7 +962,7 @@ void bashfest_deploy_dsp(t_bashfest *x)
         return;
         x->hosed = 1;
     }
-    
+
     pan = boundrand(0.1, 0.9);
     events[slot].gainL = cos(PIOVERTWO * pan) * gain;
     events[slot].gainR = sin(PIOVERTWO * pan) * gain;
@@ -979,7 +979,7 @@ void bashfest_deploy_dsp(t_bashfest *x)
     for(i=0; i<b_frames*b_nchans; i++){
         events[slot].workbuffer[i] = b_samples[i];
     }
-    
+
     // clean rest of work buffer
     for(i=b_frames*b_nchans; i<buf_samps; i++){
         events[slot].workbuffer[i] = 0.0;
@@ -1091,9 +1091,9 @@ int bashfest_set_parameters(t_bashfest *x,float *params)
     int minproc = x->min_process_per_note;
     float tval;
     t_cycle tcycle = x->tcycle;
-    
+
     /* preliminary transposition will be set here */
-    
+
     if(tcycle.len > 0){
         params[pcount++] = TRANSPOSE;
         params[pcount++] = tcycle.data[tcycle.p++];
@@ -1102,12 +1102,12 @@ int bashfest_set_parameters(t_bashfest *x,float *params)
         }
         x->tcycle.p = tcycle.p;
     }
-    
-    
+
+
     if(maxproc <= 0){
         return pcount;
     }
-    
+
     events = minproc + rand() % (1+(maxproc-minproc));
 	
     for(i = 0; i < events; i++){
@@ -1117,24 +1117,24 @@ int bashfest_set_parameters(t_bashfest *x,float *params)
             j++;
         }
 		
-        
+
         if(j == RETRO){
             params[pcount++] = RETRO;
-        } 
+        }
         else if(j == COMB){
             params[pcount++] = COMB;
             params[pcount++] = boundrand(.001,.035);// delaytime
             params[pcount++] = boundrand(.25,.98);//feedback
             params[pcount++] = boundrand(.05,.5);//hangtime
-        } 
+        }
         else if(j == RINGMOD) {
             params[pcount++] = RINGMOD;
             params[pcount++] = boundrand(100.0,2000.0); //need a log version
-        } 
+        }
         else if(j == TRANSPOSE){
             params[pcount++] = TRANSPOSE;
             params[pcount++] = boundrand(0.25,3.0);
-        } 
+        }
         else if(j == FLANGE){
             params[pcount++] = FLANGE;
             params[pcount++] = boundrand(100.0,400.0);
@@ -1276,7 +1276,7 @@ void bashfest_dsp_free(t_bashfest *x)
     t_freebytes(x->odds, 64 * sizeof(float));
     t_freebytes(x->delayline1, x->maxdelay * x->sr * sizeof(float));
     t_freebytes(x->delayline2, x->maxdelay * x->sr * sizeof(float));
-    
+
     for(i=0;i<x->overlap_max;i++){
         t_freebytes(x->events[i].workbuffer, x->buf_samps * sizeof(float));
     }
@@ -1323,17 +1323,17 @@ void bashfest_dsp(t_bashfest *x, t_signal **sp)
             post("warning: zero sampling rate!");
             x->sr = 44100;
         }
-    } 
+    }
     if(x->b_frames <= 0){
         post("empty buffer, hosing down");
         x->hosed = 1;
     }
 	
     if(x->hosed){
-        dsp_add(bashfest_perform_hosed, 5, x, 
+        dsp_add(bashfest_perform_hosed, 5, x,
                 sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);	
     } else {
-        dsp_add(bashfest_perform, 5, x, 
+        dsp_add(bashfest_perform, 5, x,
                 sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);		
     }
 }
@@ -1344,7 +1344,7 @@ void bashfest_assist (t_bashfest *x, void *b, long msg, long arg, char *dst)
         switch (arg) {
             case 0: sprintf(dst,"(signal) Click Trigger"); break;
         }
-    } 
+    }
     else if (msg==2) {
         switch(arg){
             case 0: sprintf(dst,"(signal) Channel 1 Output"); break;

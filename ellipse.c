@@ -4,7 +4,7 @@ float ellipse(float x, LSTRUCT *eel, int nsects, float xnorm)
 {
   register int m;
   float op;
-  
+
   for(m=0;m<nsects;m++) {
     op = x + eel[m].c0 * eel[m].ps0 + eel[m].c2 * eel[m].ps1
       - eel[m].c1 * eel[m].ps2 - eel[m].c3 * eel[m].ps3;
@@ -22,8 +22,8 @@ void ellipset(float *list, LSTRUCT *eel, int  *nsects, float *xnorm)
 /* the first argument in the list is the number of sections */
   int m,i;
   *nsects = (int)list[0];
-  if(*nsects > MAXSECTS) { 
-    error("sorry, only configured for %d sections",MAXSECTS); 
+  if(*nsects > MAXSECTS) {
+    error("sorry, only configured for %d sections",MAXSECTS);
     return;
   }
   i=1;
@@ -122,8 +122,8 @@ void init_ellipse_data(float **a)
         a[4][11] = 0.99999996;
         a[4][12] = 0.89422169;
         a[4][13] = 0.0071020706;
-    /* 5: 
-       f1,f2,f3= 400.0     900.0     2500.     ripple= 1.000     db= 40.00    */            
+    /* 5:
+       f1,f2,f3= 400.0     900.0     2500.     ripple= 1.000     db= 40.00    */
         a[5][0] = 4;
         a[5][1] = -1.9594111;
         a[5][2] = -1.9900446;
@@ -142,7 +142,7 @@ void init_ellipse_data(float **a)
         a[5][15] = 1;
         a[5][16] = 0.96284515;
         a[5][17] = 0.0027629927;
-    /* 6:  hipass at 500 */        
+    /* 6:  hipass at 500 */
         a[6][0] = 3;
         a[6][1] = -1.9950633;
         a[6][2] = -1.9910746;
@@ -175,7 +175,7 @@ void init_ellipse_data(float **a)
         a[7][14] = -1.6413378;
         a[7][15] = 0.99999998;
         a[7][16] = 0.78964041;
-        a[7][17] = 0.0087452226;            
+        a[7][17] = 0.0087452226;
     /* 8: hipass 4000-10000 */
         a[8][0] = 1;
         a[8][1] = -1.9896868;
@@ -209,7 +209,7 @@ void init_ellipse_data(float **a)
         a[9][22] = -1.8664352;
         a[9][23] = 0.99999993;
         a[9][24] = 0.90871633;
-        a[9][25] = 0.00044746789;     
+        a[9][25] = 0.00044746789;
     /* 10: bp-300-400-2500-70dB */
         a[10][0] = 8;
         a[10][1] = -1.7823256;

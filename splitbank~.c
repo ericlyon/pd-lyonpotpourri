@@ -41,11 +41,11 @@ typedef struct
     float *index;
     float *table;
     float pitch_increment;
-    
+
     int lo_bin;
     int hi_bin;
     float synthesis_threshold;
-    
+
     int overlap;
     int winfac;
     float user_lofreq;
@@ -55,7 +55,7 @@ typedef struct
     float mult;
     float *trigland;
     int *bitshuffle;
-    
+
 } t_oscbank;
 
 typedef struct _splitbank
@@ -166,7 +166,7 @@ void splitbank_tilde_setup(void){
     class_addmethod(splitbank_class, (t_method)splitbank_overlap, gensym("overlap"),A_FLOAT,0);
     class_addmethod(splitbank_class, (t_method)splitbank_scramble, gensym("scramble"),0);
     class_addmethod(splitbank_class, (t_method)splitbank_fftinfo, gensym("fftinfo"),0);
-    
+
     potpourri_announce(OBJECT_NAME);
 }
 
@@ -246,7 +246,7 @@ void splitbank_store( t_splitbank *x, t_floatarg loc )
     short *stored_slots = x->stored_slots;
     int location = (int) loc;
     int i;
-    
+
     if( location < 0 || location > MAXSTORE - 1 ){
         error("location must be between 0 and %d, but was %d", MAXSTORE, location);
         return;
@@ -255,7 +255,7 @@ void splitbank_store( t_splitbank *x, t_floatarg loc )
         stored_binsplits[location][i] = current_binsplit[i];
     }
     stored_slots[location] = 1;
-    
+
    // post("stored bin split at location %d", location);
 }
 
@@ -275,12 +275,12 @@ void splitbank_recall( t_splitbank *x, t_floatarg loc )
         error("nothing stored at location %d", location);
         return;
     }
-    
+
     for(i = 0; i < x->N2; i++ ){
         last_binsplit[i] = current_binsplit[i];
         current_binsplit[i] = stored_binsplits[location][i];
     }
-    
+
     x->new_distribution = 1;
     x->interpolation_completed = 0;
     x->frames_left = x->ramp_frames;
@@ -306,7 +306,7 @@ void *splitbank_new(t_symbol *s, int argc, t_atom *argv)
     t_splitbank *x = (t_splitbank *)pd_new(splitbank_class);
     int i;
 
-    
+
     x->channel_count = (int) atom_getfloatarg(0, argc, argv);
     x->channel_count = splitbank_closestPowerOfTwo( x->channel_count );
     // post("theoretic chan count: %d",x->channel_count );
@@ -318,19 +318,19 @@ void *splitbank_new(t_symbol *s, int argc, t_atom *argv)
     for(i = 0; i < x->channel_count + 1; i++){
         outlet_new(&x->x_obj, gensym("signal"));
     }
-    
+
     x->ins = (t_float **) malloc(sizeof(t_float *) * (x->channel_count + 5));
     x->outs = (t_float **) malloc(sizeof(t_float *) * (x->channel_count + 1));
     for(i = 0; i < x->channel_count + 5; i++){
         x->ins[i] = (t_float *) malloc(8192 * sizeof(t_float));
     }
     x->list_outlet = (t_outlet *) outlet_new(&x->x_obj, gensym("list"));
- 
+
     x->obanks = (t_oscbank **) malloc(x->channel_count * sizeof(t_oscbank *));
     for(i = 0; i < x->channel_count; i++){
         x->obanks[i] = (t_oscbank *) malloc(sizeof(t_oscbank));
     }
-    
+
     x->mute = 0;
     x->table_offset = 0;
     x->bin_offset = 0;
@@ -347,7 +347,7 @@ t_int *splitbank_perform(t_int *w)
     int i,j;
     float frac = 0.0;
     t_splitbank *x = (t_splitbank *) (w[1]);
-    
+
     int channel_count = x->channel_count;
     float *input;
     float *synthesis_threshold;
@@ -356,32 +356,32 @@ t_int *splitbank_perform(t_int *w)
     float *manual_control;
     float *sync = (t_float *)(w[(channel_count * 2) + 7]);
     int n = (int) w[(channel_count * 2) + 8];
-    
+
     int N2 = x->N2;
     int N = x->N;
     int hopsamps = x->hopsamps;
 //    int frames_left = x->frames_left;
 //    int ramp_frames = x->ramp_frames;
-    
+
     int *current_binsplit = x->current_binsplit;
     int *last_binsplit = x->last_binsplit;
-    
+
     float *in_amps = x->in_amps;
     float manual_control_value = x->manual_control_value;
-    
+
     long counter = x->counter;
     long countdown_samps = x->countdown_samps;
-    
+
     t_oscbank **obanks = x->obanks;
 
-    
+
     t_float **ins = x->ins;
     t_float *inlet;
     t_float *outlet;
     t_float **outs = x->outs; // assign from output vector pointers
-    
+
     // mute branch: clear outlets and return
-    
+
     if(x->mute){
         for(i = 0; i < (channel_count + 1); i++){
             outlet = (t_float *) w[i + (channel_count + 7)];
@@ -391,7 +391,7 @@ t_int *splitbank_perform(t_int *w)
         }
         return (w + ((channel_count * 2) + 9));
     }
-    
+
     // Copy all inlets
 
     for(i = 0; i < channel_count + 5; i++){
@@ -401,53 +401,53 @@ t_int *splitbank_perform(t_int *w)
         }
     }
     // local assigments:
-    
+
     input = ins[0];
 
     synthesis_threshold = ins[channel_count + 1];
     t_offset = ins[channel_count + 2];
     b_offset = ins[channel_count + 3];
     manual_control = ins[channel_count + 4];
-    
+
     // assign outlet pointers
-    
+
     for(i = 0; i < (channel_count + 1); i++){
         outs[i] = (t_float *) w[i + (channel_count + 7)]; // was 5
     }
-    
+
     sync = outs[channel_count];
-    
+
     for(i = 0; i < channel_count; i++){
         obanks[i]->pitch_increment = ins[i+1][0] * obanks[i]->table_si;
         obanks[i]->synthesis_threshold = synthesis_threshold[0];
     }
 
-    
+
     x->table_offset = t_offset[0] * N2;
     x->bin_offset = b_offset[0] * N2;
-    
+
     manual_control_value = manual_control[0];
-    
-    
+
+
     // ANALYSIS (only analyze to one oscbank
-    
+
     fftease_shiftin( obanks[0], input );
     fftease_obank_analyze( obanks[0] );
-    
-    
+
+
     // copy input amplitudes from analyzed frame
     for( i = 0, j = 0; i < N; i += 2 , j++){
         in_amps[j] = obanks[0]->interleaved_spectrum[i];
     }
-    
+
     // zero the amps next
-    
+
     for(i = 0; i < channel_count; i++){
         for(j = 0; j < N; j += 2){
             obanks[i]->interleaved_spectrum[j] = 0.0;
         }
     }
-    
+
     if( x->manual_override ){
         for(i = 0; i < channel_count; i++){
             splitbank_spliti( x, obanks[i]->interleaved_spectrum,
@@ -456,7 +456,7 @@ t_int *splitbank_perform(t_int *w)
         frac = manual_control_value;
     }
     else if( x->new_distribution ) {
-        
+
         x->new_distribution = 0;
 
         for(i = 0; i < channel_count; i++){
@@ -495,9 +495,9 @@ t_int *splitbank_perform(t_int *w)
             obanks[i]->interleaved_spectrum[j] = obanks[0]->interleaved_spectrum[j];
         }
     }
-    
+
     // SYNTHESIS
-    
+
     for(i = 0; i < channel_count; i++){
         fftease_obank_synthesize( obanks[i] );
         fftease_shiftout( obanks[i], outs[i] );
@@ -511,34 +511,34 @@ void splitbank_scramble (t_splitbank *x)
 {
     int i, j;
     int used;
-    
+
     int max = x->N2;
     int bindex;
-    
+
     int *current_binsplit = x->current_binsplit;
     int *last_binsplit = x->last_binsplit;
     int *bin_tmp = x->bin_tmp;
-    
+
     x->new_distribution = 1;
     x->interpolation_completed = 0;
-    
+
     //  post("scrambling");
-    
+
     // Copy current mapping to last mapping (first time this will be all zeros)
-    
+
     for( i = 0; i < x->N2; i++ ){
         last_binsplit[i] = current_binsplit[i];
     }
-    
-    
+
+
     for( i = 0; i < max; i++ ){
         bin_tmp[i] = i;
     }
-    
+
     used = max;
-    
+
     // This randomly distributes each bin number (to occur once each in a random location)
-    
+
     for( i = 0; i < max; i++ ){
         bindex = rand_index( used );
         current_binsplit[i] = bin_tmp[bindex];
@@ -562,7 +562,7 @@ int rand_index( int max) {
 
 void splitbank_setstate (t_splitbank *x, t_symbol *msg, short argc, t_atom *argv) {
     short i;
-    
+
     if( argc != x->N2 ){
         error("list must be of length %d, but actually was %d", x->N2, argc);
         return;
@@ -581,7 +581,7 @@ void splitbank_setstate (t_splitbank *x, t_symbol *msg, short argc, t_atom *argv
             x->last_binsplit[ i ] = x->current_binsplit[ i ];
         }
     }
-    
+
     return;
 }
 
@@ -590,26 +590,26 @@ void splitbank_ramptime (t_splitbank *x, t_symbol *msg, short argc, t_atom *argv
 	rampdur = atom_getfloatarg(0,argc,argv) * 0.001;
  	x->countdown_samps = rampdur * x->R;
  	x->counter = 0;
-    
+
 //    return;
 }
 
 // REPORT CURRENT SHUFFLE STATUS
 void splitbank_showstate (t_splitbank *x ) {
-    
+
     t_atom *list_data = x->list_data;
-    
+
     short i, count;
-    
+
     count = 0;
     // post("showing %d data points", x->N2);
-    
+
     for( i = 0; i < x->N2; i++ ) {
         SETFLOAT(list_data+count,x->current_binsplit[i]);
         ++count;
     }
     outlet_list(x->list_outlet,0L,x->N2,list_data);
-    
+
     return;
 }
 /*
@@ -685,12 +685,12 @@ void splitbank_split(t_splitbank *x, int *binsplit, float *dest_mag, int start, 
     float *in_amps = x->in_amps;
     int table_offset = x->table_offset;
     int bin_offset = x->bin_offset;
-    
+
     if( table_offset  < 0 )
         table_offset *= -1;
     if( bin_offset  < 0 )
         bin_offset *= -1;
-    
+
     for( i = start; i < end; i++){
         bindex = binsplit[ (i + table_offset) % n ];
         bindex = ( bindex + bin_offset ) % n;
@@ -713,8 +713,8 @@ void splitbank_spliti( t_splitbank *x, float *dest_mag, int start, int end, floa
     int n = x->N2;
     float newfrac;
     float phase;
-    
-    
+
+
     if( oldfrac < 0 )
         oldfrac = 0;
     if( oldfrac > 1.0 )
@@ -727,21 +727,21 @@ void splitbank_spliti( t_splitbank *x, float *dest_mag, int start, int end, floa
     } else {
         newfrac = 1.0 - oldfrac;
     }
-    
+
     if( table_offset  < 0 )
         table_offset *= -1;
     if( bin_offset  < 0 )
         bin_offset *= -1;
-    
+
     for( i = 0; i < n; i++ ){
         last_mag[i] = current_mag[i] = 0.0;
     }
-    
+
     for( i = start; i < end; i++ ){
         bindex = current_binsplit[ (i + table_offset) % n ];
         bindex = ( bindex + bin_offset ) % n;
         current_mag[ bindex ] = in_amps[ bindex ];
-        
+
         bindex = last_binsplit[ (i + table_offset) % n ];
         bindex = ( bindex + bin_offset ) % n;
         last_mag[ bindex ] = in_amps[ bindex ];
@@ -774,7 +774,7 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
     int channel_count = x->channel_count;
     int vector_size;
     t_oscbank **obanks = x->obanks;
-    
+
     pointer_count = (channel_count * 2) + 8;
     sigvec = (t_int **) malloc(sizeof(t_int *) * pointer_count);
 	for(i = 0; i < pointer_count; i++){
@@ -785,15 +785,15 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
 	for(i = 1; i < pointer_count - 1; i++){ // now attach the inlet and all outlets
 		sigvec[i] = (t_int *)sp[i-1]->s_vec;
 	}
-    
+
     x->vector_size = vector_size = sp[0]->s_n;
- 
+
     fftsize = vector_size * overlap;
-    
+
 //    post("vector size %d, sys vector size: %d",vector_size, sys_getblksize() );
 //    post("splitbank~: samples per vector: %d, sys blocksize %d, fftsize %d",
 //         sp[0]->s_n, sys_getblksize(), fftsize);
-    
+
     // generate FFT size from x->overlap * x->vector_size
     if( ! sp[0]->s_sr ){
         error("splitbank~: zero sample rate! Perhaps no audio driver is selected.");
@@ -820,14 +820,14 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
             x->stored_binsplits[i] = malloc(x->N2 * sizeof(int));
         }
         splitbank_scramble( x );
-        
+
         for( i = 0; i < x->N2; i++ ){
             x->last_binsplit[i] = x->current_binsplit[i];
         }
          for(i = 0; i < channel_count; i++){
             fftease_obank_initialize(obanks[i], lo_freq, hi_freq, overlap, R, vector_size,x->N);
         }
-        
+
         x->in_amps = malloc((x->N +2) * sizeof(float));
         x->initialize = 0;
     }
@@ -863,9 +863,9 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
     int i;
 
     x->overlap = overlap;
-    
+
     //  x = t_getbytes( sizeof(t_oscbank) ); // CRASH!!
-    
+
     x->R = R;
     x->vector_size = vector_size;
     x->N = N;
@@ -875,10 +875,10 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
     x->in_count = -(x->Nw);
     x->table_length = OSCBANK_TABLE_LENGTH ;
     // x->topfreq = OSCBANK_DEFAULT_TOPFREQ ;
-    
+
     x->user_lofreq = lo_freq;
     x->user_hifreq = hi_freq;
-    
+
     x->synthesis_threshold = .000001;
     x->table_si = (float) x->table_length/ (float) x->R;
     x->Wanal = (float *) malloc( x->Nw * sizeof(float) );
@@ -896,56 +896,56 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
     x->table = (float *) malloc( x->table_length * sizeof(float) );
     x->bitshuffle = (int *) malloc( (x->N * 2) * sizeof( int ) );
     x->trigland = (float *) malloc( (x->N * 2) * sizeof( float ) );
-    
+
     x->mult = 1. / (float) x->N;
-    
+
     for( i = 0; i < x->N2 + 1; i++) {
         x->c_lastphase_in[i] = x->c_lastphase_out[i] = 0.0;
     }
-    
+
     for( i = 0; i < x->N + 1; i++) {
         x->lastamp[i] = x->lastfreq[i] = x->index[i] = 0.0;
     }
-    
+
     for( i = 0; i < x->Nw; i++ ){
         x->input_buffer[i] = x->output_buffer[i] = 0.0;
     }
-    
+
     init_rdft( x->N, x->bitshuffle, x->trigland);
     makehanning( x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->vector_size, 0);
-    
-    
+
+
     x->c_fundamental =  (float) x->R/(float)x->N ;
     x->c_factor_in =  (float) x->R/((float)x->vector_size * TWOPI);
     x->c_factor_out = 1.0 / x->c_factor_in;
-    
-    
-    
+
+
+
     if( x->user_hifreq < x->c_fundamental ) {
         x->user_hifreq = OSCBANK_DEFAULT_TOPFREQ ;
     }
-    
+
     x->hi_bin = 1;
     x->curfreq = 0;
     while( x->curfreq < x->user_hifreq ) {
         ++(x->hi_bin);
         x->curfreq += x->c_fundamental ;
     }
-    
+
     x->lo_bin = 0;
     x->curfreq = 0;
     while( x->curfreq < x->user_lofreq ) {
         ++(x->lo_bin);
         x->curfreq += x->c_fundamental ;
     }
-    
+
     if( x->hi_bin > x->N2)
         x->hi_bin = x->N2 ;
-    
+
     for ( i = 0; i < x->table_length; i++ ) {
         x->table[i] = (float) x->N * cos(  (float)i * TWOPI / (float)x->table_length );
     }
-    
+
     x->P = 1.0 ;
     x->i_vector_size = 1. / x->vector_size;
     x->pitch_increment = x->P * x->table_length/x->R;
@@ -964,7 +964,7 @@ void  fftease_obank_topfreq( t_oscbank *x, float topfreq )
     if( topfreq < x->c_fundamental ) {
         topfreq = OSCBANK_DEFAULT_TOPFREQ ;
     }
-    
+
     x->hi_bin = 1;
     x->curfreq = 0;
     while( x->curfreq < topfreq ) {
@@ -977,26 +977,26 @@ void  fftease_obank_topfreq( t_oscbank *x, float topfreq )
 /**************************************************/
 void  fftease_obank_bottomfreq( t_oscbank *x, float bottomfreq )
 {
-    
-    
+
+
     x->lo_bin = 0;
     x->curfreq = 0;
     while( x->curfreq < bottomfreq ) {
         ++(x->lo_bin);
         x->curfreq += x->c_fundamental ;
     }
-    
+
 }
 /**************************************************/
 void  fftease_obank_analyze( t_oscbank *x )
 {
     fold( x->input_buffer, x->Wanal, x->Nw, x->complex_spectrum, x->N, x->in_count );
-    
+
     rdft( x->N, 1, x->complex_spectrum, x->bitshuffle, x->trigland );
-    
+
     convert( x->complex_spectrum, x->interleaved_spectrum, x->N2, x->c_lastphase_in,
             x->c_fundamental, x->c_factor_in );
-    
+
 }
 /**************************************************/
 void fftease_shiftin( t_oscbank *x, float *input )
@@ -1005,14 +1005,14 @@ void fftease_shiftin( t_oscbank *x, float *input )
     int vector_size = x->vector_size;
     int Nw = x->Nw;
     float *input_buffer = x->input_buffer;
-    
+
     for ( i = 0 ; i < (Nw - vector_size) ; i++ ){
         input_buffer[i] = input_buffer[i + vector_size];
     }
     for ( i = (Nw - vector_size) ; i < Nw; i++ ) {
         input_buffer[i] = *input++;
     }
-    
+
 }
 /**************************************************/
 void fftease_shiftout( t_oscbank *x, float *output )
@@ -1022,7 +1022,7 @@ void fftease_shiftout( t_oscbank *x, float *output )
     int Nw = x->Nw;
     float *output_buffer = x->output_buffer;
     float mult = x->mult;
-    
+
     for ( i = 0; i < vector_size; i++ ){
         *output++ = output_buffer[i] * mult;
     }
@@ -1032,7 +1032,7 @@ void fftease_shiftout( t_oscbank *x, float *output )
     for ( i = Nw - vector_size; i < Nw; i++ ){
         output_buffer[i] = 0.;
     }
-    
+
     x->in_count += vector_size;
 }
 /**************************************************/
@@ -1041,7 +1041,7 @@ void fftease_obank_synthesize( t_oscbank *x )
     int amp, chan, freq;
     float    a,ainc,f,finc,address;
     int n;
-    
+
     float synthesis_threshold = x->synthesis_threshold;
     float *lastfreq = x->lastfreq;
     float *lastamp = x->lastamp;
@@ -1055,9 +1055,9 @@ void fftease_obank_synthesize( t_oscbank *x )
     float pitch_increment = x->pitch_increment;
     float *index = x->index;
     float *table = x->table;
-    
+
     for ( chan = lo_bin; chan < hi_bin; chan++ ) {
-        
+
         freq = ( amp = ( chan << 1 ) ) + 1;
         if ( interleaved_spectrum[amp] > synthesis_threshold ){
             interleaved_spectrum[freq] *= pitch_increment;
@@ -1066,7 +1066,7 @@ void fftease_obank_synthesize( t_oscbank *x )
             address = index[chan];
             for ( n = 0; n < vector_size; n++ ) {
                 output_buffer[n] += a*table[ (int) address ];
-                
+
                 address += f;
                 while ( address >= table_length )
                     address -= table_length;
@@ -1084,72 +1084,72 @@ void fftease_obank_synthesize( t_oscbank *x )
 ////////////////////////
 void init_rdft(int n, int *ip, float *w)
 {
-    
+
     int	nw,
 	nc;
-    
+
     void	makewt(int nw, int *ip, float *w);
     void	makect(int nc, int *ip, float *c);
-    
+
     nw = n >> 2;
     makewt(nw, ip, w);
-    
+
     nc = n >> 2;
     makect(nc, ip, w + nw);
-    
+
     return;
 }
 
 
 void rdft(int n, int isgn, float *a, int *ip, float *w)
 {
-    
+
     int		j,
     nw,
     nc;
-    
+
     float		xi;
-    
+
     void		bitrv2(int n, int *ip, float *a),
     cftsub(int n, float *a, float *w),
     rftsub(int n, float *a, int nc, float *c);
-    
-    
+
+
     nw = ip[0];
     nc = ip[1];
-    
+
     if (isgn < 0) {
         a[1] = 0.5 * (a[1] - a[0]);
         a[0] += a[1];
-        
+
         for (j = 3; j <= n - 1; j += 2) {
             a[j] = -a[j];
         }
-        
+
         if (n > 4) {
             rftsub(n, a, nc, w + nw);
             bitrv2(n, ip + 2, a);
         }
-        
+
         cftsub(n, a, w);
-        
+
         for (j = 1; j <= n - 1; j += 2) {
             a[j] = -a[j];
         }
     }
-    
+
     else {
-        
+
         if (n > 4) {
             bitrv2(n, ip + 2, a);
         }
-        
+
         cftsub(n, a, w);
-        
+
         if (n > 4) {
             rftsub(n, a, nc, w + nw);
         }
-        
+
         xi = a[0] - a[1];
         a[0] += a[1];
         a[1] = xi;
@@ -1161,11 +1161,11 @@ void bitrv2(int n, int *ip, float *a)
 {
     int j, j1, k, k1, l, m, m2;
     float xr, xi;
-    
+
     ip[0] = 0;
     l = n;
     m = 1;
-    
+
     while ((m << 2) < l) {
         l >>= 1;
         for (j = 0; j <= m - 1; j++) {
@@ -1173,11 +1173,11 @@ void bitrv2(int n, int *ip, float *a)
         }
         m <<= 1;
     }
-    
+
     if ((m << 2) > l) {
-        
+
         for (k = 1; k <= m - 1; k++) {
-            
+
             for (j = 0; j <= k - 1; j++) {
                 j1 = (j << 1) + ip[k];
                 k1 = (k << 1) + ip[j];
@@ -1190,12 +1190,12 @@ void bitrv2(int n, int *ip, float *a)
             }
         }
     }
-    
+
     else {
         m2 = m << 1;
-        
+
         for (k = 1; k <= m - 1; k++) {
-            
+
             for (j = 0; j <= k - 1; j++) {
                 j1 = (j << 1) + ip[k];
                 k1 = (k << 1) + ip[j];
@@ -1224,12 +1224,12 @@ void cftsub(int n, float *a, float *w)
     int j, j1, j2, j3, k, k1, ks, l, m;
     float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
     float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
-    
+
     l = 2;
-    
+
     while ((l << 1) < n) {
         m = l << 2;
-        
+
         for (j = 0; j <= l - 2; j += 2) {
             j1 = j + l;
             j2 = j1 + l;
@@ -1251,10 +1251,10 @@ void cftsub(int n, float *a, float *w)
             a[j3] = x1r + x3i;
             a[j3 + 1] = x1i - x3r;
         }
-        
+
         if (m < n) {
             wk1r = w[2];
-            
+
             for (j = m; j <= l + m - 2; j += 2) {
                 j1 = j + l;
                 j2 = j1 + l;
@@ -1280,10 +1280,10 @@ void cftsub(int n, float *a, float *w)
                 a[j3] = wk1r * (x0i - x0r);
                 a[j3 + 1] = wk1r * (x0i + x0r);
             }
-            
+
             k1 = 1;
             ks = -1;
-            
+
             for (k = (m << 1); k <= n - m; k += m) {
                 k1++;
                 ks = -ks;
@@ -1293,7 +1293,7 @@ void cftsub(int n, float *a, float *w)
                 wk2i = w[k1 + ks];
                 wk3r = wk1r - 2 * wk2i * wk1i;
                 wk3i = 2 * wk2i * wk1r - wk1i;
-                
+
                 for (j = k; j <= l + k - 2; j += 2) {
                     j1 = j + l;
                     j2 = j1 + l;
@@ -1323,12 +1323,12 @@ void cftsub(int n, float *a, float *w)
                 }
             }
         }
-        
+
         l = m;
     }
-    
+
     if (l < n) {
-        
+
         for (j = 0; j <= l - 2; j += 2) {
             j1 = j + l;
             x0r = a[j] - a[j1];
@@ -1346,10 +1346,10 @@ void rftsub(int n, float *a, int nc, float *c)
 {
     int j, k, kk, ks;
     float wkr, wki, xr, xi, yr, yi;
-    
+
     ks = (nc << 2) / n;
     kk = 0;
-    
+
     for (k = (n >> 1) - 2; k >= 2; k -= 2) {
         j = n - k;
         kk += ks;
@@ -1372,7 +1372,7 @@ void makewt(int nw, int *ip, float *w)
     void bitrv2(int n, int *ip, float *a);
     int nwh, j;
     float delta, x, y;
-    
+
     ip[0] = nw;
     ip[1] = 1;
     if (nw > 2) {
@@ -1399,7 +1399,7 @@ void makect(int nc, int *ip, float *c)
 {
     int nch, j;
     float delta;
-    
+
     ip[1] = nc;
     if (nc > 1) {
         nch = nc >> 1;
@@ -1423,26 +1423,26 @@ void convert(float *S, float *C, int N2, float *lastphase, float fundamental, fl
     float 	a,
     b;
     int 		i;
-    
+
     /*  float myTWOPI, myPI; */
     /*  double sin(), cos(), atan(), hypot();*/
-    
+
     /*  myTWOPI = 8.*atan(1.);
      myPI = 4.*atan(1.); */
-    
-    
+
+
     for ( i = 0; i <= N2; i++ ) {
         imag = freq = ( real = amp = i<<1 ) + 1;
         a = ( i == N2 ? S[1] : S[real] );
         b = ( i == 0 || i == N2 ? 0. : S[imag] );
-        
+
         C[amp] = hypot( a, b );
         if ( C[amp] == 0. )
             phasediff = 0.;
         else {
             phasediff = ( phase = -atan2( b, a ) ) - lastphase[i];
             lastphase[i] = phase;
-            
+
             while ( phasediff > PI )
                 phasediff -= TWOPI;
             while ( phasediff < -PI )

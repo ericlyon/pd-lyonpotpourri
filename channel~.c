@@ -5,12 +5,12 @@ static t_class *channel_class;
 
 typedef struct _channel
 {
-    
+
 	t_object x_obj;
 	float x_f;
 	void *float_outlet;
 	int channel;
-    
+
 	
 } t_channel;
 
@@ -49,10 +49,10 @@ void channel_int(t_channel *x, long chan)
 
 void *channel_new(t_symbol *s, int argc, t_atom *argv)
 {
-    
+
 	t_channel *x = (t_channel *)pd_new(channel_class);
 	outlet_new(&x->x_obj, gensym("signal"));
-    
+
 	x->channel = (int)atom_getfloatarg(0,argc,argv);
 	return (x);
 }

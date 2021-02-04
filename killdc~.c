@@ -17,7 +17,7 @@ typedef struct _killdc
 {
     t_object x_obj;
     float x_f;
-    
+
     COEFS fdata;
 } t_killdc;
 
@@ -35,19 +35,19 @@ void killdc_tilde_setup(void)
     CLASS_MAINSIGNALIN(killdc_class,t_killdc, x_f );
     class_addmethod(killdc_class,(t_method)killdc_dsp,gensym("dsp"),A_CANT,0);
   	potpourri_announce(OBJECT_NAME);
-    
+
 }
 
 void *killdc_new(t_symbol *s)
 {
  	int i, j;
-    
+
     t_killdc *x = (t_killdc *)pd_new(killdc_class);
     outlet_new(&x->x_obj, gensym("signal"));
-    
+
     /**************/
-    
-    
+
+
 	x->fdata.nsects = 3;
 	x->fdata.c[0][0] = -1.9999995 ;
 	x->fdata.c[1][0] = -1.9997407 ;
@@ -67,15 +67,15 @@ void *killdc_new(t_symbol *s)
       		x->fdata.ps[j][i] = 0.0;
     	}
   	}
-    
+
 	x->fdata.xnorm = 0.99725327e+00 ;
-    
-    
-    
-    
+
+
+
+
     // INITIALIZATIONS
-    
-    
+
+
     return (x);
 }
 // method from Paul Lansky's cmix implementation
@@ -100,7 +100,7 @@ t_int *killdc_perform(t_int *w)
             x->fdata.c[2][m] * x->fdata.ps[1][m]
             - x->fdata.c[1][m] * x->fdata.ps[2][m]
             - x->fdata.c[3][m] * x->fdata.ps[3][m];
-            
+
     		x->fdata.ps[1][m] = x->fdata.ps[0][m];
    			x->fdata.ps[0][m] = sample;
     		x->fdata.ps[3][m] = x->fdata.ps[2][m];

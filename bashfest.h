@@ -67,7 +67,7 @@ typedef struct
 typedef struct _bashfest
 {
   t_object x_obj;
-  float x_f;  
+  float x_f;
   float sr; // sampling rate
   t_symbol *wavename; // name of waveform buffer
   short hosed; // buffers are bad
@@ -79,7 +79,7 @@ typedef struct _bashfest
   long b_valid; // state of buffer
   long b_frames; // number of frames in sample buffer
   t_word *b_samples; // pointer samples in buffer
-  int overlap_max; // max number of simultaneous plays 
+  int overlap_max; // max number of simultaneous plays
   t_event *events; //note attacks
   int active_events; // how many currently activated notes?
   int buf_samps;//total samples in workbuffer
@@ -101,7 +101,7 @@ typedef struct _bashfest
   char sound_name[256];
   float *trigger_vec;//stores incoming trigger vectors
   int vs;//Max/MSP vector size
-  
+
   /* stuff for bashfest DSP */
   float *sinewave;
   int sinelen;
@@ -163,7 +163,7 @@ void init_ellipse_data(float **a);
 void setExpFlamFunc(float *arr, int flen, float v1,float v2,float alpha);
 void setflamfunc1(float *arr, int flen);
 void funcgen1(float *outArray, int outlen, float duration, float outMin, float outMax,
-	 float speed1, float speed2, float gain1, float gain2, float *phs1, float *phs2, 
+	 float speed1, float speed2, float gain1, float gain2, float *phs1, float *phs2,
 	 float *sine, int sinelen);
 void normtab(float *inarr,float *outarr, float min, float max, int len);
 float mapp(float in,float imin,float imax,float omin,float omax);
@@ -172,14 +172,14 @@ void set_dcflt(float *a);
 
 void set_distortion_table(float *arr, float cut, float max, int len);
 float dlookup(float samp,float *arr,int len);
-void do_compdist(float *in,float *out,int sampFrames,int nchans,int channel, 
+void do_compdist(float *in,float *out,int sampFrames,int nchans,int channel,
 	    float cutoff,float maxmult,int lookupflag,float *table,int range,float bufMaxamp);
 float getmaxamp(float *arr, int len);
 void buildadsr(CMIXADSR *a);
 /*bashfest dsp functions */
 void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channels, float *functab1,
-	   float *functab2,float *functab3,float *functab4,int funclen, 
+	   float *functab2,float *functab3,float *functab4,int funclen,
 	   float duration, float maxDelay, t_bashfest *x);
-void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans, 
+void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
 	       int channel, float revtime, float dry, t_bashfest *x);
 	       void killdc( float *inbuf, int in_frames, int channels, t_bashfest *x);

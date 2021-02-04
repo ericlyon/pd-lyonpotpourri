@@ -15,7 +15,7 @@ typedef struct _dynss
 
 	t_object x_obj;
     t_float x_f;
-    
+
 	long point_count; // how many points in waveform (including beginning and end point)
 	t_double freq; // frequency
 	long counter; // count samples
@@ -52,7 +52,7 @@ void dynss_tilde_setup(void)
 	c = class_new(gensym("dynss~"), (t_newmethod)dynss_new, 0, sizeof(t_dynss), 0,0);
     CLASS_MAINSIGNALIN(c,t_dynss,x_f);
 	class_addmethod(c,(t_method)dynss_dsp, gensym("dsp"), A_CANT, 0);
-    
+
 	class_addmethod(c,(t_method)version,gensym("version"),0);
 	class_addmethod(c,(t_method)dynss_devx,gensym("devx"),A_FLOAT,0);
 	class_addmethod(c,(t_method)dynss_devy,gensym("devy"),A_FLOAT,0);
@@ -137,7 +137,7 @@ void *dynss_new(void)
 	
 	srand(time(0));
 
-	dynss_init(x,0); 
+	dynss_init(x,0);
 	
 	return (x);
 }
@@ -235,13 +235,13 @@ t_int *dynss_perform(t_int *w)
 				current_point = 0;
 				counter = 0;
 			}
-		} 
+		}
 	
 		else {
 			segsamps = point_breaks[current_point + 1] - point_breaks[current_point];
 			if( segsamps <= 1){
 				frak = 0.0;
-			} 
+			}
 			else {
 				frak = (float)(counter - point_breaks[current_point]) / (float)segsamps;
 				//post("frak %f counter %d point break %d diff %d",frak, counter, point_breaks[current_point],counter - point_breaks[current_point] );

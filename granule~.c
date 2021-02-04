@@ -30,14 +30,14 @@ typedef struct {
 
 typedef struct _granule
 {
-    
+
     t_object x_obj;
     float x_f;
     t_pdbuffer *wavebuf; // holds waveform samples
     t_pdbuffer *windowbuf; // holds window samples
 	t_symbol *wavename; // name of waveform buffer
 	t_symbol *windowname; // name of window buffer
-    
+
 	float sr; // sampling rate
 	short mute;
 	short hosed; // buffers are bad
@@ -219,7 +219,7 @@ void granule_constrain(int *index_min, int *index_max, float minfreq, float maxf
 void granule_pitchspray(t_granule *x)
 {
 	int i,j;
-    
+
 	long eframes = x->windowbuf->b_frames;
 	long frames = x->wavebuf->b_frames;
 	float sr = x->sr;
@@ -248,8 +248,8 @@ void granule_pitchspray(t_granule *x)
 	short inserted = 0;
 	short constrain_scale = x->constrain_scale;
 	t_grain *grains = x->grains;
-    
-    
+
+
 	if( steps < 2 ){
 		error("scale is undefined");
 		return;
@@ -436,31 +436,31 @@ void *granule_new(t_symbol *msg, short argc, t_atom *argv)
     x->wavebuf = (t_pdbuffer*)malloc(sizeof(t_pdbuffer));
     x->windowbuf = (t_pdbuffer*)malloc(sizeof(t_pdbuffer));
 	srand(time(0));
-    
+
 	x->pitchscale = (float *) t_getbytes(MAXSCALE * sizeof(float));
 	x->grains = (t_grain *) t_getbytes(MAXGRAINS * sizeof(t_grain));
 	
-    
+
 	// default names
 	x->wavename = gensym("waveform");
 	x->windowname = gensym("window");
-    
+
 	/* MaxMSP bug that may soon be fixed, this does not work:
      x->wavename = atom_getsymarg(0,argc,argv);
      x->windowname = atom_getsymarg(1,argc,argv); */
-    
+
     // apparently Pd lacks this Max/MSP bug
 	x->wavename = atom_getsymbolarg(0,argc,argv);
 	x->windowname = atom_getsymbolarg(1,argc,argv);
 
-    
+
 	x->sr = sys_getsr();
 	if(! x->sr )
 		x->sr = 44100;
-    
+
 	granule_init(x,0);
-    
-    
+
+
     return (x);
 }
 
@@ -564,7 +564,7 @@ void granule_setbuf(t_granule *x, t_symbol *wavename, t_symbol *windowname)
 {
     t_garray *a;
     int frames;
-    
+
     x->hosed = 0;
     x->wavebuf->b_frames = 0;
     x->windowbuf->b_frames = 0;
@@ -582,7 +582,7 @@ void granule_setbuf(t_granule *x, t_symbol *wavename, t_symbol *windowname)
         x->wavebuf->b_frames = frames;
         garray_usedindsp(a);
     }
-    
+
     if (!(a = (t_garray *)pd_findbyclass(windowname, garray_class))) {
         if (*wavename->s_name) pd_error(x, "granule~: %s: no such array", windowname->s_name);
         x->hosed = 1;
@@ -634,23 +634,23 @@ t_int *granule_perform(t_int *w)
 	long eframes = windowbuf->b_frames;
 	int i,j;
 	
-    
-    
+
+
 	/* grain parameters */
-    
-    
+
+
 	if( x->mute ){
 		while(n--) *outputL++ = *outputR++ = 0;
 		return (w+6);
 	}
-    
+
     // pre-clean buffer
 	for( i = 0; i < n; i++ ){
 		outputL[i] = outputR[i] = 0;
 	}
-    
+
 	for (j=0; j<MAXGRAINS; j++) {
-        
+
 		if(grains[j].ephase >= eframes){
 			goto nextgrain;
 		}
@@ -662,7 +662,7 @@ t_int *granule_perform(t_int *w)
 		delay =  grains[j].delay;
 		panL = grains[j].panL;
 		panR = grains[j].panR;
-        
+
 		
 		for(i = 0; i < n; i++ ){
 			// ++(x->sampcount); // not really needed
@@ -671,7 +671,7 @@ t_int *granule_perform(t_int *w)
 			}
 			if( delay <= 0 && ephase < eframes){
 				sample = wavetable[(int)phase].w_float;
-                
+
 				envelope = amplitude * window[(int)ephase].w_float;
 				sample *= envelope;
 				outputL[i] += panL * sample;
@@ -680,12 +680,12 @@ t_int *granule_perform(t_int *w)
 				ephase += esi;
 				while( phase >= frames )
 					phase -= frames;
-                
+
 				if( ephase >= eframes ){
 					grains[j].ephase = ephase;
 					goto nextgrain; // must escape loop now
 				}
-                
+
 			}
 		}
 		grains[j].phase = phase;
@@ -694,10 +694,10 @@ t_int *granule_perform(t_int *w)
 		
     nextgrain: ;
 	}
-    
+
 	return (w+6);
-    
-    
+
+
 }
 
 void granule_dsp_free(t_granule *x)
@@ -709,7 +709,7 @@ void granule_dsp_free(t_granule *x)
 
 void granule_dsp(t_granule *x, t_signal **sp)
 {
-    
+
 	granule_reload(x);
 	
 	if( x->hosed ){
@@ -725,8 +725,8 @@ void granule_dsp(t_granule *x, t_signal **sp)
 			x->sr = 44100;
 		}
 		granule_init(x,1);
-	} 
-	dsp_add(granule_perform, 5, x, 
+	}
+	dsp_add(granule_perform, 5, x,
 			sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 }
 

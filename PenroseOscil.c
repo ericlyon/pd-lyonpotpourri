@@ -5,10 +5,10 @@
 float frequencyToIncrement( float samplingRate, float frequency, int bufferLength ) {
 
   return (frequency / samplingRate) * (float) bufferLength;
-} 
+}
 
 void makeSineBuffer( float *buffer, int bufferLength ) {
-  
+
   int   i;
 
   float myTwoPi = 8. * atan(1.);

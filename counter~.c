@@ -105,7 +105,7 @@ t_int *counter_perform(t_int *w)
 			current = current + direction;
 			if( direction == COUNTER_UP ){
 				if( current > max ){
-					current = min; 
+					current = min;
 				}
 			} else if( direction == COUNTER_DOWN ){
 				if( current < min ){

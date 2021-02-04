@@ -21,10 +21,10 @@ typedef struct {
 
 typedef struct _vdb
 {
-    
+
     t_object x_obj;
     float x_f;
-    
+
 	float sr;
 	t_lpf lpf;
 	short filter;
@@ -196,8 +196,8 @@ t_int *vdb_perform(t_int *w)
 	
 	/**********************/
 	
-    
-    
+
+
 	n = (int) w[b_nchans * 2 + 4];
 	
 	if(x->always_update){
@@ -215,9 +215,9 @@ t_int *vdb_perform(t_int *w)
             }
             return (w + b_nchans * 2 + 5);
         }
-        
-        
-        
+
+
+
         if(!x->b_valid){
             for(i = 0; i < b_nchans; i++){
                 output = (t_float *) w[4 + b_nchans + i];
@@ -227,7 +227,7 @@ t_int *vdb_perform(t_int *w)
             }
             return (w + b_nchans * 2 + 5);
         }
-        
+
         fdelay = x->delay_time * .001 * sr;
         feedback = x->feedback;
         delay_vec = (t_float *) w[b_nchans + 2];
@@ -237,9 +237,9 @@ t_int *vdb_perform(t_int *w)
             output = (t_float *) w[4 + b_nchans + i];
             phs = x->phs; // reset for each channel
             for(j = 0; j < n; j++){
-                
+
                 //		insamp = input[j];
-                
+
                 if ( connections[delay_inlet]) {
                     fdelay = delay_vec[j];
                     fdelay *= .001 * sr;
@@ -261,19 +261,19 @@ t_int *vdb_perform(t_int *w)
                         x->feedback = feedback;
                     }
                 }
-                
+
                 idelay = floor(fdelay);
-                
+
                 if(phs < 0 || phs >= maxdelay_len){
                     error("%s: bad phase %d",OBJECT_NAME,phs);
                     phs = 0;
                 }
-                
+
                 if(interpolate){
                     frac = (fdelay - idelay);
                     dphs1 = phs - idelay;
                     dphs2 = dphs1 - 1;
-                    
+
                     while(dphs1 >= maxdelay_len){
                         dphs1 -= maxdelay_len;
                     }
@@ -286,11 +286,11 @@ t_int *vdb_perform(t_int *w)
                     while(dphs2 < 0){
                         dphs2 += maxdelay_len;
                     }
-                    
+
                     x1 = delay_line[dphs1 * b_nchans + i].w_float;
                     x2 = delay_line[dphs2 * b_nchans + i].w_float;
                     outsamp = x1 + frac * (x2 - x1);
-                    
+
                 } else {
                     dphs = phs - idelay;
                     while(dphs >= maxdelay_len){
@@ -304,8 +304,8 @@ t_int *vdb_perform(t_int *w)
                         dphs = 0;
                     }
                     outsamp = delay_line[dphs * b_nchans + i].w_float;
-                    
-                    
+
+
                 }
                 output[j] = outsamp;
                 if(! inf_hold ){
@@ -319,52 +319,52 @@ t_int *vdb_perform(t_int *w)
                 while(phs < 0){
                     phs += maxdelay_len;
                 }
-                
+
             }
-            
+
         }
-        
-        
+
+
         x->phs = phs;
         if(x->redraw_flag){
             vdb_redraw(x);
         }
         return (w + b_nchans * 2 + 5);
-        
-        
+
+
     }
-    
+
     void *vdb_new(t_symbol *s, int argc, t_atom *argv)
     {
-        
+
         int i;
         int user_chans;
 
         t_vdb *x = (t_vdb *)pd_new(vdb_class);
-        
+
         x->sr = sys_getsr();
         if(argc < 2){
             error("%s: you must provide a valid buffer name and channel count",OBJECT_NAME);
             return (void *)NULL;
         }
-        
+
         if(!x->sr){
             error("zero sampling rate - set to 44100");
             x->sr = 44100;
         }
         // DSP CONFIG
-        
-        
+
+
         // SET DEFAULTS
         x->maxdelay = 50.0; // milliseconds
         x->feedback = 0.5;
         x->delay_time  = 0.0;
-        
+
         // args: name channels [max delay, initial delay, feedback, interpolation_flag]
-        
+
 
         x->buffername = atom_getsymbolarg(0,argc,argv);
-        
+
         user_chans = 1; // in Pd buffers always mono...
         x->maxdelay = atom_getfloatarg(1,argc,argv);
         x->delay_time = atom_getfloatarg(2,argc,argv);
@@ -372,7 +372,7 @@ t_int *vdb_perform(t_int *w)
         x->interpolate = atom_getfloatarg(4,argc,argv);
         x->b_nchans = user_chans;
         x->redraw_flag = 1;
-        
+
         /* need data checking here */
         x->inlet_count = x->b_nchans + 2;
         x->outlet_count = x->b_nchans;
@@ -383,24 +383,24 @@ t_int *vdb_perform(t_int *w)
             inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
         }
         outlet_new(&x->x_obj, gensym("signal") );
-        
-        
+
+
         vdb_init(x,0);
         return (x);
     }
-    
+
     void vdb_free(t_vdb *x)
     {
 
         free(x->connections);
     }
-    
-    
+
+
     void vdb_init(t_vdb *x,short initialized)
     {
         // int i;
-        
-        
+
+
         if(!initialized){
             if(!x->maxdelay)
                 x->maxdelay = 50.0;
@@ -412,17 +412,17 @@ t_int *vdb_perform(t_int *w)
             x->always_update = 0;
             x->connections = (short *) calloc(128, sizeof(short));
         }
-        
-    }
-    
-    
 
-    
+    }
+
+
+
+
     void vdb_protect(t_vdb *x, t_floatarg state)
     {
         x->feedback_protect = state;
     }
-    
+
     int vdb_attach_buffer(t_vdb *x)
     {
 
@@ -432,13 +432,13 @@ t_int *vdb_perform(t_int *w)
         t_word *b_samples;
         if (!(a = (t_garray *)pd_findbyclass(wavename, garray_class))) {
             if (*wavename->s_name) pd_error(x, "%s: %s: no such array",OBJECT_NAME,wavename->s_name);
-            
+
             x->b_valid = 0;
             return 0;
         }
         else if (!garray_getfloatwords(a, &b_frames, &b_samples)) {
             pd_error(x, "%s: bad array for %s", wavename->s_name,OBJECT_NAME);
-            x->b_valid = 0; 
+            x->b_valid = 0;
             return 0;
         }
         else  {
@@ -454,11 +454,11 @@ t_int *vdb_perform(t_int *w)
             garray_usedindsp(a);
             return(1);	
         }
-        
-        
+
+
     }
 
-    
+
     void vdb_redraw(t_vdb *x)
     {
         t_garray *a;
@@ -471,43 +471,43 @@ t_int *vdb_perform(t_int *w)
             garray_redraw(a);
         }
     }
-    
-    
+
+
     void vdb_dsp(t_vdb *x, t_signal **sp)
     {
         int i;
         int vector_count;
         t_int **sigvec;
-        
+
         vector_count = x->inlet_count+x->outlet_count + 2;
-        
-        
+
+
         for(i = 0; i < vector_count - 2; i++){
 
             x->connections[i] = 1;
         }
-        
+
         vdb_attach_buffer(x);
-        
+
         sigvec  = (t_int **) calloc(vector_count, sizeof(t_int *));	
         for(i = 0; i < vector_count; i++)
             sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
-        
+
         sigvec[0] = (t_int *)x;
-        
+
         sigvec[vector_count - 1] = (t_int *)sp[0]->s_n;
-        
+
         for(i = 1; i < vector_count - 1; i++){
             sigvec[i] = (t_int *)sp[i-1]->s_vec;
         }
-        
-        
+
+
 
         dsp_addv(vdb_perform, vector_count, (t_int *)sigvec);
-        
+
         free(sigvec);
-        
-        
+
+
     }
-    
-    
+
+

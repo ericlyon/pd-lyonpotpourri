@@ -45,7 +45,7 @@ t_int *cartopol_perform(t_int *w)
 
     int n = (int) w[6]; // obj, func, 1 inlet
     int N2 = n/2;
-    
+
     for(i = 0; i < N2 + 1; i++){
         real = (i == N2 ? real_in[1] : real_in[i]);
         imag = (i == 0 || i == N2 ? 0.0 : imag_in[i]);

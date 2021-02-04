@@ -39,7 +39,7 @@ t_int *clickhold_perform(t_int *w)
 	t_float *in_vec = (t_float *)(w[2]);
 	t_float *out_vec = (t_float *)(w[3]);
 	int n = (int) w[4];
-    
+
 	float hold_value = x->hold_value;
 	
 	while( n-- ) {
@@ -48,7 +48,7 @@ t_int *clickhold_perform(t_int *w)
 		}
 		*in_vec++;
 		*out_vec++ = hold_value;
-        
+
 	}
 	x->hold_value = hold_value;
 	return (w+5);

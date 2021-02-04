@@ -6,7 +6,7 @@ static t_class *click2float_class;
 
 typedef struct _click2float
 {
-    
+
 	t_object x_obj;
 	float x_f;
 	void *float_outlet;
@@ -50,7 +50,7 @@ t_int *click2float_perform(t_int *w)
 	t_click2float *x = (t_click2float *) (w[1]);
 	t_float *in_vec = (t_float *)(w[2]);
 	int n = (int) w[3];
-    
+
 	while( n-- ) {
 		if(*in_vec){
 			x->float_value = *in_vec;

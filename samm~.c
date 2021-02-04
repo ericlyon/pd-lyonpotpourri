@@ -107,19 +107,19 @@ void samm_beats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
 {
     int i;
     double beatdur;
-    
+
 	if(argc != x->metro_count){
 		error("%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
 		return;
 	}
-    
+
 	for(i = 0; i < argc; i++){
 		beatdur = (double)atom_getfloatarg(i,argc,argv);
     	if(!beatdur){
 			error("%s: zero divisor given for beat stream %d",OBJECT_NAME,i+1);
 			beatdur = 1.0;
 		}
-        
+
 		x->metro_beatdurs[i] = beatdur;
 		x->metro_samps[i] = x->metro_beatdurs[i] * x->onebeat_samps;
 		x->metro[i] = 1.0; // initialize for instantaneous beat
@@ -130,19 +130,19 @@ void samm_divbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
 {
     int i;
     double divisor;
-    
+
 	if(argc != x->metro_count){
 		error("%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
 		return;
 	}
-    
+
 	for(i = 0; i < argc; i++){
 		divisor = (double)atom_getfloatarg(i,argc,argv);
     	if(!divisor){
 			error("%s: zero divisor given for beat stream %d",OBJECT_NAME,i+1);
 			divisor = 1.0;
 		}
-        
+
 		x->metro_beatdurs[i] = 1.0 / divisor; // argument is now DIVISOR of beat
 		x->metro_samps[i] = x->metro_beatdurs[i] * x->onebeat_samps;
 		x->metro[i] = 1.0; // initialize for instantaneous beat
@@ -167,7 +167,7 @@ void samm_msbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
 		x->metro_beatdurs[i] = x->metro_samps[i] / x->onebeat_samps; // just in case tempo changes
 		x->metro[i] = 1.0; // initialize for instantaneous beat
 	}
-    
+
 }
 
 void samm_sampbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
@@ -194,12 +194,12 @@ void samm_ratiobeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
 {
     int i,j;
     double num,denom;
-    
+
 	if(argc != x->metro_count * 2){
 		error("%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
 		return;
 	}
-    
+
 	for(i = 0, j= 0; i < argc; i += 2, j++){
 		num = (double)atom_getfloatarg(i,argc,argv);
 		denom = (double)atom_getfloatarg(i+1,argc,argv);
@@ -207,7 +207,7 @@ void samm_ratiobeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
 			error("%s: zero divisor given for beat stream %d",OBJECT_NAME,(i/2)+1);
 			denom = 1.0;
 		}
-        
+
 		x->metro_beatdurs[j] = 4.0 * (num / denom);
         //		post("beat duration %f",4.0 * (num/denom));
 		x->metro_samps[j] = x->metro_beatdurs[j] * x->onebeat_samps;
@@ -251,22 +251,22 @@ void *samm_new(t_symbol *msg, short argc, t_atom *argv)
 		error("%s: exceeded maximum of %d beat values",OBJECT_NAME, MAXBEATS);
 		return (void *)NULL;
     }
-    
+
     x = (t_samm *)pd_new(samm_class);
     x->metro_count = argc - 1;
     for(i=0;i< x->metro_count;i++)
         outlet_new(&x->x_obj, gensym("signal"));
 	x->sr = sys_getsr();
 	x->vs = sys_getblksize();
-    
+
     x->pause = 0;
     x->mute = 0;
-    
+
 	x->beats = (double *) calloc(x->metro_count, sizeof(double));
 	x->metro_samps = (double *) calloc(x->metro_count, sizeof(double));
 	x->metro_beatdurs = (double *) calloc(x->metro_count, sizeof(double));
 	x->metro = (double *) calloc(x->metro_count, sizeof(double));
-    
+
 	if(! x->sr ){
 		x->sr = 44100;
 		post("sr autoset to 44100");
@@ -275,7 +275,7 @@ void *samm_new(t_symbol *msg, short argc, t_atom *argv)
 	if(argc > 0) {
 		x->tempo = (double) atom_getfloatarg(0,argc,argv);
 	}
-    
+
 	if( x->tempo <= 0.0 ){
 		x->tempo = 120;
 		post("tempo autoset to 120 BPM");
@@ -283,16 +283,16 @@ void *samm_new(t_symbol *msg, short argc, t_atom *argv)
 	
 	x->onebeat_samps = (60.0/x->tempo) * x->sr;
 	
-    
-    
-    
+
+
+
 	for(i = 1,j = 0; i < argc; i++, j++){
         divisor = (double)atom_getfloatarg(i,argc,argv);
     	if(!divisor){
 			error("%s: zero divisor given for beat stream %d",OBJECT_NAME,i);
 			divisor = 1.0;
 		}
-        
+
 		x->metro_beatdurs[j] = 1.0 / divisor; // argument is now DIVISOR of beat
 		x->metro_samps[j] = x->metro_beatdurs[j] * x->onebeat_samps;
 		x->metro[j] = 1.0; // initialize for instantaneous beat
@@ -300,7 +300,7 @@ void *samm_new(t_symbol *msg, short argc, t_atom *argv)
 	}
     //    post("there are %d beat streams",x->metro_count);
     samm_init(x,0);
-    
+
     return (x);
 }
 
@@ -311,14 +311,14 @@ void samm_free(t_samm *x)
     free(x->metro_samps);
     free(x->metro_beatdurs);
     free(x->metro);
-    
+
 }
 void samm_init(t_samm *x,short initialized)
 {
     if(!initialized){
         x->trigger_vec = (float*)calloc(x->vs, sizeof(float));
-        
-        
+
+
     } else {
         x->trigger_vec = (float*) realloc(x->trigger_vec,x->vs*sizeof(float));
     }
@@ -339,9 +339,9 @@ t_int *samm_perform(t_int *w)
 	double *metro = x->metro;
 	float *trigger_vec = x->trigger_vec;
 	short pause = x->pause;
-    
+
     n = (int) w[metro_count + 3];
-    
+
     if(x->mute){
 		for(i = 0, j=3; i < metro_count; i++, j++){
 			beat_outlet = (t_float *) (w[j]);
@@ -354,7 +354,7 @@ t_int *samm_perform(t_int *w)
     /* main loop */
 	for(i=0;i<n;i++)
 		trigger_vec[i] = inlet[i];
-    
+
 	for(i = 0, j=3; i < metro_count; i++, j++){
 		beat_outlet = (t_float *) (w[j]);
 		for(k = 0; k < n; k++){
@@ -372,7 +372,7 @@ t_int *samm_perform(t_int *w)
 			}
 		}
 	}
-    
+
 	return (w + metro_count + 4);
 }
 
@@ -382,7 +382,7 @@ void samm_dsp(t_samm *x, t_signal **sp)
 	long i;
     t_int **sigvec;
     int pointer_count;
-    
+
     pointer_count = x->metro_count + 3; // all metros, plus 1 inlet, plus the object pointer, plus N
 	
 	if(x->vs != sp[0]->s_n){
@@ -402,7 +402,7 @@ void samm_dsp(t_samm *x, t_signal **sp)
 		sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
 	}
 	sigvec[0] = (t_int *)x; // first pointer is to the object
-    
+
 	sigvec[pointer_count - 1] = (t_int *)sp[0]->s_n; // last pointer is to vector size (N)
 	
 	for(i = 1; i < pointer_count - 1; i++){ // now attach the inlet and all outlets
@@ -410,9 +410,9 @@ void samm_dsp(t_samm *x, t_signal **sp)
 	}
     //	post("attached %d pointers",pointer_count);
 
-	dsp_addv(samm_perform, pointer_count, (t_int *) sigvec);     
-    
+	dsp_addv(samm_perform, pointer_count, (t_int *) sigvec);
+
 	free(sigvec);
-    
+
 }
 

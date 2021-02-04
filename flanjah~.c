@@ -12,7 +12,7 @@ static t_class *flanjah_class;
 
 typedef struct _flanjah
 {
-    
+
     t_object x_obj;
     float x_f;
     //
@@ -130,7 +130,7 @@ t_int *flanjah_perform(t_int *w)
     int feedback_protect = x->feedback_protect;
     float depth_factor = x->depth;
     /**********************/
-    
+
     if( x->mute ){
         while( n-- ){
             *out1++ = 0.0;
@@ -142,7 +142,7 @@ t_int *flanjah_perform(t_int *w)
         insamp1 = *in1++;
         if( feedback_connected ){
             feedback = *feedback_vec++;
-            
+
         }
         if( feedback_protect ) {
             if( feedback > 0.425){
@@ -151,7 +151,7 @@ t_int *flanjah_perform(t_int *w)
             if( feedback < -0.425 )
                 feedback = -0.425;
         }
-        
+
         if( speed1_connected ){
             osc1_si = *speed1_vec++ * si_factor;
         }
@@ -161,17 +161,17 @@ t_int *flanjah_perform(t_int *w)
         if( depth_connected ){
             depth_factor = *depth_vec++;
         }
-        
+
         if( depth_factor < .0001 ){
             depth_factor = .0001;
         }
         if( depth_factor > 1. ){
             depth_factor = 1.;
         }
-        
+
         fdelay1 = sinetab[ (int) osc1_phs ] * (float) ddl1_len * depth_factor;
         fdelay2 = sinetab[ (int) osc2_phs ] * (float) ddl2_len * depth_factor;
-        
+
         // DSP Proper
 		
         idelay1 = fdelay1;
@@ -180,10 +180,10 @@ t_int *flanjah_perform(t_int *w)
             osc1_phs -= F_LEN;
         while( osc1_phs < 0 )
             osc1_phs += F_LEN;
-        
-        
-        
-        
+
+
+
+
         idelay2 = fdelay2;
         osc2_phs += osc2_si;
         while( osc2_phs >= F_LEN )
@@ -200,7 +200,7 @@ t_int *flanjah_perform(t_int *w)
         m1 = 1. - frac;
         m2 = frac;
         tap1 = m1 * ddl1[ index1 ] + m2 * ddl1[ index2 ];
-        
+
         ddl2[ ddl2_phs++ ] = tap1;
         ddl2_phs = ddl2_phs % ddl2_len;
         index1 = (ddl2_phs + idelay2) % ddl2_len;
@@ -210,10 +210,10 @@ t_int *flanjah_perform(t_int *w)
         m2 = frac;
         tap2 = m1 * ddl2[ index1 ] + m2 * ddl2[ index2 ];
         *out1++ = (insamp1+tap2) * 0.2;
-        
-        
+
+
         ///
-        
+
     }
     x->ddl1_phs = ddl1_phs;
     x->osc1_phs = osc1_phs;
@@ -234,7 +234,7 @@ void flanjah_dsp(t_flanjah *x, t_signal **sp)
     x->speed1_connected = 1;
     x->speed2_connected = 1;
     x->depth_connected = 1;
-    
+
     if(x->sr != sp[0]->s_sr){
         x->sr = sp[0]->s_sr;
         flanjah_init(x,1);
@@ -300,22 +300,22 @@ void *flanjah_new(t_symbol *s, int argc, t_atom *argv)
     inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
     inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
     outlet_new(&x->x_obj, gensym("signal"));
-    
+
     x->sr = sys_getsr();
     if(!x->sr){
         error("zero sampling rate - set to 44100");
         x->sr = 44100;
     }
-    
+
     // SET DEFAULTS
-    
+
     x->maxdel = .05; // in seconds
     x->feedback = 0.7;
     x->speed1 = 0.136;
     x->speed2 = 0.183;
     x->feedback_protect = 1;
     x->depth = 1.0;
-    
+
     if( argc > 0 )
         x->maxdel = atom_getfloatarg(0,argc,argv)/1000.0;
     if( argc > 1 )
@@ -326,7 +326,7 @@ void *flanjah_new(t_symbol *s, int argc, t_atom *argv)
         x->speed2 = atom_getfloatarg(3,argc,argv);
     if( argc > 4 )
         x->depth = atom_getfloatarg(4,argc,argv);	
-    
+
     flanjah_init(x,0);
     return (x);
 }

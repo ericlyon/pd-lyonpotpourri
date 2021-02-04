@@ -7,7 +7,7 @@ static t_class *granola_class;
 
 typedef struct _granola
 {
-    
+
     t_object x_obj;
     float x_f;
     float *gbuf;
@@ -27,7 +27,7 @@ typedef struct _granola
     long curdel;
     short mute_me;
     short iconnect;
-    
+
 } t_granola;
 
 
@@ -61,7 +61,7 @@ void granola_float(t_granola *x, double f) {
 
 void granola_dsp_free(t_granola *x)
 {
-    
+
     free(x->gbuf);
     free(x->grainenv);
 }
@@ -103,11 +103,11 @@ void granola_size(t_granola *x, t_floatarg newsize) {
 
 void *granola_new(t_floatarg val)
 {
-    
+
     t_granola *x = (t_granola *)pd_new(granola_class);
     inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
     outlet_new(&x->x_obj, gensym("signal"));
-    
+
     // INITIALIZATIONS
 	x->sr = sys_getsr();
 	x->grain_duration = val * 0.001; // convert to seconds
@@ -117,15 +117,15 @@ void *granola_new(t_floatarg val)
 	granola_init(x);
     return x;
     /*
-     
-     
+
+
     if( val > 0 ) {
         x->grainsamps = val;
         //    post( "grainsize set to %.0f", val );
     } else {
         x->grainsamps = 2048;
         // post( "grainsize defaults to %d, val was %.0f", x->grainsamps, val );
-        
+
     }
     x->buflen = x->grainsamps * 4;
     x->gbuf = (float *) calloc( x->buflen, sizeof(float) ) ;
@@ -142,7 +142,7 @@ void *granola_new(t_floatarg val)
     x->incr = .5 ;
     x->curdel = 0;
     x->mute_me = 0;
-    
+
     return (x);
     */
 }
@@ -191,7 +191,7 @@ t_int *granola_perform(t_int *w)
 	float  outsamp ;
 	int iphs_a, iphs_b;
 	float frac;
-    
+
 	
 	/****/
 	t_granola *x = (t_granola *) (w[1]);
@@ -221,9 +221,9 @@ t_int *granola_perform(t_int *w)
 	}
 	
 	while (n--) {
-        
+
 		x->incr = *increment++;
-        
+
 		if( x->incr <= 0. ) {
 			x->incr = .5 ;
 		}
@@ -245,7 +245,7 @@ t_int *granola_perform(t_int *w)
 			iphs_b -= buflen;
 		}
 		outsamp = (gbuf[ iphs_a ] + frac * ( gbuf[ iphs_b ] - gbuf[ iphs_a ])) * grainenv[ gpt1++ ];
-        
+
 		if( gpt1 >= grainsamps ) {
 			
 			gpt1 = 0;
@@ -264,7 +264,7 @@ t_int *granola_perform(t_int *w)
 		iphs_b = iphs_a + 1;
 		
 		frac = phs2 - iphs_a;
-        
+
 		
 		while( iphs_a >= buflen ) {
 			iphs_a -= buflen;
@@ -288,7 +288,7 @@ t_int *granola_perform(t_int *w)
 		iphs_b = iphs_a + 1;
 		
 		frac = phs3 - iphs_a;
-        
+
 		while( iphs_a >= buflen ) {
 			iphs_a -= buflen;
 		}
@@ -324,7 +324,7 @@ t_int *granola_perform(t_int *w)
 
 void granola_dsp(t_granola *x, t_signal **sp)
 {
-    
+
     dsp_add(granola_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,  sp[0]->s_n);
 }
 

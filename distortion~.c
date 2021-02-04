@@ -8,7 +8,7 @@ static t_class *distortion_class;
 
 typedef struct _distortion
 {
-    
+
     t_object x_obj;
     float x_f;
 	float knee;
@@ -53,7 +53,7 @@ void *distortion_new(t_floatarg knee, t_floatarg cut)
 		x->knee = knee;
 		x->cut = cut;
 		// post("User defined values: knee %f cut %f", knee, cut);
-        
+
 	}
 	x->rescale = 1.0 / x->cut ;
 	x->mute = 0;
@@ -65,9 +65,9 @@ void *distortion_new(t_floatarg knee, t_floatarg cut)
 
 t_int *distortion1_perform(t_int *w)
 {
-    
+
 	float rectified_sample, in_sample;
-    
+
 	t_distortion *x = (t_distortion *) (w[1]);
 	float *in = (t_float *)(w[2]);
 	float *out = (t_float *)(w[5]);
@@ -76,7 +76,7 @@ t_int *distortion1_perform(t_int *w)
 	float knee = x->knee;
 	float cut = x->cut;
 	float rescale = x->rescale;
-    
+
 	
 	if( x->mute ){
 		while( n-- ){
@@ -97,7 +97,7 @@ t_int *distortion1_perform(t_int *w)
 				*out++ = rescale * (-(knee + (rectified_sample - knee) * (cut - knee)));
 			}
 		}
-        
+
 	}
 	return (w+7);
 }
@@ -106,9 +106,9 @@ t_int *distortion1_perform(t_int *w)
 
 t_int *distortion2_perform(t_int *w)
 {
-    
+
 	float rectified_sample, in_sample;
-    
+
 	t_distortion *x = (t_distortion *) (w[1]);
 	float *in = (t_float *)(w[2]);
 	float *data1 = (t_float *)(w[3]);
@@ -116,11 +116,11 @@ t_int *distortion2_perform(t_int *w)
 	float *out = (t_float *)(w[5]);
 	int n = (int)(w[6]);
     //	double fabs();
-    
+
 	float knee = x->knee;
 	float cut = x->cut;
 	float rescale = x->rescale;
-    
+
 	
 	if( x->mute ){
 		while( n-- ){
@@ -148,7 +148,7 @@ t_int *distortion2_perform(t_int *w)
 				*out++ = rescale * (-(knee + (rectified_sample - knee) * (cut - knee)));
 			}
 		}
-        
+
 	}
 	x->knee = knee;
 	x->cut = cut;
@@ -158,9 +158,9 @@ t_int *distortion2_perform(t_int *w)
 
 t_int *distortion3_perform(t_int *w)
 {
-    
+
 	float rectified_sample, in_sample;
-    
+
 	t_distortion *x = (t_distortion *) (w[1]);
 	float *in = (t_float *)(w[2]);
 	float *data1 = (t_float *)(w[3]);
@@ -168,7 +168,7 @@ t_int *distortion3_perform(t_int *w)
 	float *out = (t_float *)(w[5]);
 	int n = (int)(w[6]);
     //	double fabs();
-    
+
 	float knee = x->knee;
 	float cut = x->cut;
 	float rescale = x->rescale;
@@ -205,7 +205,7 @@ t_int *distortion3_perform(t_int *w)
 				*out++ = rescale * (-(knee + (rectified_sample - knee) * (cut - knee)));
 			}
 		}
-        
+
 	}
 	x->knee = knee;
 	x->cut = cut;

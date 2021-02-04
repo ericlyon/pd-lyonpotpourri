@@ -11,10 +11,10 @@ static t_class *sigseq_class;
 #define OBJECT_NAME "sigseq~"
 typedef struct _sigseq
 {
-    
+
     t_object x_obj;
     float x_f;
-    
+
     // Variables Here
     float *sequence;
     float *trigger_vec; // stores vector with trigger click
@@ -130,7 +130,7 @@ void sigseq_report(t_sigseq *x)
     post("rval: %d", x->rval);
     post("seqpt: %d", x->seq_ptr);
     post("manual rnd pos: %d", x->rval % x->seq_len);
-    
+
     for(i=0;i<x->seq_len;i++){
         post("%f",x->sequence[i]);
     }
@@ -171,13 +171,13 @@ void sigseq_retro(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
 
 void sigseq_adsrgate(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
 {
-    
+
     x->do_envelope = atom_getfloatarg(0,argc,argv);
 }
 
 void sigseq_banggate(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
 {
-    
+
     x->bang_on = atom_getfloatarg(0,argc,argv);
 }
 
@@ -211,7 +211,7 @@ void *sigseq_new(t_symbol *s, int argc, t_atom *argv)
     outlet_new(&x->x_obj, gensym("signal"));
     x->mybang = outlet_new(&x->x_obj, gensym("bang"));
     x->m_clock = clock_new(x,(void *)sigseq_tick);
-    
+
     srand(clock());
     x->tempo = atom_getfloatarg(0,argc,argv);
     x->beat_subdiv = atom_getfloatarg(1,argc,argv);
@@ -222,7 +222,7 @@ void *sigseq_new(t_symbol *s, int argc, t_atom *argv)
         x->beat_subdiv = 2;
     if(x->flat_gain<= 0)
         x->flat_gain = 0.5;
-    
+
     x->sr = sys_getsr();
     if(!x->sr){
         x->sr = 44100;
@@ -238,7 +238,7 @@ void sigseq_init(t_sigseq *x,short initialized)
     float beatdur;
     int asamp, dsamp, ssamp, rsamp;
     //  int i;
-    
+
     if(!initialized){
         x->sequence = (float *) t_getbytes(MAX_SEQ * sizeof(float));
         x->trigger_vec = (float *) t_getbytes(MAX_VEC * sizeof(float));
@@ -259,7 +259,7 @@ void sigseq_init(t_sigseq *x,short initialized)
         x->rand_state = 0;
         x->mute = 0;
     }
-    
+
     beatdur = (60. / x->tempo ) / (float) x->beat_subdiv;
     x->tsamps = x->sr * beatdur;
     x->counter = x->tsamps ;
@@ -292,7 +292,7 @@ void sigseq_tick(t_sigseq *x)
 void sigseq_list (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
 {
     short i;
-    
+
     if( argc < 1 ){
         // post("null list ignored");
         return;
@@ -312,7 +312,7 @@ void sigseq_list (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
 void sigseq_adsr (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
 {
     //  short i;
-    
+
     if( argc != 4 ){
         error("sigseq~: bad arguments for adsr");
         return;
@@ -321,7 +321,7 @@ void sigseq_adsr (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
     x->d = atom_getfloatarg(1,argc,argv) * .001;
     x->r = atom_getfloatarg(2,argc,argv) * .001;
     x->egain = atom_getfloatarg(3,argc,argv);
-    
+
     x->asamps = x->sr * x->a;
     x->dsamps = x->sr * x->d;
     x->rsamps = x->sr * x->r;
@@ -338,7 +338,7 @@ void sigseq_adsr (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
 }
 t_int *sigseq_perform(t_int *w)
 {
-    
+
     t_sigseq *x = (t_sigseq *) (w[1]);
     //  t_float *in = (t_float *)(w[2]);
     t_float *out = (t_float *)(w[3]);
@@ -377,7 +377,7 @@ t_int *sigseq_perform(t_int *w)
         }
         return (w+6);
     } else {
-        
+
         while(n--) {
             if(counter >= tsamps){
                 counter = 0;
@@ -386,7 +386,7 @@ t_int *sigseq_perform(t_int *w)
                     trand = (float) ( rand() % 32768 / 32768.0) * (float) seq_len;
                     x->rval = trand ;
                     seq_ptr = x->rval % seq_len;
-                    
+
                 }
                 else if (retro_state) {
                     seq_ptr = (seq_ptr - 1) % seq_len ;
@@ -427,13 +427,13 @@ t_int *sigseq_perform(t_int *w)
         if( last_val != val) {
             last_val = val;
         }
-        
+
         x->seq_ptr = seq_ptr;
         x->bang_ptr = bang_ptr;
         x->counter = counter;
         x->val = val;
         x->last_val = last_val;
-        
+
     }
     return (w+6);
 }
@@ -441,7 +441,7 @@ t_int *sigseq_perform(t_int *w)
 
 t_int *sigseq_perform_clickin(t_int *w)
 {
-    
+
     t_sigseq *x = (t_sigseq *) (w[1]);
     t_float *trigger = (t_float *)(w[2]);
     t_float *out = (t_float *)(w[3]);
@@ -490,19 +490,19 @@ t_int *sigseq_perform_clickin(t_int *w)
         if(trigger_vec[i]){
             counter = 0;
             //     bang_ptr = (bang_ptr + 1) % seq_len ;
-            
+
             if (rand_state) {
                 trand = (float) ( rand() % 32768 / 32768.0) * (float) seq_len;
                 x->rval = trand ;
                 x->seq_ptr = x->rval % seq_len;	
-                
+
             }
             else if (retro_state) {
                 x->seq_ptr = (seq_ptr - 1) % seq_len ;
                 if( x->seq_ptr < 0) {
                     x->seq_ptr = seq_len - 1;
                 }
-            } 
+            }
             else {
                 x->seq_ptr = (x->seq_ptr + 1) % seq_len ;
             }
@@ -537,10 +537,10 @@ t_int *sigseq_perform_clickin(t_int *w)
     if( last_val != x->val) {
         last_val = x->val;		
     }
-    
+
     x->bang_ptr = bang_ptr;
     x->counter = counter;
-    
+
     x->last_val = last_val;
 	
     return (w+6);
@@ -548,7 +548,7 @@ t_int *sigseq_perform_clickin(t_int *w)
 
 void sigseq_free(t_sigseq *x)
 {
-    
+
     t_freebytes(x->sequence, MAX_SEQ * sizeof(float));
     t_freebytes(x->trigger_vec, MAX_VEC * sizeof(float));
 }
@@ -562,10 +562,10 @@ void sigseq_dsp(t_sigseq *x, t_signal **sp)
         sigseq_init(x,1);
     }
     if(x->method == EXTERNAL_CLOCK){
-        dsp_add(sigseq_perform_clickin, 5, x, 
+        dsp_add(sigseq_perform_clickin, 5, x,
                 sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
     } else {
-        dsp_add(sigseq_perform, 5, x, 
+        dsp_add(sigseq_perform, 5, x,
                 sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
     }
 }

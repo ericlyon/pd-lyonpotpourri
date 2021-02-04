@@ -13,7 +13,7 @@ double cos(), sin();
   int		real, imag,
 		amp, phase;
   register int		i;
-  
+
   for ( i = 0; i <= N2; i++ ) {
     imag = phase = ( real = amp = i<<1 ) + 1;
     S[real] = *(C+amp) * cos( *(C+phase) );

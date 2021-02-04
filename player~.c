@@ -42,7 +42,7 @@ typedef struct _player
 	short direction; // forwards or backwards
 	int most_recent_event; // position in array where last note was initiated
 	long b_nchans; // channels of buffer
-	int overlap_max; // max number of simultaneous plays 
+	int overlap_max; // max number of simultaneous plays
 	t_event *events; //note attacks
 	int active_events; // how many currently activated notes?
 	short connections[4]; // state of signal connections
@@ -82,7 +82,7 @@ void player_init(t_player *x,short initialized);
 
 void player_tilde_setup(void)
 {
-	player_class = class_new(gensym("player~"), (t_newmethod)player_new, 
+	player_class = class_new(gensym("player~"), (t_newmethod)player_new,
 							 (t_method)player_dsp_free ,sizeof(t_player), 0, A_GIMME,0);
 	CLASS_MAINSIGNALIN(player_class, t_player, x_f );
 	class_addmethod(player_class, (t_method)player_dsp, gensym("dsp"), 0);
@@ -143,7 +143,7 @@ void *player_new(t_symbol *msg, short argc, t_atom *argv)
 	if(!x->sr)
 		x->sr = 44100;
 	if(!x->vs)
-		x->vs = 256;  
+		x->vs = 256;
 	player_init(x,0);
 	//   player_setbuf(x, x->wavename);
 	return (x);
@@ -281,8 +281,8 @@ t_int *player_perform_mono_interpol(t_int *w)
 	player_setbuf(x, x->wavename);
 	b_samples = x->b_samples;
 	b_nchans = x->b_nchans;
-	b_frames = x->b_frames;  
-    
+	b_frames = x->b_frames;
+
 	if(! x->b_valid) {
 		player_stop(x);
 		memset((void *)outchan,0,sizeof(float) * n);
@@ -303,7 +303,7 @@ t_int *player_perform_mono_interpol(t_int *w)
 			bail = 0;
 			break;
 		}
-	} 
+	}
 	if(bail){
 		for(i = 0; i < n; i++){
 			if(trigger_vec[i]){
@@ -344,7 +344,7 @@ t_int *player_perform_mono_interpol(t_int *w)
 						samp2 = b_samples[iphase + 1].w_float;
 						outchan[j] += gain * (samp1 + frac * (samp2-samp1));
 					}
-				} 
+				}
 				// moving backwards into sample				
 				else {
 					if(iphase == 0.0){
@@ -435,7 +435,7 @@ t_int *player_perform_mono_interpol(t_int *w)
 						samp2 = b_samples[iphase + 1].w_float;
 						outchan[k] += gain * (samp1 + frac * (samp2-samp1));
 					}
-				} 
+				}
 				// moving backwards into sample				
 				else {
 					if(iphase == 0.0){
@@ -454,7 +454,7 @@ t_int *player_perform_mono_interpol(t_int *w)
 					increment = increment_vec[k];
 				}
 				
-				events[new_insert].phase += increment; 
+				events[new_insert].phase += increment;
 				
 				
 				/* note termination conditions */
@@ -496,7 +496,7 @@ void player_dsp(t_player *x, t_signal **sp)
 			post("warning: zero sampling rate!");
 			x->sr = 44100;
 		}
-	} 
+	}
 	
 	if(x->vs != sp[0]->s_n){
 		x->vs = sp[0]->s_n;
@@ -512,10 +512,10 @@ void player_dsp(t_player *x, t_signal **sp)
 	player_stop(x); // turn off all players to start
 	
 	if(x->hosed)
-		dsp_add(player_perform_hosed1, 5, x, 
+		dsp_add(player_perform_hosed1, 5, x,
 				sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 	else{
-		dsp_add(player_perform_mono_interpol, 5, x, 
+		dsp_add(player_perform_mono_interpol, 5, x,
 				sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);	
 	}
 	

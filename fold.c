@@ -9,7 +9,7 @@
 void fold( float *I, float *W, int Nw, float *O, int N, int n )
 
 {
- 
+
     int i;
 
     for ( i = 0; i < N; i++ )

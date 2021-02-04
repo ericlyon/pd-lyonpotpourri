@@ -67,7 +67,7 @@ t_int *npan_perform(t_int *w)
     t_float *outlet1, *outlet2, *cleanoutlet;
     t_float *input_locvec = x->input_locvec;
     t_float *panner_locvec = x->panner_locvec;
-    
+
 	double gain1, gain2;
 	double insamp;
 	int chan1, chan2;

@@ -24,7 +24,7 @@ typedef struct {
 
 typedef struct _vdp
 {
-    
+
     t_object x_obj;
     float x_f;
 	float sr;
@@ -138,7 +138,7 @@ t_int *vdp_perform(t_int *w)
     t_float *feedback_vec = (t_float *)(w[4]);
     t_float *output = (t_float *)(w[5]);
     int n = (int) w[6];
-    
+
     float fdelay;
     float insamp;
     float outsamp = 0.0;
@@ -295,13 +295,13 @@ void *vdp_new(t_symbol *s, int argc, t_atom *argv)
 		x->sr = 44100;
 	}
 	// DSP CONFIG
-    
-    
+
+
 	// SET DEFAULTS
 	x->maxdel = 50.0; // milliseconds
 	x->feedback = 0.5;
 	x->delay_time  = 0.0;
-    
+
     /*
      atom_arg_getfloat(&x->maxdel,0,argc,argv);
      atom_arg_getfloat(&x->delay_time,1,argc,argv);
@@ -313,7 +313,7 @@ void *vdp_new(t_symbol *s, int argc, t_atom *argv)
 	x->interpolate = atom_getfloatarg(3,argc,argv);
 	if(!x->maxdel)
 		x->maxdel = 50.0;
-    
+
 	vdp_init(x,0);
 	return (x);
 }
@@ -332,7 +332,7 @@ void vdp_clear(t_vdp *x)
 void vdp_init(t_vdp *x,short initialized)
 {
     //int i;
-    
+
     if(!initialized){
         x->feedback_protect = 0;
         x->interpolate = 1;
@@ -361,7 +361,7 @@ void vdp_init(t_vdp *x,short initialized)
     x->startmem = x->delay_line;
     x->endmem = x->startmem + x->len;
     // x->endmem = x->startmem + (x->len - 1);
-    
+
     x->write_ptr = x->startmem;
     /*
      post("startmem %d endmem %d len %d diff %d diffback %d", x->startmem, x->endmem, x->len, x->endmem - x->startmem, ( x->endmem - x->startmem) /sizeof(float));
@@ -373,7 +373,7 @@ void vdp_dsp(t_vdp *x, t_signal **sp)
 	// DSP CONFIG
 	x->connections[1] = 1;
 	x->connections[2] = 1;
-    
+
 	if(x->sr != sp[0]->s_sr){
 		x->sr = sp[0]->s_sr;
 		vdp_init(x,1);
@@ -381,7 +381,7 @@ void vdp_dsp(t_vdp *x, t_signal **sp)
     dsp_add(vdp_perform, 6, x,
     		sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec,
     		sp[0]->s_n);
-    
+
 }
 
 
@@ -394,15 +394,15 @@ void vdp_protect(t_vdp *x, double state)
 void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, short argc, t_atom *argv)
 {
     t_symbol *destname;
-    
+
     float *b_samples = x->delay_line;
     long b_nchans = 1;
     long b_frames = x->len + 2;
-    
+
     float *b_dest_samples;
     long b_dest_nchans;
     long b_dest_frames;
-    
+
 	
 	destname = atom_getsymarg(0,argc,argv);
 	
@@ -414,7 +414,7 @@ void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, short argc, t_atom *argv)
 	b_dest_nchans = x->destbuf->b_nchans;
 	b_dest_frames = x->destbuf->b_frames;
 	
-    
+
 	if(b_nchans != 1){
 		error("%s: buffer must be mono",OBJECT_NAME);
 		return;
@@ -443,7 +443,7 @@ int vdp_setdestbuf(t_vdp *x, t_symbol *wavename)
 	float *b_samples;
 	if (!(a = (t_garray *)pd_findbyclass(wavename, garray_class))) {
 		if (*wavename->s_name) pd_error(x, "%s: %s: no such array",OBJECT_NAME,wavename->s_name);
-        
+
 		x->destbuf->b_valid = 0;
 		return 0;
     }

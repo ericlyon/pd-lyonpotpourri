@@ -8,7 +8,7 @@ static t_class *shoehorn_class;
 
 typedef struct _shoehorn
 {
-    
+
     t_object x_obj;
     t_float x_f;
     long inChans;
@@ -55,7 +55,7 @@ void *shoehorn_new(t_symbol *s, int argc, t_atom *argv)
         outlet_new(&x->x_obj, gensym("signal"));
     }
     x->pio2 = PI / 2.0;
-    
+
     x->inarr = (t_float *) malloc(x->inChans * sizeof(t_float));
     x->loc_invecs = (t_float **) malloc(x->inChans * sizeof(t_float *));
     for(i = 0; i < x->inChans; i++){
@@ -66,7 +66,7 @@ void *shoehorn_new(t_symbol *s, int argc, t_atom *argv)
     x->indexList = (long *) malloc(x->inChans * sizeof(long));
     x->advFrac = (double)(x->outChans - 1)/(double)(x->inChans - 1);
     x->outs = (t_float **) malloc(x->outChans * sizeof(t_float *)); // temporary holding for output vectors
-    
+
     for(i = 1; i < x->inChans - 1; i++){
         fullFrac = i * x->advFrac;
         outIndex = floor(fullFrac);
@@ -108,10 +108,10 @@ t_int *shoehorn_perform(t_int *w)
 	int chan,i, j;
     long outIndex;
     long *indexList = x->indexList;
-    
+
     int n = (int) w[inChans + outChans + 2];
     // assign output vector pointers
-    
+
     for(i = 0; i < outChans; i++){
         outs[i] = (t_float *) w[2 + inChans + i];
     }
@@ -123,25 +123,25 @@ t_int *shoehorn_perform(t_int *w)
             loc_invecs[i][j] = invec[j];
         }
     }
-   
+
 	for( j = 0; j < n; j++){
         // copy local input sample frame
         for(chan = 0; chan < inChans; chan++){
             inarr[chan] = loc_invecs[chan][j];
         }
-        
+
         // zero out output channels
         for(chan = 1; chan < outChans - 1; chan++){
             outs[chan][j] = 0.0;
         }
-        
+
         // copy outer channel samples directly
-        
+
         outs[0][j] = inarr[0];
         outs[outChans - 1][j] = inarr[inChans - 1];
-        
+
         // spread internal input channels to respective output channels
-        
+
         for(chan = 1; chan < inChans - 1; chan++){
             outIndex = indexList[chan];
             outs[outIndex][j] += pangains1[chan] * inarr[chan];

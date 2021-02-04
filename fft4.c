@@ -33,10 +33,10 @@ void rdft(int n, int isgn, float *a, int *ip, float *w)
 		cftsub(int n, float *a, float *w),
 		rftsub(int n, float *a, int nc, float *c);
 
-    
+
   nw = ip[0];
   nc = ip[1];
-  
+
   if (isgn < 0) {
     a[1] = 0.5 * (a[1] - a[0]);
     a[0] += a[1];
@@ -80,7 +80,7 @@ void bitrv2(int n, int *ip, float *a)
 {
   int j, j1, k, k1, l, m, m2;
   float xr, xi;
-    
+
   ip[0] = 0;
   l = n;
   m = 1;
@@ -143,7 +143,7 @@ void cftsub(int n, float *a, float *w)
   int j, j1, j2, j3, k, k1, ks, l, m;
   float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
   float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
-    
+
   l = 2;
 
   while ((l << 1) < n) {
@@ -265,7 +265,7 @@ void rftsub(int n, float *a, int nc, float *c)
 {
   int j, k, kk, ks;
   float wkr, wki, xr, xi, yr, yi;
-    
+
   ks = (nc << 2) / n;
   kk = 0;
 
@@ -291,7 +291,7 @@ void makewt(int nw, int *ip, float *w)
     void bitrv2(int n, int *ip, float *a);
     int nwh, j;
     float delta, x, y;
-    
+
     ip[0] = nw;
     ip[1] = 1;
     if (nw > 2) {
@@ -318,7 +318,7 @@ void makect(int nc, int *ip, float *c)
 {
     int nch, j;
     float delta;
-    
+
     ip[1] = nc;
     if (nc > 1) {
         nch = nc >> 1;

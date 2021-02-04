@@ -44,7 +44,7 @@ void *sel_new(t_symbol *msg, short argc, t_atom *argv)
 	for(i=0;i< x->length ;i++){
         outlet_new(&x->x_obj, gensym("signal"));
     }
-    
+
 	x->matches = (t_double *) malloc(x->length * sizeof(double));
 
 	for(i = 0; i < argc; i++){
@@ -81,7 +81,7 @@ t_int *sel_perform(t_int *w)
 	t_int length = x->length;
 	
     int n = (int) w[length + 3]; // obj, func, 1 inlet
-    
+
     // copy input vectors (just 1 here)
     for(i = 0; i < 1; i++){
         invec = (t_float *) w[2 + i];
@@ -94,7 +94,7 @@ t_int *sel_perform(t_int *w)
     for(i = 0; i < length; i++){
         outs[i] = (t_float *) w[3 + i];
     }
-    
+
     // clean each outlet
 	for(j = 0; j < length; j++){
 		match_outlet = (t_double *) outs[j];

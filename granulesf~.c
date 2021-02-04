@@ -30,14 +30,14 @@ typedef struct {
 
 typedef struct _granulesf
 {
-    
+
     t_object x_obj;
     float x_f;
     t_pdbuffer *wavebuf; // holds waveform samples
     t_pdbuffer *windowbuf; // holds window samples
 	t_symbol *wavename; // name of waveform buffer
 	t_symbol *windowname; // name of window buffer
-    
+
 	float sr; // sampling rate
 	short mute;
 	short hosed; // buffers are bad
@@ -299,7 +299,7 @@ void granulesf_pitchspray(t_granulesf *x)
 	short constrain_scale = x->constrain_scale;
 	t_grain *grains = x->grains;
 	float tmp;
-    
+
 	if( steps < 2 ){
 		error("scale is undefined");
 		return;
@@ -321,7 +321,7 @@ void granulesf_pitchspray(t_granulesf *x)
     			grains[j].phase = 0.0;
     			grains[j].ephase = 0.0;
     			pan = granulesf_boundrand(minpan, maxpan);
-                
+
     			grains[j].amplitude = granulesf_boundrand(minamp, maxamp);
     			grains[j].panL = grains[j].amplitude * cos(pan * PIOVERTWO);
     			grains[j].panR = grains[j].amplitude * sin(pan * PIOVERTWO);
@@ -379,8 +379,8 @@ void granulesf_pitchspray(t_granulesf *x)
                     }
                     grains[j].endframe = grains[j].phase + grainframes - 1;
                 }
-                
-                
+
+
                 if( granulesf_boundrand(0.0,1.0) < retro_odds){//go backwards - make sure to test both boundaries
 				  	grains[j].si *= -1.0;
 				  	tmp = grains[j].phase;
@@ -447,7 +447,7 @@ void granulesf_spray(t_granulesf *x)
     			grains[j].panR = grains[j].amplitude * sin(pan * PIOVERTWO);
     			grains[j].amplitude *= .707;//used directly only for "nopan"
                 grains[j].si = transpose * granulesf_boundrand(min_incr, max_incr);
-                
+
                 grainframes = grains[j].duration * grains[j].si;//frames to be read from buffer
                 // grains[j].esi =  (float) eframes / (float) grainframes;
                 grains[j].esi =  (float) eframes / (float) grains[j].duration;
@@ -470,7 +470,7 @@ void granulesf_spray(t_granulesf *x)
                     }
                     grains[j].endframe = grains[j].phase + grainframes - 1;
                 }
-                
+
                 if( granulesf_boundrand(0.0,1.0) < retro_odds){//go backwards - make sure to test both boundaries
 				  	grains[j].si *= -1.0;
 				  	tmp = grains[j].phase;
@@ -554,10 +554,10 @@ void *granulesf_grain(t_granulesf *x, t_symbol *msg, short argc, t_atom *argv)
             return 0;
         }
     }
-    
+
     error("could not insert grain");
     return 0;
-    
+
 }
 
 float granulesf_boundrand(float min, float max)
@@ -575,28 +575,28 @@ void *granulesf_new(t_symbol *msg, short argc, t_atom *argv)
     x->wavebuf = (t_pdbuffer*)malloc(sizeof(t_pdbuffer));
     x->windowbuf = (t_pdbuffer*)malloc(sizeof(t_pdbuffer));
 	srand(time(0)); //need "seed" message
-    
+
 	x->pitchscale = (float *) t_getbytes(MAXSCALE * sizeof(float));
 	x->grains = (t_grain *) t_getbytes(MAXGRAINS * sizeof(t_grain));
 	
-    
+
 	// default names
 	x->wavename = gensym("waveform");
 	x->windowname = gensym("window");
 
-    
+
     // apparently Pd lacks this Max/MSP bug
 	x->wavename = atom_getsymbolarg(0,argc,argv);
 	x->windowname = atom_getsymbolarg(1,argc,argv);
 
-    
+
 	x->sr = sys_getsr();
 	if(! x->sr )
 		x->sr = 44100;
-    
+
 	granulesf_init(x,0);
-    
-    
+
+
     return (x);
 }
 
@@ -706,14 +706,14 @@ void granulesf_setbuf(t_granulesf *x, t_symbol *wavename, t_symbol *windowname)
 {
     t_garray *a;
     int frames;
-    
+
     x->hosed = 0;
     x->wavebuf->b_frames = 0;
     x->windowbuf->b_frames = 0;
     x->wavebuf->b_nchans = 1;//unused, should kill
     x->windowbuf->b_nchans = 1;  //unused, should kill
     x->b_nchans = 1;
-    
+
     /* load up sample array */
     if (!(a = (t_garray *)pd_findbyclass(wavename, garray_class))) {
         if (*wavename->s_name) pd_error(x, "granulesf~: %s: no such array", wavename->s_name);
@@ -728,7 +728,7 @@ void granulesf_setbuf(t_granulesf *x, t_symbol *wavename, t_symbol *windowname)
         x->b_nchans = 1; // Pd buffers are always mono (so far)
         garray_usedindsp(a);
     }
-    
+
     /* load up envelope array*/
     if (!(a = (t_garray *)pd_findbyclass(windowname, garray_class))) {
         if (*wavename->s_name) pd_error(x, "granulesf~: %s: no such array", windowname->s_name);
@@ -742,7 +742,7 @@ void granulesf_setbuf(t_granulesf *x, t_symbol *wavename, t_symbol *windowname)
         x->windowbuf->b_frames = frames;
         garray_usedindsp(a);
     }
-    
+
     x->maxskip = x->wavebuf->b_frames - 1;
 }
 
@@ -786,22 +786,22 @@ t_int *granulesf_perform_no_interpolation(t_int *w)
 	long current_index;
 	int i,j;
 	
-    
+
 	/* grain parameters */
-    
-    
+
+
 	if( x->mute ){
 		while(n--) *outputL++ = *outputR++ = 0;
 		return (w+6);
 	}
-    
+
     // pre-clean buffer
 	for( i = 0; i < n; i++ ){
 		outputL[i] = outputR[i] = 0;
 	}
-    
+
 	for (j=0; j<MAXGRAINS; j++) {
-        
+
 		if(!grains[j].active){
 			goto nextgrain;
 		}
@@ -813,14 +813,14 @@ t_int *granulesf_perform_no_interpolation(t_int *w)
 		delay =  grains[j].delay;
 		panL = grains[j].panL;
 		panR = grains[j].panR;
-        
+
 		
 		for(i = 0; i < n; i++ ){
 			if( delay > 0 ){
 				--delay;
 			}
 			if( delay <= 0 && ephase < eframes){
-                
+
 				envelope = amplitude * window[(int)ephase].w_float;// interpolate please!
 				
 				if(b_nchans == 1){
@@ -852,10 +852,10 @@ t_int *granulesf_perform_no_interpolation(t_int *w)
 						outputR[i] += panR * sample2;
 					}
 				}
-                
+
                 /*this will be gritty so be sure to interpolate both envelope and sample-lookup */
 				
-                
+
 				phase += si;
 				if(phase < 0 || phase >= b_frames){
 					error("phase %f out of bounds",phase);
@@ -863,13 +863,13 @@ t_int *granulesf_perform_no_interpolation(t_int *w)
 					goto nextgrain;
 				}
 				ephase += esi;
-                
-                
+
+
 				if( ephase >= eframes ){
 					grains[j].active = 0;
 					goto nextgrain; // must escape loop now
 				}
-                
+
 			}
 		}
 		grains[j].phase = phase;
@@ -878,7 +878,7 @@ t_int *granulesf_perform_no_interpolation(t_int *w)
 		
     nextgrain: ;
 	}
-    
+
 	return (w+6);
 }
 
@@ -918,14 +918,14 @@ t_int *granulesf_perform(t_int *w)
 		while(n--) *outputL++ = *outputR++ = 0;
 		return (w+6);
 	}
-    
+
     // pre-clean buffer
 	for( i = 0; i < n; i++ ){
 		outputL[i] = outputR[i] = 0;
 	}
-    
+
 	for (j=0; j<MAXGRAINS; j++) {
-        
+
 		if(!grains[j].active){
 			goto nextgrain;
 		}
@@ -937,14 +937,14 @@ t_int *granulesf_perform(t_int *w)
 		delay =  grains[j].delay;
 		panL = grains[j].panL;
 		panR = grains[j].panR;
-        
+
 		
 		for(i = 0; i < n; i++ ){
 			if( delay > 0 ){
 				--delay;
 			}
 			if( delay <= 0 && ephase < eframes){
-                
+
                 if(interpolate_envelope){
                     current_index = floor((double)ephase);
                     frac = ephase - current_index;
@@ -1002,7 +1002,7 @@ t_int *granulesf_perform(t_int *w)
                         tsmp2 = wavetable[current_index + 3].w_float;
                         sample2 = tsmp1 + frac * (tsmp2 - tsmp1);
 					}
-                    
+
 					sample1 *= envelope;
 					sample2 *= envelope;
 					
@@ -1022,14 +1022,14 @@ t_int *granulesf_perform(t_int *w)
 					goto nextgrain;
 				}
 				ephase += esi;
-                
-                
+
+
 				if( ephase >= eframes ){
 					grains[j].active = 0;
 					goto nextgrain; // must escape loop now
 				}
-                
-			} 
+
+			}
 		} 		
 		grains[j].phase = phase;
 		grains[j].ephase = ephase;
@@ -1048,12 +1048,12 @@ void granulesf_dsp_free(t_granulesf *x)
 
 void granulesf_dsp(t_granulesf *x, t_signal **sp)
 {
-    
+
 	granulesf_reload(x);
 	
 	if( x->hosed ){
 		post("You need some valid buffers");
-		dsp_add(granulesf_performhose, 5, x, 
+		dsp_add(granulesf_performhose, 5, x,
                 sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 		return;
 	}
@@ -1064,12 +1064,12 @@ void granulesf_dsp(t_granulesf *x, t_signal **sp)
 			x->sr = 44100;
 		}
 		granulesf_init(x,1);
-	} 
+	}
 	if(x->interpolate){
-		dsp_add(granulesf_perform, 5, x, 
+		dsp_add(granulesf_perform, 5, x,
                 sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 	} else {
-		dsp_add(granulesf_perform_no_interpolation, 5, x, 
+		dsp_add(granulesf_perform_no_interpolation, 5, x,
                 sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 	}
 }

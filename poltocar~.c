@@ -45,7 +45,7 @@ t_int *poltocar_perform(t_int *w)
 
     int n = (int) w[6]; // obj, func, 1 inlet
     int N2 = n/2;
-    
+
     for(i = 0; i < N2 + 1; i++){
         real = mag_in[i] * cos( phase_in[i] );
         if(i == N2){

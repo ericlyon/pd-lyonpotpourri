@@ -46,7 +46,7 @@ void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
  float sum ;
 
 
- 
+
  if (odd) {
     for ( i = 0 ; i < Nw ; i++ )
 	  H[i] = A[i] = S[i] = sqrt(0.54 - 0.46*cos( TWOPI*i/(Nw - 1) ));
@@ -88,13 +88,13 @@ void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
     }
 }
 
-  
+
 void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
 {
  int i;
  float sum ;
- 
- 
+
+
  if (odd) {
     for ( i = 0 ; i < Nw ; i++ )
 	  H[i] = A[i] = S[i] = sqrt(0.5 * (1. + cos(PI + TWOPI * i / (Nw - 1))));

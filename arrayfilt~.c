@@ -67,9 +67,9 @@ t_int *arrayfilt_perform(t_int *w)
     int a_frames = x->a_frames;
     int n = (int) w[6];
     int N2 = n / 2;
-    
+
     arrayfilt_setarray(x);
-    
+
     if(a_frames < N2+1) {
         goto exit;
     }

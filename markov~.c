@@ -7,7 +7,7 @@ static t_class *markov_class;
 
 typedef struct _markov
 {
-    
+
     t_object x_obj;
     float x_f;
     // for markov
@@ -22,7 +22,7 @@ typedef struct _markov
 	int event_samples;
 	int subdiv;
 	float tempo;
-    
+
 	float sr;
 	short manual_override;
 	short trigger;
@@ -77,7 +77,7 @@ void markov_bang(t_markov *x)
 void markov_values(t_markov *x, t_symbol *msg, short argc, t_atom *argv)
 {
 	int i;
-    
+
 	if( argc != x->event_count ){
 		error("there must be %d values in this list", x->event_count);
 		return;
@@ -92,9 +92,9 @@ void markov_event_odds(t_markov *x, t_symbol *msg, short argc, t_atom *argv)
 	int i;
 	int event;
 	float sum = 0.0;
-    
+
 	float **event_weights = x->event_weights;
-    
+
 	if( argc != x->event_count + 1){
 		error("there must be %d values in this list", x->event_count + 1);
 		return;
@@ -126,7 +126,7 @@ void markov_set_length(t_markov *x, t_floatarg length)
 		return;
 	}
 	x->event_count = length;
-    
+
 }
 
 void markov_tempo(t_markov *x, t_floatarg tempo)
@@ -145,7 +145,7 @@ void markov_subdiv(t_markov *x, t_floatarg subdiv)
 
 void *markov_new(t_floatarg event_count)
 {
-    
+
   	int i;
 
     t_markov *x = (t_markov *)pd_new(markov_class);
@@ -157,16 +157,16 @@ void *markov_new(t_floatarg event_count)
 		event_count = 16 ;
 	}
     x->maximum_length = event_count;
-    
+
     x->event_count = 4; // default pattern
     x->count = 0;
-    
+
     x->event_weights = (float **) malloc( event_count * sizeof(float *) );
   	for( i = 0; i < 10; i++ ){
     	x->event_weights[i] = (float *) malloc( event_count * sizeof(float) );
   	}
     x->values = (float *) malloc( event_count * sizeof(float) );
-    
+
 	x->current_event = 0;
     x->values[0] = 300;
     x->values[1] = 400;
@@ -199,9 +199,9 @@ void *markov_new(t_floatarg event_count)
 	}
 	x->subdiv = 1;
 	x->event_samples = x->sr * (60.0/x->tempo) / (float) x->subdiv;
-    
+
 	x->trigger = 0;
-    
+
     return (x);
 }
 
@@ -221,7 +221,7 @@ t_int *markov_perform(t_int *w)
 	int current_event = x->current_event;
 	float *values = x->values;
 	float current_value = x->current_value;
-    
+
 	
 	if( x->manual_override ){
 		while (n--) {
@@ -238,19 +238,19 @@ t_int *markov_perform(t_int *w)
 	}
 	
 	while (n--) {
-        
+
 		if( ++count >= event_samples ){
 			current_event = markov_domarkov( current_event, event_weights, event_count );
 			current_value = values[ current_event ];
 			count = 0;
 		}
-        
+
 		*sync++ = (float) count / (float) event_samples;
-        
+
 		*out++ = current_value;
-        
+
 	}
-    
+
 	x->current_value = current_value;
 	x->count = count;
 	x->current_event = current_event;
@@ -284,7 +284,7 @@ void markov_dsp(t_markov *x, t_signal **sp)
         x->event_samples = x->sr * (60.0/x->tempo) / (float) x->subdiv;
         x->count = 0;
     }
-    dsp_add(markov_perform, 5, x, sp[0]->s_vec , sp[1]->s_vec, sp[2]->s_vec, 
+    dsp_add(markov_perform, 5, x, sp[0]->s_vec , sp[1]->s_vec, sp[2]->s_vec,
             sp[0]->s_n);
 }
 

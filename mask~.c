@@ -23,7 +23,7 @@ typedef struct
 
 typedef struct _mask
 {
-    
+
     t_object x_obj;
     float x_f;
     short mute;// stops all computation (try z-disable)
@@ -120,8 +120,8 @@ void mask_showmask(t_mask *x, t_floatarg p){
     short found = 0;
     int i;
     int len;
-    
-    
+
+
     for(i = 0; i<x->pattern_count; i++){
         if(location == x->stored_masks[i]){
             found = 1;
@@ -134,7 +134,7 @@ void mask_showmask(t_mask *x, t_floatarg p){
         for(i = 0; i < len; i++){
             post("%d: %f",i,x->masks[location].pat[i]);
         }
-        
+
     } else {
         error("no pattern stored at location %d",location);
     }
@@ -145,8 +145,8 @@ void mask_recall(t_mask *x, t_floatarg p)
     int i;
     int location = p;
     short found = 0;
-    
-    
+
+
     for(i = 0; i < x->pattern_count; i++){
         if(location == x->stored_masks[i]){
             found = 1;
@@ -167,7 +167,7 @@ void mask_recall(t_mask *x, t_floatarg p)
 void mask_sequence(t_mask *x, t_symbol *msg, short argc, t_atom *argv)
 {
     int i;
-    
+
 	if(argc > MAXSEQ){
 		error("%d exceeds possible length for a sequence",argc);
 		return;
@@ -196,7 +196,7 @@ void mask_addmask(t_mask *x, t_symbol *msg, short argc, t_atom *argv)
 {
     int location;
     int i;
-    
+
     if(argc < 2){
         error("must specify location and mask");
         return;
@@ -240,21 +240,21 @@ void *mask_new(t_symbol *msg, short argc, t_atom *argv)
     int i;
     t_mask *x = (t_mask *)pd_new(mask_class);
     outlet_new(&x->x_obj, gensym("signal"));
-    
+
     x->masks = (t_maskpat *) malloc(MAXMASKS * sizeof(t_maskpat));
     x->stored_masks = (int *) malloc(MAXMASKS * sizeof(int));
-    
+
     x->sequence.seq = (int *) malloc(MAXSEQ * sizeof(int));
-    
-    
+
+
     /* this should be vector size, and possibly realloced in dsp routine if size changes */
     x->in_vec = (float *) malloc(8192 * sizeof(float));
-    
+
     x->sequence.length = 0; // no sequence by default
     x->sequence.phase = 0; //
-    
+
     //	post("allocated %d bytes for basic mask holder",MAXMASKS * sizeof(t_maskpat));
-    
+
     x->current_mask = -1; // by default no mask is selected
     for(i=0; i<MAXMASKS; i++){
         x->stored_masks[i] = -1; // indicates no pattern stored
@@ -278,7 +278,7 @@ void *mask_new(t_symbol *msg, short argc, t_atom *argv)
     x->phaselock = 0;// by default do NOT use a common phase for all patterns
     x->phase = 0;
     x->noloop = 0;
-    
+
     return x;
 }
 
@@ -290,7 +290,7 @@ t_int *mask_perform(t_int *w)
     float *inlet = (t_float *) (w[2]);
     float *outlet = (t_float *) (w[3]);
     int n = (int) w[4];
-    
+
     int phase = x->phase;
     short gate = x->gate;
     short indexmode = x->indexmode;
@@ -299,13 +299,13 @@ t_int *mask_perform(t_int *w)
     t_maskpat *masks = x->masks;
     t_sequence sequence = x->sequence;
     float *in_vec = x->in_vec;
-    
-    
+
+
     if( x->mute || current_mask < 0){
         while(n--) *outlet++ = 0;
         return (w+5);
     }
-    
+
     // should use memcpy() here
     for(i = 0; i < n; i++){
         in_vec[i] = inlet[i];
@@ -314,7 +314,7 @@ t_int *mask_perform(t_int *w)
     for( i = 0; i < n; i++){
         outlet[i] = 0.0;
     }
-    
+
     for(i = 0; i<n; i++){
         if(in_vec[i]){ // got a click
             if(indexmode){ // indexmode means the click itself controls the phase of the mask
@@ -346,7 +346,7 @@ t_int *mask_perform(t_int *w)
 						sequence.phase = 0;
 				}
             }
-        } 
+        }
     }
 out:
     x->phase = phase;

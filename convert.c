@@ -25,7 +25,7 @@ void convert(float *S, float *C, int N2, float *lastphase, float fundamental, fl
 
 /*  float myTWOPI, myPI; */
 /*  double sin(), cos(), atan(), hypot();*/
-  
+
 /*  myTWOPI = 8.*atan(1.);
   myPI = 4.*atan(1.); */
 

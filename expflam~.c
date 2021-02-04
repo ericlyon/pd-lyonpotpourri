@@ -96,12 +96,12 @@ void *expflam_new(void)
 	t_expflam *x = (t_expflam *)pd_new(expflam_class);
 	inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
 	outlet_new(&x->x_obj, gensym("signal"));
-	x->flams = (t_flam *) calloc(MAXFLAMS, sizeof(t_flam));   
+	x->flams = (t_flam *) calloc(MAXFLAMS, sizeof(t_flam));
 	for(i = 0; i < MAXFLAMS; i++){
 	  	x->flams[i].attack_times = (float *) calloc(MAXATTACKS, sizeof(float));
 	  	x->flams[i].attack_points = (int *) calloc(MAXATTACKS, sizeof(int));
 	}
-	   
+	
 	x->trigvec = malloc(8192 * sizeof(float)); // maximum vector size
 	x->bypvec = malloc(8192 * sizeof(float)); // maximum vector size
     x->sr = sys_getsr();
@@ -190,7 +190,7 @@ t_int *expflam_perform(t_int *w)
 	for(i = 0; i < n; i++){
 		if(trigvec[i] && (flamgate_vec[i] || ! flamgate_connected || flamall ) ){	
 //		post("triggered with t %f and flamgate %f",trigvec[i],flamgate_vec[i]);
-			j = 0;  
+			j = 0;
 			while(flams[j].active && j < MAXFLAMS){
 				++j;
 			}
@@ -244,9 +244,9 @@ void expflam_dsp(t_expflam *x, t_signal **sp)
 
 	x->flamgate_connected = 1;
 	dsp_add(expflam_perform, 5, x,
-			sp[0]->s_vec, 
+			sp[0]->s_vec,
 			sp[1]->s_vec,
-			sp[2]->s_vec,  
+			sp[2]->s_vec,
 			sp[0]->s_n
 	);
 }
