@@ -189,7 +189,6 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
 	long N2 = x->N2;
 	long i, j, ip, ip1;
 	long ifr_cnt = 0, ofr_cnt = 0;
-	long inframes, outframes;
 	int target_frames = 2;
 	short copacetic; // loop enabler
 	float a,b,temp,max=0.0,gain=1.0; //,thresh=.0000000001,fmag;
@@ -229,8 +228,8 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
 	--source_chan;
 	--impulse_chan;
 	--dest_chan;
-	inframes = source->b_frames;
-	outframes = dest->b_frames;
+	//inframes = source->b_frames;
+	//outframes = dest->b_frames;
 	// initialization routine (move out and only do once)
 	for( N2 = 2; N2 < NCMAX; N2 *= 2){
 		if( N2 >= impulse->b_frames )
@@ -406,15 +405,13 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
 
 void convolver_noiseimp(t_convolver *x, t_floatarg curve)
 {
-	long b_nchans;
 	long b_frames;
 	t_word *b_samples;
 	float sr = x->sr;
 	int i;
 	int count;
 //	int position;
-	float gain, guess;
-	float dur;
+	float guess;
 	float level = 1.0, endLevel = 0.001;
 	float grow, a1, a2, b1;
 
@@ -423,7 +420,7 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
 	}
 	// let's be current
 	convolver_attach_buffers(x);
-	b_nchans = x->impulse->b_nchans;
+	//b_nchans = x->impulse->b_nchans;
 	b_frames = x->impulse->b_frames;
 	b_samples = x->impulse->b_samples;
 	// chan test
@@ -432,7 +429,7 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
 		return;
 	}
 	// zero out buffer
-	dur = (float) b_frames / sr;
+	//dur = (float) b_frames / sr;
 	count = b_frames;
 	if(b_frames < 20){
 		post("impulse buffer too small!");
@@ -451,7 +448,7 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
 	b1 = a1;	
 	for( i = 0; i < b_frames; i++ ){
 		guess = boundrand(-1.0, 1.0);
-		gain = 1. - guess;
+		//gain = 1. - guess;
 
 		b1 = b1 * grow;
 		level = a2 - b1;

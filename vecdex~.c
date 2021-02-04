@@ -49,7 +49,6 @@ void *vecdex_new(t_symbol *msg, short argc, t_atom *argv)
 
 t_int *vecdex_perform(t_int *w)
 {
-	t_vecdex *x = (t_vecdex *) (w[1]);
 //	t_float *input = (t_float *) (w[2]);
 	t_float *output = (t_float *) (w[3]);
 	int n = (int) w[4];

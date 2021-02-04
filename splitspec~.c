@@ -625,7 +625,6 @@ void splitspec_showstate (t_splitspec *x ) {
 void splitspec_dsp(t_splitspec *x, t_signal **sp)
 {
     int i;
-    float R, funda;
     int vector_size;
     t_int **sigvec;
     int pointer_count;
@@ -664,9 +663,9 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
         x->N = sp[0]->s_n;
         x->N2 = sp[0]->s_n / 2;
  //       post("FFT size is %d, N2 is %d",x->N, x->N2);
-        R = sys_getsr();
+        //R = sys_getsr();
 //        post("sampling rate: %f, vector thinks it is: %f", sys_getsr(), sp[0]->s_sr);
-        funda = R / (2. * (float) x->N) ;
+        //funda = R / (2. * (float) x->N) ;
 
         if(x->initialize){
             x->list_data = (t_atom *) calloc((x->N + 2),sizeof(t_atom));

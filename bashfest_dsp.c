@@ -172,8 +172,6 @@ void comber(t_bashfest *x, int slot, int *pcount)
   int buf_frames = x->buf_frames;
   int out_frames ;
   float overhang, revtime, delay ;
-  //  float *comb1, *comb2;
-  int combsamps;
   int i;
   int fade_frames;
   float fadegain;
@@ -210,7 +208,7 @@ void comber(t_bashfest *x, int slot, int *pcount)
     out_frames = buf_frames / 2 ;
   }
 
-  combsamps = delay * srate + 20 ;
+  //combsamps = delay * srate + 20 ;
   mycombset(delay,revtime,0,delayline1,srate);
   if( channels == 2 )
     mycombset(delay,revtime,0,delayline2,srate);
@@ -567,7 +565,6 @@ void sweepreson(t_bashfest *x, int slot, int *pcount)
 void slidecomb(t_bashfest *x, int slot, int *pcount)
 {
   float overhang, feedback, delay1, delay2;
-//  int combsamps;
   int i;
   int fade_frames;
   float fadegain;

@@ -36,7 +36,6 @@ void *poltocar_new(t_symbol *msg, short argc, t_atom *argv)
 t_int *poltocar_perform(t_int *w)
 {
     int i;
-    t_poltocar *x = (t_poltocar *) w[1];
     t_float *mag_in = (t_float *) w[2];
     t_float *phase_in = (t_float *) w[3];
     t_float *real_out = (t_float *) w[4];

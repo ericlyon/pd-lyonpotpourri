@@ -36,7 +36,6 @@ void *cartopol_new(t_symbol *msg, short argc, t_atom *argv)
 t_int *cartopol_perform(t_int *w)
 {
     int i;
-    t_cartopol *x = (t_cartopol *) w[1];
     t_float *real_in = (t_float *) w[2];
     t_float *imag_in = (t_float *) w[3];
     t_float *mag_out = (t_float *) w[4];
