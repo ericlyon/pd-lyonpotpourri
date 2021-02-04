@@ -214,15 +214,15 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
 		return;
 	}
 	if( source_chan > source->b_nchans ){
-		error("%s: source channel %d out of range", OBJECT_NAME, source_chan);
+		error("%s: source channel %ld out of range", OBJECT_NAME, source_chan);
 		return;
 	}
 	if( impulse_chan > impulse->b_nchans ){
-		error("%s: impulse channel %d out of range", OBJECT_NAME, impulse_chan);
+		error("%s: impulse channel %ld out of range", OBJECT_NAME, impulse_chan);
 		return;
 	}
 	if( dest_chan > dest->b_nchans ){
-		error("%s: dest channel %d out of range", OBJECT_NAME, dest_chan);
+		error("%s: dest channel %ld out of range", OBJECT_NAME, dest_chan);
 		return;
 	}
 	--source_chan;
@@ -497,7 +497,7 @@ void convolver_spikeimp(t_convolver *x, t_floatarg density)
 			}
 			position = (int) (dur * guess * guess * sr) * b_nchans + j;
 			if( position >= b_frames * b_nchans ){
-				error("%d exceeds %d",position, b_frames * b_nchans);
+				error("%d exceeds %ld",position, b_frames * b_nchans);
 			} else{
 				b_samples[ position ].w_float = gain;
 			}
