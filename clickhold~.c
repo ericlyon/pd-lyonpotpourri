@@ -46,7 +46,7 @@ t_int *clickhold_perform(t_int *w)
 		if(*in_vec){
 			hold_value = *in_vec;
 		}
-		*in_vec++;
+		in_vec++;
 		*out_vec++ = hold_value;
 
 	}

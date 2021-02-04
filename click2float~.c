@@ -56,7 +56,7 @@ t_int *click2float_perform(t_int *w)
 			x->float_value = *in_vec;
 			clock_delay(x->clock, 0);
 		}
-		*in_vec++;
+		in_vec++;
 	}
 	return (w+4);
 }

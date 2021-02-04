@@ -183,7 +183,7 @@ t_int *vdp_perform(t_int *w)
 		while( n-- ){
 			read_ptr = write_ptr;
 			outsamp = *read_ptr;
-			*write_ptr++;
+			write_ptr++;
 			if( write_ptr >= endmem ){
 				write_ptr = startmem;
 			}
