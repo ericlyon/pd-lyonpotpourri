@@ -10,7 +10,7 @@ static t_class *waveshape_class;
 
 typedef struct _waveshape
 {
-    
+
     t_object x_obj;
     float x_f;
     int flen;
@@ -64,7 +64,7 @@ void waveshape_list (t_waveshape *x, t_symbol *msg, short argc, t_atom *argv)
 		}
 	}
 	update_waveshape_function( x );
-    
+
 }
 
 void waveshape_mute(t_waveshape *x, t_floatarg tog)
@@ -76,7 +76,7 @@ void *waveshape_new(void)
 {
     t_waveshape *x = (t_waveshape *)pd_new(waveshape_class);
     outlet_new(&x->x_obj, gensym("signal"));
-    
+
 	x->flen = 1<<16 ;
 	x->wavetab = (float *) calloc( x->flen, sizeof(float) );
 	x->tempeh = (float *) calloc( x->flen, sizeof(float) );
@@ -113,7 +113,7 @@ void update_waveshape_function( t_waveshape *x ) {
 			min = x->tempeh[j];
 		if( max < x->tempeh[j] )
 			max = x->tempeh[j];
-        
+
 	}
     //	post("min:%f, max:%f",min,max);
     // normalize from -1 to +1
@@ -160,7 +160,7 @@ t_int *waveshape_perform(t_int *w)
 		windex = ((insamp + 1.0)/2.0) * (float)flenm1 ;
 		*out++ = wavetab[windex] ;
 	}
-    
+
 	return (w+5);
 }
 

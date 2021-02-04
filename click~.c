@@ -22,7 +22,7 @@ void click_set(t_click *x, t_floatarg f);
 #define NO_FREE_FUNCTION 0
 void click_tilde_setup(void)
 {
-	click_class = class_new(gensym("click~"), (t_newmethod)click_new, 
+	click_class = class_new(gensym("click~"), (t_newmethod)click_new,
 								 NO_FREE_FUNCTION,sizeof(t_click), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(click_class, t_click, x_f);
 	class_addmethod(click_class, (t_method)click_dsp, gensym("dsp"), 0);
@@ -31,7 +31,7 @@ void click_tilde_setup(void)
 	potpourri_announce(OBJECT_NAME);
 }
 
-void click_bang(t_click *x) 
+void click_bang(t_click *x)
 {
   x->status = 1;
 }
@@ -62,7 +62,7 @@ t_int *click_perform(t_int *w)
 		for(i = 1; i < n; i++){
 			output[i] = 0.0;
 		}
-	} 
+	}
 	else {
 		for(i = 0; i < n; i++){
 			output[i] = 0.0;

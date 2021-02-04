@@ -53,7 +53,7 @@ void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd );
 void fold( float *I, float *W, int Nw, float *O, int N, int n );
 void makewindows( float *H, float *A, float *S, int Nw, int N, int I );
 /*
-void squash_perform64(t_squash *x, t_object *dsp64, double **ins, 
+void squash_perform64(t_squash *x, t_object *dsp64, double **ins,
                       long numins, double **outs,long numouts, long n,
                       long flags, void *userparam);
 void squash_dsp64(t_squash *x, t_object *dsp64, short *count, double sr, long n, long flags);
@@ -94,7 +94,7 @@ void squash_tilde_setup(void){
 
 void *squash_new(t_symbol *msg, short argc, t_atom *argv)
 {
-    
+
     t_squash *x = (t_squash *)pd_new(squash_class);
 	outlet_new(&x->x_obj, gensym("signal"));
 	
@@ -400,7 +400,7 @@ void squash_dsp(t_squash *x, t_signal **sp)
 
 #define DIAG 0
 
-/*  compression/expansion routine! */ 
+/*  compression/expansion routine! */
 	
 double squash_squat( float *buffer, float thresh, float ratio, float nt, float nmult, int N )
 {

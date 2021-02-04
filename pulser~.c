@@ -37,7 +37,7 @@ void pulser_float(t_pulser *x, double f);
 void pulser_free(t_pulser *x);
 
 void pulser_tilde_setup(void){
-  pulser_class = class_new(gensym("pulser~"), (t_newmethod)pulser_new, 
+  pulser_class = class_new(gensym("pulser~"), (t_newmethod)pulser_new,
 			    (t_method)pulser_free,sizeof(t_pulser), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(pulser_class, t_pulser, x_f);
   class_addmethod(pulser_class,(t_method)pulser_dsp,gensym("dsp"),0);
@@ -85,14 +85,14 @@ void *pulser_new(t_symbol *s, int argc, t_atom *argv)
   x->components = 8;
   x->frequency = 440.0;
   x->pulsewidth = 0.5;
-  
+
   if( argc > 0 )
     x->frequency = atom_getfloatarg(0,argc,argv);
   if( argc > 1 )
     x->components = atom_getfloatarg(1,argc,argv);
 			
   x->si_fac = ((float)FUNC_LEN/x->sr) ;
-  
+
   if(x->components <= 0 || x->components > MAX_COMPONENTS){
   	error("%d is an illegal number of components, setting to 8",x->components );
   	x->components = 8;
@@ -133,7 +133,7 @@ t_int *pulser_perform(t_int *w)
   float pulsewidth = x->pulsewidth;
   float frequency = x->frequency;
   short *connected = x->connected;
-  
+
   if( x->mute )
   {
   	while( n-- ){
@@ -141,10 +141,10 @@ t_int *pulser_perform(t_int *w)
   	}
   	return (w+6);
   }
-  
+
   incr = frequency * si_fac;
-  
-  while (n--) { 
+
+  while (n--) {
 
     if( connected[1] ){
     	pulsewidth = *pulsewidth_vec++;
@@ -154,23 +154,23 @@ t_int *pulser_perform(t_int *w)
       pulsewidth = 0;
     if( pulsewidth > 1 )
       pulsewidth = 1;
-    
+
     if( connected[0] ){
       incr = *frequency_vec++ * si_fac ;
     }
- 
+
     outsamp = 0;
-    
+
     for( i = 0, j = 1; i < components; i++, j++ ){
 
       lookdex = (float)FUNC_LEN_OVER2 * pulsewidth * (float)j;
- 
+
       while( lookdex >= FUNC_LEN ){
 				lookdex -= FUNC_LEN;
 		  }
- 
+
       gain = wavetab[ lookdex ] ;
- 
+
       phases[i] += incr * (float) j;
       while( phases[i] < 0.0 ) {
 				phases[i] += FUNC_LEN;
@@ -181,7 +181,7 @@ t_int *pulser_perform(t_int *w)
       outsamp += gain * wavetab[ (int) phases[i] ];
 		
     }
-    *out++ =  outsamp * global_gain; 
+    *out++ =  outsamp * global_gain;
   }
 
   //	x->bendphs = bendphs;

@@ -62,7 +62,7 @@ void atom_arg_getfloat(float *c, long idx, long ac, t_atom *av);
 void atom_arg_getsym(t_symbol **c, long idx, long ac, t_atom *av);
 
 void adsr_tilde_setup(void){
-	adsr_class = class_new(gensym("adsr~"), (t_newmethod)adsr_new, 
+	adsr_class = class_new(gensym("adsr~"), (t_newmethod)adsr_new,
 						   0,sizeof(t_adsr), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(adsr_class, t_adsr, x_f);
 	class_addmethod(adsr_class,(t_method)adsr_dsp,gensym("dsp"),0);
@@ -183,7 +183,7 @@ void adsr_list (t_adsr *x, t_atom *msg, short argc, t_atom *argv)
     t_atom *fraud; // make compiler happy
     fraud = msg;
 	x->rsamps = x->tsamps - (x->asamps+x->dsamps+x->ssamps);	
-	if( x->rsamps < 0 ) 
+	if( x->rsamps < 0 )
 		x->rsamps = 0;
 	
 	x->a = (atom_getfloatarg(0,argc,argv)) * .001;
@@ -212,7 +212,7 @@ static void *adsr_new(t_symbol *s, int argc, t_atom *argv)
     fraud = s;
 	outlet_new(&x->x_obj, gensym("signal"));
 	
-   
+
 	x->srate = sys_getsr();
 	if(!x->srate){
 		error("zero sampling rate, setting to 44100");
@@ -276,7 +276,7 @@ t_int *adsr_perform(t_int *w)
 	float input_val;
 	/*********************************************/	
 	if(x->mute){
-		while(n--) *out++ = 0.0; 
+		while(n--) *out++ = 0.0;
 		return w+5;
 	}
 	while(n--) {

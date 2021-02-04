@@ -9,7 +9,7 @@ long rand_state = 0 ;
 
 /* still needs implementation for mono. Also update to use rand() function.
  Also free memory function. Change from pre-inc/dec to normal form.
- 
+
  Obviously this is a legacy external. Chopper probably does everything stutter does
  only better.
  */
@@ -91,7 +91,7 @@ float erand(void);
 t_symbol *ps_buffer;
 
 void stutter_tilde_setup(void){
-	stutter_class = class_new(gensym("stutter~"), (t_newmethod)stutter_new, 
+	stutter_class = class_new(gensym("stutter~"), (t_newmethod)stutter_new,
 								NO_FREE_FUNCTION,sizeof(t_stutter), 0,A_GIMME,0);
 	CLASS_MAINSIGNALIN(stutter_class, t_stutter, x_f);
 	class_addmethod(stutter_class,(t_method)stutter_dsp,gensym("dsp"),0);
@@ -170,7 +170,7 @@ t_int *stutter_perform(t_int *w)
 	t_float sdev, ldev, startdev, st_dev;
 	
 	stutter_setarray(x);
-    
+
 	if(x->mute_me || ! x->b_valid) {
 		while( n-- ) {
 			*out1++ = 0.0;
@@ -223,7 +223,7 @@ t_int *stutter_perform(t_int *w)
 				}
 				if(  ( --echos <= 0 ) && ( ! lock_loop ) ) {
 					echos = (int)boundrand((float)x->min_echo,(float)x->max_echo);
-					samps_to_go = loop_samps = 
+					samps_to_go = loop_samps =
 					loop_min_samps + ( erand() * (float)(loop_max_samps-loop_min_samps) ) ;
 					loop_start = erand() * (b_frames - loop_samps) ;
 				} else {
@@ -458,7 +458,7 @@ void stutter_minmax_echo(t_stutter *x,  t_floatarg minf, t_floatarg maxf)
 {
     int minec = (int)minf;
     int maxec = (int)maxf;
-    
+
     if( minec < maxec){
         x->min_echo = minec;
         x->max_echo - maxec;
@@ -476,7 +476,7 @@ void stutter_init(t_stutter *x,short initialized)
 	if(!initialized){
 		x->loop_min_samps = x->loop_min_duration * (float)x->R;
 		x->loop_max_samps = x->loop_max_duration * (float)x->R;
-		x->samps_to_go = x->loop_samps = x->loop_min_samps + 
+		x->samps_to_go = x->loop_samps = x->loop_min_samps +
 		(erand() * (float)(x->loop_max_samps-x->loop_min_samps) ) ;
 		
 		x->loop_start = 0;
@@ -502,7 +502,7 @@ void stutter_init(t_stutter *x,short initialized)
 	} else {
 		x->loop_min_samps = x->loop_min_duration * (float)x->R;
 		x->loop_max_samps = x->loop_max_duration * (float)x->R;
-		x->samps_to_go = x->loop_samps = x->loop_min_samps + 
+		x->samps_to_go = x->loop_samps = x->loop_min_samps +
 		(erand() * (float)(x->loop_max_samps - x->loop_min_samps)) ;
 		x->loop_start = 0;
 		x->b_index = x->loop_start;

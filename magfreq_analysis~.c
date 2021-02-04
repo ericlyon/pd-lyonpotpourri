@@ -7,7 +7,7 @@ static t_class *magfreq_analysis_class;
 
 typedef struct _magfreq_analysis
 {
-    
+
 	t_object x_obj;
 	float x_f;
 	int R;
@@ -217,7 +217,7 @@ void magfreq_analysis_init(t_magfreq_analysis *x, short initialized)
 	x->mult = 1. / (float) x->N;
 	x->pitch_connected = 0;
 	x->synt_connected = 0;
-    
+
 	x->L = 8192 ;
 	x->c_fundamental =  (float) x->R/(float)( (x->N2)<<1 );
 	x->c_factor_in =  (float) x->R/((float)x->D * TWOPI);
@@ -246,7 +246,7 @@ void magfreq_analysis_init(t_magfreq_analysis *x, short initialized)
 		x->ffac = x->P * PI/MAX_N;
 		x->mute = 0;
         //		x->threshgen = .0001;
-        
+
 	}
 	memset((char *)x->input,0,x->Nw * sizeof(float));
 	memset((char *)x->output,0,x->Nw * sizeof(float));
@@ -255,7 +255,7 @@ void magfreq_analysis_init(t_magfreq_analysis *x, short initialized)
 	memset((char *)x->lastamp,0,(x->N+1) * sizeof(float));
 	memset((char *)x->lastfreq,0,(x->N+1) * sizeof(float));
 	memset((char *)x->index,0,(x->N+1) * sizeof(float));
-    
+
 	for ( i = 0; i < x->L; i++ ) {
 		x->table[i] = (float) x->N * cos((float)i * TWOPI / (float)x->L);
 	}
@@ -298,8 +298,8 @@ void *magfreq_analysis_new(t_symbol *s, int argc, t_atom *argv)
 		x->lofreq = 0;
 	if(x->hifreq <50 || x->hifreq> 22050)
 		x->hifreq = 4000;
-    
-    
+
+
 	if(!power_of_two(x->overlap)){
 		x->overlap = 4;
 	}
@@ -335,7 +335,7 @@ t_int *magfreq_analysis_perform(t_int *w)
 	int *bitshuffle = x->bitshuffle;
 	float *trigland = x->trigland;
 	float *lastphase_in = x->c_lastphase_in;
-    
+
 	
 	float *Wanal = x->Wanal;
 	float *input = x->input;;
@@ -352,7 +352,7 @@ t_int *magfreq_analysis_perform(t_int *w)
 		}
 		return w+7;
 	}
-    
+
 	
 	if (x->bypass_state) {
 		for( j = 0; j < n; j++ ) {
@@ -387,10 +387,10 @@ t_int *magfreq_analysis_perform(t_int *w)
         freq = ( amp = ( chan << 1 ) ) + 1;
         frequency_vec[chan] = channel[freq];
         magnitude_vec[chan] = channel[amp];
-        
+
     	index_vec[chan] = chan;
 	}
-    
+
 	
 	
     // restore state variables

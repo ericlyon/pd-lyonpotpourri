@@ -35,7 +35,7 @@ typedef struct _sarec
 	float sr;
     float syncphase;
 	t_symbol *bufname; // name of recording buffer
-    t_garray *recbuf; 
+    t_garray *recbuf;
 } t_sarec;
 
 
@@ -90,9 +90,9 @@ void *sarec_new(t_symbol *bufname)
 {
 	int i;
 	int chans;
-    
+
     chans = 1; // mono processing only in Pd
-    
+
 	t_sarec *x = (t_sarec *)pd_new(sarec_class);
 	inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
     outlet_new(&x->x_obj, gensym("signal"));
@@ -232,7 +232,7 @@ t_int *sarec_perform(t_int *w)
 					} else if ( counter_msf >= (regionsamps - fadesamps) ){
 						frak = (float) (regionsamps - counter_msf) / (float) fadesamps;
 						// fade out
-                        
+
 						// frak = (float)counter_msf / (float)fadesamps;
 						goin_up = cos(PIOVERTWO * frak);
 						goin_down = sin(PIOVERTWO * frak);
@@ -348,7 +348,7 @@ void sarec_regionsamps(t_sarec *x, t_floatarg start_frame, t_floatarg end_frame)
 
 void sarec_attach_buffer(t_sarec *x)
 {
-	t_garray *a; 
+	t_garray *a;
 	t_symbol *bufname = x->bufname;
 	int b_frames;
 	float *b_samples = x->b_samples;
@@ -394,7 +394,7 @@ void sarec_dsp(t_sarec *x, t_signal **sp)
 		sigvec[i] = (t_int *)sp[i-1]->s_vec;
 	}
 	x->sr = sp[0]->s_sr;
-    
+
 	dsp_addv(sarec_perform, pointer_count, (t_int *) sigvec);
 	free(sigvec);	
 }

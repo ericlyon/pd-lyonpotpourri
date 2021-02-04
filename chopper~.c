@@ -37,7 +37,7 @@ typedef struct _chopper
   short disabled;
   int setup_chans;
   int *stored_starts;
-  int *stored_samps;   
+  int *stored_samps;
   float *stored_increments;
   short preempt;
   short loop_engaged;
@@ -126,7 +126,7 @@ void chopper_seed(t_chopper *x, t_floatarg seed)
 }
 
 void chopper_tilde_setup(void){
-  chopper_class = class_new(gensym("chopper~"), (t_newmethod)chopper_new, 
+  chopper_class = class_new(gensym("chopper~"), (t_newmethod)chopper_new,
       (t_method)chopper_free ,sizeof(t_chopper), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(chopper_class, t_chopper, x_f);
   class_addmethod(chopper_class,(t_method)chopper_dsp,gensym("dsp"),0);
@@ -158,7 +158,7 @@ void chopper_tilde_setup(void){
 void chopper_increment_adjust(t_chopper *x, t_floatarg toggle)
 {
   x->increment_adjusts_loop = (short)toggle;
-  
+
 }
 
 void chopper_adjust_inverse(t_chopper *x, t_floatarg toggle)
@@ -177,9 +177,9 @@ void chopper_fixed_increment(t_chopper *x, t_floatarg f)
   } else {
     x->fixed_increment_on = 0;
   }
-  
+
   rectf = fabs(f);
-  
+
   if( x->lock_loop && rectf > 0.0 ){
 
     if( x->loop_adjust_inverse ){
@@ -202,11 +202,11 @@ void chopper_fixed_increment(t_chopper *x, t_floatarg f)
     }
 		
   }
-  
+
   if( x->increment_adjusts_loop ){
     x->transp_loop_samps = new_samps;
   }
-  
+
 
 }
 
@@ -264,7 +264,7 @@ void chopper_store_loop(t_chopper *x, t_floatarg f)
   x->stored_samps[ loop_bindex ] = x->transp_loop_samps;
   x->stored_increments[ loop_bindex ] = x->increment;
 
-  post("storing loop %d: %d %d %f",loop_bindex, 
+  post("storing loop %d: %d %d %f",loop_bindex,
        x->stored_starts[ loop_bindex ],x->stored_samps[ loop_bindex ],  x->stored_increments[ loop_bindex ] );
 
 }
@@ -288,7 +288,7 @@ int loop_bindex = (int) f;
 	
   x->loop_start = x->stored_starts[ loop_bindex ];
   x->samps_to_go = x->transp_loop_samps = x->stored_samps[ loop_bindex ];
-	 
+	
   if( x->loop_min_samps > x->transp_loop_samps )
     x->loop_min_samps = x->transp_loop_samps ;
   if( x->loop_max_samps < x->transp_loop_samps )
@@ -340,7 +340,7 @@ void *chopper_new(t_symbol *msg, short argc, t_atom *argv)
 }
 
 
-void chopper_init(t_chopper *x, short initialized) 
+void chopper_init(t_chopper *x, short initialized)
 {
 	if(!initialized){
 
@@ -395,7 +395,7 @@ void chopper_init(t_chopper *x, short initialized)
 	}
 }
 
-void chopper_free(t_chopper *x) 
+void chopper_free(t_chopper *x)
 {
   free(x->stored_increments);
   free(x->stored_samps);
@@ -460,11 +460,11 @@ void chopper_rincme(t_chopper *x )
   }
 
  if(x->increment_adjusts_loop){
- 	 new_samps = (float) x->transp_loop_samps / new_inc ; 
+ 	 new_samps = (float) x->transp_loop_samps / new_inc ;
   } else {
   	new_samps = x->transp_loop_samps;
   }
-    
+
   new_inc *= x->increment ;
   if( x->increment > 0 ){
     if( x->loop_start + new_samps >= x->framesize ){
@@ -511,7 +511,7 @@ void chopper_randloop( t_chopper *x )
   loop_samps = segdur * R * increment; // total samples in segment
 //  post("rand: segdur %f R %f increment %f lsamps %d",segdur,R,increment,loop_samps);
   transp_loop_samps = segdur * R ; // actual count of samples to play back
-  samps_to_go = transp_loop_samps;  
+  samps_to_go = transp_loop_samps;
   if( loop_samps >= framesize ){
     loop_samps = framesize - 1;
     loop_start = 0;
@@ -548,7 +548,7 @@ t_int *chopper_pd_perform(t_int *w)
   t_chopper *x = (t_chopper *)(w[1]);
   t_float *out1 = (t_float *)(w[2]);
   int n = (int) w[3];
-  
+
 
   /*********************************************/
   t_word *tab = x->b_samples;
@@ -611,7 +611,7 @@ t_int *chopper_pd_perform(t_int *w)
   /* SET INITIAL SEGMENT */
 	
   bindex = x->fbindex;
-  
+
   if(initialize_loop){ /* FIRST TIME ONLY */
     chopper_randloop(x);
     bindex = x->fbindex;
@@ -620,7 +620,7 @@ t_int *chopper_pd_perform(t_int *w)
 
   while(n--){
     if( lock_loop )  {
-      if ( recalling_loop ) { 
+      if ( recalling_loop ) {
         bindex = x->fbindex ;
 		x->fbindex += x->increment;
 		--preempt_count;
@@ -644,7 +644,7 @@ t_int *chopper_pd_perform(t_int *w)
 		  preempt_gain = fade_level  * ( (float) preempt_count / (float) preempt_samps );
 		  bindex = x->fbindex ;
 		  x->fbindex += x->increment;
-			 
+			
 						
 		  *out1++ = tab[ bindex ].w_float * preempt_gain;
 		  if(! preempt_count) {
@@ -652,16 +652,16 @@ t_int *chopper_pd_perform(t_int *w)
 			bindex = x->fbindex;
 			force_new_loop = 0;
 		  }
-		} 
-		else { 
+		}
+		else {
 		  /* IMMEDIATE FORCE NEW LOOP AFTER PREEMPT FADE */
 		  chopper_randloop(x);
-		  
+		
 		  force_new_loop = 0;
 		  bindex = x->fbindex ;
 		  bindex2 = bindex << 1;	
 		  x->fbindex += x->increment;
-		  
+		
 		  --(x->samps_to_go);
 		  if( x->samps_to_go <= 0 ){
 			x->fbindex = x->loop_start;
@@ -680,9 +680,9 @@ t_int *chopper_pd_perform(t_int *w)
 		  }
 		}
 				
-      } 
+      }
       /* REGULAR PLAYBACK */
-      else { 
+      else {
 
 		if( bindex < 0 || bindex >= b_frames ){
 		  error("lock_loop: bindex %d is out of range", bindex);
@@ -720,11 +720,11 @@ t_int *chopper_pd_perform(t_int *w)
 		if( x->samps_to_go > x->transp_loop_samps - taper_samps ){
 		  fade_level =  (float)(x->transp_loop_samps - x->samps_to_go)/(float)taper_samps ;
 		  *out1++ = sample1 * fade_level;
-		} 
+		}
 		else if( x->samps_to_go < taper_samps ) {
 		  fade_level = (float)(x->samps_to_go)/(float)taper_samps;
 		  *out1++ = sample1 * fade_level;
-		} 
+		}
 		else {	
 		  fade_level = 1.0;
 		  *out1++ = sample1;
@@ -732,8 +732,8 @@ t_int *chopper_pd_perform(t_int *w)
       }
     } /* END OF LOCK LOOP */
     /* RECALL STORED LOOP */
-    
-    else if (recalling_loop) { 
+
+    else if (recalling_loop) {
       bindex = x->fbindex ;
       x->fbindex += x->increment;
       --preempt_count;
@@ -746,19 +746,19 @@ t_int *chopper_pd_perform(t_int *w)
 		recalling_loop = 0;
       }
     }
-    
+
     else {
       if( force_new_loop ){
 	/* FORCE LOOP CODE : MUST PREEMPT */
 		force_new_loop = 0;
 	/* NEED CODE HERE*/
-      } 
+      }
       else {  /* NORMAL OPERATION */
 		fade_level = 1.0; /* default level */
 
 		if( bindex < 0 || bindex >= b_frames ){
 		  error("force loop: bindex %d is out of range", bindex);
-		  post("frames:%d start:%d, samps2go:%d, tloopsamps:%d, increment:%f", 
+		  post("frames:%d start:%d, samps2go:%d, tloopsamps:%d, increment:%f",
 			   x->framesize, bindex, x->samps_to_go, x->transp_loop_samps, x->increment);
 		  chopper_randloop(x);
 		  bindex = x->fbindex;
@@ -769,11 +769,11 @@ t_int *chopper_pd_perform(t_int *w)
 		if( x->samps_to_go > x->transp_loop_samps - taper_samps ){
 		  fade_level =  (float)(x->transp_loop_samps - x->samps_to_go)/(float)taper_samps ;
 		  *out1++ = tab[bindex].w_float * fade_level;
-		} 
+		}
 		else if(x->samps_to_go < taper_samps) {
 		  fade_level = (float)(x->samps_to_go)/(float)taper_samps;
 		  *out1++ = tab[bindex].w_float * fade_level;
-		} 
+		}
 		else {	
 		  fade_level = 1.0;
 		  *out1++ = tab[bindex].w_float;
@@ -795,7 +795,7 @@ t_int *chopper_pd_perform(t_int *w)
   x->segdur = segdur;
   x->force_new_loop = force_new_loop;
   return (w+4);
-  
+
 }
 
 void chopper_force_new(t_chopper *x)

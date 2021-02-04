@@ -39,7 +39,7 @@ void rotapan_tilde_setup(void){
 void *rotapan_new(t_symbol *s, int argc, t_atom *argv)
 {
 	int i;
-    
+
     t_rotapan *x = (t_rotapan *)pd_new(rotapan_class);
     x->rchans = (long) atom_getfloatarg(0,argc,argv);
     /* allocate in chans plus 1 for controlling the pan */
@@ -89,9 +89,9 @@ t_int *rotapan_perform(t_int *w)
     double scaledIndex;
 	int chan,i,j;
     int offset;
-    
+
     int n = (int) w[(rchans * 2) + 3];
-    
+
     // copy input vectors
     for(i = 0; i < rchans + 1; i++){
         invec = (t_float *) w[2 + i];
@@ -99,12 +99,12 @@ t_int *rotapan_perform(t_int *w)
             ins[i][j] = invec[j];
         }
     }
-    
+
     // assign output vector pointers
     for(i = 0; i < rchans; i++){
         outs[i] = (t_float *) w[3 + rchans + i];
     }
-    
+
 	for( j = 0; j < n; j++){
         for(chan = 0; chan < rchans; chan++){
             inarr[chan] = ins[chan][j];
@@ -113,13 +113,13 @@ t_int *rotapan_perform(t_int *w)
         scaledIndex = ins[rchans][j] * (double) rchans;
         if(scaledIndex < 0.0 || scaledIndex > rchans)
             scaledIndex = 0.0;
-        
+
         offset = (int) floor(scaledIndex) % rchans;
         panloc = (scaledIndex - offset) * pio2;
-        
+
         amp1 = cos( panloc );
         amp2 = sin( panloc );
-        
+
         for(chan = 0; chan < rchans; chan++){
             outs[(chan+offset)%rchans][j] += amp1 * inarr[chan];
             outs[(chan+offset+1)%rchans][j] += amp2 * inarr[chan];

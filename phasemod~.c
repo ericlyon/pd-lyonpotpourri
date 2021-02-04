@@ -8,7 +8,7 @@ static t_class *phasemod_class;
 
 typedef struct _phasemod
 {
-    
+
     t_object x_obj;
     float x_f;
     t_float x_val;
@@ -91,7 +91,7 @@ void *phasemod_new(t_symbol *s, int argc, t_atom *argv)
 
 t_int *phasemod_perform(t_int *w)
 {
-    
+
 	float phs;
 	
 	t_phasemod *x = (t_phasemod *) (w[1]);
@@ -129,12 +129,12 @@ t_int *phasemod_perform(t_int *w)
 		// NO NEGATIVE FREQUENCIES
 		if( incr < 0 )
 			incr = -incr;
-        
+
 		bendphs += incr ;
 		while( bendphs > 1.0 )
 			bendphs -= 1.0 ;
         phs =   FUNC_LEN * ( (1 - exp(bendphs * alpha))/(1 - exp(alpha))  );
-        
+
 		while( phs < 0.0 ) {
 			phs += FUNC_LEN;
 		}
@@ -143,7 +143,7 @@ t_int *phasemod_perform(t_int *w)
 		}
 		*out++ =  wavetab[(int) phs] ;
 	}
-    
+
 	x->bendphs = bendphs;
 	return (w+6);
 }
@@ -153,7 +153,7 @@ void phasemod_dsp(t_phasemod *x, t_signal **sp)
 
 	x->connections[0] = 1;
 	x->connections[1] = 1;
-    
+
 	if(x->sr != sp[0]->s_sr){
 		if(!sp[0]->s_sr){
 			error("zero sampling rate");

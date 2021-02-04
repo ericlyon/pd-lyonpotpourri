@@ -26,7 +26,7 @@ typedef struct {
 
 typedef struct _buffet
 {
-    
+
 	t_object x_obj;
 	float x_f;
 	t_symbol *wavename; // name of waveform buffer
@@ -182,7 +182,7 @@ void buffet_events(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 	long bufsamps;
 	long aframes; // frames to analyze
 	float tadv;
-    
+
 	long i,j;
 	float meansq;
 	float rmsval;
@@ -498,7 +498,7 @@ void buffet_reverse(t_buffet *x)
 			b_samples[i + j].w_float = tmpsamp;
 		}
 	}
-    
+
 	buffet_update(x);
 }
 
@@ -561,7 +561,7 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 	b_nchans = x->wavebuf->b_nchans;
 	b_frames = x->wavebuf->b_frames;
 	
-    
+
 	destname = atom_getsymbolarg(0,argc,argv);
 	
 	if(! buffet_setdestbuf(x, destname)){
@@ -600,7 +600,7 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
     for(i = 0; i < chunkframes; i++){
         b_dest_samples[i].w_float = b_samples[i+startframe].w_float;
     }
-    
+
 	/* memcpy(b_dest_samples, b_samples + (startframe * b_nchans),
 		   chunkframes * b_nchans * sizeof(float) ); */
 	
@@ -656,7 +656,7 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 
 int buffet_setdestbuf(t_buffet *x, t_symbol *wavename)
 {
-    
+
 	t_garray *a;
 	int b_frames;
 	t_word *b_samples;
@@ -685,13 +685,13 @@ void buffet_rmschunk(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 	t_word *b_samples;
 	long b_nchans;
 	long b_frames;
-    
+
 	long bufsamps;
 	long i;
 	float meansq;
 	float rmsval;
 	long bindex;
-    
+
 	float buffer_duration;
 	long startframe;
 	long endframe;
@@ -1062,20 +1062,20 @@ void buffet_killdc(t_buffet *x)
 void *buffet_new(t_symbol *msg, short argc, t_atom *argv)
 {
 	
-    
+
 	//	int i;
 	
 	srand(clock());
-    
+
 	t_buffet *x = (t_buffet *)pd_new(buffet_class);
 	x->bang = outlet_new(&x->x_obj, gensym("bang"));
 	x->list = outlet_new(&x->x_obj, gensym("list"));
 	x->floater = outlet_new(&x->x_obj, gensym("float"));
-    
+
     x->sr = sys_getsr();
     if(! x->sr )
         x->sr = 44100;
-    
+
     if(argc < 1){
         error("%s: you must provide a valid buffer name",OBJECT_NAME);
         return 0;
@@ -1087,11 +1087,11 @@ void *buffet_new(t_symbol *msg, short argc, t_atom *argv)
         x->minframes = 100;
     if(!x->maxframes)
         x->maxframes = x->minframes + 10;
-    
+
     buffet_init(x,0);
-    
-    
-    
+
+
+
     return (x);
 }
 
@@ -1145,7 +1145,7 @@ void buffet_nosync_setswap(t_buffet *x)
 	long region1;
 	long region2;
 	
-    
+
 	swapframes = buffet_boundrand(minframes, maxframes);
 	r1startframe = buffet_boundrand(0.0, (float)(totalframes-swapframes));
 	r1endframe = r1startframe + swapframes;
@@ -1181,7 +1181,7 @@ void buffet_nosync_setswap(t_buffet *x)
 
 void buffet_swap(t_buffet *x)
 {
-    
+
 	float maxframes = x->maxframes;
 	float fade = x->fade;
 	long totalframes;
@@ -1631,7 +1631,7 @@ void buffet_nakedswap(t_buffet *x)
 
 void buffet_setbuf(t_buffet *x, t_symbol *wavename)
 {
-    
+
 	t_garray *a;
 	int b_frames;
 	t_word *b_samples;
@@ -1841,7 +1841,7 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 		lastfreqs[j] = 0;
 	
 	for(i = 0, k = 1; i < fft_frames - 1; i++, k++){
-        
+
 		for(j = 0; j < 5; j++)
 			lastfreqs[j] = freqs[j];
 		
@@ -1866,7 +1866,7 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 				}
 			}
 		}
-        
+
 		if(first){
 			first = 0;
 			for(j = 0; j < 5; j++){
@@ -1928,7 +1928,7 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom
 	int	D = N / 2;
 	int	i,j,k,l;
 	int minbin,maxbin;
-    
+
 	
 	float rt, rtadv;
 	int	inCount;
@@ -1944,28 +1944,28 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom
 	float *freqdiff;
 	float *hfc;
 	float *freqs, *amps;
-    
+
 	float subband_energy[5];
 	float subband_freqdiff[5];
 	int subband_bincuts[6];
 	
 	float *onsets;
 	float **loveboat;
-    
+
 	float *c_lastphase_in;
 	float *c_lastphase_out;
 	float c_fundamental;
 	float c_factor_in;
-    
+
 	float *trigland;
 	int *bitshuffle;
-    
+
 	
 	float threshold;
-    
+
 	
 	int MAX_ONSETS = 2048;
-    
+
 	buffet_setbuf(x, x->wavename);
 	if( x->hosed ){
 		error("buffet~ needs a valid buffer");
@@ -2113,9 +2113,9 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom
 	 for(i = 0; i < onset_count; i++){
      SETFLOAT(listdata + i, onsets[i]);
 	 }
-	 
+	
 	 outlet_list(x->list, 0, onset_count, listdata);
-	 
+	
 	 outlet_bang(x->bang);
 	 */
 	// free memory at end of routine
@@ -2125,7 +2125,7 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom
 /* should really be using malloc/free instead of annoying MSPd routines */
 void buffet_dsp_free(t_buffet *x)
 {
-    
+
 	freebytes(x->storage,0);
 	freebytes(x->listdata,0);
 	freebytes(x->rmsbuf,0);

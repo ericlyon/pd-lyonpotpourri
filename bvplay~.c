@@ -14,12 +14,12 @@ typedef struct {
 
 typedef struct _bvplay
 {
-    
+
     t_object x_obj;
 	float x_f;
     t_symbol *sfname; // name of soundfile
 	t_guffer *wavebuf; // store needed buffer or garray data
-    
+
 	long object_chans; // number of channels for a given instantiation
     float taper_dur;
     int R;
@@ -60,7 +60,7 @@ void bvplay_tilde_setup(void)
 	class_addmethod(bvplay_class,(t_method)bvplay_verbose,gensym("verbose"),A_FLOAT,0);
 	class_addmethod(bvplay_class,(t_method)bvplay_mute,gensym("mute"),A_FLOAT,0);
 	class_addmethod(bvplay_class,(t_method)bvplay_taper,gensym("taper"),A_FLOAT,0);
-    
+
 	potpourri_announce(OBJECT_NAME);
 }
 
@@ -86,7 +86,7 @@ void bvplay_verbose(t_bvplay *x, t_floatarg f)
 
 void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv)
 {
-    
+
 	if( x->active ){
 		if( x->verbose )
 			error("object still playing - cannot add note!");
@@ -97,7 +97,7 @@ void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv)
 		post("%s: no valid buffer yet",OBJECT_NAME);
 		return;
 	}
-    
+
 	// read note data
 	if( argc != 4 ){
 		if( x->verbose ){
@@ -105,16 +105,16 @@ void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv)
 			post("notelist parameters: skiptime, duration, increment, amplitude");
 		}
 	}
-    
+
 	x->notedata[0] = atom_getfloatarg(0,argc,argv) / 1000.0;
 	x->notedata[1] = atom_getfloatarg(1,argc,argv) / 1000.0;
 	x->notedata[2] = atom_getfloatarg(2,argc,argv);
 	x->notedata[3] = atom_getfloatarg(3,argc,argv);
-    
+
 	x->start_frame = x->notedata[0] * x->R;
 	x->increment = x->notedata[2];
 	x->index = x->findex = x->start_frame;
-    
+
 	if( x->increment == 0.0 ){
 		if( x->verbose )
 			post("zero increment!");
@@ -122,7 +122,7 @@ void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv)
 	}
 	x->note_frames =  x->notedata[1] * x->increment  * x->R;
 	x->end_frame = x->start_frame + x->note_frames;
-    
+
     x->amp = x->notedata[3];
 	if( x->start_frame < 0 || x->start_frame >= x->wavebuf->b_frames){
 		if( x->verbose )
@@ -134,7 +134,7 @@ void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv)
 			post("%s: bad end time",OBJECT_NAME);
 		return;
 	}
-    
+
 	x->active = 1;
 }
 
@@ -154,7 +154,7 @@ t_int *bvplay_perform_mono(t_int *w)
 	float frac, amp;
     /**********************/
     bvplay_set(x,x->sfname);
-    
+
 	if(!x->wavebuf->b_valid) {
 		post("invalid buffer");
 		memset(out, 0, sizeof(float) * n);
@@ -183,7 +183,7 @@ t_int *bvplay_perform_mono(t_int *w)
 					} else {
 						amp = noteamp;
 					}
-                    
+
 				}
 				frac = findex - iindex ;
 				*out++ = amp * (tab[iindex].w_float + frac * (tab[iindex + 1].w_float - tab[iindex].w_float));
@@ -194,23 +194,23 @@ t_int *bvplay_perform_mono(t_int *w)
 				x->active = 0;
 			}
 		}
-        
+
 	}
 	else{
 		while(n--){
 			*out++ = 0;
 		}
 	}
-    
+
 	x->index = iindex;
 	x->findex = findex;
-    
+
 	return (w+4);
 }
 
 void bvplay_set(t_bvplay *x, t_symbol *wavename)
 {
-    
+
 	t_garray *a;
 	int b_frames;
 	t_word *b_samples;
@@ -229,19 +229,19 @@ void bvplay_set(t_bvplay *x, t_symbol *wavename)
 		x->wavebuf->b_samples = b_samples;
 		garray_usedindsp(a);
 	}
-    
+
 }
 
 
 void *bvplay_new(t_symbol *s, t_floatarg taperdur)
 {
     int ichan = 1;
-    
+
 	t_bvplay *x = (t_bvplay *)pd_new(bvplay_class);
 
     outlet_new(&x->x_obj, gensym("signal"));
 
-    
+
 	x->object_chans = ichan;
     taperdur /= 1000.0; // convert to seconds
 	if(taperdur <= 0)
@@ -262,14 +262,14 @@ void *bvplay_new(t_symbol *s, t_floatarg taperdur)
 	x->verbose = 0;
 	x->mute = 0;
 	// post("channels %f, taper duration %.4f, taperframes %d", chan, taperdur, x->taper_frames );
-    
+
 	// post("arguments: channels, taper_duration(secs.)");
 	return x;
 }
 
 void bvplay_dsp_free(t_bvplay *x)
 {
-    
+
 	free(x->notedata);
 	free(x->wavebuf);
 }
@@ -277,7 +277,7 @@ void bvplay_dsp_free(t_bvplay *x)
 void bvplay_dsp(t_bvplay *x, t_signal **sp)
 {
     bvplay_set(x,x->sfname);
-    
+
     if(x->R != sp[0]->s_sr){
     	x->R = sp[0]->s_sr;
     	x->taper_frames = x->R * x->taper_dur;

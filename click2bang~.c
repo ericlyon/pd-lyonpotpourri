@@ -40,7 +40,7 @@ void click2bang_tick(t_click2bang *x)
 
 void *click2bang_new(void)
 {
-    
+
 	t_click2bang *x = (t_click2bang *)pd_new(click2bang_class);
 	x->bang = outlet_new(&x->x_obj, gensym("bang"));
 	x->clock = clock_new(x,(void *)click2bang_tick);
@@ -52,7 +52,7 @@ t_int *click2bang_perform(t_int *w)
 	t_click2bang *x = (t_click2bang *) (w[1]);
 	t_float *in_vec = (t_float *)(w[2]);
 	int n = (int) w[3];
-    
+
 	while( n-- ) {
 		if(*in_vec++)
 			clock_delay(x->clock, 0);

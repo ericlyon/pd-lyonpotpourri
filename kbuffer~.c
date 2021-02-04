@@ -6,7 +6,7 @@ static t_class *kbuffer_class;
 
 typedef struct _kbuffer
 {
-    
+
     t_object x_obj;
     float x_f;
 	float ksrate;
@@ -180,7 +180,7 @@ t_int *kbuffer_perform(t_int *w)
     short in_connected = x->in_connected;
     float fval = x->fval;
     /*********************/
-    
+
     while( n-- ){
         if( in_connected ){
             sample = *in++ ;
@@ -226,7 +226,7 @@ t_int *kbuffer_perform(t_int *w)
             }
             *out++ = data[ iphase ] ;
             *sync_out++ = phase / (float) length ;
-            
+
         }
         else if ( dump_flag ) {
             iphase = phase ;
@@ -236,19 +236,19 @@ t_int *kbuffer_perform(t_int *w)
             } else {
                 *out++ = data[ iphase ];
             }
-            
+
         }
-        
+
         else {
             *sync_out++ = 0.0 ;
             *out++ = 0.0;
-            
+
         }
         x->phase = phase;
         x->lastphase = lastphase;
         x->record_flag = record_flag;
         x->play_flag = play_flag;
-        
+
     }
     // DSP CONFIG
     return (w+6);
@@ -260,7 +260,7 @@ void *kbuffer_new(t_symbol *s, int argc, t_atom *argv)
     t_kbuffer *x = (t_kbuffer *)pd_new(kbuffer_class);
     outlet_new(&x->x_obj, gensym("signal"));
     outlet_new(&x->x_obj, gensym("signal"));
-    
+
 	x->srate = sys_getsr();
 	if( x->srate == 0 ){
 		error("zero sampling rate - set to 44100");
@@ -298,13 +298,13 @@ void kbuffer_dsp(t_kbuffer *x, t_signal **sp)
 	// DSP CONFIG
 
 	x->in_connected = 1;
-    
+
 	if(x->srate != sp[0]->s_sr){
         x->srate = sp[0]->s_sr;
         kbuffer_init(x,1);
 	}
    	dsp_add(kbuffer_perform, 5, x,
             sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
-    
+
 }
 

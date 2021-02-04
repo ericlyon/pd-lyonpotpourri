@@ -8,7 +8,7 @@ static t_class *clean_selector_class;
 
 typedef struct _clean_selector
 {
-    
+
 	t_object x_obj;
 	float x_f;
 	// Variables Here
@@ -66,14 +66,14 @@ void *clean_selector_new(t_symbol *s, int argc, t_atom *argv)
             error("%s: %d is illegal number of inlets",OBJECT_NAME,x->inlet_count);
             return (void *) NULL;
         }
-        
+
     }
     if(argc >= 2){
         x->fadetime = atom_getfloatarg(1,argc,argv) / 1000.0;
     }
-    
+
     //		post("argc %d inlet count %d fadetime %f",argc, x->inlet_count, x->fadetime);
-    
+
 	for(i=0; i< x->inlet_count - 1; i++){// create 16 inlets in total
 		inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
 	}
@@ -89,11 +89,11 @@ void *clean_selector_new(t_symbol *s, int argc, t_atom *argv)
 	x->pi_over_two = 1.57079632679;
 	
 	
-    
+
     if(x->fadetime <= 0.0)
     	x->fadetime = .05;
     x->fadesamps = x->fadetime * x->sr;
-    
+
     x->connected_list = (short *) t_getbytes(MAX_CHANS * sizeof(short));
     for(i=0;i<16;i++){
     	x->connected_list[i] = 0;
@@ -170,7 +170,7 @@ t_int *clean_selector_perform(t_int *w)
 			*out++ = 0.0;
 		}
   	}
-    
+
 	x->samps_to_fade = samps_to_fade;
 	return (w + (inlet_count + 4));
 }
@@ -189,27 +189,27 @@ void clean_selector_dsp(t_clean_selector *x, t_signal **sp)
 	sigvec[0] = (t_int *)x; // first pointer is to the object
 	
 	sigvec[pointer_count - 1] = (t_int *)sp[0]->s_n; // last pointer is to vector size (N)
-    
+
 	for(i = 1; i < pointer_count - 1; i++){ // now attach the inlet and all outlets
 		sigvec[i] = (t_int *)sp[i-1]->s_vec;
 	}
-    
+
 	if(x->sr != sp[0]->s_sr){
 		x->sr = sp[0]->s_sr;
 		x->fadesamps = x->fadetime * x->sr;
 		x->samps_to_fade = 0;
 	}
-    
-    
+
+
 	dsp_addv(clean_selector_perform, pointer_count, (t_int *) sigvec);
 	free(sigvec);
-    
+
     for (i = 0; i < MAX_CHANS; i++) {
         x->connected_list[i] = 1;
     }
-    
-    
-    
+
+
+
 }
 
 

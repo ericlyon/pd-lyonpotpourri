@@ -83,7 +83,7 @@ t_int *epluribus_perform(t_int *w)
 			for(i = 0, j=2; i < incount ; i++, j++){
 				inlet = (t_float *) (w[j]);
 				if( maxamp > fabs( inlet[k] ) ){
-					maxamp = fabs( inlet[k] ); 
+					maxamp = fabs( inlet[k] );
 					maxout = inlet[k]; // don't actually change signal
 					maxloc = i + 1; // record location of max amp
 				}
@@ -91,7 +91,7 @@ t_int *epluribus_perform(t_int *w)
 			outlet[k] = maxout;
 			selection[k] = maxloc;
 		}
-	} 
+	}
 	else {
 		for(k = 0; k < n; k ++ ){
 			maxamp = 0.0;
@@ -138,7 +138,7 @@ void epluribus_dsp(t_epluribus *x, t_signal **sp)
 		sigvec[i] = (t_int *)sp[i-1]->s_vec;
 	}
 
-	dsp_addv(epluribus_perform, pointer_count, (t_int *) sigvec); 
+	dsp_addv(epluribus_perform, pointer_count, (t_int *) sigvec);
 	free(sigvec);
 	
 }

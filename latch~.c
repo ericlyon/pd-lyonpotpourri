@@ -38,7 +38,7 @@ static void *latch_new(t_float duration)
 	inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
 	outlet_new(&x->x_obj, gensym("signal"));
 
-	x->status = LATCH_WAITING;    
+	x->status = LATCH_WAITING;
 	x->duration = duration;
 	x->sr = sys_getsr();
 	if(x->duration <= 1.0)
@@ -69,14 +69,14 @@ static t_int *latch_perform(t_int *w)
 	
 
 	for(i = 0; i < n; i++){
-        
+
 		if(connected){
 			duration = vec_duration[i];
 			if( duration > 0.0 ){ // dummy proof
 				dsamps = sr * duration * 0.001;
 			}
 		}
-        
+
 		if(trigger[i]){
 			latch = 0;
 			status = LATCH_RUNNING;
@@ -89,9 +89,9 @@ static t_int *latch_perform(t_int *w)
 			}
 		}
 		output[i] = current;
-     
+
 	}
-    
+
 	
 	x->current = current;
 	x->status = status;

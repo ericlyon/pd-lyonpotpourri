@@ -10,7 +10,7 @@ typedef struct _function
     t_object x_obj;
     t_float x_f;
     t_symbol *wavename; // name of waveform buffer
-    
+
     int b_frames;
     int b_nchans;
     t_word *b_samples;
@@ -78,7 +78,7 @@ void function_rcos(t_function *x)
     t_symbol *wavename = x->wavename;
     int frames;
     t_garray *a;
-    
+
     x->b_frames = 0;
     x->b_nchans = 1;
     // open array
@@ -139,7 +139,7 @@ void function_gaussian(t_function *x)
     long b_frames;
     t_word *b_samples;
     t_float arg, xarg,in;
-    
+
     if(!b_frames){
         post("* zero length function!");
         return;
@@ -150,7 +150,7 @@ void function_gaussian(t_function *x)
     arg = 12.0 / (t_float)b_frames;
     xarg = 1.0;
     in = -6.0;
-    
+
     for(i=0;i<b_frames;i++){
         b_samples[i].w_float = xarg * pow(2.71828, -(in*in)/2.0);
         in += arg;
@@ -168,7 +168,7 @@ void function_clear(t_function *x)
     int i;
     long b_frames = x->b_frames;
     t_word *b_samples = x->b_samples;
-    
+
     function_setbuf(x, x->wavename);
     b_frames = x->b_frames;
     b_samples = x->b_samples;
@@ -184,7 +184,7 @@ void function_adrenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     long b_frames = x->b_frames;
     t_word *b_samples = x->b_samples;
     t_float downgain = 0.33;
-    
+
     function_setbuf(x, x->wavename);
     al = (t_float) b_frames * atom_getfloatarg(0,argc,argv);
     dl = (t_float) b_frames * atom_getfloatarg(1,argc,argv);
@@ -197,7 +197,7 @@ void function_adrenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
         return;
     }
     sl = b_frames - (al+dl+rl);
-    
+
     for(i=0;i<al;i++){
         b_samples[i].w_float = (t_float)i/(t_float)al;
     }
@@ -220,7 +220,7 @@ void function_adenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     long b_frames = x->b_frames;
     t_word *b_samples = x->b_samples;
     t_float downgain = 0.33;
-    
+
     function_setbuf(x, x->wavename);
     al = (t_float) b_frames * atom_getfloatarg(0,argc,argv);
     dl = (t_float) b_frames * atom_getfloatarg(1,argc,argv);
@@ -232,7 +232,7 @@ void function_adenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
         return;
     }
     rl = b_frames - (al+dl);
-    
+
     for(i=0;i<al;i++){
         b_samples[i].w_float = (t_float)i/(t_float)al;
     }
@@ -253,14 +253,14 @@ void function_aenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     t_word *b_samples = x->b_samples;
     t_float frac;
     frac = atom_getfloatarg(0,argc,argv);
-    
+
     function_setbuf(x, x->wavename);
     if(frac <= 0 || frac >= 1){
         post("* attack time must range from 0.0 - 1.0, rather than %f",frac);
     }
-    
+
     al = b_frames * frac;
-    
+
     dl = b_frames - al;
     for(i=0;i<al;i++){
         b_samples[i].w_float = (t_float)i/(t_float)al;
@@ -279,11 +279,11 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     t_float amp;
     t_float maxamp, rescale;
     t_float theSample;
-    
+
     /* for(i = 0; i < argc; i++){
         post("argument %d: %f",i, atom_getfloatarg(i,argc,argv));
     }*/
-    
+
     function_setbuf(x, x->wavename);
     b_samples = x->b_samples;
     b_frames = x->b_frames;
@@ -303,7 +303,7 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
             }
         }
     }
-    
+
     if(x->normalize){
         maxamp = 0;
         for(i=0;i<b_frames;i++){
@@ -319,7 +319,7 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
             b_samples[i].w_float *= rescale;
         }
     }
-    
+
     /*
     for(i=0;i<b_frames;i++){
         post("%f", x->b_samples[i].w_float);
@@ -331,7 +331,7 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 
 void *function_new(t_symbol *msg, int argc, t_atom *argv)
 {
-    
+
     t_function *x = (t_function *)pd_new(function_class);
     outlet_new(&x->x_obj, gensym("signal"));
     x->wavename = atom_getsymbolarg(0,argc,argv);
@@ -345,7 +345,7 @@ void function_setbuf(t_function *x, t_symbol *wavename)
 {
     int frames;
     t_garray *a;
-    
+
     x->b_frames = 0;
     x->b_nchans = 1;
     if (!(a = (t_garray *)pd_findbyclass(wavename, garray_class))) {

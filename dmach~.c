@@ -34,10 +34,10 @@ typedef struct
 
 typedef struct _dmach
 {
-    
+
     t_object x_obj;
     float x_f;
-    
+
 	short mute; // global mute
 	float clocker; // global sample counter clock
 	float tempo;
@@ -179,11 +179,11 @@ void dmach_playsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 			return;
 		}
 	}
-    
+
 	for(i = 0; i < argc; i++){
 		x->sequence[i] = (int) atom_getfloatarg(i,argc,argv);
 	}
-    
+
 	//
 	
 	
@@ -221,7 +221,7 @@ void dmach_loopsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 	for(i = 0; i < argc; i++){
 		x->sequence[i] = (int) atom_getfloatarg(i,argc,argv);
 	}
-    
+
 	if(x->instant_recall){
 		x->this_pattern = x->sequence[0];
 		x->clocker = x->patterns[x->this_pattern].dsamps;
@@ -307,7 +307,7 @@ void dmach_arm(t_dmach *x, t_floatarg pnf)
 	int pnum = pnf;
 	int i;
 	t_pattern *p = x->patterns;
-    
+
 	if(pnum < 0){
 		error("requested index is less than zero");
 		return;
@@ -346,7 +346,7 @@ void dmach_tempo(t_dmach *x, t_floatarg new_tempo)
 	x->clocker *= ratio;
 	x->tempo = new_tempo;
     tempo_factor = (60.0/new_tempo);
-    
+
 	for(i = 0; i < MAX_PATTERNS; i++){
 		if(stored_patterns[i]){
             p[i].dsamps = p[i].beats * tempo_factor * sr;
@@ -368,19 +368,19 @@ void dmach_show(t_dmach *x, t_floatarg fn)
     t_pattern *p = x->patterns;
     t_attack *ptr;
     int drum_count = x->drum_count;
-    
+
     if(pnum < 0 || pnum > MAX_PATTERNS-1){
     	error("illegal pattern number: %d",pnum);
     	return;
     }
-    
+
 	if(! x->stored_patterns[pnum]){
 		error("%d is not currently stored",pnum);
 		return;
 	}
 	post("showing pattern %d",pnum);
     /* need to check if pattern is valid */
-    
+
     for(j = 0; j < drum_count; j++){
         if(p[pnum].drumlines[j].active){
             post("*** drum line for slot %d ***",j);
@@ -405,12 +405,12 @@ void dmach_printraw(t_dmach *x, t_floatarg fn)
     float normalized_trigger;
     float tempo_factor = x->tempo_factor;
     float sr = x->sr;
-    
+
     if(pnum < 0 || pnum > MAX_PATTERNS-1){
     	error("illegal pattern number: %d",pnum);
     	return;
     }
-    
+
 	if(! x->stored_patterns[pnum]){
 		error("%d is not currently stored",pnum);
 		return;
@@ -419,13 +419,13 @@ void dmach_printraw(t_dmach *x, t_floatarg fn)
         error("tempo factor is zero!");
         return;
     }
-    
+
 	post("readraw %d %f",pnum, p[pnum].beats);
     for(j = 0; j < drum_count; j++){
         if(p[pnum].drumlines[j].active){
             ptr = p[pnum].drumlines[j].attacks;
             post("%d %d",j, p[pnum].drumlines[j].attack_count);
-            
+
             for(i = 0; i < p[pnum].drumlines[j].attack_count; i++){
                 /* scale attack times to factor out sample rate and tempo */
                 normalized_trigger = ptr->trigger_point / (tempo_factor * sr);
@@ -449,7 +449,7 @@ void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
     float sr = x->sr;
     int ldex = 0;
     t_atom *listdata = x->listdata;
-    
+
     if(argc < 1){
         pnum = x->this_pattern;
     } else {
@@ -459,7 +459,7 @@ void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
         error("illegal pattern number: %d",pnum);
         return;
     }
-    
+
 	if(! x->stored_patterns[pnum]){
 		error("%d is not currently stored",pnum);
 		return;
@@ -468,22 +468,22 @@ void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
         error("tempo factor is zero!");
         return;
     }
-    
+
     /* note: format of MACROS requires that ldex be incremented outside of
      call. Also note that traditional indexing A[x] cannot be used; instead must
      use A+x format. */
 
     SETSYMBOL(listdata + ldex, gensym("readraw")); ++ldex;
-    
+
     SETFLOAT(listdata + ldex, (float)pnum);  ++ldex;
 	SETFLOAT(listdata + ldex, p[pnum].beats);  ++ldex;
-    
+
     for(j = 0; j < drum_count; j++){
         if(p[pnum].drumlines[j].active){
             ptr = p[pnum].drumlines[j].attacks;
             SETFLOAT(listdata + ldex, (float)j); ++ldex;
             SETFLOAT(listdata + ldex, (float)(p[pnum].drumlines[j].attack_count)); ++ldex;
-            
+
             for(i = 0; i < p[pnum].drumlines[j].attack_count; i++){
                 normalized_trigger = ptr->trigger_point / (tempo_factor * sr);
                 SETFLOAT(listdata + ldex, ptr->amplitude); ++ldex;
@@ -504,7 +504,7 @@ void dmach_copypattern(t_dmach *x, t_floatarg pn1, t_floatarg pn2)
     t_pattern *p = x->patterns;
     t_attack *ptr_from, *ptr_to;
     int drum_count = x->drum_count;
-    
+
     if(pnum_from < 0 || pnum_from > MAX_PATTERNS-1){
     	error("illegal source pattern number: %d",pnum_from);
     	return;
@@ -523,7 +523,7 @@ void dmach_copypattern(t_dmach *x, t_floatarg pn1, t_floatarg pn2)
 	}
 	dmach_init_pattern(x,pnum_to);
     //	post("readraw %d %f %f",pnum, p[pnum].beats, p[pnum].dsamps);
-    
+
 	p[pnum_to].beats = p[pnum_from].beats;
 	p[pnum_to].dsamps = p[pnum_from].dsamps;
 	
@@ -561,18 +561,18 @@ void dmach_readraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 	mutein = x->mute;
 	x->mute = 1;
 	pnum = (int) atom_getfloatarg(pdex++,argc,argv);
-    
-    
+
+
     if(pnum < 0 || pnum > MAX_PATTERNS-1){
     	error("%s: illegal pattern number: %d",OBJECT_NAME,pnum);
     	return;
     }
-    
+
 	if(! x->stored_patterns[pnum]){
         x->stored_patterns[pnum] = 1; // means there's something there now
         dmach_init_pattern(x,pnum);
         post("readraw: loading pattern %d",pnum);
-        
+
 	} else {
 		post("readraw: reloading pattern %d",pnum);
 	}
@@ -618,14 +618,14 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 	float sr = x->sr;
 	t_attack *tmpatks = x->tmpatks;
 	
-    
+
 	
 	pdex = 0;
 	pnum = atom_getfloatarg(pdex++,argc,argv);
     /*
      post("skipping slotamps for %d",pnum);
      return;*/
-    
+
 	if(pnum < 0 || pnum > MAX_PATTERNS - 1){
 		error("%s: invalid pattern number: %d",OBJECT_NAME,pnum);
 		return;
@@ -635,7 +635,7 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 		error("%s: no pattern found at location : %d",OBJECT_NAME,pnum);
 		return;
 	}
-    
+
 	slot = (int) atom_getfloatarg(pdex++,argc,argv);
 	if(slot < 0 || slot >= x->drum_count){
 		post("%s: %d is an illegal slot",OBJECT_NAME,slot);
@@ -668,7 +668,7 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 		}
 		trigger_point += beat_samps;
 	}
-    
+
 	/* initialize with increment of 1.0 for each non-zero amplitude attack. */
 	for(i = 0; i < local_attacks; i++){
 		if(tmpatks[i].amplitude) {
@@ -684,8 +684,8 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 	p[pnum].drumlines[slot].adex = 0;
 	p[pnum].drumlines[slot].active = 1;
 	x->this_pattern = x->next_pattern = pnum; // set pattern to what we're working on
-    
-    
+
+
 }
 
 
@@ -760,7 +760,7 @@ void dmach_slotampsfull(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
         attack_count += local_attacks;
 	}
 	p[pnum].drumlines[slot].attack_count = attack_count;
-    
+
 }
 
 void dmach_slotincrs(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
@@ -788,31 +788,31 @@ void dmach_slotincrs(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
         return;
     }
     //  post("%d local atks, argc = %d",local_attacks, argc);
-    
-    
+
+
     if(pnum < 0 || pnum >= MAX_PATTERNS){
         error("%s: slotincrs sent invalid pattern number: %d",OBJECT_NAME,pnum);
         return;
     }
-    
+
     if(!x->stored_patterns[pnum]){
         error("%s: slotincrs: no pattern found at location : %d",OBJECT_NAME,pnum);
 		return;
     }
 	
-    
-    
-    
-    
+
+
+
+
     //  post("filling slotincr for slot %d pnum %d",slot, pnum);
-    
-    
-    
+
+
+
     for(i = 0; i < local_attacks; i++){
 		p[pnum].drumlines[slot].attacks[i].increment = atom_getfloatarg(pdex++,argc,argv);
     }
     x->this_pattern = x->next_pattern = pnum; // set current pattern to what we're working on
-    
+
     //  x->mute = mutein;
 }
 
@@ -833,18 +833,18 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
     t_pattern *p = x->patterns;
     float tempo = x->tempo;
     float sr = x->sr;
-    
-    
-    
+
+
+
     pnum = atom_getfloatarg(0,argc,argv);
     if(pnum < 0 || pnum > MAX_PATTERNS - 1){
         error("invalid pattern number: %d",pnum);
         return;
     }
     //  post("%d arguments to \"store\" at pattern %d",argc,pnum);
-    
+
     dmach_init_pattern(x,pnum);
-    
+
     p[pnum].beats = atom_getfloatarg(1,argc,argv);
     if(p[pnum].beats <= 0){
         post("illegal beats at pnum %d: %f",pnum,p[pnum].beats);
@@ -857,13 +857,13 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
     tempo_factor = (60.0/tempo);
     p[pnum].dsamps = p[pnum].beats * tempo_factor * sr;
     pdex = 2;
-    
+
     //  post("%f beats %f samps in this pattern",p[pnum].beats,p[pnum].dsamps );
     while(pdex < argc){
         slot = atom_getfloatarg(pdex++,argc,argv);
         p[pnum].drumlines[slot].active = 1;
         tmpbeats = p[pnum].beats;
-        
+
         trigger_point = 0;
         attack_count = 0;
         while(tmpbeats > 0){
@@ -871,7 +871,7 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
             beatseg = atom_getfloatarg(pdex++,argc,argv);
             subdiv = atom_getfloatarg(pdex++,argc,argv);
             beat_samps = (beatseg/subdiv) * tempo_factor * sr;
-            
+
             /* read attack cycle and store any non-zero attacks */
             for(i = 0; i < subdiv; i++){
 				val = atom_getfloatarg(pdex++,argc,argv);
@@ -884,7 +884,7 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 				trigger_point += beat_samps;
             }
             /* we now know number of attacks and read that many transpose factors */
-            
+
             for(i = 0; i < local_attacks; i++){
 				p[pnum].drumlines[slot].attacks[i + attack_count].increment = atom_getfloatarg(pdex++,argc,argv);
             }
@@ -914,27 +914,27 @@ void dmach_init_pattern(t_dmach *x, int pnum)
         error("invalid pattern number: %d",pnum);
         return;
     }
-    
-    
-    
+
+
+
     if( x->stored_patterns[pnum] ){
         // post("replacing pattern stored at %d",pnum);
     }
-    
+
     if(p[pnum].drumlines == NULL){
         // post("initializing drumline memory at location %d",pnum);
         p[pnum].drumlines = (t_drumline *)malloc(drum_count * sizeof(t_drumline));
     }
-    
-    
+
+
     for(i = 0; i < drum_count; i++){
         p[pnum].drumlines[i].attacks = (t_attack *)calloc(MAX_ATTACKS, sizeof(t_attack));
         p[pnum].drumlines[i].adex = 0;
         p[pnum].drumlines[i].active = 0;
         p[pnum].drumlines[i].attack_count = 0;
     }
-    
-    
+
+
 }
 
 void dmach_dsp_free( t_dmach *x )
@@ -1000,7 +1000,7 @@ void *dmach_new(t_symbol *s, int argc, t_atom *argv)
 	x->connected = (short *) malloc(1024 * sizeof(short));
 	x->tmpatks = (t_attack *)calloc(MAX_ATTACKS, sizeof(t_attack));
 	x->muted = (short *)calloc(x->drum_count, sizeof(short)); // by default mute is off on each slot
-    
+
 	x->seqptr = 0;
 	x->sequence_length = 0;
 	x->playsequence = 0;
@@ -1012,7 +1012,7 @@ void *dmach_new(t_symbol *s, int argc, t_atom *argv)
 	
 	if(x->tempo <= 0 || x->tempo > 6666)
 		x->tempo = 60.0;
-    
+
     //	post("initial tempo is %f",x->tempo);
 	for(i = 0; i < MAX_PATTERNS; i++){
 		x->patterns[i].drumlines = NULL;
@@ -1020,11 +1020,11 @@ void *dmach_new(t_symbol *s, int argc, t_atom *argv)
 	}
 	x->this_pattern = x->next_pattern = 0;
 	x->mute = 0;
-    
+
 	x->clocker = 0;
 	x->sr = sys_getsr();
 	x->tempo_factor = 60.0 / x->tempo ;
-    
+
 	for(i = 0; i < x->drum_count; i++){
 		x->gains[i] = 1.0;
 		x->gtranspose[i] = 1.0;
@@ -1044,13 +1044,13 @@ t_int *dmach_perform(t_int *w)
 {
     int i,j;
     t_float *trig_outlet, *incr_outlet;
-    
+
 	t_dmach *x = (t_dmach *) w[1];
 	int outlet_count = x->outlet_count;
     //	t_float *in_sync = (t_float *) w[2]; // input for sync trigger (not implemented yet)
 	t_float *sync = (t_float *) w[outlet_count + 2];
 	int n = (int) w[outlet_count + 3];
-    
+
 	int this_pattern = x->this_pattern;
 	int next_pattern = x->next_pattern;
 	t_pattern *p = x->patterns;
@@ -1108,7 +1108,7 @@ t_int *dmach_perform(t_int *w)
 					}
  				}
  				this_pattern = sequence[seqptr++];
-                
+
  			}
  			/* we do this if we're not pattern sequencing: */
 			else if(next_pattern != this_pattern){
@@ -1141,12 +1141,12 @@ t_int *dmach_perform(t_int *w)
 				incr_outlet = (t_float *) w[i * 2 + 4];
 				
 				adex = p[this_pattern].drumlines[i].adex; // overflow danger ???
-                
+
 				if((int)clocker == (int)p[this_pattern].drumlines[i].attacks[adex].trigger_point){
 					current_increment[i] =
                     p[this_pattern].drumlines[i].attacks[adex].increment * gtranspose[i];
 					/* put sync click into sample j of the output vector */
-                    
+
 					trig_outlet[j] =
                     p[this_pattern].drumlines[i].attacks[adex].amplitude * gains[i];
 					++adex;
@@ -1165,7 +1165,7 @@ t_int *dmach_perform(t_int *w)
 					}
 				}
 				
-			} 
+			}
 		}
 		++clocker;
 	}
@@ -1185,7 +1185,7 @@ void dmach_dsp(t_dmach *x, t_signal **sp)
 	t_int **sigvec;
 	int pointer_count;
 	
-    
+
 	if(x->virgin){
 		post("%s: no patterns are stored",OBJECT_NAME);
         //		return;
@@ -1198,28 +1198,28 @@ void dmach_dsp(t_dmach *x, t_signal **sp)
 	pointer_count = x->outlet_count + 3; // all outlets, 1 inlet, object and s_n
 	
     //	post("pointer count %d", pointer_count);
-    
-    
+
+
     // copy vector to be safe
 
 	for(i = 0; i < pointer_count - 2; i++){
 		x->connected[i] = 1;
 	}
 
-    
+
 	sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));	
 	for(i = 0; i < pointer_count; i++){
 		sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
 	}
 	sigvec[0] = (t_int *)x; // first pointer is to the object
-    
+
 	sigvec[pointer_count - 1] = (t_int *)sp[0]->s_n; // last pointer is to vector size (N)
 	
 	for(i = 1; i < pointer_count - 1; i++){ // now attach the inlet and all outlets
 		sigvec[i] = (t_int *)sp[i-1]->s_vec;
 	}	
 
-	dsp_addv(dmach_perform, pointer_count, (t_int *) sigvec); 
+	dsp_addv(dmach_perform, pointer_count, (t_int *) sigvec);
 	free(sigvec);
 }
 

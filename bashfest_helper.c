@@ -5,7 +5,7 @@ void putsine (float *arr, int len);
 float boundrand(float min, float max);
 
 
-void putsine (float *arr, int len) 
+void putsine (float *arr, int len)
 {
   int i;
   double twopi;
@@ -25,11 +25,11 @@ float boundrand(float min, float max)
 void mycombset(float loopt,float rvt,int init,float *a,float srate)
 {
   int j;
-  
+
   a[0] =  (3.0 + (loopt * srate + .5));
   a[1] = rvt;
-  if(!init) { 
-    for(j=3; j<(int)*a; j++)  
+  if(!init) {
+    for(j=3; j<(int)*a; j++)
       a[j] = 0;
     a[2] = 3;
   }
@@ -38,10 +38,10 @@ void mycombset(float loopt,float rvt,int init,float *a,float srate)
 float mycomb(float samp,float *a)
 {
   float temp,*aptr;
-  if ( a[2] >= (int) a[0]) 
+  if ( a[2] >= (int) a[0])
     a[2] = 3;
   aptr = a + (int)a[2];
-  a[2]++; 
+  a[2]++;
   temp = *aptr;
   *aptr = *aptr * a[1] + samp;
   return(temp);
@@ -64,7 +64,7 @@ void setweights(float *a, int len)
 
 void  delset2(float *a,int *l,float xmax, float srate)
 {
-  /* delay initialization.  a is address of float array, l is size-2 int 
+  /* delay initialization.  a is address of float array, l is size-2 int
    * array for bookkeeping variables, xmax, is maximum expected delay */
 
   int i;
@@ -80,7 +80,7 @@ void delput2(float x,float *a,int *l)
 
   *(a + (*l)++) = x;
   if(*(l) >= *(l+1)) *l -= *(l+1);
-}                                                            
+}
 
 float dliget2(float *a,float wait,int *l,float srate)
 {
@@ -91,7 +91,7 @@ float dliget2(float *a,float wait,int *l,float srate)
   float frac = x - i;
   i = *l - i;
   im1 = i - 1;
-  if(i <= 0) { 
+  if(i <= 0) {
     if(i < 0) i += *(l+1);
     if(i < 0) return(0.);
     if(im1 < 0) im1 += *(l+1);
@@ -235,7 +235,7 @@ float allpass(float samp,float *a)
   float temp,*aptr;
   if ( a[STARTM1] >= (int) a[0]) a[STARTM1] = START;
   aptr = a + (int)a[STARTM1];
-  a[STARTM1] ++; 
+  a[STARTM1] ++;
   temp = *aptr;
   *aptr = *aptr * a[1] + samp;
   return(temp - a[1] * *aptr);
@@ -255,7 +255,7 @@ void init_reverb_data(float *a)
   a[9] = 0.035888535;
 }
 
-void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans, 
+void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
 	       int channel, float revtime, float dry, t_bashfest *x)
 {
   float dels[4];// stick into main structure
@@ -287,15 +287,15 @@ void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
     mycombset(dels[i], revtime, 0, alpo[i], srate);
   }
 
-  ellipset(fltdata,eel,&nsects,&xnorm); 
+  ellipset(fltdata,eel,&nsects,&xnorm);
 
   for( i = channel ; i < inFrames * nchans; i += nchans ){
 
     a1 = allpass(in[i], alpo[0]);
     a2 = allpass(in[i], alpo[1]);
     a3 = allpass(in[i], alpo[2]);
-    a4 = allpass(in[i], alpo[3]); 
-    
+    a4 = allpass(in[i], alpo[3]);
+
 
     out[i] = in[i] * dry + ellipse((a1+a2+a3+a4), eel, nsects,xnorm) * wet;
   }
@@ -305,7 +305,7 @@ void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
     a1 = allpass(0.0, alpo[0]);
     a2 = allpass(0.0, alpo[1]);
     a3 = allpass(0.0, alpo[2]);
-    a4 = allpass(0.0, alpo[3]); 
+    a4 = allpass(0.0, alpo[3]);
 
     out[i] =  ellipse((a1+a2+a3+a4), eel, nsects,xnorm) * wet;
 
@@ -314,7 +314,7 @@ void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
 }
 
 void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channels, float *functab1,
-	   float *functab2,float *functab3,float *functab4,int funclen, 
+	   float *functab2,float *functab3,float *functab4,int funclen,
 	   float duration, float maxDelay, t_bashfest *x)
 {
   int i;
@@ -351,7 +351,7 @@ void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channe
 
 
   for(i = 0; i < out_frames*channels; i += channels ){
-    // buffer loop 
+    // buffer loop
 
     delay1 = functab1[ (int) funcPhs ];
     delay2 = functab2[ (int) funcPhs ];
@@ -364,7 +364,7 @@ void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channe
 
     putsamp = i < in_frames * channels ? inbuf[i] + delsamp1a*feedback1 : 0.0;
 	outbuf[i] = putsamp; // zero instead ??
-    
+
     delput2( putsamp, delayLine1a, dv1a);
     delsamp1a = dliget2(delayLine1a, delay1, dv1a,srate);
 
@@ -373,7 +373,7 @@ void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channe
     delput2( putsamp, delayLine2a, dv2a);
 	delsamp2a = dliget2(delayLine2a, delay2, dv2a, srate);
     outbuf[i] += delsamp2a;
-    
+
 
     if( channels == 2 ){
       putsamp = i < in_frames * channels ? inbuf[i+1] + delsamp1a*feedback1 : 0.0;
@@ -415,7 +415,7 @@ void setExpFlamFunc(float *arr, int flen, float v1,float v2,float alpha)
 }
 
 void funcgen1(float *outArray, int outlen, float duration, float outMin, float outMax,
-	 float speed1, float speed2, float gain1, float gain2, float *phs1, float *phs2, 
+	 float speed1, float speed2, float gain1, float gain2, float *phs1, float *phs2,
 	 float *sine, int sinelen)
 {
   float si1, si2;
@@ -444,14 +444,14 @@ void normtab(float *inarr,float *outarr, float min, float max, int len)
   float imin=9999999999., imax=-9999999999.;
 
   for(i = 0; i < len ; i++){
-    if( imin > inarr[i] ) 
+    if( imin > inarr[i] )
       imin = inarr[i];
-    if( imax < inarr[i] ) 
+    if( imax < inarr[i] )
       imax = inarr[i];
   }
   for(i = 0; i < len; i++ )
     outarr[i] = mapp(inarr[i], imin, imax, min, max);
-  
+
 }
 
 float mapp(float in,float imin,float imax,float omin,float omax)
@@ -465,10 +465,10 @@ float mapp(float in,float imin,float imax,float omin,float omax)
 
 float oscil(float amp,float si,float *farray,int len,float *phs)
 {
-  register int i =  *phs;   
-  *phs += si;            
+  register int i =  *phs;
+  *phs += si;
   while(*phs >= len)
-    *phs -= len;     
+    *phs -= len;
   return(*(farray+i) * amp);
 }
 
@@ -479,17 +479,17 @@ void killdc( float *inbuf, int in_frames, int channels, t_bashfest *x)
   int nsects;
   float xnorm;
   float *dcflt = x->dcflt;
-  
+
   /* float dcflt[64] =
-     {3, -1.9999924    , -1.9992482    ,  1.0000000 
+     {3, -1.9999924    , -1.9992482    ,  1.0000000
      ,  .99928019    ,
      -1.9999956    , -1.9964080    ,  1.0000000    ,  .99645999    ,
      -1.9999994    , -1.9805074    ,  1.0000000    ,  .98069401    ,
      .98817413E+00};*/
 
   for( j = 0; j < channels; j++) {
-    ellipset(dcflt,eel,&nsects,&xnorm); 
-    
+    ellipset(dcflt,eel,&nsects,&xnorm);
+
     for( i = j; i < in_frames * channels ; i += channels ){
       inbuf[i] = ellipse(inbuf[i], eel, nsects,xnorm);
     }
@@ -521,7 +521,7 @@ void set_distortion_table(float *arr, float cut, float max, int len)
 
   len2 = len>>1 ;
   for( i = len2; i < len; i++ ){
-    samp = (float)(i - len2) / (float) len2 ; 
+    samp = (float)(i - len2) / (float) len2 ;
     if( samp > cut )
       samp = mapp( samp, cut, 1.0,  cut, max );
     *(arr + i) = samp;
@@ -530,13 +530,13 @@ void set_distortion_table(float *arr, float cut, float max, int len)
     *(arr + i) = - *(arr + len - (i+1));
 }
 
-float dlookup(float samp,float *arr,int len) 
+float dlookup(float samp,float *arr,int len)
 {
   return arr[(int) (((samp+1.0)/2.0) * (float) len)];
 
 }
 
-void do_compdist(float *in,float *out,int sampFrames,int nchans,int channel, 
+void do_compdist(float *in,float *out,int sampFrames,int nchans,int channel,
 	    float cutoff,float maxmult,int lookupflag,float *table,int range,float bufMaxamp)
 {
 
@@ -552,14 +552,14 @@ void do_compdist(float *in,float *out,int sampFrames,int nchans,int channel,
       } else {
 	rectsamp = fabs( *(in + i) ) / bufMaxamp;
 	if( rectsamp > cutoff ){
-	  *(in + i) = *(out + i) * 
+	  *(in + i) = *(out + i) *
 	    mapp( rectsamp, cutoff, 1.0, cutoff, maxmult);
 	}
       }
     }
 }
 
-float getmaxamp(float *arr, int len) 
+float getmaxamp(float *arr, int len)
 {
   int i;
   float max = 0;
