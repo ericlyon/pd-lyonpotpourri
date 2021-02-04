@@ -555,10 +555,10 @@ void convolver_setbuf(t_buffy *trybuf)
 	int b_frames;
 	/* load up sample array */
 	if (!(a = (t_garray *)pd_findbyclass(trybuf->myname, garray_class))) {
-		if (*trybuf->myname->s_name) pd_error("%s: %s: no such array", OBJECT_NAME, trybuf->myname->s_name);
+		if (*trybuf->myname->s_name) error("%s: %s: no such array", OBJECT_NAME, trybuf->myname->s_name);
 	}
 	else if (!garray_getfloatwords(a, &b_frames, &trybuf->b_samples)) { // possible crash worry?
-		pd_error("%s: bad template for %s", trybuf->myname->s_name,OBJECT_NAME);
+		error("%s: bad template for %s", trybuf->myname->s_name,OBJECT_NAME);
 		trybuf->b_valid = 0;
 	}
 	else  {
