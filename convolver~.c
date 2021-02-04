@@ -135,8 +135,7 @@ void convolver_static_memory(t_convolver *x, t_floatarg toggle)
 
 void convolver_seed(t_convolver *x, t_floatarg seed)
 {
-    t_convolver *fraud;
-    fraud = x;
+    (void)x;
 	srand((long)seed);
 }
 
@@ -183,7 +182,6 @@ void convolver_convolve(t_convolver *x)
 
 void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *argv)
 {
-    t_symbol *fraud;
 	float *tbuf = x->tbuf;
 	float *sbuf = x->sbuf;
 	float *filt = x->filt;
@@ -203,7 +201,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
 	float *trigland = x->trigland;	
 	long source_chan, impulse_chan, dest_chan;
 	float rescale = 0.5 / (float) N;
-    fraud = msg;
+        (void)msg;
 //	t_atom newsize;
 	
 	convolver_attach_buffers( x );
@@ -522,8 +520,7 @@ void *convolver_new(t_symbol *msg, short argc, t_atom *argv)
 {
 
 	t_convolver *x = (t_convolver *)pd_new(convolver_class);
-    t_symbol *fraud;
-    fraud = msg;
+    (void)msg;
 	x->bang = outlet_new(&x->x_obj, gensym("bang"));
 	srand(time(0)); //need "seed" message
 	x->impulse = (t_buffy *)malloc(sizeof(t_buffy));

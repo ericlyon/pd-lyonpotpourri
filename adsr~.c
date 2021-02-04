@@ -180,8 +180,7 @@ void adsr_set_r(t_adsr *x, t_floatarg f)
 
 void adsr_list (t_adsr *x, t_atom *msg, short argc, t_atom *argv)
 {
-    t_atom *fraud; // make compiler happy
-    fraud = msg;
+  (void)msg; // make compiler happy
 	x->rsamps = x->tsamps - (x->asamps+x->dsamps+x->ssamps);	
 	if( x->rsamps < 0 )
 		x->rsamps = 0;
@@ -208,8 +207,7 @@ static void *adsr_new(t_symbol *s, int argc, t_atom *argv)
 {
 
 	t_adsr *x = (t_adsr *)pd_new(adsr_class);
-    t_symbol *fraud; // make compiler happy
-    fraud = s;
+        (void)s; // make compiler happy
 	outlet_new(&x->x_obj, gensym("signal"));
 	
 

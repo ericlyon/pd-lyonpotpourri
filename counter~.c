@@ -67,9 +67,8 @@ void counter_minmax(t_counter *x, t_floatarg min, t_floatarg max)
 void *counter_new(t_symbol *s, int argc, t_atom *argv)
 {
     float farg;
-    t_symbol *fraud;
 	t_counter *x = (t_counter *)pd_new(counter_class);
-    fraud = s;
+    (void)s;
 	outlet_new(&x->x_obj, gensym("signal"));
 	x->direction = COUNTER_UP;
     farg = 1.0;
