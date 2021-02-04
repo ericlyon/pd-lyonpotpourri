@@ -54,4 +54,3 @@ typedef struct {
   float *func;
   int len;
 } CMIXADSR ;
-

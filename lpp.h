@@ -22,7 +22,7 @@
 #define TWOPI 6.2831853072
 #endif
 // budget version of Max/MSP denorm function
-#define FIX_DENORM_FLOAT(v)	(v=(fabs(v) < 0.000001 ? 0.f : (v)))
+#define FIX_DENORM_FLOAT(v) (v=(fabs(v) < 0.000001 ? 0.f : (v)))
 
 
 /*** MSP helper functions, thanks JKC! ***/
@@ -32,14 +32,14 @@ void atom_arg_getsym(t_symbol **c, long idx, long ac, t_atom *av);
 
 void atom_arg_getfloat(float *c, long idx, long ac, t_atom *av)
 {
-		if (c&&ac&&av&&(idx<ac)) {
-			*c = atom_getfloat(av+idx);
-		}
+  if (c&&ac&&av&&(idx<ac)) {
+    *c = atom_getfloat(av+idx);
+  }
 }
 
 void atom_arg_getsym(t_symbol **c, long idx, long ac, t_atom *av)
 {
-	if (c&&ac&&av&&(idx<ac)) {
-		*c = atom_getsymbol(av+idx);
-	}
+  if (c&&ac&&av&&(idx<ac)) {
+    *c = atom_getsymbol(av+idx);
+  }
 }

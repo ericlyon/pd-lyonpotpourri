@@ -38,7 +38,7 @@ void pulser_free(t_pulser *x);
 
 void pulser_tilde_setup(void){
   pulser_class = class_new(gensym("pulser~"), (t_newmethod)pulser_new,
-			    (t_method)pulser_free,sizeof(t_pulser), 0,A_GIMME,0);
+                           (t_method)pulser_free,sizeof(t_pulser), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(pulser_class, t_pulser, x_f);
   class_addmethod(pulser_class,(t_method)pulser_dsp,gensym("dsp"),0);
   class_addmethod(pulser_class,(t_method)pulser_mute,gensym("mute"),A_FLOAT,0);
@@ -48,24 +48,24 @@ void pulser_tilde_setup(void){
 
 void pulser_mute(t_pulser *x, t_floatarg toggle)
 {
-	x->mute = toggle;
+  x->mute = toggle;
 }
 
 void pulser_harmonics(t_pulser *x, t_floatarg c)
 {
-	if(c < 2 || c > MAX_COMPONENTS){
-		error("harmonic count out of bounds");
-		return;
-	}
-	x->components = c;
-	x->global_gain = 1.0 / (float) x->components ;
-	// reset phases too?
+  if(c < 2 || c > MAX_COMPONENTS){
+    error("harmonic count out of bounds");
+    return;
+  }
+  x->components = c;
+  x->global_gain = 1.0 / (float) x->components ;
+  // reset phases too?
 }
 
 void pulser_free(t_pulser *x)
 {
-	free(x->phases);
-	free(x->wavetab);
+  free(x->phases);
+  free(x->wavetab);
 }
 
 void *pulser_new(t_symbol *s, int argc, t_atom *argv)
@@ -90,12 +90,12 @@ void *pulser_new(t_symbol *s, int argc, t_atom *argv)
     x->frequency = atom_getfloatarg(0,argc,argv);
   if( argc > 1 )
     x->components = atom_getfloatarg(1,argc,argv);
-			
+
   x->si_fac = ((float)FUNC_LEN/x->sr) ;
 
   if(x->components <= 0 || x->components > MAX_COMPONENTS){
-  	error("%d is an illegal number of components, setting to 8",x->components );
-  	x->components = 8;
+    error("%d is an illegal number of components, setting to 8",x->components );
+    x->components = 8;
   }
   x->global_gain = 1.0 / (float) x->components ;
   x->phases = (float *) calloc(MAX_COMPONENTS, sizeof(float) );
@@ -122,7 +122,7 @@ t_int *pulser_perform(t_int *w)
   t_float *pulsewidth_vec = (t_float *)(w[3]);
   t_float *out = (t_float *)(w[4]);
   int n = (int) w[5];
-	
+
 
   float *wavetab = x->wavetab;
   float si_fac = x->si_fac;
@@ -136,10 +136,10 @@ t_int *pulser_perform(t_int *w)
 
   if( x->mute )
   {
-  	while( n-- ){
-  		*out++ = 0.0;
-  	}
-  	return (w+6);
+    while( n-- ){
+      *out++ = 0.0;
+    }
+    return (w+6);
   }
 
   incr = frequency * si_fac;
@@ -147,8 +147,8 @@ t_int *pulser_perform(t_int *w)
   while (n--) {
 
     if( connected[1] ){
-    	pulsewidth = *pulsewidth_vec++;
-    	// post("pw %f",pulsewidth);
+      pulsewidth = *pulsewidth_vec++;
+      // post("pw %f",pulsewidth);
     }
     if( pulsewidth < 0 )
       pulsewidth = 0;
@@ -166,49 +166,47 @@ t_int *pulser_perform(t_int *w)
       lookdex = (float)FUNC_LEN_OVER2 * pulsewidth * (float)j;
 
       while( lookdex >= FUNC_LEN ){
-				lookdex -= FUNC_LEN;
-		  }
+        lookdex -= FUNC_LEN;
+      }
 
       gain = wavetab[ lookdex ] ;
 
       phases[i] += incr * (float) j;
       while( phases[i] < 0.0 ) {
-				phases[i] += FUNC_LEN;
+        phases[i] += FUNC_LEN;
       }
       while( phases[i] >= FUNC_LEN ){
-				phases[i] -= FUNC_LEN;
+        phases[i] -= FUNC_LEN;
       }
       outsamp += gain * wavetab[ (int) phases[i] ];
-		
+
     }
     *out++ =  outsamp * global_gain;
   }
 
-  //	x->bendphs = bendphs;
+  //  x->bendphs = bendphs;
   return (w+6);
-}		
+}
 
 void pulser_dsp(t_pulser *x, t_signal **sp)
 {
   long i;
 
-	if(!sp[0]->s_sr){
-		error("zero sampling rate");
-		return;
-	}
-	
+  if(!sp[0]->s_sr){
+    error("zero sampling rate");
+    return;
+  }
+
   if(x->sr != sp[0]->s_sr){
-  	x->sr = sp[0]->s_sr;
-  	x->si_fac = ((float)FUNC_LEN/x->sr);
-  	for(i=0;i<MAX_COMPONENTS;i++){
-  		x->phases[i] = 0.0;
-  	}
+    x->sr = sp[0]->s_sr;
+    x->si_fac = ((float)FUNC_LEN/x->sr);
+    for(i=0;i<MAX_COMPONENTS;i++){
+      x->phases[i] = 0.0;
+    }
   }
   for( i = 0; i < 2; i++){
 
-  	x->connected[i] = 1;
+    x->connected[i] = 1;
   }
   dsp_add(pulser_perform, 5, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
 }
-
-

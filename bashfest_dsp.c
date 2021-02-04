@@ -15,7 +15,7 @@ void transpose(t_bashfest *x, int slot, int *pcount)
   int in_frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
   float *params = x->params;
-//  float srate = x->sr;
+  //  float srate = x->sr;
   int buflen = x->buf_samps;
   int halfbuffer = x->halfbuffer;
   int buf_frames = x->buf_frames;
@@ -70,7 +70,7 @@ void ringmod(t_bashfest *x, int slot, int *pcount)
   float srate = x->sr;
   int in_start = x->events[slot].in_start;
   int out_start = x->events[slot].out_start;
-//  int in_frames = x->events[slot].sample_frames;
+  //  int in_frames = x->events[slot].sample_frames;
   int buflen = x->buf_samps;
   int halfbuffer = x->halfbuffer;
   int i;
@@ -110,8 +110,8 @@ void retrograde(t_bashfest *x, int slot, int *pcount)
 
   int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
-//  float *params = x->params;
-//  float srate = x->sr;
+  //  float *params = x->params;
+  //  float srate = x->sr;
   int i ;
   int swap1, swap2;
   float tmpsamp;
@@ -259,13 +259,13 @@ void flange(t_bashfest *x, int slot, int *pcount)
   float hangover ;
   int hangframes ;
 
-//  float *inbuf = x->events[slot].workbuffer;
-//  int frames = x->events[slot].sample_frames;
+  //  float *inbuf = x->events[slot].workbuffer;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
-//  int buflen = x->buf_samps;
+  //  int buflen = x->buf_samps;
   float *params = x->params;
   float srate = x->sr;
-//  int in_start = x->events[slot].in_start;
+  //  int in_start = x->events[slot].in_start;
   float *delayline1 = x->delayline1;
   float *delayline2 = x->delayline2;
   float max_delay = x->maxdelay ;
@@ -485,8 +485,8 @@ void sweepreson(t_bashfest *x, int slot, int *pcount)
   float cf, bw;
   float si;
   float fac1, fac2;
-//  float inmax, outmax, rescale ;
-//  int frames = x->events[slot].sample_frames;
+  //  float inmax, outmax, rescale ;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
   float *params = x->params;
   float srate = x->sr;
@@ -536,24 +536,24 @@ void sweepreson(t_bashfest *x, int slot, int *pcount)
     phase += si;
     while( phase >= sinelen )
       phase -= sinelen;
-	
+
 
     fac2 = .5 * (maxfreq - minfreq) ;
     fac1 = minfreq + fac2;
 
     cf = fac1 + fac2 * sinewave[(int) phase];
     bw = bwfac * cf;
-	if(cf < 10 || cf > 8000 || bw < 1 || srate < 100){
-		post("danger values, cf %f bw %f sr %f",cf, bw, srate);
-	}
-   rsnset2( cf, bw, 2.0, 1.0, q1, srate );
-   // clicks stop if we don't apply filter above, and if attacks come too fast
-   *outbuf++ = reson(*inbuf++, q1);
+    if(cf < 10 || cf > 8000 || bw < 1 || srate < 100){
+      post("danger values, cf %f bw %f sr %f",cf, bw, srate);
+    }
+    rsnset2( cf, bw, 2.0, 1.0, q1, srate );
+    // clicks stop if we don't apply filter above, and if attacks come too fast
+    *outbuf++ = reson(*inbuf++, q1);
 
     if( channels == 2 ){
-	
-    //  rsnset2( cf, bw, 2.0, 1.0, q2, srate );
-	  *outbuf++ = reson(*inbuf++, q2);
+
+      //  rsnset2( cf, bw, 2.0, 1.0, q2, srate );
+      *outbuf++ = reson(*inbuf++, q2);
 
     }
   }
@@ -569,7 +569,7 @@ void slidecomb(t_bashfest *x, int slot, int *pcount)
   int fade_frames;
   float fadegain;
   int fadestart;
-  int dv1[2], dv2[2];		/* cmix bookkeeping */
+  int dv1[2], dv2[2];   /* cmix bookkeeping */
   float delsamp1 = 0, delsamp2 = 0;
   float m1, m2;
   float delay_time;
@@ -579,8 +579,8 @@ void slidecomb(t_bashfest *x, int slot, int *pcount)
   int buf_frames = x->buf_frames;
   float *params = x->params;
   float srate = x->sr;
-//  float *sinewave = x->sinewave;
-//  int sinelen = x->sinelen ;
+  //  float *sinewave = x->sinewave;
+  //  int sinelen = x->sinelen ;
   float max_delay = x->maxdelay;
   float *delayline1 = x->delayline1;
   float *delayline2 = x->delayline2;
@@ -598,7 +598,7 @@ void slidecomb(t_bashfest *x, int slot, int *pcount)
   feedback = params[(*pcount)++];
   overhang = params[(*pcount)++];
 
-// post("del1 %f del2 %f srate %f",delay1,delay2, srate);
+  // post("del1 %f del2 %f srate %f",delay1,delay2, srate);
 
   out_start = (in_start + halfbuffer) % buflen ;
   inbuf = x->events[slot].workbuffer + in_start;
@@ -617,7 +617,6 @@ void slidecomb(t_bashfest *x, int slot, int *pcount)
   if( channels == 2 ){
     delset2(delayline2, dv2, max_delay, srate);
   }
-
 
 
   for( i = 0; i < in_frames*channels; i += channels){
@@ -669,7 +668,7 @@ void reverb1(t_bashfest *x, int slot, int *pcount)
   int channel_to_compute;
   float drygain;
   int out_frames;
-//  int frames = x->events[slot].sample_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
   int buf_frames = x->buf_frames;
   float *params = x->params;
@@ -721,11 +720,11 @@ void ellipseme(t_bashfest *x, int slot, int *pcount)
   int filtercode ;
   float *fltdata;
 
-//  int frames = x->events[slot].sample_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
-//  int buf_frames = x->buf_frames;
+  //  int buf_frames = x->buf_frames;
   float *params = x->params;
-//  float srate = x->sr;
+  //  float srate = x->sr;
   float **flts = x->ellipse_data;
   LSTRUCT *eel = x->eel;
 
@@ -762,7 +761,7 @@ void ellipseme(t_bashfest *x, int slot, int *pcount)
 
 void feed1me(t_bashfest *x, int slot, int *pcount)
 {
-//  int i;
+  //  int i;
   float mindelay, maxdelay, speed1, speed2;
   float phz1 = .13, phz2 = .251;
   float dur;
@@ -771,7 +770,7 @@ void feed1me(t_bashfest *x, int slot, int *pcount)
   float overhang;
   /* main variables */
 
-//  int frames = x->events[slot].sample_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
   int buf_frames = x->buf_frames;
   float *params = x->params;
@@ -817,25 +816,25 @@ void feed1me(t_bashfest *x, int slot, int *pcount)
   outbuf = x->events[slot].workbuffer + out_start;
 
   funcgen1( func1, flen, desired_dur, mindelay, maxdelay,
-	    speed1, speed2, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
+            speed1, speed2, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
 
   phz1 /= (float) flen; phz2 /= (float) flen;
 
 
   funcgen1( func2, flen, desired_dur, mindelay*.5, maxdelay*2.0,
-	    speed1*1.25, speed2*.75, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
+            speed1*1.25, speed2*.75, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
 
   phz1 /= (float) flen; phz2 /= (float) flen;
 
 
   funcgen1( func3, flen, desired_dur, minfeedback, maxfeedback,
-	    speed1*.35, speed2*1.25, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
+            speed1*.35, speed2*1.25, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
 
   phz1 /= (float) flen; phz2 /= (float) flen;
 
   funcgen1( func4,flen, desired_dur, minfeedback, maxfeedback,
-	    speed1*.55, speed2*2.25, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
-		
+            speed1*.55, speed2*2.25, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
+
   feed1( inbuf, outbuf, in_frames, out_frames, channels, func1, func2, func3, func4, flen, dur, my_max_delay, x);
 
   x->events[slot].sample_frames = out_frames;
@@ -846,19 +845,19 @@ void feed1me(t_bashfest *x, int slot, int *pcount)
 
 void flam1(t_bashfest *x, int slot, int *pcount)
 {
-//  int channel_to_compute;
+  //  int channel_to_compute;
   int attacks;
   float gain2;
   float gainatten;
   float delay;
   float gain = 1.0;
   int i, j, k, delaysamps, delayoffset = 0;
-//  float inputmax;
+  //  float inputmax;
   int delay_frames;
   /* main variables */
   float *inbuf;
   float *outbuf;
-//  int frames = x->events[slot].sample_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
   int buflen = x->buf_samps;
   int buf_frames = x->buf_frames;
@@ -905,7 +904,7 @@ void flam1(t_bashfest *x, int slot, int *pcount)
     }
     for(j = 0; j < in_frames * channels; j += channels ){
       for( k = 0; k < channels; k++ ){
-		outbuf[j + k + delayoffset] += *(inbuf +j + k) * gain;
+        outbuf[j + k + delayoffset] += *(inbuf +j + k) * gain;
       }
     }
     delayoffset += delaysamps;
@@ -931,7 +930,7 @@ void flam2(t_bashfest *x, int slot, int *pcount)
   float gain = 1.0;
   int i, j, k, delaysamps, delayoffset = 0;
   int f_endpoint;
-//  float inputmax, outputmax, rescale;
+  //  float inputmax, outputmax, rescale;
   int delay_frames;
   float now = 0.0;
   int findex;
@@ -941,7 +940,7 @@ void flam2(t_bashfest *x, int slot, int *pcount)
   float *inbuf;
   float *outbuf;
   int out_frames;
-//  int frames = x->events[slot].sample_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
   int buflen = x->buf_samps;
   int buf_frames = x->buf_frames;
@@ -1000,7 +999,7 @@ void flam2(t_bashfest *x, int slot, int *pcount)
     }
     for(j = 0; j < in_frames * channels; j += channels ){
       for( k = 0; k < channels; k++ ){
-		outbuf[j + k + delayoffset] += *(inbuf + j + k) * gain;
+        outbuf[j + k + delayoffset] += *(inbuf + j + k) * gain;
       }
     }
     delayoffset += delaysamps;
@@ -1025,18 +1024,18 @@ void expflam(t_bashfest *x, int slot, int *pcount)
   float delay1,delay2;
   float gain = 1.0;
   int i, j, k, delaysamps, delayoffset = 0, f_endpoint;
-//  float inputmax, outputmax, rescale;
+  //  float inputmax, outputmax, rescale;
   int delay_frames;
   float now = 0.0;
-//  int findex;
-//  float inval;
+  //  int findex;
+  //  float inval;
   float curdelay;
   float slope;
   /* main variables */
   float *inbuf;
   float *outbuf;
   int out_frames;
-//  int frames = x->events[slot].sample_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
   int buflen = x->buf_samps;
   int buf_frames = x->buf_frames;
@@ -1047,7 +1046,7 @@ void expflam(t_bashfest *x, int slot, int *pcount)
   int in_frames = x->events[slot].sample_frames;
   int halfbuffer = x->halfbuffer;
   float *expfunc = x->feedfunc1;
-//  int funclen = x->feedfunclen;
+  //  int funclen = x->feedfunclen;
   /* process specfic*/
 
   ++(*pcount);
@@ -1088,12 +1087,12 @@ void expflam(t_bashfest *x, int slot, int *pcount)
     delay_frames = srate * curdelay + 0.5;
     delaysamps = delay_frames * channels;
     if(f_endpoint >= out_frames){
-   // error("expflam: breaking at attack %d",i);
+      // error("expflam: breaking at attack %d",i);
       break;
     }
     for(j = 0; j < in_frames * channels; j += channels ){
       for( k = 0; k < channels; k++ ){
-		outbuf[j + k + delayoffset] += *(inbuf + j + k) * gain;
+        outbuf[j + k + delayoffset] += *(inbuf + j + k) * gain;
       }
     }
     delayoffset += delaysamps;
@@ -1122,7 +1121,7 @@ void comb4(t_bashfest *x, int slot, int *pcount)
   /* main variables */
 
   int out_frames;
-//  int frames = x->events[slot].sample_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
   int buf_frames = x->buf_frames;
   float *params = x->params;
@@ -1177,7 +1176,7 @@ void comb4(t_bashfest *x, int slot, int *pcount)
       input_sample = *(inbuf + i + j) ; // we can move inside loop
       *(outbuf + i + j ) = 0.0; // comment out to leave original sound into it
       for( k = 0; k < 4; k++ ){
-		*(outbuf + i + j) += mycomb(input_sample, combies[k].arr);
+        *(outbuf + i + j) += mycomb(input_sample, combies[k].arr);
       }
     }
   }
@@ -1185,7 +1184,7 @@ void comb4(t_bashfest *x, int slot, int *pcount)
     for( j = 0; j < channels; j++ ){
       *(outbuf + i + j) = 0.0;
       for( k = 0; k < 4; k++ ){
-		*(outbuf +i+j) += mycomb(0.0,combies[k].arr);
+        *(outbuf +i+j) += mycomb(0.0,combies[k].arr);
       }
     }
   }
@@ -1213,12 +1212,12 @@ void compdist(t_bashfest *x, int slot, int *pcount)
   float maxamp;
   /* main variables */
 
-//  int out_frames;
-//  int frames = x->events[slot].sample_frames;
+  //  int out_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
-//  int buf_frames = x->buf_frames;
+  //  int buf_frames = x->buf_frames;
   float *params = x->params;
-//  float srate = x->sr;
+  //  float srate = x->sr;
   /* function specific*/
   int range = x->tf_len;
   float *table = x->transfer_function;
@@ -1248,7 +1247,7 @@ void compdist(t_bashfest *x, int slot, int *pcount)
 
   for( channel_to_compute = 0; channel_to_compute < channels; channel_to_compute++) {
     do_compdist(inbuf, outbuf, in_frames, channels, channel_to_compute,
-		cutoff, maxmult, lookupflag, table, range, maxamp);
+                cutoff, maxmult, lookupflag, table, range, maxamp);
   }
   x->events[slot].out_start = in_start;
   x->events[slot].in_start = (x->events[slot].out_start + halfbuffer) % buflen ;
@@ -1266,7 +1265,7 @@ void ringfeed(t_bashfest *x, int slot, int *pcount)
   float rez ;
   /* main variables */
   int out_frames;
-//  int frames = x->events[slot].sample_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
   int buf_frames = x->buf_frames;
   float *params = x->params;
@@ -1340,7 +1339,6 @@ void ringfeed(t_bashfest *x, int slot, int *pcount)
   }
 
   /* COMB TAILS */
-
   for( i = in_frames * channels; i < out_frames * channels; i += channels ){
     for( j = 0; j < channels; j++ ){
       *(outbuf +i+j) = reson(mycomb( 0.0, combies[j].arr), resies[j].q );
@@ -1348,7 +1346,6 @@ void ringfeed(t_bashfest *x, int slot, int *pcount)
   }
 
   /* FADE OUT ON MIX */
-
   fade_frames = COMBFADE * srate;
   fadestart = (out_frames - fade_frames) * channels ;
   for( i = 0; i < fade_frames * channels; i += channels ){
@@ -1373,13 +1370,13 @@ void resonadsr(t_bashfest *x, int slot, int *pcount)
   float si;
   float notedur;
   float phase = 0.;
-//  int j = 0;
+  //  int j = 0;
   /* main variables */
 
-//  int out_frames;
-//  int frames = x->events[slot].sample_frames;
+  //  int out_frames;
+  //  int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
-//  int buf_frames = x->buf_frames;
+  //  int buf_frames = x->buf_frames;
   float *params = x->params;
   float srate = x->sr;
 
@@ -1428,7 +1425,7 @@ void resonadsr(t_bashfest *x, int slot, int *pcount)
   for(i = 0; i < in_frames*channels; i += channels ){
     phase += si;
     if( phase > funclen - 1)
-      phase = funclen - 1;	/* stop at end of function */
+      phase = funclen - 1;  /* stop at end of function */
 
     cf = adsrfunc[ (int) phase ];
     bw = bwfac * cf ;
@@ -1449,10 +1446,10 @@ void stv(t_bashfest *x, int slot, int *pcount)
   int i,j;
   /* main variables */
 
-//  int out_frames;
+  //  int out_frames;
   int frames = x->events[slot].sample_frames;
   int channels = x->events[slot].out_channels;
-//  int buf_frames = x->buf_frames;
+  //  int buf_frames = x->buf_frames;
   float *params = x->params;
   float srate = x->sr;
   /*function specific*/
@@ -1467,12 +1464,12 @@ void stv(t_bashfest *x, int slot, int *pcount)
   int dv1[2], dv2[2]; /* cmix bookkeeping */
   float delay_time;
   float speed1, speed2, depth ;
-//  float max;
+  //  float max;
 
   float *inbuf, *outbuf;
   int in_start = x->events[slot].in_start;
   int out_start = x->events[slot].out_start;
-//  int in_frames = x->events[slot].sample_frames;
+  //  int in_frames = x->events[slot].sample_frames;
   int buflen = x->buf_samps;
   int halfbuffer = x->halfbuffer;
 
@@ -1514,12 +1511,12 @@ void stv(t_bashfest *x, int slot, int *pcount)
     for(i = 0, j = 0; i < frames; i++, j+=2 ){
 
       delay_time = fac1 +
-	oscil(osc1.amp, osc1.si, osc1.func, osc1.len, &osc1.phs);
+        oscil(osc1.amp, osc1.si, osc1.func, osc1.len, &osc1.phs);
       delput2( inbuf[i], delayline1, dv1);
       outbuf[j] = dliget2(delayline1, delay_time, dv1,srate);
 
       delay_time = fac1 +
-	oscil(osc2.amp, osc2.si, osc2.func, osc2.len, &osc2.phs);
+        oscil(osc2.amp, osc2.si, osc2.func, osc2.len, &osc2.phs);
       delput2( inbuf[i], delayline2, dv2);
       outbuf[j + 1] = dliget2(delayline2, delay_time, dv2,srate);
     }
@@ -1527,12 +1524,12 @@ void stv(t_bashfest *x, int slot, int *pcount)
   else if( channels == 2 ){
     for(i = 0; i < frames*2; i += 2 ){
       delay_time = fac1 +
-	oscil(osc1.amp, osc1.si, osc1.func, osc1.len, &osc1.phs);
+        oscil(osc1.amp, osc1.si, osc1.func, osc1.len, &osc1.phs);
       delput2( inbuf[i], delayline1, dv1);
       outbuf[i] = dliget2(delayline1, delay_time, dv1,srate);
 
       delay_time = fac1 +
-	oscil(osc2.amp, osc2.si, osc2.func, osc2.len, &osc2.phs);
+        oscil(osc2.amp, osc2.si, osc2.func, osc2.len, &osc2.phs);
       delput2( inbuf[i + 1], delayline2, dv2);
       outbuf[i + 1] = dliget2(delayline2, delay_time, dv2,srate);
 

@@ -1,6 +1,6 @@
 
 float frequencyToIncrement( float samplingRate, float frequency,
-			    int bufferLength );
+                            int bufferLength );
 
 void makeSineBuffer( float *buffer, int bufferLength );
 

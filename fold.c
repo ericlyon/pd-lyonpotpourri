@@ -7,21 +7,18 @@
  * input time n
  */
 void fold( float *I, float *W, int Nw, float *O, int N, int n )
-
 {
+  int i;
 
-    int i;
+  for ( i = 0; i < N; i++ )
+    O[i] = 0.;
 
-    for ( i = 0; i < N; i++ )
-	O[i] = 0.;
-
-    while ( n < 0 )
-      	n += N;
-    n %= N;
-    for ( i = 0; i < Nw; i++ ) {
-	      O[n] += I[i]*W[i];
-      	if ( ++n == N )
-	      n = 0;
-    }
+  while ( n < 0 )
+    n += N;
+  n %= N;
+  for ( i = 0; i < Nw; i++ ) {
+    O[n] += I[i]*W[i];
+    if ( ++n == N )
+      n = 0;
+  }
 }
-
