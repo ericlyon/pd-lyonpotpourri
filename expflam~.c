@@ -97,7 +97,7 @@ void *expflam_new(void)
   inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
   outlet_new(&x->x_obj, gensym("signal"));
   x->flams = (t_flam *) calloc(MAXFLAMS, sizeof(t_flam));
-  for(i = 0; i < MAXFLAMS; i++){
+  for(i = 0; i < MAXFLAMS; i++) {
     x->flams[i].attack_times = (float *) calloc(MAXATTACKS, sizeof(float));
     x->flams[i].attack_points = (int *) calloc(MAXATTACKS, sizeof(int));
   }
@@ -118,7 +118,7 @@ void *expflam_new(void)
 
 void expflam_setflam(t_expflam *x, t_symbol *msg, short argc, t_atom *argv)
 {
-  if( argc != 5 ){
+  if( argc != 5 ) {
     error("%s: setflam format: startdelay enddelay attacks slope gainatten",OBJECT_NAME);
     return;
   }
@@ -135,7 +135,7 @@ void expflam_setflam(t_expflam *x, t_symbol *msg, short argc, t_atom *argv)
     x->end_delay = .00001;
   if(x->atks < 2)
     x->atks = 2;
-  if(x->atks > MAXATTACKS){
+  if(x->atks > MAXATTACKS) {
     post("%s: exceeded maximum of %d attacks",OBJECT_NAME, MAXATTACKS);
     x->atks = MAXATTACKS;
   }
@@ -147,7 +147,7 @@ void expflam_free(t_expflam *x)
 
   free(x->trigvec);
   free(x->bypvec);
-  for(i = 0; i < MAXFLAMS; i++){
+  for(i = 0; i < MAXFLAMS; i++) {
     free(x->flams[i].attack_times);
     free(x->flams[i].attack_points);
   }
@@ -177,7 +177,7 @@ t_int *expflam_perform(t_int *w)
   short flamall = x->flamall;
 
   /* in flamgate mode copy input to output and return */
-  if(x->bypass){
+  if(x->bypass) {
     memcpy( (void *)out_vec, (void *)in_vec, n * sizeof(float) );
     return (w+6);
   }
@@ -187,14 +187,14 @@ t_int *expflam_perform(t_int *w)
   memcpy( (void *)out_vec, (void *)in_vec, n * sizeof(float) );// copy triggers to output for a start
 
   /* look for activation triggers */
-  for(i = 0; i < n; i++){
-    if(trigvec[i] && (flamgate_vec[i] || ! flamgate_connected || flamall ) ){
+  for(i = 0; i < n; i++) {
+    if(trigvec[i] && (flamgate_vec[i] || ! flamgate_connected || flamall ) ) {
 //    post("triggered with t %f and flamgate %f",trigvec[i],flamgate_vec[i]);
       j = 0;
-      while(flams[j].active && j < MAXFLAMS){
+      while(flams[j].active && j < MAXFLAMS) {
         ++j;
       }
-      if(j >= MAXFLAMS){
+      if(j >= MAXFLAMS) {
         post("too many flams");
       }
       else {
@@ -208,7 +208,7 @@ t_int *expflam_perform(t_int *w)
         flams[j].fdex = 0;
         flams[j].atks = atks;
 
-        for(k = 1; k < atks; k++){
+        for(k = 1; k < atks; k++) {
           flams[j].attack_times[k] = start_delay + (end_delay - start_delay) * ((1.0 - exp((float)k * slope/((float)atks-1.0)))/(1.0-exp(slope)));
           flams[j].attack_times[k] += flams[j].attack_times[k - 1];
           flams[j].attack_points[k] = flams[j].attack_times[k] * sr + i;
@@ -217,17 +217,17 @@ t_int *expflam_perform(t_int *w)
     }
   }
   /* now iterate through active flams */
-  for( i = 0; i < n; i++){
-    for(j = 0; j < MAXFLAMS; j++){
-      if(flams[j].active){
-        if(flams[j].counter >= flams[j].attack_points[flams[j].fdex]){
+  for( i = 0; i < n; i++) {
+    for(j = 0; j < MAXFLAMS; j++) {
+      if(flams[j].active) {
+        if(flams[j].counter >= flams[j].attack_points[flams[j].fdex]) {
           out_vec[i] += flams[j].amp;
           flams[j].amp *= flams[j].gainatten;
-          if( flams[j].amp <= STOPGAIN ){
+          if( flams[j].amp <= STOPGAIN ) {
             flams[j].active = 0;
           }
           flams[j].fdex++;
-          if(flams[j].fdex >= flams[j].atks){
+          if(flams[j].fdex >= flams[j].atks) {
             flams[j].active = 0;
           }
         }

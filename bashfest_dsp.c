@@ -31,19 +31,19 @@ void transpose(t_bashfest *x, int slot, int *pcount)
 
   //  fprintf(stderr,"TRANSPOSE: in %d out %d\n", w->in_start, w->out_start);
   out_frames = (float) in_frames / tfac ;
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
 
-  for( i = 0; i < out_frames * channels; i += channels ){
+  for( i = 0; i < out_frames * channels; i += channels ) {
     iphs = phs;
     m2 = phs - iphs;
     m1 = 1. - m2;
 
-    if( channels == 1 ){
+    if( channels == 1 ) {
       *outbuf++ = inbuf[iphs] * m1 + inbuf[ iphs + 1] * m2 ;
 
-    } else if( channels == 2 ){
+    } else if( channels == 2 ) {
       ip2 = iphs * 2;
       *outbuf++ = inbuf[ip2] * m1 + inbuf[ ip2 + 2] * m2 ;
       *outbuf++ = inbuf[ip2 + 1] * m1 + inbuf[ ip2 + 3] * m2 ;
@@ -92,9 +92,9 @@ void ringmod(t_bashfest *x, int slot, int *pcount)
 
 //  inbuf = inbuf + in_start ;
 
-  for(i = 0; i < frames*channels; i += channels ){
+  for(i = 0; i < frames*channels; i += channels ) {
     *outbuf++ = *inbuf++ * sinewave[(int)phase];
-    if( channels == 2 ){
+    if( channels == 2 ) {
       *outbuf++ = *inbuf++ * sinewave[(int)phase];
     }
     phase += si;
@@ -131,8 +131,8 @@ void retrograde(t_bashfest *x, int slot, int *pcount)
 
   memcpy(outbuf, inbuf, in_frames * channels * sizeof(float) );
 
-  if( channels == 1 ){
-    for(i = 0; i < (frames/2)  ; i++ ){
+  if( channels == 1 ) {
+    for(i = 0; i < (frames/2)  ; i++ ) {
       swap2 = (frames - 1 - i);
       tmpsamp = outbuf[i];
       outbuf[i] = outbuf[swap2];
@@ -142,7 +142,7 @@ void retrograde(t_bashfest *x, int slot, int *pcount)
 
   /* this would also work for mono, but we'll save a few multiplies */
   else {
-    for(i = 0; i < (frames/2)   ; i++ ){
+    for(i = 0; i < (frames/2)   ; i++ ) {
       swap1 = i * channels ;
       swap2 = (frames - 1 - i) * channels;
       tmpsamp = outbuf[swap1];
@@ -193,18 +193,18 @@ void comber(t_bashfest *x, int slot, int *pcount)
   inbuf = x->events[slot].workbuffer + in_start;
   outbuf = x->events[slot].workbuffer + out_start;
 
-  if( delay <= 0.0 ){
+  if( delay <= 0.0 ) {
     error("comber got bad delay value\n");
     return;
   }
-  if( delay > max_delay ){
+  if( delay > max_delay ) {
     delay = max_delay ;
   }
   if( overhang < COMBFADE )
     overhang = COMBFADE;
 
   out_frames = in_frames + overhang * srate ;
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
 
@@ -214,26 +214,26 @@ void comber(t_bashfest *x, int slot, int *pcount)
     mycombset(delay,revtime,0,delayline2,srate);
 
   // ADD IN ORIGINAL SIGNAL
-  for( i = 0; i < in_frames*channels; i += channels){
+  for( i = 0; i < in_frames*channels; i += channels) {
     *outbuf++ += mycomb(*inbuf++, delayline1);
-    if( channels == 2 ){
+    if( channels == 2 ) {
       *outbuf++ += mycomb(*inbuf++,delayline2);
     }
   }
 
-  for( i = in_frames * channels; i < out_frames*channels; i += channels){
+  for( i = in_frames * channels; i < out_frames*channels; i += channels) {
     *outbuf++ = mycomb( 0.0 , delayline1);
-    if( channels == 2 ){
+    if( channels == 2 ) {
       *outbuf++ = mycomb( 0.0 , delayline2);
     }
   }
 
   fade_frames = COMBFADE * srate;
   fadestart = (out_frames - fade_frames) * channels ;
-  for( i = 0; i < fade_frames * channels; i += channels ){
+  for( i = 0; i < fade_frames * channels; i += channels ) {
     fadegain = 1.0 - (float) i / (float) (fade_frames * channels)  ;
     *(inbuf + fadestart + i) *= fadegain;
-    if(channels == 2){
+    if(channels == 2) {
       *(inbuf + fadestart + i + 1) *= fadegain;
     }
   }
@@ -294,27 +294,27 @@ void flange(t_bashfest *x, int slot, int *pcount)
   outbuf = x->events[slot].workbuffer + out_start;
 
 
-  if( minres <= 0. || maxres <= 0. ){
+  if( minres <= 0. || maxres <= 0. ) {
     error("flange: got zero frequency resonances as input");
     return;
   }
   mindel = 1.0/maxres;
   maxdel = 1.0/minres;
 
-  if( maxdel > max_delay ){
+  if( maxdel > max_delay ) {
     maxdel = max_delay;
     error("flange: too large delay time shortened");
   }
 
   delset2(delayline1, dv1, maxdel,srate);
-  if( channels == 2 ){
+  if( channels == 2 ) {
     delset2(delayline2, dv2, maxdel,srate);
   }
 
 
   si = ((float) sinelen/srate) * speed ;
 
-  if( phase > 1.0 ){
+  if( phase > 1.0 ) {
     phase = 0;
     error("flange: given > 1 initial phase");
   }
@@ -323,10 +323,10 @@ void flange(t_bashfest *x, int slot, int *pcount)
   fac2 = .5 * (maxdel - mindel) ;
   fac1 = mindel + fac2;
 
-  for(i = 0; i < in_frames*channels; i += channels ){
+  for(i = 0; i < in_frames*channels; i += channels ) {
     /* homemade oscillator */
     delay_time = fac1 + fac2 *  sinewave[(int) phase];
-    if( delay_time < .00001 ){
+    if( delay_time < .00001 ) {
       delay_time = .00001;
     }
     phase += si;
@@ -335,17 +335,17 @@ void flange(t_bashfest *x, int slot, int *pcount)
     delput2( *inbuf + delsamp1*feedback, delayline1, dv1);
     delsamp1 = dliget2(delayline1, delay_time, dv1,srate);
     *outbuf++ = (*inbuf++ + delsamp1) ;
-    if( channels == 2 ){
+    if( channels == 2 ) {
       delput2( *inbuf+delsamp2*feedback, delayline2, dv2);
       delsamp2 = dliget2(delayline2, delay_time, dv2,srate);
       *outbuf++ = (*inbuf++ + delsamp2) ;
     }
   }
   /* NOW DO HANGOVER */
-  for(i = 0; i < hangframes*channels; i += channels ){
+  for(i = 0; i < hangframes*channels; i += channels ) {
 
     delay_time = fac1 + fac2 *  sinewave[ (int) phase ];
-    if( delay_time < .00001 ){
+    if( delay_time < .00001 ) {
       delay_time = .00001;
     }
     phase += si;
@@ -354,7 +354,7 @@ void flange(t_bashfest *x, int slot, int *pcount)
     delput2( delsamp1*feedback, delayline1, dv1);
     delsamp1 = dliget2(delayline1, delay_time, dv1,srate);
     *outbuf++ = delsamp1 ;
-    if( channels == 2 ){
+    if( channels == 2 ) {
       delput2( delsamp2*feedback, delayline2, dv2);
       delsamp2 = dliget2(delayline2, delay_time, dv2,srate);
       *outbuf++ = delsamp2 ;
@@ -390,15 +390,15 @@ void butterme(t_bashfest *x, int slot, int *pcount)
   inbuf = x->events[slot].workbuffer + in_start;
   outbuf = x->events[slot].workbuffer + out_start;
 
-  if(ftype == HIPASS){
+  if(ftype == HIPASS) {
     cutoff = params[(*pcount)++];
     butterHipass(inbuf, outbuf, cutoff, frames, channels, srate);
   }
-  else if(ftype == LOPASS){
+  else if(ftype == LOPASS) {
     cutoff = params[(*pcount)++];
     butterLopass(inbuf, outbuf, cutoff, frames, channels, srate);
   }
-  else if(ftype == BANDPASS){
+  else if(ftype == BANDPASS) {
     cf = params[(*pcount)++];
     bw = params[(*pcount)++];
     butterBandpass(inbuf, outbuf, cf, bw, frames, channels, srate);
@@ -437,7 +437,7 @@ void truncateme(t_bashfest *x, int slot, int *pcount)
   fadeout = params[ (*pcount)++ ];
   fade_frames = fadeout * srate ;
   out_frames = shortdur * srate ;
-  if( out_frames >= in_frames ){
+  if( out_frames >= in_frames ) {
     // error("truncation requesting >= original duration, no truncation");
     return;
   }
@@ -448,12 +448,12 @@ void truncateme(t_bashfest *x, int slot, int *pcount)
   outbuf = x->events[slot].workbuffer + out_start;
 
 
-  if( fade_frames <= 0 ){
+  if( fade_frames <= 0 ) {
     error("truncation with 0 length fade!");
     return;
   }
 
-  if( fade_frames > out_frames ){
+  if( fade_frames > out_frames ) {
     error("truncation requested fadeout > new duration, adjusting...");
     fade_frames = out_frames;
   }
@@ -462,10 +462,10 @@ void truncateme(t_bashfest *x, int slot, int *pcount)
 
   fadestart = (out_frames - fade_frames) * channels ;
 
-  for( i = 0; i < fade_frames * channels; i += channels ){
+  for( i = 0; i < fade_frames * channels; i += channels ) {
     fadegain = 1.0 - (float) i / (float) (fade_frames * channels)  ;
     outbuf[fadestart + i]   *= fadegain;
-    if( channels == 2 ){
+    if( channels == 2 ) {
       outbuf[ fadestart + i + 1] *= fadegain;
     }
   }
@@ -514,7 +514,7 @@ void sweepreson(t_bashfest *x, int slot, int *pcount)
 
   si = ((float) sinelen / srate) * speed ;
 
-  if( phase > 1.0 ){
+  if( phase > 1.0 ) {
     phase = 0;
     error("sweepreson: given > 1 initial phase");
   }
@@ -526,11 +526,11 @@ void sweepreson(t_bashfest *x, int slot, int *pcount)
   cf = fac1 + fac2 * sinewave[(int) phase];
   bw = bwfac * cf;
   rsnset2( cf, bw, 2.0, 0.0, q1, srate );
-  if( channels == 2 ){
+  if( channels == 2 ) {
     rsnset2( cf, bw, 2.0, 0.0, q2, srate );
   }
 
-  for(i = 0; i < in_frames; i++ ){
+  for(i = 0; i < in_frames; i++ ) {
     // homemade oscillator
 
     phase += si;
@@ -543,14 +543,14 @@ void sweepreson(t_bashfest *x, int slot, int *pcount)
 
     cf = fac1 + fac2 * sinewave[(int) phase];
     bw = bwfac * cf;
-    if(cf < 10 || cf > 8000 || bw < 1 || srate < 100){
+    if(cf < 10 || cf > 8000 || bw < 1 || srate < 100) {
       post("danger values, cf %f bw %f sr %f",cf, bw, srate);
     }
     rsnset2( cf, bw, 2.0, 1.0, q1, srate );
     // clicks stop if we don't apply filter above, and if attacks come too fast
     *outbuf++ = reson(*inbuf++, q1);
 
-    if( channels == 2 ){
+    if( channels == 2 ) {
 
       //  rsnset2( cf, bw, 2.0, 1.0, q2, srate );
       *outbuf++ = reson(*inbuf++, q2);
@@ -609,37 +609,37 @@ void slidecomb(t_bashfest *x, int slot, int *pcount)
 
 
   out_frames = in_frames + overhang * srate ;
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
 
   delset2(delayline1, dv1, max_delay, srate);
-  if( channels == 2 ){
+  if( channels == 2 ) {
     delset2(delayline2, dv2, max_delay, srate);
   }
 
 
-  for( i = 0; i < in_frames*channels; i += channels){
+  for( i = 0; i < in_frames*channels; i += channels) {
     m2 = (float) i / (float) (out_frames * channels) ;
     m1 = 1. - m2;
     delay_time = delay1 * m1 + delay2 * m2 ;
     delput2(*inbuf +delsamp1*feedback, delayline1, dv1);
     delsamp1 = dliget2(delayline1, delay_time, dv1, srate);
     *outbuf++ = *inbuf++ + delsamp1;
-    if( channels == 2 ){
+    if( channels == 2 ) {
       delput2( *inbuf + delsamp2*feedback, delayline2, dv2);
       delsamp2 = dliget2(delayline2, delay_time, dv2, srate);
       *outbuf++ = *inbuf++ + delsamp2 ;
     }
   }
 
-  for( i = in_frames * channels; i < out_frames*channels; i += channels){
+  for( i = in_frames * channels; i < out_frames*channels; i += channels) {
     m2 = (float) i / (float) (out_frames * channels) ;
     m1 = 1. - m2;
     delay_time = delay1 * m1 + delay2 * m2 ;
     delput2( delsamp1*feedback, delayline1, dv1);
     *outbuf++ = delsamp1 = dliget2( delayline1, delay_time, dv1, srate );
-    if( channels == 2 ){
+    if( channels == 2 ) {
       delput2( delsamp2*feedback, delayline2, dv2);
       *outbuf++ = delsamp2 = dliget2( delayline2, delay_time, dv2, srate );
     }
@@ -647,10 +647,10 @@ void slidecomb(t_bashfest *x, int slot, int *pcount)
 
   fade_frames = COMBFADE * srate;
   fadestart = (out_frames - fade_frames) * channels ;
-  for( i = 0; i < fade_frames * channels; i += channels ){
+  for( i = 0; i < fade_frames * channels; i += channels ) {
     fadegain = 1.0 - (float) i / (float) (fade_frames * channels)  ;
     *(outbuf + fadestart + i) *= fadegain;
-    if( channels == 2 ){
+    if( channels == 2 ) {
       *(outbuf + fadestart + i + 1) *= fadegain;
     }
   }
@@ -683,7 +683,7 @@ void reverb1(t_bashfest *x, int slot, int *pcount)
 
   ++(*pcount);
   revtime = params[(*pcount)++];
-  if( revtime >= 1. ){
+  if( revtime >= 1. ) {
     error("reverb1 does not like feedback values over 1.");
     revtime = .99 ;
   }
@@ -692,7 +692,7 @@ void reverb1(t_bashfest *x, int slot, int *pcount)
 
 
   out_frames = in_frames + srate * overhang;
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
 
@@ -738,7 +738,7 @@ void ellipseme(t_bashfest *x, int slot, int *pcount)
   ++(*pcount);
   filtercode = params[(*pcount)++];
 
-  if( filtercode >= ELLIPSE_FILTER_COUNT ){
+  if( filtercode >= ELLIPSE_FILTER_COUNT ) {
     error("there is no %d ellipse data",filtercode);
     return;
   };
@@ -750,7 +750,7 @@ void ellipseme(t_bashfest *x, int slot, int *pcount)
 
   for( j = 0; j < channels; j++) {
     ellipset(fltdata,eel,&nsects,&xnorm);
-    for( i = j; i < in_frames * channels ; i += channels ){
+    for( i = j; i < in_frames * channels ; i += channels ) {
       outbuf[i] = ellipse(inbuf[i], eel, nsects,xnorm);
     }
   }
@@ -800,14 +800,14 @@ void feed1me(t_bashfest *x, int slot, int *pcount)
   speed2 = params[ (*pcount)++ ];
   overhang = params[ (*pcount)++ ];
 
-  if( maxdelay > my_max_delay ){
+  if( maxdelay > my_max_delay ) {
     error("feed1: too high max delay, adjusted");
     maxdelay = my_max_delay ;
   }
   dur = in_frames / srate ;
   desired_dur = dur + overhang;
   out_frames = srate * desired_dur ;
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
 
@@ -877,7 +877,7 @@ void flam1(t_bashfest *x, int slot, int *pcount)
 
 
 
-  if( attacks <= 1 ){
+  if( attacks <= 1 ) {
     error("flam1: too few attacks: %d",attacks);
     return;
   }
@@ -889,26 +889,26 @@ void flam1(t_bashfest *x, int slot, int *pcount)
   delay_frames = srate * delay + 0.5;
   delaysamps = channels * delay_frames;
   out_frames = in_frames + (srate * delay * (float) (attacks - 1));
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
 
-  for( i = 0; i < out_frames * channels; i++ ){
+  for( i = 0; i < out_frames * channels; i++ ) {
     outbuf[i] = 0.0 ;
   }
 
-  for(i = 0; i < attacks; i++ ){
-    if(in_frames + delay_frames * i >= out_frames){
+  for(i = 0; i < attacks; i++ ) {
+    if(in_frames + delay_frames * i >= out_frames) {
       // error("breaking at attack %d",i);
       break;
     }
-    for(j = 0; j < in_frames * channels; j += channels ){
-      for( k = 0; k < channels; k++ ){
+    for(j = 0; j < in_frames * channels; j += channels ) {
+      for( k = 0; k < channels; k++ ) {
         outbuf[j + k + delayoffset] += *(inbuf +j + k) * gain;
       }
     }
     delayoffset += delaysamps;
-    if( i == 0 ){
+    if( i == 0 ) {
       gain = gain2;
     } else {
       gain *= gainatten;
@@ -961,7 +961,7 @@ void flam2(t_bashfest *x, int slot, int *pcount)
   delay1 = params[(*pcount)++];
   delay2 = params[(*pcount)++];
 
-  if( attacks <= 1 ){
+  if( attacks <= 1 ) {
     error("flam2: recieved too few attacks: %d",attacks);
     return;
   }
@@ -969,42 +969,42 @@ void flam2(t_bashfest *x, int slot, int *pcount)
   inbuf = x->events[slot].workbuffer + in_start;
   outbuf = x->events[slot].workbuffer + out_start;
 
-  for( i = 0; i < attacks - 1; i++ ){
+  for( i = 0; i < attacks - 1; i++ ) {
     findex = ((float)i/(float)attacks) * (float)flamfunclen ;
     inval = flamfunc1[findex];
     curdelay = mapp(inval, 0., 1., delay2, delay1);
     now += curdelay;
   }
   out_frames = in_frames + (srate * now);
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
 
-  for( i = 0; i < out_frames * channels; i++ ){
+  for( i = 0; i < out_frames * channels; i++ ) {
     outbuf[i] = 0.0 ;
   }
 
   f_endpoint = in_frames;
   // first time delay_offset is zero
-  for( i = 0; i < attacks; i++ ){
+  for( i = 0; i < attacks; i++ ) {
     findex = ((float)i/(float)attacks) * (float)flamfunclen ;
     inval = flamfunc1[findex];
     curdelay = mapp(inval, 0., 1., delay2, delay1);
 
     delay_frames = srate * curdelay + 0.5;
     delaysamps = delay_frames * channels;
-    if(f_endpoint >= out_frames){
+    if(f_endpoint >= out_frames) {
       // error("flam2: breaking at attack %d",i);
       break;
     }
-    for(j = 0; j < in_frames * channels; j += channels ){
-      for( k = 0; k < channels; k++ ){
+    for(j = 0; j < in_frames * channels; j += channels ) {
+      for( k = 0; k < channels; k++ ) {
         outbuf[j + k + delayoffset] += *(inbuf + j + k) * gain;
       }
     }
     delayoffset += delaysamps;
     f_endpoint = in_frames + delayoffset/channels;
-    if( i == 0 ){
+    if( i == 0 ) {
       gain = gain2;
     } else {
       gain *= gainatten;
@@ -1057,7 +1057,7 @@ void expflam(t_bashfest *x, int slot, int *pcount)
   delay2 = params[(*pcount)++];
   slope = params[(*pcount)++];
 
-  if( attacks <= 1 ){
+  if( attacks <= 1 ) {
     error("expflam: recieved too few attacks: %d",attacks);
     return;
   }
@@ -1067,37 +1067,37 @@ void expflam(t_bashfest *x, int slot, int *pcount)
 
   setExpFlamFunc(expfunc, attacks, delay1, delay2, slope);
 
-  for( i = 0; i < attacks - 1; i++ ){
+  for( i = 0; i < attacks - 1; i++ ) {
     now += expfunc[i];
   }
 
   out_frames = in_frames + (srate * now);
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
 
-  for( i = 0; i < out_frames * channels; i++ ){
+  for( i = 0; i < out_frames * channels; i++ ) {
     outbuf[i] = 0.0 ;
   }
 
   f_endpoint = in_frames;
 
-  for( i = 0; i < attacks; i++ ){
+  for( i = 0; i < attacks; i++ ) {
     curdelay = expfunc[i];
     delay_frames = srate * curdelay + 0.5;
     delaysamps = delay_frames * channels;
-    if(f_endpoint >= out_frames){
+    if(f_endpoint >= out_frames) {
       // error("expflam: breaking at attack %d",i);
       break;
     }
-    for(j = 0; j < in_frames * channels; j += channels ){
-      for( k = 0; k < channels; k++ ){
+    for(j = 0; j < in_frames * channels; j += channels ) {
+      for( k = 0; k < channels; k++ ) {
         outbuf[j + k + delayoffset] += *(inbuf + j + k) * gain;
       }
     }
     delayoffset += delaysamps;
     f_endpoint = in_frames + delayoffset/channels;
-    if( i == 0 ){
+    if( i == 0 ) {
       gain = gain2;
     } else {
       gain *= gainatten;
@@ -1144,13 +1144,13 @@ void comb4(t_bashfest *x, int slot, int *pcount)
   inbuf = x->events[slot].workbuffer + in_start;
   outbuf = x->events[slot].workbuffer + out_start;
 
-  for( j = 0; j < 4; j++ ){
+  for( j = 0; j < 4; j++ ) {
     rez = params[(*pcount)++] ;
-    if( rez == 0.0){
+    if( rez == 0.0) {
       error("comb4: 0 resonance frequency not allowed");
       return;
     }
-    if( 1./rez > maxloop ){
+    if( 1./rez > maxloop ) {
       error("comb4: %f is too long loop",1./rez);
       return;
     }
@@ -1162,38 +1162,38 @@ void comb4(t_bashfest *x, int slot, int *pcount)
   if( overhang < COMBFADE )
     overhang = COMBFADE;
   out_frames = in_frames + overhang * srate;
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
-  for( j = 0; j < 4; j++ ){
+  for( j = 0; j < 4; j++ ) {
     mycombset( combies[j].lpt, revtime, 0, combies[j].arr, srate);
   }
 
   inbuf = x->events[slot].workbuffer + in_start;
 
-  for( j = 0; j < channels; j++ ){
-    for( i = 0; i < in_frames * channels; i += channels ){
+  for( j = 0; j < channels; j++ ) {
+    for( i = 0; i < in_frames * channels; i += channels ) {
       input_sample = *(inbuf + i + j) ; // we can move inside loop
       *(outbuf + i + j ) = 0.0; // comment out to leave original sound into it
-      for( k = 0; k < 4; k++ ){
+      for( k = 0; k < 4; k++ ) {
         *(outbuf + i + j) += mycomb(input_sample, combies[k].arr);
       }
     }
   }
-  for( i = in_frames * channels; i < out_frames * channels; i += channels ){
-    for( j = 0; j < channels; j++ ){
+  for( i = in_frames * channels; i < out_frames * channels; i += channels ) {
+    for( j = 0; j < channels; j++ ) {
       *(outbuf + i + j) = 0.0;
-      for( k = 0; k < 4; k++ ){
+      for( k = 0; k < 4; k++ ) {
         *(outbuf +i+j) += mycomb(0.0,combies[k].arr);
       }
     }
   }
   fadeFrames = COMBFADE * srate; // ok - this is just the fadeout
   fadestart = (out_frames - fadeFrames) * channels ;
-  for( i = 0; i < fadeFrames * channels; i += channels ){
+  for( i = 0; i < fadeFrames * channels; i += channels ) {
     fadegain = 1.0 - (float) i / (float) (fadeFrames * channels)  ;
     *(outbuf + fadestart + i) *= fadegain;
-    if( channels == 2 ){
+    if( channels == 2 ) {
       *(outbuf + fadestart + i + 1) *= fadegain;
     }
   }
@@ -1241,7 +1241,7 @@ void compdist(t_bashfest *x, int slot, int *pcount)
 
   maxamp = getmaxamp(inbuf, in_frames*channels) ;
 
-  if(lookupflag){
+  if(lookupflag) {
     set_distortion_table(table, cutoff, maxmult, range);
   }
 
@@ -1313,7 +1313,7 @@ void ringfeed(t_bashfest *x, int slot, int *pcount)
 
   inbuf = x->events[slot].workbuffer + in_start;
 
-  for( i = 0; i < channels ; i++ ){
+  for( i = 0; i < channels ; i++ ) {
     mycombset( combies[0].lpt, combies[0].rvbt, 0, combies[i].arr,srate);
     rsnset2(resies[0].cf, resies[0].bw, RESON_NO_SCL, 0., resies[i].q, srate);
   }
@@ -1324,12 +1324,12 @@ void ringfeed(t_bashfest *x, int slot, int *pcount)
     overhang = COMBFADE;
 
   out_frames = in_frames + overhang * srate ;
-  if( out_frames > buf_frames / 2 ){
+  if( out_frames > buf_frames / 2 ) {
     out_frames = buf_frames / 2 ;
   }
   /* INPUT LOOP */
-  for( i = 0; i < in_frames * channels; i += channels ){
-    for( j = 0; j < channels; j++ ){
+  for( i = 0; i < in_frames * channels; i += channels ) {
+    for( j = 0; j < channels; j++ ) {
       input_sample = *(inbuf + i + j ) ;
 
       input_sample *= oscil(1.0, oscar.si, oscar.func, oscar.len, &oscar.phs);
@@ -1339,8 +1339,8 @@ void ringfeed(t_bashfest *x, int slot, int *pcount)
   }
 
   /* COMB TAILS */
-  for( i = in_frames * channels; i < out_frames * channels; i += channels ){
-    for( j = 0; j < channels; j++ ){
+  for( i = in_frames * channels; i < out_frames * channels; i += channels ) {
+    for( j = 0; j < channels; j++ ) {
       *(outbuf +i+j) = reson(mycomb( 0.0, combies[j].arr), resies[j].q );
     }
   }
@@ -1348,10 +1348,10 @@ void ringfeed(t_bashfest *x, int slot, int *pcount)
   /* FADE OUT ON MIX */
   fade_frames = COMBFADE * srate;
   fadestart = (out_frames - fade_frames) * channels ;
-  for( i = 0; i < fade_frames * channels; i += channels ){
+  for( i = 0; i < fade_frames * channels; i += channels ) {
     fadegain = 1.0 - (float) i / (float) (fade_frames * channels)  ;
     *(outbuf + fadestart + i) *= fadegain;
-    if( channels == 2 ){
+    if( channels == 2 ) {
       *(outbuf + fadestart + i + 1) *= fadegain;
     }
   }
@@ -1409,7 +1409,7 @@ void resonadsr(t_bashfest *x, int slot, int *pcount)
 
   notedur = (float) in_frames / srate ;
   a->s = notedur - (a->a+a->d+a->r);
-  if( a->s <= 0.0 ){
+  if( a->s <= 0.0 ) {
     a->a=a->d=a->s=a->r= notedur/ 4. ;
   }
   buildadsr(a);
@@ -1418,11 +1418,11 @@ void resonadsr(t_bashfest *x, int slot, int *pcount)
   phase = 0;
 
   rsnset2(adsrfunc[(int)phase], adsrfunc[(int) phase]*bwfac, 2.0, 0.0, q1, srate);
-  if( channels == 2 ){
+  if( channels == 2 ) {
     rsnset2( adsrfunc[(int)phase], adsrfunc[(int) phase]*bwfac, 2.0, 0.0, q2, srate );
   }
 
-  for(i = 0; i < in_frames*channels; i += channels ){
+  for(i = 0; i < in_frames*channels; i += channels ) {
     phase += si;
     if( phase > funclen - 1)
       phase = funclen - 1;  /* stop at end of function */
@@ -1431,7 +1431,7 @@ void resonadsr(t_bashfest *x, int slot, int *pcount)
     bw = bwfac * cf ;
     rsnset2( cf, bw, 2.0, 1.0, q1, srate );
     outbuf[i] = reson(inbuf[i], q1);
-    if( channels == 2 ){
+    if( channels == 2 ) {
       rsnset2( cf, bw, 2.0, 1.0, q2, srate );
       outbuf[i+1] = reson(inbuf[i+1], q2);
     }
@@ -1485,7 +1485,7 @@ void stv(t_bashfest *x, int slot, int *pcount)
   mindel = .001;
   maxdel = depth;
 
-  if( maxdel > max_delay ){
+  if( maxdel > max_delay ) {
     maxdel = max_delay;
   }
 
@@ -1507,8 +1507,8 @@ void stv(t_bashfest *x, int slot, int *pcount)
   osc2.phs = 0;
   osc2.amp = fac2;
 
-  if( channels == 1 ){
-    for(i = 0, j = 0; i < frames; i++, j+=2 ){
+  if( channels == 1 ) {
+    for(i = 0, j = 0; i < frames; i++, j+=2 ) {
 
       delay_time = fac1 +
         oscil(osc1.amp, osc1.si, osc1.func, osc1.len, &osc1.phs);
@@ -1521,8 +1521,8 @@ void stv(t_bashfest *x, int slot, int *pcount)
       outbuf[j + 1] = dliget2(delayline2, delay_time, dv2,srate);
     }
   }
-  else if( channels == 2 ){
-    for(i = 0; i < frames*2; i += 2 ){
+  else if( channels == 2 ) {
+    for(i = 0; i < frames*2; i += 2 ) {
       delay_time = fac1 +
         oscil(osc1.amp, osc1.si, osc1.func, osc1.len, &osc1.phs);
       delput2( inbuf[i], delayline1, dv1);

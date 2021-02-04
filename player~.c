@@ -104,7 +104,7 @@ void player_stop(t_player *x)
 {
   int i;
 
-  for(i = 0; i < x->overlap_max; i++){
+  for(i = 0; i < x->overlap_max; i++) {
     x->events[i].status = INACTIVE;
     x->events[i].phase = 0.0;
     x->events[i].phase = 0.0;
@@ -129,12 +129,12 @@ void *player_new(t_symbol *msg, short argc, t_atom *argv)
   outlet_new(&x->x_obj, gensym("signal") );
   x->wavename = atom_getsymbolarg(0,argc,argv);
   x->b_nchans = 1;
-  if(argc < 1){
+  if(argc < 1) {
     error("%s: must specify buffer name",OBJECT_NAME);
     return 0;
   }
   x->overlap_max = atom_getfloatarg(2,argc,argv);
-  if(x->overlap_max <= 0 || x->overlap_max > 128){
+  if(x->overlap_max <= 0 || x->overlap_max > 128) {
     x->overlap_max = DEFAULT_MAX_OVERLAP;
   }
   // post("%d overlaps for %s",x->overlap_max,x->wavename->s_name);
@@ -153,7 +153,7 @@ void player_init(t_player *x,short initialized)
 {
   int i;
 
-  if(!initialized){
+  if(!initialized) {
     x->most_recent_event = 0;
     x->active_events = 0;
     x->increment = 1.0;
@@ -163,7 +163,7 @@ void player_init(t_player *x,short initialized)
     x->mute = 0;
     x->interpolation_tog = 1; // interpolation by default
     x->static_increment = 0; // by default increment is adjustable through note
-    for(i = 0; i < x->overlap_max; i++){
+    for(i = 0; i < x->overlap_max; i++) {
       x->events[i].status = INACTIVE;
       x->events[i].increment = 0.0;
       x->events[i].phase = 0.0;
@@ -173,7 +173,7 @@ void player_init(t_player *x,short initialized)
     x->increment_vec = malloc(MAXIMUM_VECTOR * sizeof(float));
     x->trigger_vec = malloc(MAXIMUM_VECTOR * sizeof(float));
   } else {
-    for(i = 0; i < x->overlap_max; i++){
+    for(i = 0; i < x->overlap_max; i++) {
       x->events[i].status = INACTIVE;
     }
     x->increment_vec = realloc(x->increment_vec, x->vs * sizeof(float));
@@ -209,7 +209,7 @@ void player_setbuf(t_player *x, t_symbol *wavename)
     x->b_valid = 1;
     garray_usedindsp(a);
   }
-  if(! x->b_valid ){
+  if(! x->b_valid ) {
     post("player~ got invalid buffer");
   }
 
@@ -274,7 +274,7 @@ t_int *player_perform_mono_interpol(t_int *w)
   long b_frames;
   float vincrement;
 
-  if(x->mute || x->hosed){
+  if(x->mute || x->hosed) {
     memset((void *)outchan,0,sizeof(float) * n);
     return(w+6);
   }
@@ -290,7 +290,7 @@ t_int *player_perform_mono_interpol(t_int *w)
   }
   // DO THIS BETTER
 
-  for(i = 0; i < n; i++){
+  for(i = 0; i < n; i++) {
     trigger_vec[i] = t_vec[i];
     increment_vec[i] = i_vec[i];
   }
@@ -298,20 +298,20 @@ t_int *player_perform_mono_interpol(t_int *w)
 
   /* test if we even need to do anything */
   bail = 1;
-  for(i = 0; i < overlap_max; i++){
-    if(events[i].status == ACTIVE){
+  for(i = 0; i < overlap_max; i++) {
+    if(events[i].status == ACTIVE) {
       bail = 0;
       break;
     }
   }
-  if(bail){
-    for(i = 0; i < n; i++){
-      if(trigger_vec[i]){
+  if(bail) {
+    for(i = 0; i < n; i++) {
+      if(trigger_vec[i]) {
         bail = 0;
       }
     }
   }
-  if(bail){
+  if(bail) {
     memset((void *)outchan,0,sizeof(float) * n);
     return(w+6);
   }
@@ -322,13 +322,13 @@ t_int *player_perform_mono_interpol(t_int *w)
 
   memset((void *)outchan,0,sizeof(float) * n);
   flimit = (b_frames - 1) * 2;
-  for(i = 0; i < overlap_max; i++){
-    if(events[i].status == ACTIVE){
+  for(i = 0; i < overlap_max; i++) {
+    if(events[i].status == ACTIVE) {
       gain = events[i].gain;
       for(j = 0; j < n; j++){ //vector loop
         iphase = events[i].phase;
         frac = events[i].phase - iphase;
-        if(static_increment){
+        if(static_increment) {
           increment = events[i].increment;
         } else {
 
@@ -337,7 +337,7 @@ t_int *player_perform_mono_interpol(t_int *w)
         }
         //  iphase *= 2;
         if(increment > 0){ // moving forward into sample
-          if(iphase == flimit){
+          if(iphase == flimit) {
             outchan[j] += b_samples[iphase].w_float * gain;
           } else {
             samp1 = b_samples[iphase].w_float;
@@ -347,7 +347,7 @@ t_int *player_perform_mono_interpol(t_int *w)
         }
         // moving backwards into sample
         else {
-          if(iphase == 0.0){
+          if(iphase == 0.0) {
             outchan[j] += b_samples[iphase].w_float * gain;
           } else {
             samp2 = b_samples[iphase].w_float;
@@ -356,7 +356,7 @@ t_int *player_perform_mono_interpol(t_int *w)
           }
         }
 
-        if(static_increment){
+        if(static_increment) {
           events[i].phase += events[i].increment;
         }
         else {
@@ -365,7 +365,7 @@ t_int *player_perform_mono_interpol(t_int *w)
           events[i].phase += increment_vec[j];
 
         }
-        if( events[i].phase < 0.0 || events[i].phase >= b_frames){
+        if( events[i].phase < 0.0 || events[i].phase >= b_frames) {
           events[i].status = INACTIVE;
           break;
         }
@@ -373,20 +373,20 @@ t_int *player_perform_mono_interpol(t_int *w)
     }
   }
   /* trigger responder and initial playback code */
-  for(i=0; i<n; i++){
-    if(trigger_vec[i]){
+  for(i=0; i<n; i++) {
+    if(trigger_vec[i]) {
       gain = trigger_vec[i];
 
       increment = increment_vec[i];
       insert_success = 0;
 
       /* put new event into event list */
-      for(j=0; j<overlap_max; j++){
-        if(events[j].status == INACTIVE){
+      for(j=0; j<overlap_max; j++) {
+        if(events[j].status == INACTIVE) {
           events[j].status = ACTIVE;
           events[j].gain = gain;
           events[j].increment = increment;
-          if(increment > 0){
+          if(increment > 0) {
             events[j].phase = 0.0;
           } else {
             events[j].phase = b_frames - 1;
@@ -401,8 +401,8 @@ t_int *player_perform_mono_interpol(t_int *w)
 
         maxphase = 0;
         theft_candidate = 0;
-        for(k = 0; k < overlap_max; k++){
-          if(events[k].phase > maxphase){
+        for(k = 0; k < overlap_max; k++) {
+          if(events[k].phase > maxphase) {
             maxphase = events[k].phase;
             theft_candidate = k;
           }
@@ -411,7 +411,7 @@ t_int *player_perform_mono_interpol(t_int *w)
         new_insert = theft_candidate;
         events[new_insert].gain = gain;
         events[new_insert].increment = increment;
-        if(increment > 0){
+        if(increment > 0) {
           events[new_insert].phase = 0.0;
         } else {
           events[new_insert].phase = b_frames - 1;
@@ -419,7 +419,7 @@ t_int *player_perform_mono_interpol(t_int *w)
         insert_success = 1;
       }
 
-      for(k=i; k<n; k++){
+      for(k=i; k<n; k++) {
 
         //roll out for remaining portion of vector
         fphase = events[new_insert].phase;
@@ -428,7 +428,7 @@ t_int *player_perform_mono_interpol(t_int *w)
         //    iphase *= 2; // double for stereo
         /* do interpolation */
         if(increment > 0){ // moving forward into sample
-          if(iphase == flimit){
+          if(iphase == flimit) {
             outchan[k] += b_samples[iphase].w_float * gain;
           } else {
             samp1 = b_samples[iphase].w_float;
@@ -438,7 +438,7 @@ t_int *player_perform_mono_interpol(t_int *w)
         }
         // moving backwards into sample
         else {
-          if(iphase == 0.0){
+          if(iphase == 0.0) {
             outchan[k] += b_samples[iphase].w_float * gain;
           } else {
             samp2 = b_samples[iphase].w_float;
@@ -447,7 +447,7 @@ t_int *player_perform_mono_interpol(t_int *w)
           }
         }
         /* advance phase */
-        if(static_increment){
+        if(static_increment) {
           increment = events[new_insert].increment;
         } else {
 
@@ -458,7 +458,7 @@ t_int *player_perform_mono_interpol(t_int *w)
 
 
         /* note termination conditions */
-        if( events[new_insert].phase < 0.0 || events[new_insert].phase >= b_frames){
+        if( events[new_insert].phase < 0.0 || events[new_insert].phase >= b_frames) {
           events[new_insert].status = INACTIVE;
           break;
         }
@@ -490,20 +490,20 @@ void player_dsp(t_player *x, t_signal **sp)
 
   player_setbuf(x, x->wavename);
 
-  if(x->sr != sp[0]->s_sr){
+  if(x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
-    if(!x->sr){
+    if(!x->sr) {
       post("warning: zero sampling rate!");
       x->sr = 44100;
     }
   }
 
-  if(x->vs != sp[0]->s_n){
+  if(x->vs != sp[0]->s_n) {
     x->vs = sp[0]->s_n;
     player_init(x,1);
   }
 
-  if(x->b_frames <= 0 && ! x->hosed){
+  if(x->b_frames <= 0 && ! x->hosed) {
     post("empty buffer, external disabled until it a sound is loaded");
     x->hosed = 1;
   }

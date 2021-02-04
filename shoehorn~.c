@@ -28,7 +28,7 @@ void shoehorn_free(t_shoehorn *x);
 void shoehorn_dsp(t_shoehorn *x, t_signal **sp);
 t_int *shoehorn_perform(t_int *w);
 
-void shoehorn_tilde_setup(void){
+void shoehorn_tilde_setup(void) {
   shoehorn_class = class_new(gensym("shoehorn~"), (t_newmethod)shoehorn_new,
                              (t_method)shoehorn_free, sizeof(t_shoehorn),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(shoehorn_class, t_shoehorn, x_f);
@@ -44,21 +44,21 @@ void *shoehorn_new(t_symbol *s, int argc, t_atom *argv)
   t_shoehorn *x = (t_shoehorn *)pd_new(shoehorn_class);
   x->inChans = (long) atom_getfloatarg(0,argc,argv);
   x->outChans = (long) atom_getfloatarg(1,argc,argv);
-  if( x->outChans < 2 || x->inChans < 2){
+  if( x->outChans < 2 || x->inChans < 2) {
     error("%s: illegal channel count: [in = %ld] [out = %ld]",OBJECT_NAME,x->inChans,x->outChans);
     return NULL;
   }
-  for(i = 0; i < x->inChans - 1; i++){
+  for(i = 0; i < x->inChans - 1; i++) {
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal"));
   }
-  for(i=0; i < x->outChans; i++){
+  for(i=0; i < x->outChans; i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
   x->pio2 = PI / 2.0;
 
   x->inarr = (t_float *) malloc(x->inChans * sizeof(t_float));
   x->loc_invecs = (t_float **) malloc(x->inChans * sizeof(t_float *));
-  for(i = 0; i < x->inChans; i++){
+  for(i = 0; i < x->inChans; i++) {
     x->loc_invecs[i] = (t_float *) malloc(8192 * sizeof(t_float));
   }
   x->pangains1 = (double *) malloc(x->inChans * sizeof(double));
@@ -67,7 +67,7 @@ void *shoehorn_new(t_symbol *s, int argc, t_atom *argv)
   x->advFrac = (double)(x->outChans - 1)/(double)(x->inChans - 1);
   x->outs = (t_float **) malloc(x->outChans * sizeof(t_float *)); // temporary holding for output vectors
 
-  for(i = 1; i < x->inChans - 1; i++){
+  for(i = 1; i < x->inChans - 1; i++) {
     fullFrac = i * x->advFrac;
     outIndex = floor(fullFrac);
     thisFrac = fullFrac - outIndex;
@@ -86,7 +86,7 @@ void shoehorn_free(t_shoehorn *x)
   free(x->pangains1);
   free(x->pangains2);
   free(x->indexList);
-  for(i = 0; i < x->inChans; i++){
+  for(i = 0; i < x->inChans; i++) {
     free(x->loc_invecs[i]);
   }
   free(x->loc_invecs);
@@ -112,26 +112,26 @@ t_int *shoehorn_perform(t_int *w)
   int n = (int) w[inChans + outChans + 2];
   // assign output vector pointers
 
-  for(i = 0; i < outChans; i++){
+  for(i = 0; i < outChans; i++) {
     outs[i] = (t_float *) w[2 + inChans + i];
   }
 
   // copy all input vectors to a local 2D array
-  for(i = 0; i < inChans; i++){
+  for(i = 0; i < inChans; i++) {
     invec = (t_float *) w[2 + i];
-    for(j = 0; j < n; j++){
+    for(j = 0; j < n; j++) {
       loc_invecs[i][j] = invec[j];
     }
   }
 
-  for( j = 0; j < n; j++){
+  for( j = 0; j < n; j++) {
     // copy local input sample frame
-    for(chan = 0; chan < inChans; chan++){
+    for(chan = 0; chan < inChans; chan++) {
       inarr[chan] = loc_invecs[chan][j];
     }
 
     // zero out output channels
-    for(chan = 1; chan < outChans - 1; chan++){
+    for(chan = 1; chan < outChans - 1; chan++) {
       outs[chan][j] = 0.0;
     }
 
@@ -142,7 +142,7 @@ t_int *shoehorn_perform(t_int *w)
 
     // spread internal input channels to respective output channels
 
-    for(chan = 1; chan < inChans - 1; chan++){
+    for(chan = 1; chan < inChans - 1; chan++) {
       outIndex = indexList[chan];
       outs[outIndex][j] += pangains1[chan] * inarr[chan];
       outs[outIndex+1][j] += pangains2[chan] * inarr[chan];
@@ -157,7 +157,7 @@ void shoehorn_dsp(t_shoehorn *x, t_signal **sp)
   t_int **sigvec;
   int pointer_count = x->inChans + x->outChans + 2;
   sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object

@@ -21,7 +21,7 @@ t_int *npan_perform(t_int *w);
 void npan_dsp(t_npan *x, t_signal **sp);
 void npan_free(t_npan *x);
 
-void npan_tilde_setup(void){
+void npan_tilde_setup(void) {
   npan_class = class_new(gensym("npan~"), (t_newmethod)npan_new,
                          (t_method)npan_free, sizeof(t_npan),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(npan_class, t_npan, x_f);
@@ -35,13 +35,13 @@ void *npan_new(t_symbol *s, short argc, t_atom *argv)
   x = (t_npan *)pd_new(npan_class);
   int i;
   x->outcount = (int) atom_getfloatarg(0, argc, argv);
-  if( x->outcount < 2 || x->outcount > SPEAKERMAX ){
+  if( x->outcount < 2 || x->outcount > SPEAKERMAX ) {
 
     error("npan~: output count %d exceeded range limits of 2 to %d",x->outcount, SPEAKERMAX);
     x->outcount = SPEAKERMAX;
   }
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal")); // create 2nd inlet
-  for(i = 0; i < x->outcount; i++){
+  for(i = 0; i < x->outcount; i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
   x->input_locvec = (t_float *) calloc(8192, 1);
@@ -76,18 +76,18 @@ t_int *npan_perform(t_int *w)
   double pi_over_two = x->pi_over_two;
   int n = (int) w[4 + outcount];
   // copy inputs
-  for(i = 0; i < n; i++){
+  for(i = 0; i < n; i++) {
     input_locvec[i] = input[i];
     panner_locvec[i] = panner[i];
   }
   // clean all outlets
-  for( i = 0; i < outcount; i++ ){
+  for( i = 0; i < outcount; i++ ) {
     cleanoutlet = (t_float*) w[4 + i];
-    for(j = 0; j < n; j++){
+    for(j = 0; j < n; j++) {
       cleanoutlet[j] = 0.0;
     }
   }
-  for(i = 0; i < n; i++){
+  for(i = 0; i < n; i++) {
     insamp = input_locvec[i];
     panloc = panner_locvec[i];
     if( panloc < 0 )
@@ -115,7 +115,7 @@ void npan_dsp(t_npan *x, t_signal **sp)
   t_int **sigvec;
   int pointer_count = x->outcount + 4;
   sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object

@@ -66,7 +66,7 @@ t_int *channel_perform(t_int *w)
   int channel = x->channel;
   float value;
 
-  if(channel < 0 || channel > n){
+  if(channel < 0 || channel > n) {
     return w + 5;
   }
   value = in_vec[channel];

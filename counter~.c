@@ -54,10 +54,10 @@ void counter_direction(t_counter *x, t_floatarg d)
 
 void counter_minmax(t_counter *x, t_floatarg min, t_floatarg max)
 {
-  if(min < 1){
+  if(min < 1) {
     return;
   }
-  if(min >= max){
+  if(min >= max) {
     return;
   }
   x->min = min;
@@ -98,16 +98,16 @@ t_int *counter_perform(t_int *w)
   long current = x->current;
   short direction = x->direction;
 
-  for(i = 0; i < n; i++){
-    if(in_vec[i]){
+  for(i = 0; i < n; i++) {
+    if(in_vec[i]) {
       out_vec[i] = current;
       current = current + direction;
-      if( direction == COUNTER_UP ){
-        if( current > max ){
+      if( direction == COUNTER_UP ) {
+        if( current > max ) {
           current = min;
         }
-      } else if( direction == COUNTER_DOWN ){
-        if( current < min ){
+      } else if( direction == COUNTER_DOWN ) {
+        if( current < min ) {
           current = max;
         }
       }

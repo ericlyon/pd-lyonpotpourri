@@ -167,7 +167,7 @@ t_int *vdp_perform(t_int *w)
   /**********************/
 
   if( x->mute ) {
-    /* while(n--){
+    /* while(n--) {
      *output++ = 0.0;
      } */
     memset( (char *)output, 0, n * sizeof(float) );
@@ -179,12 +179,12 @@ t_int *vdp_perform(t_int *w)
 
   /* loop only for infinite hold */
 
-  if(inf_hold){
-    while( n-- ){
+  if(inf_hold) {
+    while( n-- ) {
       read_ptr = write_ptr;
       outsamp = *read_ptr;
       write_ptr++;
-      if( write_ptr >= endmem ){
+      if( write_ptr >= endmem ) {
         write_ptr = startmem;
       }
       *output++ = outsamp;
@@ -196,7 +196,7 @@ t_int *vdp_perform(t_int *w)
 
 
   /* normal main loop*/
-  while( n-- ){
+  while( n-- ) {
 
     // Pull Data off Signal buffers
     insamp = *input++;
@@ -211,7 +211,7 @@ t_int *vdp_perform(t_int *w)
       idelay = floor(fdelay);
     }
 
-    if(connections[2]){
+    if(connections[2]) {
       feedback = *feedback_vec++;
       if( feedback_protect ) {
         if( feedback > 0.99)
@@ -224,22 +224,22 @@ t_int *vdp_perform(t_int *w)
 
 
     /* make fdelay behave */
-    if(fdelay < 0.0){
+    if(fdelay < 0.0) {
       fdelay = 0.0;
     }
-    else if(fdelay >= len){
+    else if(fdelay >= len) {
       fdelay = len - 1;
     }
     idelay = floor(fdelay);
 
-    if(interpolate){
+    if(interpolate) {
       frac = (fdelay - idelay);
       read_ptr = write_ptr - idelay;
-      if( read_ptr < startmem ){
+      if( read_ptr < startmem ) {
         read_ptr += len;
       }
       x1 = *read_ptr--;
-      if( read_ptr < startmem ){
+      if( read_ptr < startmem ) {
         read_ptr += endmem - startmem;
       }
       x2 = *read_ptr;
@@ -248,13 +248,13 @@ t_int *vdp_perform(t_int *w)
     }
     else { // no interpolation case
       read_ptr = write_ptr - idelay;
-      if( read_ptr < startmem ){
+      if( read_ptr < startmem ) {
         read_ptr += len;
       }
       outsamp = *read_ptr;
 
     }
-    if(filter){
+    if(filter) {
       outsamp += lpf.x1 * lpf.coef;
       outsamp /= (1.0+lpf.coef);
       lpf.x1 = outsamp;
@@ -262,7 +262,7 @@ t_int *vdp_perform(t_int *w)
 
     *write_ptr++ = insamp + outsamp * feedback;
 
-    if( write_ptr >= endmem ){
+    if( write_ptr >= endmem ) {
       write_ptr = startmem;
     }
 
@@ -285,12 +285,12 @@ void *vdp_new(t_symbol *s, int argc, t_atom *argv)
   int i;
 
   t_vdp *x = (t_vdp *)pd_new(vdp_class);
-  for(i = 0; i < 2; i++){
+  for(i = 0; i < 2; i++) {
     inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
   }
   outlet_new(&x->x_obj, gensym("signal") );
   x->sr = sys_getsr();
-  if(!x->sr){
+  if(!x->sr) {
     error("zero sampling rate - set to 44100");
     x->sr = 44100;
   }
@@ -333,15 +333,15 @@ void vdp_init(t_vdp *x,short initialized)
 {
   //int i;
 
-  if(!initialized){
+  if(!initialized) {
     x->feedback_protect = 0;
     x->interpolate = 1;
     x->filter = 0;
     x->inf_hold = 0;
-    if( x->maxdel < .00001 ){
+    if( x->maxdel < .00001 ) {
       x->maxdel = .00001;
     }
-    if( x->maxdel > MAX_DELAY_TIME ){
+    if( x->maxdel > MAX_DELAY_TIME ) {
       error("%s: %f is too long, delay time set to max of %f",OBJECT_NAME,x->maxdel, MAX_DELAY_TIME);
       x->maxdel = MAX_DELAY_TIME;
     }
@@ -374,7 +374,7 @@ void vdp_dsp(t_vdp *x, t_signal **sp)
   x->connections[1] = 1;
   x->connections[2] = 1;
 
-  if(x->sr != sp[0]->s_sr){
+  if(x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
     vdp_init(x,1);
   }
@@ -406,7 +406,7 @@ void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, short argc, t_atom *argv)
 
   destname = atom_getsymarg(0,argc,argv);
 
-  if(! vdp_setdestbuf(x, destname)){
+  if(! vdp_setdestbuf(x, destname)) {
     post("could not find buffer");
     return;
   }
@@ -415,11 +415,11 @@ void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, short argc, t_atom *argv)
   b_dest_frames = x->destbuf->b_frames;
 
 
-  if(b_nchans != 1){
+  if(b_nchans != 1) {
     error("%s: buffer must be mono",OBJECT_NAME);
     return;
   }
-  if(b_dest_frames < b_frames ){
+  if(b_dest_frames < b_frames ) {
     // post("%s: destination buffer %s is too small, truncating",OBJECT_NAME,destname->s_name);
     b_frames = b_dest_frames; // local copy only
   }

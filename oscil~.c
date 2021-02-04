@@ -119,7 +119,7 @@ void oscil_amph(t_oscil *x, t_symbol *msg, short argc, t_atom *argv)
   int harmonic_count = 0;
   float *harmonic_weights = x->harmonic_weights;
   float *harmonic_phases = x->harmonic_phases;
-  if(argc < 1){
+  if(argc < 1) {
     return;
   }
   /* DC */
@@ -143,7 +143,7 @@ void oscil_fadetime (t_oscil *x, t_floatarg fade_ms)
     error("oscil: crossfade in progress, cannot update fade time");
     return;
   }
-  if( fade_ms < 0.0 || fade_ms > 60000.0 ){
+  if( fade_ms < 0.0 || fade_ms > 60000.0 ) {
     error("%s: %f is not a good fade time",OBJECT_NAME, fade_ms);
     fade_ms = 50.;
   }
@@ -205,19 +205,19 @@ void *oscil_new(t_symbol *s, short argc, t_atom *argv)
   x->phase_offset = 0.0;
   x->interpolate = 0;
 
-  if( argc > 0 ){
+  if( argc > 0 ) {
     init_freq = atom_getfloatarg(0, argc, argv);
-    if( ! init_freq ){
+    if( ! init_freq ) {
       error("%s: zero initial frequency, resetting to 440",OBJECT_NAME);
       init_freq = 440 ;
     }
 
   }
-  if( argc > 1 ){
+  if( argc > 1 ) {
     x->table_length = atom_getfloatarg(1, argc, argv);
     //    post("table length is %d", x->table_length );
   }
-  if( argc > 2 ){
+  if( argc > 2 ) {
     init_waveform_symbol = atom_getsymbolarg(2, argc, argv);
   } else {
     init_waveform_symbol = gensym( OSCIL_DEFAULT_WAVEFORM );
@@ -226,7 +226,7 @@ void *oscil_new(t_symbol *s, short argc, t_atom *argv)
 
   if( argc > 3 ) {
     x->bl_harms = atom_getfloatarg(3, argc, argv);
-    if( x->bl_harms > 1024 ){
+    if( x->bl_harms > 1024 ) {
       error("%s: too many harmonics - limit is 1024",OBJECT_NAME);
       x->bl_harms = 1024;
     }
@@ -235,13 +235,13 @@ void *oscil_new(t_symbol *s, short argc, t_atom *argv)
     x->bl_harms = OSCIL_DEFAULT_HARMONICS ;
   }
 
-  if( x->table_length < 4 ){
+  if( x->table_length < 4 ) {
     x->table_length = OSCIL_DEFAULT_FLEN ;
   }
-  if( x->table_length > OSCIL_MAX_FLEN ){
+  if( x->table_length > OSCIL_MAX_FLEN ) {
     x->table_length = OSCIL_MAX_FLEN;
     error("%s: Exceeded maximum - setting function length to %d",OBJECT_NAME,OSCIL_MAX_FLEN);
-  } if( x->bl_harms < 1 || x->bl_harms > OSCIL_MAXIMUM_HARMONICS ){
+  } if( x->bl_harms < 1 || x->bl_harms > OSCIL_MAXIMUM_HARMONICS ) {
     x->bl_harms = OSCIL_DEFAULT_HARMONICS ;
     error("%s: Bad parameters. Bandlimited waveforms will have %d partials.",
           OBJECT_NAME,OSCIL_DEFAULT_HARMONICS);
@@ -264,7 +264,7 @@ void *oscil_new(t_symbol *s, short argc, t_atom *argv)
   x->mute = 0;
   x->dirty = 0;
   x->sr = sys_getsr();
-  if( ! x->sr ){
+  if( ! x->sr ) {
     x->sr = 44100;
     error("zero sampling rate - set to 44100");
   }
@@ -311,24 +311,24 @@ void build_amph_waveform( t_oscil *x )
   //  float testsum = 0.0;
   float addphase;
 
-  if( x->fade_in_progress ){
+  if( x->fade_in_progress ) {
     // error("Crossfade in progress. Cannot generate waveform");
     // do not use because this will happen too often
     return;
   }
 
 
-  if( harmonic_count < 1 ){
+  if( harmonic_count < 1 ) {
     error("%s: no harmonics specified, waveform not created.",OBJECT_NAME);
     return;
   }
 
-  if( x->fadetype && ! x->firsttime ){
+  if( x->fadetype && ! x->firsttime ) {
     x->fade_countdown = x->fade_samples;
     x->fade_in_progress = 1;
   }
   /*
-    for( i = 0; i < table_length ; i++ ){
+    for( i = 0; i < table_length ; i++ ) {
     old_wavetable[i] = wavetable[i];
     }
   */
@@ -337,15 +337,15 @@ void build_amph_waveform( t_oscil *x )
   x->dirty = 1 ;
 
   // add DC in directly (usually 0.0)
-  for( i = 0; i < table_length; i++ ){
+  for( i = 0; i < table_length; i++ ) {
     wavetable[i] = harmonic_weights[0];
   }
   // sum all specified harmonics
-  for( i = 1 ; i < harmonic_count; i++ ){
-    if( harmonic_weights[i] ){
+  for( i = 1 ; i < harmonic_count; i++ ) {
+    if( harmonic_weights[i] ) {
       addphase = twopi * harmonic_phases[i];
       //      post("amp %f phase %f twopi phase %f",harmonic_weights[i],harmonic_phases[i],addphase);
-      for( j = 0; j < table_length; j++ ){
+      for( j = 0; j < table_length; j++ ) {
         wavetable[j] +=
           harmonic_weights[i] * sin( twopi * ((float)i * ((float)j/(float)table_length)) + addphase ) ;
       }
@@ -353,14 +353,14 @@ void build_amph_waveform( t_oscil *x )
   }
   // determine maximum amplitude.
   max = 0;
-  for( j = 0; j < table_length; j++ ){
-    if( max < fabs(wavetable[j]) ){
+  for( j = 0; j < table_length; j++ ) {
+    if( max < fabs(wavetable[j]) ) {
       max = fabs(wavetable[j]) ;
     }
   }
   // restore last table
-  if( max == 0.0 ){
-    for( j = 0; j < table_length; j++ ){
+  if( max == 0.0 ) {
+    for( j = 0; j < table_length; j++ ) {
       wavetable[j] = old_wavetable[j];
     }
     error("all zero function ignored");
@@ -370,7 +370,7 @@ void build_amph_waveform( t_oscil *x )
   // normalize waveform to maximum amplitude of 1.0
   rescale = 1.0 / max ;
 
-  for( j = 0; j < table_length; j++ ){
+  for( j = 0; j < table_length; j++ ) {
     wavetable[j] *= rescale ;
   }
   x->dirty = 0;
@@ -388,24 +388,24 @@ void build_waveform( t_oscil *x ) {
   float twopi = x->twopi;
   //  float testsum = 0.0;
 
-  if( x->fade_in_progress ){
+  if( x->fade_in_progress ) {
     // error("Crossfade in progress. Cannot generate waveform");
     // do not use because this will happen too often
     return;
   }
 
 
-  if( harmonic_count < 1 ){
+  if( harmonic_count < 1 ) {
     error("no harmonics specified, waveform not created.");
     return;
   }
 
-  if( x->fadetype && ! x->firsttime ){
+  if( x->fadetype && ! x->firsttime ) {
     x->fade_countdown = x->fade_samples;
     x->fade_in_progress = 1;
   }
   /*
-    for( i = 0; i < table_length ; i++ ){
+    for( i = 0; i < table_length ; i++ ) {
     old_wavetable[i] = wavetable[i];
     }
   */
@@ -414,26 +414,26 @@ void build_waveform( t_oscil *x ) {
   x->dirty = 1 ;
 
   // add DC in directly (usually 0.0)
-  for( i = 0; i < table_length; i++ ){
+  for( i = 0; i < table_length; i++ ) {
     wavetable[i] = harmonic_weights[0];
   }
   // sum all specified harmonics
-  for( i = 1 ; i < harmonic_count; i++ ){
-    if( harmonic_weights[i] ){
-      for( j = 0; j < table_length; j++ ){
+  for( i = 1 ; i < harmonic_count; i++ ) {
+    if( harmonic_weights[i] ) {
+      for( j = 0; j < table_length; j++ ) {
         wavetable[j] += harmonic_weights[i] * sin( twopi * ( (float) i * ((float) j /(float)table_length)) ) ;
       }
     }
   }
   // determine maximum amplitude. Since waveform is symmetric, we could only look for positive maximum.
   max = 0;
-  for( j = 0; j < table_length; j++ ){
-    if( max < fabs(wavetable[j]) ){
+  for( j = 0; j < table_length; j++ ) {
+    if( max < fabs(wavetable[j]) ) {
       max = fabs(wavetable[j]) ;
     }
   }
   // restore last table
-  if( max == 0.0 ){
+  if( max == 0.0 ) {
     for( j = 0; j < table_length; j++ ){  // could use memcpy here
       wavetable[j] = old_wavetable[j];
     }
@@ -444,7 +444,7 @@ void build_waveform( t_oscil *x ) {
   // normalize waveform to maximum amplitude of 1.0
   rescale = 1.0 / max ;
 
-  for( j = 0; j < table_length; j++ ){
+  for( j = 0; j < table_length; j++ ) {
     wavetable[j] *= rescale ;
   }
   x->dirty = 0;
@@ -478,19 +478,19 @@ t_int *oscil_perform_interpolate(t_int *w)
 
   float piotwo = x->piotwo;
 
-  if( x->mute ){
+  if( x->mute ) {
     while (n--) {
       *out++ = 0.0;
     }
     return (w+6);
   }
   /* interpolated loop */
-  if(x->interpolate){
+  if(x->interpolate) {
     while (n--) {
       if(connected[0])
         si = *freq_vec++ * si_factor;
 
-      if(connected[1]){
+      if(connected[1]) {
         phase_offset = (float)table_length * *phase_vec++;
 
       }
@@ -508,12 +508,12 @@ t_int *oscil_perform_interpolate(t_int *w)
       frac = fphase - iphase;
 
 
-      if( x->dirty ){
+      if( x->dirty ) {
         sample1 = old_wavetable[ iphase ];
         sample2 = old_wavetable[ iphase2 ];
         *out++ = sample1 + frac * (sample2 - sample1);
       }
-      else if( fade_countdown ){
+      else if( fade_countdown ) {
 
         sample1 = wavetable[ iphase ];
         sample2 = wavetable[ iphase2 ];
@@ -526,7 +526,7 @@ t_int *oscil_perform_interpolate(t_int *w)
         m2 = (float) fade_countdown / (float) fade_samples ;
         m1 = 1.0 - m2 ;
         --fade_countdown;
-        if( fadetype == 1 ){
+        if( fadetype == 1 ) {
           *out++ = m1 * outsamp1 + m2 * outsamp2 ;
         }
         else if( fadetype == 2 ) {
@@ -557,7 +557,7 @@ t_int *oscil_perform_interpolate(t_int *w)
       if(connected[0])
         si = *freq_vec++ * si_factor;
 
-      if(connected[1]){
+      if(connected[1]) {
         phase_offset = (float)table_length * *phase_vec++;
 
       }
@@ -570,14 +570,14 @@ t_int *oscil_perform_interpolate(t_int *w)
         iphase += table_length;
       }
 
-      if( x->dirty ){
+      if( x->dirty ) {
         *out++ = old_wavetable[ iphase ] ;
       }
-      else if( fade_countdown ){
+      else if( fade_countdown ) {
         m2 = (float) fade_countdown / (float) fade_samples ;
         m1 = 1.0 - m2 ;
         --fade_countdown;
-        if( fadetype == 1 ){
+        if( fadetype == 1 ) {
           *out++ = m1 * wavetable[iphase] + m2 * old_wavetable[ iphase ] ;
         }
         else if( fadetype == 2 ) {
@@ -600,7 +600,7 @@ t_int *oscil_perform_interpolate(t_int *w)
     }
   }
 
-  if( ! fade_countdown ){
+  if( ! fade_countdown ) {
     x->fade_in_progress = 0;
   }
   x->fade_countdown = fade_countdown;
@@ -633,7 +633,7 @@ static t_int *oscil_perform(t_int *w)
   float m1, m2;
   float piotwo = x->piotwo;
 
-  if( x->mute ){
+  if( x->mute ) {
     while (n--) {
       *out++ = 0.0;
     }
@@ -644,7 +644,7 @@ static t_int *oscil_perform(t_int *w)
     if(connected[0])
       si = *freq_vec++ * si_factor;
 
-    if(connected[1]){
+    if(connected[1]) {
       phase_offset = (float)table_length * *phase_vec++;
 
     }
@@ -657,14 +657,14 @@ static t_int *oscil_perform(t_int *w)
       iphase += table_length;
     }
 
-    if( x->dirty ){
+    if( x->dirty ) {
       *out++ = old_wavetable[ iphase ] ;
     }
-    else if( fade_countdown ){
+    else if( fade_countdown ) {
       m2 = (float) fade_countdown / (float) fade_samples ;
       m1 = 1.0 - m2 ;
       --fade_countdown;
-      if( fadetype == 1 ){
+      if( fadetype == 1 ) {
         *out++ = m1 * wavetable[iphase] + m2 * old_wavetable[ iphase ] ;
       }
       else if( fadetype == 2 ) {
@@ -685,7 +685,7 @@ static t_int *oscil_perform(t_int *w)
     }
 
   }
-  if( ! fade_countdown ){
+  if( ! fade_countdown ) {
     x->fade_in_progress = 0;
   }
   x->fade_countdown = fade_countdown;
@@ -701,7 +701,7 @@ void oscil_sawtooth(t_oscil *x)
 
   x->harmonic_weights[0] = 0.0; // DC
   x->harmonic_count = x->bl_harms;
-  for( i = 1 ; i < x->bl_harms; i++ ){
+  for( i = 1 ; i < x->bl_harms; i++ ) {
     x->harmonic_weights[i] = sign * 1.0/(float)i;
     sign *= -1. ;
   }
@@ -713,7 +713,7 @@ void oscil_triangle(t_oscil *x)
   float sign = 1.0;
   x->harmonic_weights[0] = 0.0; // DC
   x->harmonic_count = x->bl_harms;
-  for( i = 1 ; i < x->bl_harms; i += 2 ){
+  for( i = 1 ; i < x->bl_harms; i += 2 ) {
     x->harmonic_weights[i] = sign * 1.0/((float)i * (float)i);
     x->harmonic_weights[i + 1] = 0.0;
     sign *= -1;
@@ -734,7 +734,7 @@ void oscil_square(t_oscil *x)
   int i;
   x->harmonic_weights[0] = 0.0; // DC
   x->harmonic_count = x->bl_harms;
-  for( i = 1 ; i < x->bl_harms  ; i += 2 ){
+  for( i = 1 ; i < x->bl_harms  ; i += 2 ) {
     x->harmonic_weights[i] = 1.0/(float)i;
     x->harmonic_weights[i + 1] = 0.0;
   }
@@ -746,7 +746,7 @@ void oscil_buzz(t_oscil *x)
   int i;
   x->harmonic_weights[0] = 0.0;
   x->harmonic_count = x->bl_harms;
-  for( i = 1 ; i < x->bl_harms; i++ ){
+  for( i = 1 ; i < x->bl_harms; i++ ) {
     x->harmonic_weights[i] = 1.0;
   }
   build_waveform(x);
@@ -763,11 +763,11 @@ void oscil_dsp_free(t_oscil *x)
 
 void oscil_dsp(t_oscil *x, t_signal **sp)
 {
-  if(! x->sr ){
+  if(! x->sr ) {
     x->sr = 44100;
   }
-  if( x->sr != sp[0]->s_sr ){
-    if(! sp[0]->s_sr){
+  if( x->sr != sp[0]->s_sr ) {
+    if(! sp[0]->s_sr) {
       error("oscil~: Zero sampling rate reported!");
       return;
     }

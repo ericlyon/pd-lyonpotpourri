@@ -65,7 +65,7 @@ t_int *windowvec_perform(t_int *w)
 
   /* Apply a Hann window to the input vector */
 
-  for(i=0; i < n; i++){
+  for(i=0; i < n; i++) {
     output[i] = input[i] * envelope[i];
   }
   return w + 5;
@@ -75,12 +75,12 @@ void windowvec_dsp(t_windowvec *x, t_signal **sp, short *count)
 {
   int i;
   float twopi = 8. * atan(1);
-  if(x->vecsize != sp[0]->s_n){
+  if(x->vecsize != sp[0]->s_n) {
     x->vecsize = sp[0]->s_n;
 
     /* Allocate memory */
 
-    if(x->envelope == NULL){
+    if(x->envelope == NULL) {
       x->envelope = (float *) getbytes(x->vecsize * sizeof(float));
     } else {
       x->envelope = (float *) resizebytes(x->envelope, x->oldbytes, x->vecsize * sizeof(float));
@@ -89,7 +89,7 @@ void windowvec_dsp(t_windowvec *x, t_signal **sp, short *count)
 
     /* Generate a Hann window */
 
-    for(i = 0 ; i < x->vecsize; i++){
+    for(i = 0 ; i < x->vecsize; i++) {
       x->envelope[i] = - 0.5 * cos(twopi * (i / (float)x->vecsize)) + 0.5;
     }
   }

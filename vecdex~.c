@@ -54,7 +54,7 @@ t_int *vecdex_perform(t_int *w)
   int n = (int) w[4];
   int i;
 
-  for(i=0; i < n; i++){
+  for(i=0; i < n; i++) {
     output[i] = i;
   }
   return w + 5;

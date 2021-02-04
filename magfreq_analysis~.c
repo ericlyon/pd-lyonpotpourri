@@ -103,7 +103,7 @@ void magfreq_analysis_mute(t_magfreq_analysis *x, t_floatarg tog)
 void magfreq_analysis_overlap(t_magfreq_analysis *x, t_floatarg f)
 {
   int i = (int) f;
-  if(!power_of_two(i)){
+  if(!power_of_two(i)) {
     error("%f is not a power of two",f);
     return;
   }
@@ -115,7 +115,7 @@ void magfreq_analysis_winfac(t_magfreq_analysis *x, t_floatarg f)
 {
   int i = (int)f;
 
-  if(!power_of_two(i)){
+  if(!power_of_two(i)) {
     error("%f is not a power of two",f);
     return;
   }
@@ -125,14 +125,14 @@ void magfreq_analysis_winfac(t_magfreq_analysis *x, t_floatarg f)
 
 void magfreq_analysis_fftinfo(t_magfreq_analysis *x)
 {
-  if( ! x->overlap ){
+  if( ! x->overlap ) {
     post("zero overlap!");
     return;
   }
   post("%s: FFT size %d, hopsize %d, windowsize %d", OBJECT_NAME, x->N, x->N/x->overlap, x->Nw);
 }
 
-void magfreq_analysis_free(t_magfreq_analysis *x ){
+void magfreq_analysis_free(t_magfreq_analysis *x ) {
   freebytes(x->c_lastphase_in,0);
   freebytes(x->c_lastphase_out,0);
   freebytes(x->trigland,0);
@@ -154,11 +154,11 @@ void magfreq_analysis_highfreq(t_magfreq_analysis *x, t_floatarg f)
 {
   float curfreq;
 
-  if(f < x->lofreq){
+  if(f < x->lofreq) {
     error("current minimum is %f",x->lofreq);
     return;
   }
-  if(f > x->R/2 ){
+  if(f > x->R/2 ) {
     f = x->R/2;
   }
   x->hifreq = f;
@@ -174,11 +174,11 @@ void magfreq_analysis_lowfreq(t_magfreq_analysis *x, t_floatarg f)
 {
   float curfreq;
 
-  if(f > x->hifreq){
+  if(f > x->hifreq) {
     error("current maximum is %f",x->lofreq);
     return;
   }
-  if(f < 0 ){
+  if(f < 0 ) {
     f = 0;
   }
   x->lofreq = f;
@@ -225,7 +225,7 @@ void magfreq_analysis_init(t_magfreq_analysis *x, short initialized)
   x->myPInc = x->P*x->L/x->R;
   x->ffac = x->P * PI/x->N;
 
-  if(!initialized){
+  if(!initialized) {
     x->Wanal = (float *) getbytes( (MAX_Nw) * sizeof(float));
     x->Wsyn = (float *) getbytes( (MAX_Nw) * sizeof(float));
     x->Hwin = (float *) getbytes( (MAX_Nw) * sizeof(float));
@@ -299,10 +299,10 @@ void *magfreq_analysis_new(t_symbol *s, int argc, t_atom *argv)
     x->hifreq = 4000;
 
 
-  if(!power_of_two(x->overlap)){
+  if(!power_of_two(x->overlap)) {
     x->overlap = 4;
   }
-  if(!power_of_two(x->winfac)){
+  if(!power_of_two(x->winfac)) {
     x->winfac = 2;
   }
   x->R = sys_getsr();
@@ -343,7 +343,7 @@ t_int *magfreq_analysis_perform(t_int *w)
   in = on = x->inCount ;
 
 
-  if(x->mute){
+  if(x->mute) {
     for( j = 0; j < n; j++ ) {
       *magnitude_vec++ = 0;
       *frequency_vec++ = 0;
@@ -367,7 +367,7 @@ t_int *magfreq_analysis_perform(t_int *w)
   in += D;
   //    on += I;
 
-  for ( j = 0 ; j < (Nw - D) ; j++ ){
+  for ( j = 0 ; j < (Nw - D) ; j++ ) {
     input[j] = input[j+D];
   }
   for ( j = (Nw-D); j < Nw; j++) {
@@ -424,7 +424,7 @@ void magfreq_analysis_float(t_magfreq_analysis *x, double f) // Look at floats a
 void magfreq_analysis_dsp(t_magfreq_analysis *x, t_signal **sp)
 {
 
-  if(x->D != sp[0]->s_n || x->R != sp[0]->s_sr ){
+  if(x->D != sp[0]->s_n || x->R != sp[0]->s_sr ) {
     x->D = sp[0]->s_n;
     x->R = sp[0]->s_sr;
     magfreq_analysis_init(x,1);

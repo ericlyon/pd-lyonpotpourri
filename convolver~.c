@@ -73,7 +73,7 @@ void bitreverse( float *x, int N );
 void convolver_static_memory(t_convolver *x, t_floatarg toggle);
 
 
-void convolver_tilde_setup(void){
+void convolver_tilde_setup(void) {
   convolver_class = class_new(gensym("convolver~"), (t_newmethod)convolver_new,
                               (t_method)convolver_dsp_free,sizeof(t_convolver), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(convolver_class, t_convolver, x_f);
@@ -99,11 +99,11 @@ void convolver_static_memory(t_convolver *x, t_floatarg toggle)
 
   x->static_memory = (short) toggle;
 
-  if( x->static_memory ){
+  if( x->static_memory ) {
     convolver_attach_buffers( x );
 
-    for( N2 = 2; N2 < NCMAX; N2 *= 2){
-      if( N2 >= impulse->b_frames ){
+    for( N2 = 2; N2 < NCMAX; N2 *= 2) {
+      if( N2 >= impulse->b_frames ) {
         // post("%s: Exceeded Impulse Maximum: %d",OBJECT_NAME, NCMAX);
         break;
       }
@@ -147,27 +147,27 @@ void convolver_convolve(t_convolver *x)
   t_atom data[3];
   mymsg = (t_symbol *) calloc(1, sizeof(t_symbol));
   convolver_attach_buffers( x );
-  if(x->source->b_nchans == x->impulse->b_nchans && x->impulse->b_nchans == x->dest->b_nchans){
+  if(x->source->b_nchans == x->impulse->b_nchans && x->impulse->b_nchans == x->dest->b_nchans) {
     // post("case 1");
-    for(i = 0; i < x->source->b_nchans; i++){
+    for(i = 0; i < x->source->b_nchans; i++) {
       SETFLOAT(data, i+1); // source
       SETFLOAT(data+1, i+1); // impulse
       SETFLOAT(data+2, i+1); // destination
       convolver_convolvechans(x, mymsg, myargc, data);
     }
   }
-  else if(x->source->b_nchans == 1 && x->impulse->b_nchans == x->dest->b_nchans){
+  else if(x->source->b_nchans == 1 && x->impulse->b_nchans == x->dest->b_nchans) {
     //post("case 2");
-    for(i = 0; i < x->impulse->b_nchans; i++){
+    for(i = 0; i < x->impulse->b_nchans; i++) {
       SETFLOAT(data, 1); // source
       SETFLOAT(data+1, i+1); // impulse
       SETFLOAT(data+2, i+1); // destination
       convolver_convolvechans(x, mymsg, myargc, data);
     }
   }
-  else if(x->impulse->b_nchans == 1 && x->source->b_nchans == x->dest->b_nchans){
+  else if(x->impulse->b_nchans == 1 && x->source->b_nchans == x->dest->b_nchans) {
     //post("case 3");
-    for(i = 0; i < x->impulse->b_nchans; i++){
+    for(i = 0; i < x->impulse->b_nchans; i++) {
       SETFLOAT(data, i+1); // source
       SETFLOAT(data+1, 1); // impulse
       SETFLOAT(data+2, i+1); // destination
@@ -209,19 +209,19 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
   impulse_chan = atom_getfloatarg(1,argc,argv);
   dest_chan = atom_getfloatarg(2,argc,argv);
 //  post("chans %d %d %d", source_chan, impulse_chan, dest_chan);
-  if( source_chan <= 0 || impulse_chan <= 0 || dest_chan <= 0){
+  if( source_chan <= 0 || impulse_chan <= 0 || dest_chan <= 0) {
     error("%s: channels are counted starting from 1",OBJECT_NAME);
     return;
   }
-  if( source_chan > source->b_nchans ){
+  if( source_chan > source->b_nchans ) {
     error("%s: source channel %ld out of range", OBJECT_NAME, source_chan);
     return;
   }
-  if( impulse_chan > impulse->b_nchans ){
+  if( impulse_chan > impulse->b_nchans ) {
     error("%s: impulse channel %ld out of range", OBJECT_NAME, impulse_chan);
     return;
   }
-  if( dest_chan > dest->b_nchans ){
+  if( dest_chan > dest->b_nchans ) {
     error("%s: dest channel %ld out of range", OBJECT_NAME, dest_chan);
     return;
   }
@@ -231,7 +231,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
   //inframes = source->b_frames;
   //outframes = dest->b_frames;
   // initialization routine (move out and only do once)
-  for( N2 = 2; N2 < NCMAX; N2 *= 2){
+  for( N2 = 2; N2 < NCMAX; N2 *= 2) {
     if( N2 >= impulse->b_frames )
       break;
   }
@@ -240,7 +240,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
   // also be sure to clear destination buffer
 
 
-  if(! x->static_memory ){
+  if(! x->static_memory ) {
     if ((sbuf = (float *) calloc(N+2, sizeof(float))) == NULL)
       error("%s: insufficient memory", OBJECT_NAME);
     if ((tbuf = (float *) calloc(N2, sizeof(float))) == NULL)
@@ -259,13 +259,13 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
 
 
 
-  for(i = 0, j = 0; i < impulse->b_frames; i+= impulse->b_nchans, j++){
+  for(i = 0, j = 0; i < impulse->b_frames; i+= impulse->b_nchans, j++) {
     filt[j] = impulse->b_samples[i + impulse_chan].w_float;
   }
 
   rdft( N, 1, filt, bitshuffle, trigland );
 
-  for (i=0; i <= N; i += 2){
+  for (i=0; i <= N; i += 2) {
 
     a = filt[i];
     b = filt[i + 1];
@@ -298,12 +298,12 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
     sbuf[i] = 0.;
   copacetic = 1;
 
-  while( target_frames < source->b_frames + impulse->b_frames ){
+  while( target_frames < source->b_frames + impulse->b_frames ) {
     target_frames *= 2;
   }
   //post("src frames + imp frames %d dest frames %d",source->b_frames + impulse->b_frames, dest->b_frames);
 
-  if( dest->b_frames < target_frames){
+  if( dest->b_frames < target_frames) {
 
 
     //SETFLOAT(&newsize, (float) target_frames);
@@ -313,7 +313,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
     convolver_attach_buffers( x );
   }
 
-  while(copacetic && ofr_cnt < ifr_cnt + N2){
+  while(copacetic && ofr_cnt < ifr_cnt + N2) {
     // post("ofr %d ifr %d, N %d",ofr_cnt, ifr_cnt, N);
 
     // convolve source buffer with filter buffer
@@ -332,7 +332,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
 
     //accumulate to output buffer
     // denormals fix is in
-    for (i=0; i<N2; i++){
+    for (i=0; i<N2; i++) {
       FIX_DENORM_FLOAT(sbuf[i]);
       tbuf[i] += sbuf[i];
     }
@@ -350,7 +350,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
       dest->b_samples[j + dest_chan].w_float = tbuf[i];
 
     // shift over remaining convolved samples
-    for (i=0; i<N2; i++){
+    for (i=0; i<N2; i++) {
       FIX_DENORM_FLOAT(sbuf[N2 + i]);
       tbuf[i] = sbuf[N2+i];
     }
@@ -373,25 +373,25 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *
   // OK
 //  post("first rescale: %f", rescale);
   max = 0.0;
-  for(i = 0, j = 0; i < dest->b_frames; i++, j += dest->b_nchans){
+  for(i = 0, j = 0; i < dest->b_frames; i++, j += dest->b_nchans) {
     if(max < fabs(dest->b_samples[j + dest_chan].w_float) )
       max = fabs(dest->b_samples[j + dest_chan].w_float);
   }
-  if(max <= 0.0){
+  if(max <= 0.0) {
     post("convolvesf: zero output");
     return;
   }
   rescale = 1.0 / max;
   // post("max: %f, second rescale: %f", max, rescale);
 
-  for(i = 0, j = 0; i < dest->b_frames; i++, j+= dest->b_nchans){
+  for(i = 0, j = 0; i < dest->b_frames; i++, j+= dest->b_nchans) {
     dest->b_samples[j + dest_chan].w_float *= rescale;
   }
   // FAILED BY HERE
   // post("rescale done");
 //  return;
 
-  if(! x->static_memory ){
+  if(! x->static_memory ) {
     free(sbuf);
     free(tbuf);
     free(filt);
@@ -415,7 +415,7 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
   float level = 1.0, endLevel = 0.001;
   float grow, a1, a2, b1;
 
-  if(fabs(curve) < 0.001){
+  if(fabs(curve) < 0.001) {
     curve = 0.001;
   }
   // let's be current
@@ -424,14 +424,14 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
   b_frames = x->impulse->b_frames;
   b_samples = x->impulse->b_samples;
   // chan test
-  if( sr == 0. ){
+  if( sr == 0. ) {
     error("zero sample rate");
     return;
   }
   // zero out buffer
   //dur = (float) b_frames / sr;
   count = b_frames;
-  if(b_frames < 20){
+  if(b_frames < 20) {
     post("impulse buffer too small!");
     return;
   }
@@ -446,7 +446,7 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
   a1 = (endLevel - level) / (1.0 - exp(curve));
   a2 = level + a1;
   b1 = a1;
-  for( i = 0; i < b_frames; i++ ){
+  for( i = 0; i < b_frames; i++ ) {
     guess = boundrand(-1.0, 1.0);
     //gain = 1. - guess;
 
@@ -478,7 +478,7 @@ void convolver_spikeimp(t_convolver *x, t_floatarg density)
   b_frames = x->impulse->b_frames;
   b_samples = x->impulse->b_samples;
   // chan test
-  if( sr == 0. ){
+  if( sr == 0. ) {
     error("zero sample rate");
     return;
   }
@@ -487,16 +487,16 @@ void convolver_spikeimp(t_convolver *x, t_floatarg density)
   count = density * dur;
   memset((char *)b_samples, 0, b_nchans * b_frames * sizeof(float));
   // return;
-  for( j = 0; j < b_nchans; j++ ){
-    for( i = 0; i < count; i++ ){
+  for( j = 0; j < b_nchans; j++ ) {
+    for( i = 0; i < count; i++ ) {
       guess = boundrand(0., 1.);
       gain = 1. - guess;
       gain = gain * gain;
-      if( boundrand(0.0,1.0) > 0.5 ){
+      if( boundrand(0.0,1.0) > 0.5 ) {
         gain = gain * -1.0; // randomly invert signs to remove DC
       }
       position = (int) (dur * guess * guess * sr) * b_nchans + j;
-      if( position >= b_frames * b_nchans ){
+      if( position >= b_frames * b_nchans ) {
         error("%d exceeds %ld",position, b_frames * b_nchans);
       } else{
         b_samples[ position ].w_float = gain;
@@ -577,7 +577,7 @@ t_int *convolver_perform(t_int *w)
 
 void convolver_dsp_free(t_convolver *x)
 {
-  if( x->static_memory ){
+  if( x->static_memory ) {
     free(x->sbuf);
     free(x->tbuf);
     free(x->filt);

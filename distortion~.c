@@ -29,7 +29,7 @@ void distortion_mute(t_distortion *x, t_floatarg f);
 
 // no freeing function needed
 
-void distortion_tilde_setup(void){
+void distortion_tilde_setup(void) {
   distortion_class = class_new(gensym("distortion~"), (t_newmethod)distortion_new,
                                0,sizeof(t_distortion), 0,A_DEFFLOAT,A_DEFFLOAT,0);
   CLASS_MAINSIGNALIN(distortion_class, t_distortion, x_f);
@@ -78,8 +78,8 @@ t_int *distortion1_perform(t_int *w)
   float rescale = x->rescale;
 
 
-  if( x->mute ){
-    while( n-- ){
+  if( x->mute ) {
+    while( n-- ) {
       *out++ = 0;
     }
     return (w+7);
@@ -88,10 +88,10 @@ t_int *distortion1_perform(t_int *w)
   while (n--) {
     in_sample = *in++;
     rectified_sample = fabs( in_sample );
-    if( rectified_sample < knee ){
+    if( rectified_sample < knee ) {
       *out++ = in_sample;
     } else {
-      if( in_sample > 0.0 ){
+      if( in_sample > 0.0 ) {
         *out++ = rescale * (knee + (rectified_sample - knee) * (cut - knee));
       } else {
         *out++ = rescale * (-(knee + (rectified_sample - knee) * (cut - knee)));
@@ -122,8 +122,8 @@ t_int *distortion2_perform(t_int *w)
   float rescale = x->rescale;
 
 
-  if( x->mute ){
-    while( n-- ){
+  if( x->mute ) {
+    while( n-- ) {
       *out++ = 0;
     }
     return (w+7);
@@ -139,10 +139,10 @@ t_int *distortion2_perform(t_int *w)
       rescale = 1.0;
 
     rectified_sample = fabs( in_sample );
-    if( rectified_sample < knee ){
+    if( rectified_sample < knee ) {
       *out++ = in_sample;
     } else {
-      if( in_sample > 0.0 ){
+      if( in_sample > 0.0 ) {
         *out++ = rescale * (knee + (rectified_sample - knee) * (cut - knee));
       } else {
         *out++ = rescale * (-(knee + (rectified_sample - knee) * (cut - knee)));
@@ -174,8 +174,8 @@ t_int *distortion3_perform(t_int *w)
   float rescale = x->rescale;
   short case1 = x->case1;
 
-  if( x->mute ){
-    while( n-- ){
+  if( x->mute ) {
+    while( n-- ) {
       *out++ = 0;
     }
     return (w+7);
@@ -184,7 +184,7 @@ t_int *distortion3_perform(t_int *w)
   while (n--) {
     // first case, knee is connected, otherwise cut is connected
     in_sample = *in++;
-    if( case1 ){
+    if( case1 ) {
       knee = *data1++;
     }
     else {
@@ -196,10 +196,10 @@ t_int *distortion3_perform(t_int *w)
       rescale = 1.0;
 
     rectified_sample = fabs( in_sample );
-    if( rectified_sample < knee ){
+    if( rectified_sample < knee ) {
       *out++ = in_sample;
     } else {
-      if( in_sample > 0.0 ){
+      if( in_sample > 0.0 ) {
         *out++ = rescale * (knee + (rectified_sample - knee) * (cut - knee));
       } else {
         *out++ = rescale * (-(knee + (rectified_sample - knee) * (cut - knee)));

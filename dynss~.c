@@ -68,7 +68,7 @@ void dynss_tilde_setup(void)
 
 void dynss_pointcount(t_dynss *x, t_floatarg f)
 {
-  if(f >= 2 && f <= MAXPOINTS ){
+  if(f >= 2 && f <= MAXPOINTS ) {
     x->point_count = (long) f;
     dynss_init(x,0);
   }
@@ -97,7 +97,7 @@ void version(void)
 void dynss_printwave(t_dynss *x)
 {
   int i;
-  for(i = 0; i < x->point_count; i++){
+  for(i = 0; i < x->point_count; i++) {
     post("point %d break %d norm break %f value %f",i, x->point_breaks[i], x->norm_breaks[i], x->values[i]);
   }
 }
@@ -110,7 +110,7 @@ void dynss_new_wave(t_dynss *x)
 void dynss_new_amps(t_dynss *x)
 {
   int i;
-  for(i = 1; i < x->point_count - 1; i++){
+  for(i = 1; i < x->point_count - 1; i++) {
     x->values[i] = boundrand(-0.95, 0.95);
   }
 }
@@ -129,7 +129,7 @@ void *dynss_new(void)
   x->xdevs = (t_double *) calloc(MAXPOINTS + 2, sizeof(t_double));
   x->ydevs = (t_double *) calloc(MAXPOINTS + 2, sizeof(t_double));
 
-  if(! x->srate ){
+  if(! x->srate ) {
     x->srate = 44100;
     post("sr autoset to 44100");
   }
@@ -160,7 +160,7 @@ void dynss_init(t_dynss *x,short initialized)
   t_double *xdevs =x->xdevs;
 
 
-  if(!initialized){
+  if(!initialized) {
     x->period_samples = (long)(x->srate / x->freq);
     x->counter = 0;
     x->current_point = 0;
@@ -170,16 +170,16 @@ void dynss_init(t_dynss *x,short initialized)
     norm_breaks[0] = 0.0;
     norm_breaks[point_count - 1] = 1.0;
     values[0] = values[point_count - 1] = 0.0;
-    for(i = 1; i < point_count - 1; i++){
+    for(i = 1; i < point_count - 1; i++) {
       values[i] = boundrand(-1.0, 1.0);
       norm_breaks[i] = boundrand(0.05,0.95);
     }
     // now sort into order (insertion sort)
 
-    for(i = 1; i < point_count; i++){
+    for(i = 1; i < point_count; i++) {
       findex = norm_breaks[i];
       j = i;
-      while( j > 0 && norm_breaks[j-1] > findex){
+      while( j > 0 && norm_breaks[j-1] > findex) {
         norm_breaks[j] = norm_breaks[j-1];
         j = j - 1;
       }
@@ -187,12 +187,12 @@ void dynss_init(t_dynss *x,short initialized)
 
     }
     // now generate sample break points;
-    for(i = 0; i < point_count; i++){
+    for(i = 0; i < point_count; i++) {
       point_breaks[i] = (long) ( (float)x->period_samples * norm_breaks[i] );
       // post("%i %f %f",point_breaks[i], norm_breaks[i], values[i]);
     }
     // set y deviation maxes
-    for(i = 0; i < point_count; i++){
+    for(i = 0; i < point_count; i++) {
       ydevs[i] = boundrand(0.0,0.99);
       xdevs[i] = boundrand(0.0,0.99);
       // post("rands: %f %f",ydevs[i],xdevs[i]);
@@ -227,11 +227,11 @@ t_int *dynss_perform(t_int *w)
   float dev, newval;
   long segsamps;
 
-  while(n--){
-    if( counter == point_breaks[current_point + 1]){
+  while(n--) {
+    if( counter == point_breaks[current_point + 1]) {
       sample = values[current_point + 1];
       ++current_point;
-      if(current_point > point_count - 1){
+      if(current_point > point_count - 1) {
         current_point = 0;
         counter = 0;
       }
@@ -239,19 +239,19 @@ t_int *dynss_perform(t_int *w)
 
     else {
       segsamps = point_breaks[current_point + 1] - point_breaks[current_point];
-      if( segsamps <= 1){
+      if( segsamps <= 1) {
         frak = 0.0;
       }
       else {
         frak = (float)(counter - point_breaks[current_point]) / (float)segsamps;
         //post("frak %f counter %d point break %d diff %d",frak, counter, point_breaks[current_point],counter - point_breaks[current_point] );
-        if( frak < 0.0 || frak > 1.0 ){
+        if( frak < 0.0 || frak > 1.0 ) {
           post("bad fraction: %f",frak);
           post("current point: %d", current_point);
           post("segsamps %d counter %d current break %d next break %d", segsamps, counter, point_breaks[current_point], point_breaks[current_point + 1]);
         }
       }
-      if(current_point < 0 || current_point > point_count - 1){
+      if(current_point < 0 || current_point > point_count - 1) {
         post("ERROR: dss had bad current point!");
         sample = 0;
       } else {
@@ -260,14 +260,14 @@ t_int *dynss_perform(t_int *w)
       }
     }
     ++counter;
-    if(counter >= period_samples){
+    if(counter >= period_samples) {
       counter = 0;
       current_point = 0;
-      if( x->freq > 0.0 ){
+      if( x->freq > 0.0 ) {
         period_samples = x->srate / x->freq;
       }
       // nudge waveform
-      for(i = 1; i < point_count - 1; i++){
+      for(i = 1; i < point_count - 1; i++) {
         dev = boundrand(-1.0,1.0) * ydevs[i] * x->devscale_y;
         newval = values[i] + dev;
         // clip
@@ -275,24 +275,24 @@ t_int *dynss_perform(t_int *w)
         newval = newval < -0.95 ? -0.95 : newval;
         values[i] = newval;
       }
-      for(i = 1; i < point_count - 1; i++){
+      for(i = 1; i < point_count - 1; i++) {
         dev = boundrand(-1.0,1.0) * xdevs[i] * x->devscale_x;
         newval = norm_breaks[i] + dev;
         // clip
         newval = newval < 0.05 ? 0.05 : newval;
         newval = newval > 0.95 ? 0.95: newval;
         norm_breaks[i] = newval;
-        /* if(norm_breaks[i] < norm_breaks[i-1]){
+        /* if(norm_breaks[i] < norm_breaks[i-1]) {
            norm_breaks[i] = norm_breaks[i-1] + 0.03; // disallow point jumps for now
            } */
       }
       // now sort them
 
-      for(i = 1; i < point_count; i++){
+      for(i = 1; i < point_count; i++) {
         findex1 = norm_breaks[i];
         findex2 = values[i];
         j = i;
-        while( j > 0 && norm_breaks[j-1] > findex1){
+        while( j > 0 && norm_breaks[j-1] > findex1) {
           norm_breaks[j] = norm_breaks[j-1];
           values[j] = values[j-1];
           j = j - 1;
@@ -302,7 +302,7 @@ t_int *dynss_perform(t_int *w)
       }
 
       // now generate sample breaks
-      for(i = 0; i < point_count; i++){
+      for(i = 0; i < point_count; i++) {
         point_breaks[i] = (long) ( (float)period_samples * norm_breaks[i] );
       }
     }

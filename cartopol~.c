@@ -16,7 +16,7 @@ void cartopol_free(t_cartopol *x);
 void cartopol_dsp(t_cartopol *x, t_signal **sp);
 
 
-void cartopol_tilde_setup(void){
+void cartopol_tilde_setup(void) {
   cartopol_class = class_new(gensym("cartopol~"), (t_newmethod)cartopol_new,
                              0, sizeof(t_cartopol),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(cartopol_class, t_cartopol, x_f);
@@ -45,7 +45,7 @@ t_int *cartopol_perform(t_int *w)
   int n = (int) w[6]; // obj, func, 1 inlet
   int N2 = n/2;
 
-  for(i = 0; i < N2 + 1; i++){
+  for(i = 0; i < N2 + 1; i++) {
     real = (i == N2 ? real_in[1] : real_in[i]);
     imag = (i == 0 || i == N2 ? 0.0 : imag_in[i]);
     mag_out[i] = hypot(real,imag);

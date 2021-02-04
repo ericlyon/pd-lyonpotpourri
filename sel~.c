@@ -26,7 +26,7 @@ void sel_free(t_sel *x);
 void sel_dsp(t_sel *x, t_signal **sp);
 
 
-void sel_tilde_setup(void){
+void sel_tilde_setup(void) {
   sel_class = class_new(gensym("sel~"), (t_newmethod)sel_new,
                         (t_method)sel_free, sizeof(t_sel),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(sel_class, t_sel, x_f);
@@ -41,20 +41,20 @@ void *sel_new(t_symbol *msg, short argc, t_atom *argv)
   t_sel *x = (t_sel *)pd_new(sel_class);
   x->length = (t_int)argc;
 
-  for(i=0;i< x->length ;i++){
+  for(i=0;i< x->length ;i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
 
   x->matches = (t_double *) malloc(x->length * sizeof(double));
 
-  for(i = 0; i < argc; i++){
+  for(i = 0; i < argc; i++) {
     x->matches[i] = (double)atom_getfloatarg(i,argc,argv);
   }
 
   x->ins = (t_float **) malloc(1 * sizeof(t_float *));
   x->outs = (t_float **) malloc(x->length * sizeof(t_float *));
   // only 1 inlet
-  for(i = 0; i < 1; i++){
+  for(i = 0; i < 1; i++) {
     x->ins[i] = (t_float *) malloc(8192 * sizeof(t_float));
   }
   return x;
@@ -83,30 +83,30 @@ t_int *sel_perform(t_int *w)
   int n = (int) w[length + 3]; // obj, func, 1 inlet
 
   // copy input vectors (just 1 here)
-  for(i = 0; i < 1; i++){
+  for(i = 0; i < 1; i++) {
     invec = (t_float *) w[2 + i];
-    for(j = 0; j < n; j++){
+    for(j = 0; j < n; j++) {
       ins[i][j] = invec[j];
     }
   }
   inlet = ins[0];
   // assign output vector pointers
-  for(i = 0; i < length; i++){
+  for(i = 0; i < length; i++) {
     outs[i] = (t_float *) w[3 + i];
   }
 
   // clean each outlet
-  for(j = 0; j < length; j++){
+  for(j = 0; j < length; j++) {
     match_outlet = (t_double *) outs[j];
-    for(i = 0; i < n; i++){
+    for(i = 0; i < n; i++) {
       match_outlet[i] = 0.0;
     }
   }
   // now match and route any clicks in the input
-  for(i = 0; i < n; i++){
-    if(inlet[i]){
-      for(j = 0; j < length; j++){
-        if( inlet[i] == matches[j]){
+  for(i = 0; i < n; i++) {
+    if(inlet[i]) {
+      for(j = 0; j < length; j++) {
+        if( inlet[i] == matches[j]) {
           match_outlet = (t_double *) outs[j];
           match_outlet[i] = 1.0; // always send a unity click
         }
@@ -128,17 +128,17 @@ t_int *sel_perform(t_int *w)
   int length = x->length;
 
   // clean each outlet
-  for(j = 0; j < length; j++){
+  for(j = 0; j < length; j++) {
   match_outlet = (t_double *) outs[j];
-  for(i = 0; i < n; i++){
+  for(i = 0; i < n; i++) {
   match_outlet[i] = 0.0;
   }
   }
   // now match and route any clicks in the input
-  for(i = 0; i < n; i++){
-  if(inlet[i]){
-  for(j = 0; j < length; j++){
-  if( inlet[i] == matches[j]){
+  for(i = 0; i < n; i++) {
+  if(inlet[i]) {
+  for(j = 0; j < length; j++) {
+  if( inlet[i] == matches[j]) {
   match_outlet = (t_double *) outs[j];
   match_outlet[i] = 1.0; // always send a unity click
   }
@@ -161,11 +161,11 @@ void sel_dsp(t_sel *x, t_signal **sp)
   long i;
   t_int **sigvec;
   int pointer_count = x->length + 3; // output chans + object + inchan + vectorsize
-  if(!sp[0]->s_sr){
+  if(!sp[0]->s_sr) {
     return;
   }
   sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object

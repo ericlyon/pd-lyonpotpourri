@@ -61,7 +61,7 @@ void adsr_mute(t_adsr *x, t_floatarg f);
 void atom_arg_getfloat(float *c, long idx, long ac, t_atom *av);
 void atom_arg_getsym(t_symbol **c, long idx, long ac, t_atom *av);
 
-void adsr_tilde_setup(void){
+void adsr_tilde_setup(void) {
   adsr_class = class_new(gensym("adsr~"), (t_newmethod)adsr_new,
                          0,sizeof(t_adsr), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(adsr_class, t_adsr, x_f);
@@ -211,7 +211,7 @@ static void *adsr_new(t_symbol *s, int argc, t_atom *argv)
 
 
   x->srate = sys_getsr();
-  if(!x->srate){
+  if(!x->srate) {
     error("zero sampling rate, setting to 44100");
     x->srate = 44100;
   }
@@ -272,19 +272,19 @@ t_int *adsr_perform(t_int *w)
   float env_val;
   float input_val;
   /*********************************************/
-  if(x->mute){
+  if(x->mute) {
     while(n--) *out++ = 0.0;
     return w+5;
   }
   while(n--) {
     input_val = *in++;
-    if(input_val){
+    if(input_val) {
       click_gain = input_val;
       counter = 0;
     }
 
 
-    if( counter < ebreak1 ){
+    if( counter < ebreak1 ) {
       env_val = (float) counter / (float) asamps;
     } else if (counter < ebreak2) {
       etmp = (float) (counter - ebreak1) / (float) dsamps;
@@ -292,12 +292,12 @@ t_int *adsr_perform(t_int *w)
     } else if (counter < ebreak3) {
       etmp = (float) (counter - ebreak2) / (float) ssamps;
       env_val = (egain1 * (1.0 - etmp)) + (egain2 * etmp);
-    } else if( counter < tsamps ){
+    } else if( counter < tsamps ) {
       env_val = ((float)(tsamps-counter)/(float)rsamps) * egain2 ;
     } else {
       env_val = 0.0;
     }
-    if(click_gain && env_val && (click_gain != 1.0) ){
+    if(click_gain && env_val && (click_gain != 1.0) ) {
       env_val *= click_gain;
     }
     *out++ = env_val;
@@ -311,7 +311,7 @@ t_int *adsr_perform(t_int *w)
 
 void adsr_dsp(t_adsr *x, t_signal **sp)
 {
-  if(x->srate != sp[0]->s_sr ){
+  if(x->srate != sp[0]->s_sr ) {
     x->srate = sp[0]->s_sr;
     x->asamps = x->a * x->srate;
     x->dsamps = x->d * x->srate;

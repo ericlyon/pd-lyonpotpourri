@@ -32,7 +32,7 @@ void waveshape_mute(t_waveshape *x, t_floatarg tog);
 void waveshape_free(t_waveshape *x);
 
 
-void waveshape_tilde_setup(void){
+void waveshape_tilde_setup(void) {
   waveshape_class = class_new(gensym("waveshape~"), (t_newmethod)waveshape_new,
                               (t_method)waveshape_free,sizeof(t_waveshape), 0,0);
   CLASS_MAINSIGNALIN(waveshape_class, t_waveshape, x_f);
@@ -96,19 +96,19 @@ void update_waveshape_function( t_waveshape *x ) {
   int i, j;
   float min, max;
   // zero out function;
-  for( i = 0; i < x->flen; i++ ){
+  for( i = 0; i < x->flen; i++ ) {
     x->tempeh[i] = 0;
   }
-  for( i = 0 ; i < x->hcount; i++ ){
+  for( i = 0 ; i < x->hcount; i++ ) {
     if( x->harms[i] > 0.0 ) {
-      for( j = 0; j < x->flen; j++ ){
+      for( j = 0; j < x->flen; j++ ) {
         point = -1.0 + 2.0 * ( (float) j / (float) x->flen) ;
         x->tempeh[j] += x->harms[i] * cos( (float) i * acos( point ) );
       }
     }
   }
   min = 1; max = -1;
-  for( j = 0; j < x->flen; j++ ){
+  for( j = 0; j < x->flen; j++ ) {
     if( min > x->tempeh[j] )
       min = x->tempeh[j];
     if( max < x->tempeh[j] )
@@ -117,15 +117,15 @@ void update_waveshape_function( t_waveshape *x ) {
   }
   //  post("min:%f, max:%f",min,max);
   // normalize from -1 to +1
-  if( (max - min) == 0 ){
+  if( (max - min) == 0 ) {
     post("all zero function - watch out!");
     return;
   }
-  for( j = 0; j < x->flen; j++ ){
+  for( j = 0; j < x->flen; j++ ) {
     x->tempeh[j] = -1.0 + ( (x->tempeh[j] - min) / (max - min) ) * 2.0 ;
   }
   // put tempeh into waveshape function
-  for( j = 0; j < x->flen; j++ ){
+  for( j = 0; j < x->flen; j++ ) {
     x->wavetab[j] = x->tempeh[j];
   }
 }
@@ -142,8 +142,8 @@ t_int *waveshape_perform(t_int *w)
   int flenm1 = x->flen - 1;
   float *wavetab = x->wavetab;
 
-  if(x->mute){
-    while(n--){
+  if(x->mute) {
+    while(n--) {
       *out++ = 0.0;
     }
     return w+5;
@@ -151,10 +151,10 @@ t_int *waveshape_perform(t_int *w)
 
   while (n--) {
     insamp = *in++;
-    if(insamp > 1.0){
+    if(insamp > 1.0) {
       insamp = 1.0;
     }
-    else if(insamp < -1.0){
+    else if(insamp < -1.0) {
       insamp = -1.0;
     }
     windex = ((insamp + 1.0)/2.0) * (float)flenm1 ;

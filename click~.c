@@ -56,15 +56,15 @@ t_int *click_perform(t_int *w)
   t_float *output = (t_float *)(w[2]);
   int n = (int) w[3];
   int i;
-  if(x->status){
+  if(x->status) {
     x->status = 0;
     output[0] = x->float_value;
-    for(i = 1; i < n; i++){
+    for(i = 1; i < n; i++) {
       output[i] = 0.0;
     }
   }
   else {
-    for(i = 0; i < n; i++){
+    for(i = 0; i < n; i++) {
       output[i] = 0.0;
     }
   }

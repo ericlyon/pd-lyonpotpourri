@@ -79,7 +79,7 @@ void makewindows( float *H, float *A, float *S, int Nw, int N, int I );
   }
 */
 
-void squash_tilde_setup(void){
+void squash_tilde_setup(void) {
   squash_class = class_new(gensym("squash~"), (t_newmethod)squash_new,
                            (t_method)squash_free, sizeof(t_squash),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(squash_class, t_squash, x_f);
@@ -303,23 +303,23 @@ void overlapadd( float *I, int N, float *W, float *O, int Nw, int n )
 }
 
 
-void squash_mute(t_squash *x, t_floatarg f){
+void squash_mute(t_squash *x, t_floatarg f) {
   x->mute = (short)f;
 }
 
-void squash_thresh(t_squash *x, t_floatarg f){
+void squash_thresh(t_squash *x, t_floatarg f) {
   x->thresh = (float)f;
 }
 
-void squash_nt(t_squash *x, t_floatarg f){
+void squash_nt(t_squash *x, t_floatarg f) {
   x->nt = (float)f;
 }
 
-void squash_ratio(t_squash *x, t_floatarg f){
+void squash_ratio(t_squash *x, t_floatarg f) {
   x->ratio = (float)f;
 }
 
-void squash_nmult(t_squash *x, t_floatarg f){
+void squash_nmult(t_squash *x, t_floatarg f) {
   x->nmult = (float)f;
 }
 
@@ -344,7 +344,7 @@ t_int *squash_perform(t_int *w)
   float nt = x->nt;
   float nmult = x->nmult;
 
-  if(x->mute){
+  if(x->mute) {
     memset((void *)out, 0, n * sizeof(float) );
     return w + 5;
   }
@@ -379,7 +379,7 @@ t_int *squash_perform(t_int *w)
   {
   if(!sr)
   return;
-  if(n != x->D ){
+  if(n != x->D ) {
   x->D = n;
   error("squash~: blocksize change not implemented yet!");
   }
@@ -390,7 +390,7 @@ t_int *squash_perform(t_int *w)
 
 void squash_dsp(t_squash *x, t_signal **sp)
 {
-  if(sp[0]->s_n != x->D ){
+  if(sp[0]->s_n != x->D ) {
     x->D = sp[0]->s_n;
     error("blocksize change not implemented yet!");
   } else {

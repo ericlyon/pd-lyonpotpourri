@@ -16,7 +16,7 @@ void poltocar_free(t_poltocar *x);
 void poltocar_dsp(t_poltocar *x, t_signal **sp);
 
 
-void poltocar_tilde_setup(void){
+void poltocar_tilde_setup(void) {
   poltocar_class = class_new(gensym("poltocar~"), (t_newmethod)poltocar_new,
                              0, sizeof(t_poltocar),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(poltocar_class, t_poltocar, x_f);
@@ -45,9 +45,9 @@ t_int *poltocar_perform(t_int *w)
   int n = (int) w[6]; // obj, func, 1 inlet
   int N2 = n/2;
 
-  for(i = 0; i < N2 + 1; i++){
+  for(i = 0; i < N2 + 1; i++) {
     real = mag_in[i] * cos( phase_in[i] );
-    if(i == N2){
+    if(i == N2) {
       imag = 0;
     } else{
       imag = -mag_in[i] * sin( phase_in[i] );

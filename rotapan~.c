@@ -28,7 +28,7 @@ void rotapan_version(t_rotapan *x);
 void rotapan_dsp(t_rotapan *x, t_signal **sp);
 t_int *rotapan_perform(t_int *w);
 
-void rotapan_tilde_setup(void){
+void rotapan_tilde_setup(void) {
   rotapan_class = class_new(gensym("rotapan~"), (t_newmethod)rotapan_new,
                             (t_method)rotapan_free, sizeof(t_rotapan),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(rotapan_class, t_rotapan, x_f);
@@ -43,10 +43,10 @@ void *rotapan_new(t_symbol *s, int argc, t_atom *argv)
   t_rotapan *x = (t_rotapan *)pd_new(rotapan_class);
   x->rchans = (long) atom_getfloatarg(0,argc,argv);
   /* allocate in chans plus 1 for controlling the pan */
-  for(i = 0; i < x->rchans; i++){
+  for(i = 0; i < x->rchans; i++) {
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal"));
   }
-  for(i=0; i < x->rchans; i++){
+  for(i=0; i < x->rchans; i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
   x->pio2 = PI / 2.0;
@@ -54,7 +54,7 @@ void *rotapan_new(t_symbol *s, int argc, t_atom *argv)
   // for better compatibility with Max 6
   x->ins = (t_float **) malloc((x->rchans + 1) * sizeof(t_float *));
   x->outs = (t_float **) malloc(x->rchans * sizeof(t_float *));
-  for(i = 0; i < x->rchans + 1; i++){
+  for(i = 0; i < x->rchans + 1; i++) {
     x->ins[i] = (t_float *) malloc(8192 * sizeof(t_float));
   }
   return x;
@@ -65,7 +65,7 @@ void *rotapan_new(t_symbol *s, int argc, t_atom *argv)
 void rotapan_free(t_rotapan *x)
 {
   int i;
-  for(i = 0; i < x->rchans + 1; i++){
+  for(i = 0; i < x->rchans + 1; i++) {
     free(x->ins[i]);
   }
   free(x->ins);
@@ -93,20 +93,20 @@ t_int *rotapan_perform(t_int *w)
   int n = (int) w[(rchans * 2) + 3];
 
   // copy input vectors
-  for(i = 0; i < rchans + 1; i++){
+  for(i = 0; i < rchans + 1; i++) {
     invec = (t_float *) w[2 + i];
-    for(j = 0; j < n; j++){
+    for(j = 0; j < n; j++) {
       ins[i][j] = invec[j];
     }
   }
 
   // assign output vector pointers
-  for(i = 0; i < rchans; i++){
+  for(i = 0; i < rchans; i++) {
     outs[i] = (t_float *) w[3 + rchans + i];
   }
 
-  for( j = 0; j < n; j++){
-    for(chan = 0; chan < rchans; chan++){
+  for( j = 0; j < n; j++) {
+    for(chan = 0; chan < rchans; chan++) {
       inarr[chan] = ins[chan][j];
       outs[chan][j] = 0;
     }
@@ -120,7 +120,7 @@ t_int *rotapan_perform(t_int *w)
     amp1 = cos( panloc );
     amp2 = sin( panloc );
 
-    for(chan = 0; chan < rchans; chan++){
+    for(chan = 0; chan < rchans; chan++) {
       outs[(chan+offset)%rchans][j] += amp1 * inarr[chan];
       outs[(chan+offset+1)%rchans][j] += amp2 * inarr[chan];
     }
@@ -134,7 +134,7 @@ void rotapan_dsp(t_rotapan *x, t_signal **sp)
   t_int **sigvec;
   int pointer_count = (x->rchans * 2) + 3; // input/output chans + object + panner + vectorsize
   sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object

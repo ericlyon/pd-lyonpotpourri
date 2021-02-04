@@ -57,14 +57,14 @@ void function_rcos(t_function *x)
   function_setbuf(x, x->wavename);
   b_samples = x->b_samples;
   b_frames = x->b_frames;
-  if(b_frames == 0){
+  if(b_frames == 0) {
     return;
   }
-  for(i=0;i<b_frames;i++){
+  for(i=0;i<b_frames;i++) {
     b_samples[i].w_float = (t_float) (0.5 - 0.5 * cos(TWOPI * (t_float)i/(t_float)b_frames));
   }
   function_redraw(x);
-  /* for(i=0;i<b_frames;i++){
+  /* for(i=0;i<b_frames;i++) {
      post("%f", b_samples[i].w_float);
      } */
 }
@@ -95,7 +95,7 @@ void function_rcos(t_function *x)
   b_frames = x->b_frames;
   post("rcos generating %d frames", b_frames); // correct
   // put samples into array
-  for(i=0;i<b_frames;i++){
+  for(i=0;i<b_frames;i++) {
   x->b_samples[i].w_float = (t_float) (0.5 - 0.5 * cos(TWOPI * (t_float)i/(t_float)b_frames));
   }
   if (!(a = (t_garray *)pd_findbyclass(x->wavename, garray_class))) {
@@ -105,7 +105,7 @@ void function_rcos(t_function *x)
   garray_redraw(a);
   }
   // printed samples are correct
-  for(i=0;i<b_frames;i++){
+  for(i=0;i<b_frames;i++) {
   post("%f", x->b_samples[i].w_float);
   }
   }
@@ -126,7 +126,7 @@ void function_print(t_function *x)
   else  {
     x->b_frames = frames;
     garray_usedindsp(a);
-    for(i = 0; i < frames; i++){
+    for(i = 0; i < frames; i++) {
       post("%d: %f",i, x->b_samples[i].w_float);
     }
   }
@@ -140,7 +140,7 @@ void function_gaussian(t_function *x)
   t_word *b_samples;
   t_float arg, xarg,in;
 
-  if(!x->b_frames){
+  if(!x->b_frames) {
     post("* zero length function!");
     return;
   }
@@ -151,7 +151,7 @@ void function_gaussian(t_function *x)
   xarg = 1.0;
   in = -6.0;
 
-  for(i=0;i<b_frames;i++){
+  for(i=0;i<b_frames;i++) {
     b_samples[i].w_float = xarg * pow(2.71828, -(in*in)/2.0);
     in += arg;
   }
@@ -192,22 +192,22 @@ void function_adrenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
   downgain = atom_getfloatarg(3,argc,argv);
   if(downgain <= 0)
     downgain = 0.333;
-  if(al+dl+rl >= b_frames){
+  if(al+dl+rl >= b_frames) {
     post("atk and dk and release are too long");
     return;
   }
   sl = b_frames - (al+dl+rl);
 
-  for(i=0;i<al;i++){
+  for(i=0;i<al;i++) {
     b_samples[i].w_float = (t_float)i/(t_float)al;
   }
-  for(i=al, j=dl;i<al+dl;i++,j--){
+  for(i=al, j=dl;i<al+dl;i++,j--) {
     b_samples[i].w_float = downgain + (1.-downgain)*(t_float)j/(t_float)dl;
   }
-  for(i=al+dl;i<al+dl+sl;i++){
+  for(i=al+dl;i<al+dl+sl;i++) {
     b_samples[i].w_float = downgain;
   }
-  for(i=al+dl+sl,j=rl;i<b_frames;i++,j--){
+  for(i=al+dl+sl,j=rl;i<b_frames;i++,j--) {
     b_samples[i].w_float = downgain * (t_float)j/(t_float)rl;
   }
   function_redraw(x);
@@ -227,19 +227,19 @@ void function_adenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
   downgain = atom_getfloatarg(2,argc,argv);
   if(downgain <= 0)
     downgain = 0.333;
-  if(al+dl >= b_frames){
+  if(al+dl >= b_frames) {
     post("atk and dk are too long");
     return;
   }
   rl = b_frames - (al+dl);
 
-  for(i=0;i<al;i++){
+  for(i=0;i<al;i++) {
     b_samples[i].w_float = (t_float)i/(t_float)al;
   }
-  for(i=al, j=dl;i<al+dl;i++,j--){
+  for(i=al, j=dl;i<al+dl;i++,j--) {
     b_samples[i].w_float = downgain + (1.-downgain)*(t_float)j/(t_float)dl;
   }
-  for(i=al+dl,j=rl;i<b_frames;i++,j--){
+  for(i=al+dl,j=rl;i<b_frames;i++,j--) {
     b_samples[i].w_float = downgain * (t_float)j/(t_float)rl;
   }
   function_redraw(x);
@@ -255,17 +255,17 @@ void function_aenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
   frac = atom_getfloatarg(0,argc,argv);
 
   function_setbuf(x, x->wavename);
-  if(frac <= 0 || frac >= 1){
+  if(frac <= 0 || frac >= 1) {
     post("* attack time must range from 0.0 - 1.0, rather than %f",frac);
   }
 
   al = b_frames * frac;
 
   dl = b_frames - al;
-  for(i=0;i<al;i++){
+  for(i=0;i<al;i++) {
     b_samples[i].w_float = (t_float)i/(t_float)al;
   }
-  for(i=al, j=dl;i<b_frames;i++,j--){
+  for(i=al, j=dl;i<b_frames;i++,j--) {
     b_samples[i].w_float = (t_float)j/(t_float)dl;
   }
   function_redraw(x);
@@ -280,7 +280,7 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
   t_float maxamp, rescale;
   t_float theSample;
 
-  /* for(i = 0; i < argc; i++){
+  /* for(i = 0; i < argc; i++) {
      post("argument %d: %f",i, atom_getfloatarg(i,argc,argv));
      }*/
 
@@ -289,14 +289,14 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
   b_frames = x->b_frames;
   amp = atom_getfloatarg(0,argc,argv);
   // post("harmonic: 0, weight: %.12f", (float)amp);
-  for(i=0;i<b_frames;i++){
+  for(i=0;i<b_frames;i++) {
     b_samples[i].w_float = amp;
   }
-  for(j=1;j<argc;j++){
+  for(j=1;j<argc;j++) {
     amp = atom_getfloatarg(j,argc,argv);
-    if(amp){
+    if(amp) {
       // post("harmonic: %d, weight: %.12f", j, (t_float)amp);
-      for(i=0;i<b_frames;i++){
+      for(i=0;i<b_frames;i++) {
         theSample = amp * sin(TWOPI * (t_float) j * (t_float)i/(t_float)b_frames);
         b_samples[i].w_float += theSample;
         // post("%d: %f", i, (t_float)b_samples[i].w_float);
@@ -304,24 +304,24 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     }
   }
 
-  if(x->normalize){
+  if(x->normalize) {
     maxamp = 0;
-    for(i=0;i<b_frames;i++){
+    for(i=0;i<b_frames;i++) {
       if(maxamp < fabs(b_samples[i].w_float))
         maxamp = fabs(b_samples[i].w_float);
     }
-    if(!maxamp){
+    if(!maxamp) {
       post("* zero maxamp!");
       return;
     }
     rescale = 1.0 / maxamp;
-    for(i=0;i<b_frames;i++){
+    for(i=0;i<b_frames;i++) {
       b_samples[i].w_float *= rescale;
     }
   }
 
   /*
-    for(i=0;i<b_frames;i++){
+    for(i=0;i<b_frames;i++) {
     post("%f", x->b_samples[i].w_float);
     }
   */

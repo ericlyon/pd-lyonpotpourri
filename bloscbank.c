@@ -11,7 +11,7 @@ void bloscbank( float *S, float *O, int D, float iD, float *lf, float *la, float
   for ( chan = lo; chan < hi; chan++ ) {
 
     freq = ( amp = ( chan << 1 ) ) + 1;
-    if ( S[amp] > synt ){
+    if ( S[amp] > synt ) {
       finc = ( S[freq] - ( f = lf[chan] ) )* iD;
       ainc = ( S[amp] - ( a = la[chan] ) )* iD;
       address = index[chan];

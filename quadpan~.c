@@ -50,10 +50,10 @@ void *quadpan_new(t_symbol *s, int argc, t_atom *argv)
   t_quadpan *x = (t_quadpan *)pd_new(quadpan_class);
 
 
-  for(i = 0; i < 2; i++){
+  for(i = 0; i < 2; i++) {
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal"));
   }
-  for(i = 0; i < 4; i++){
+  for(i = 0; i < 4; i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
   x->in = (float *) malloc(8192 * sizeof(float));
@@ -94,13 +94,13 @@ t_int *quadpan_perform(t_int *w)
   int n = (int)(w[9]);
 
   // copy buffers to avoid writeovers in shared memory
-  for(i = 0; i < n; i++){
+  for(i = 0; i < n; i++) {
     in[i] = in_loc[i];
     Xin[i] = Xin_loc[i];
     Yin[i] = Yin_loc[i];
   }
 
-  while( n-- ){
+  while( n-- ) {
     xval = *Xin++;
     yval = *Yin++;
     if( xval < 0.0 )
@@ -154,7 +154,7 @@ t_int *quadpan_perform(t_int *w)
 
 void quadpan_dsp(t_quadpan *x, t_signal **sp)
 {
-  if( ! sp[0]->s_sr ){
+  if( ! sp[0]->s_sr ) {
     return;
   }
   dsp_add(quadpan_perform, 9, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,

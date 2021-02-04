@@ -114,7 +114,7 @@ void *sarec_new(t_symbol *bufname)
   x->start_frame = -1; // initialize to a bad value
   x->end_frame = -1;
   x->regionsamps = 0;
-  for(i = 0; i < x->channel_count; i++){
+  for(i = 0; i < x->channel_count; i++) {
     x->armed_chans[i] = 1; // all channels armed by default
   }
   return x;
@@ -150,12 +150,12 @@ t_int *sarec_perform(t_int *w)
   n = (int) w[4 + channel_count];
   if(! b_valid)
     goto escape;
-  if(! regionsamps ){
+  if(! regionsamps ) {
     x->regionsamps = regionsamps = end_frame - start_frame;
   }
-  for(i = 0; i < n; i++){
+  for(i = 0; i < n; i++) {
     // could be record (1) or overdub (2)
-    if( click_inlet[i] ){
+    if( click_inlet[i] ) {
       clickval = (int) click_inlet[i];
       if(clickval == -2) {
         status = 0;
@@ -169,7 +169,7 @@ t_int *sarec_perform(t_int *w)
         }
         // arm only one channel - protect against fatal bad index
         else if(clickval <= channel_count && clickval > 0) {
-          for(j=0; j < channel_count; j++){
+          for(j=0; j < channel_count; j++) {
             armed_chans[j] = 0;
           };
           armed_chans[clickval - 1] = 1;
@@ -177,7 +177,7 @@ t_int *sarec_perform(t_int *w)
         }
 
         counter = start_frame;
-        if(!end_frame){
+        if(!end_frame) {
           end_frame = b_frames;
         }
         status = 1;
@@ -190,9 +190,9 @@ t_int *sarec_perform(t_int *w)
       garray_redraw(x->recbuf);
     }
     // write over track
-    if(status && (mode == SAREC_RECORD) ){
-      for(j=0; j < channel_count; j++){
-        if( armed_chans[j] ){
+    if(status && (mode == SAREC_RECORD) ) {
+      for(j=0; j < channel_count; j++) {
+        if( armed_chans[j] ) {
           record_inlet = (t_float *) (w[3 + j]);
           samples[ (counter * channel_count) + j].w_float = record_inlet[i];
         }
@@ -200,9 +200,9 @@ t_int *sarec_perform(t_int *w)
       counter++;
     }
     // overdub
-    else if(status && (mode == SAREC_OVERDUB) ){
-      for(j=0; j < channel_count; j++){
-        if( armed_chans[j] ){
+    else if(status && (mode == SAREC_OVERDUB) ) {
+      for(j=0; j < channel_count; j++) {
+        if( armed_chans[j] ) {
           record_inlet = (t_float *) (w[3 + j]);
           samples[ (counter * channel_count) + j].w_float += record_inlet[i];
         }
@@ -213,13 +213,13 @@ t_int *sarec_perform(t_int *w)
 
     else if(status && (mode == SAREC_PUNCH)) {
       counter_msf = counter - start_frame;
-      for(j=0; j < channel_count; j++){
-        if( armed_chans[j] ){
+      for(j=0; j < channel_count; j++) {
+        if( armed_chans[j] ) {
           record_inlet = (t_float *) (w[3 + j]);
           // frak is multiplier for NEW STUFF, (1-frak) is MULTIPLIER for stuff to fade out
           // do power fade though
 
-          if( counter_msf < fadesamps ){
+          if( counter_msf < fadesamps ) {
 
             // fade in
             frak = (float)counter_msf / (float)fadesamps;
@@ -229,7 +229,7 @@ t_int *sarec_perform(t_int *w)
             samples[ (counter * channel_count) + j].w_float =
               (samples[ (counter * channel_count) + j].w_float * goin_down)
               + (record_inlet[i] * goin_up);
-          } else if ( counter_msf >= (regionsamps - fadesamps) ){
+          } else if ( counter_msf >= (regionsamps - fadesamps) ) {
             frak = (float) (regionsamps - counter_msf) / (float) fadesamps;
             // fade out
 
@@ -252,9 +252,9 @@ t_int *sarec_perform(t_int *w)
 
     sync[i] = (float) counter / (float) b_frames;
   }
-  if(status){
+  if(status) {
     x->display_counter += n;
-    if(x->display_counter > WAVEFORM_UPDATE){
+    if(x->display_counter > WAVEFORM_UPDATE) {
       garray_redraw(x->recbuf);
       x->display_counter = 0;
     }
@@ -302,13 +302,13 @@ void sarec_arm(t_sarec *x, t_floatarg chan)
 {
   int i;
   int ichan = (int) chan;
-  if(ichan == -1){
-    for(i = 0; i < x->channel_count; i++){
+  if(ichan == -1) {
+    for(i = 0; i < x->channel_count; i++) {
       x->armed_chans[i] = 1;
     }
   } else if(ichan == 0)
   {
-    for(i = 0; i < x->channel_count; i++){
+    for(i = 0; i < x->channel_count; i++) {
       x->armed_chans[i] = 0;
     }
   } else if(chan <= x->channel_count && chan > 0) {
@@ -378,12 +378,12 @@ void sarec_dsp(t_sarec *x, t_signal **sp)
   /* all channels, 1 inlet, 1 sync outlet,  the object pointer, vector size N */
 
   sarec_attach_buffer(x);
-  if( x->start_frame < 0 && x->end_frame < 0){
+  if( x->start_frame < 0 && x->end_frame < 0) {
     x->start_frame = 0;
     x->end_frame = x->b_frames;
   }
   sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object

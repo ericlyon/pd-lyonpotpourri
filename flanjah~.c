@@ -62,7 +62,7 @@ void flanjah_report( t_flanjah *x );
 void flanjah_float(t_flanjah *x, double f);
 void flanjah_init(t_flanjah *x,short initialized);
 
-void flanjah_tilde_setup(void){
+void flanjah_tilde_setup(void) {
   flanjah_class = class_new(gensym("flanjah~"), (t_newmethod)flanjah_new,
                             (t_method)flanjah_dsp_free,sizeof(t_flanjah), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(flanjah_class, t_flanjah, x_f);
@@ -73,7 +73,7 @@ void flanjah_tilde_setup(void){
   potpourri_announce(OBJECT_NAME);
 }
 
-void flanjah_report( t_flanjah *x ){
+void flanjah_report( t_flanjah *x ) {
   post("feedback: %f", x->feedback);
   post("depth: %f", x->depth);
   post("si1: %f", x->osc1_si);
@@ -84,7 +84,7 @@ void flanjah_report( t_flanjah *x ){
   post("phase2: %f", x->osc2_phs);
 }
 
-void flanjah_dsp_free( t_flanjah *x ){
+void flanjah_dsp_free( t_flanjah *x ) {
   free(x->sinetab);
   free(x->ddl1);
   free(x->ddl2);
@@ -131,41 +131,41 @@ t_int *flanjah_perform(t_int *w)
   float depth_factor = x->depth;
   /**********************/
 
-  if( x->mute ){
-    while( n-- ){
+  if( x->mute ) {
+    while( n-- ) {
       *out1++ = 0.0;
     }
     return (w+9);
   }
-  while( n-- ){
+  while( n-- ) {
     // Pull Data off Signal buffers
     insamp1 = *in1++;
-    if( feedback_connected ){
+    if( feedback_connected ) {
       feedback = *feedback_vec++;
 
     }
     if( feedback_protect ) {
-      if( feedback > 0.425){
+      if( feedback > 0.425) {
         feedback = 0.425;
       }
       if( feedback < -0.425 )
         feedback = -0.425;
     }
 
-    if( speed1_connected ){
+    if( speed1_connected ) {
       osc1_si = *speed1_vec++ * si_factor;
     }
-    if( speed2_connected ){
+    if( speed2_connected ) {
       osc2_si = *speed2_vec++ * si_factor;
     }
-    if( depth_connected ){
+    if( depth_connected ) {
       depth_factor = *depth_vec++;
     }
 
-    if( depth_factor < .0001 ){
+    if( depth_factor < .0001 ) {
       depth_factor = .0001;
     }
-    if( depth_factor > 1. ){
+    if( depth_factor > 1. ) {
       depth_factor = 1.;
     }
 
@@ -235,7 +235,7 @@ void flanjah_dsp(t_flanjah *x, t_signal **sp)
   x->speed2_connected = 1;
   x->depth_connected = 1;
 
-  if(x->sr != sp[0]->s_sr){
+  if(x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
     flanjah_init(x,1);
   }
@@ -258,11 +258,11 @@ void flanjah_protect(t_flanjah *x, t_floatarg state)
 void flanjah_init(t_flanjah *x,short initialized)
 {
   int i;
-  if( x->maxdel < .0001 ){
+  if( x->maxdel < .0001 ) {
     x->maxdel = .0001;
     error("below minimum of 0.01 ms");
   }
-  if( x->maxdel > 360000. ){
+  if( x->maxdel > 360000. ) {
     x->maxdel = 360000.;
     error("above maximum of 360 seconds");
   }
@@ -278,11 +278,11 @@ void flanjah_init(t_flanjah *x,short initialized)
   x->osc2_phs = 0;
 
   x->tap1 = x->tap2 = 0;
-  if(!initialized){
+  if(!initialized) {
     x->ddl1 = (float *) calloc(x->ddl1_len + 2, sizeof(float));
     x->ddl2 = (float *) calloc(x->ddl2_len + 2, sizeof(float));
     x->sinetab = (float *) calloc(F_LEN,sizeof(float));
-    for( i = 0; i < F_LEN ; i++ ){
+    for( i = 0; i < F_LEN ; i++ ) {
       x->sinetab[i] = 0.51 - 0.47 * cos( TWOPI * (float) i / (float) F_LEN);
     }
   } else {
@@ -302,7 +302,7 @@ void *flanjah_new(t_symbol *s, int argc, t_atom *argv)
   outlet_new(&x->x_obj, gensym("signal"));
 
   x->sr = sys_getsr();
-  if(!x->sr){
+  if(!x->sr) {
     error("zero sampling rate - set to 44100");
     x->sr = 44100;
   }

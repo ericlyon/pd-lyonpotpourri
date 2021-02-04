@@ -103,7 +103,7 @@ void dmach_instant_recall(t_dmach *x, t_floatarg toggle);
 
 
 
-void dmach_tilde_setup(void){
+void dmach_tilde_setup(void) {
   dmach_class = class_new(gensym("dmach~"), (t_newmethod)dmach_new,
                           (t_method)dmach_dsp_free,sizeof(t_dmach), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(dmach_class, t_dmach, x_f);
@@ -140,7 +140,7 @@ void dmach_muteslot(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   int drum_count = x->drum_count;
   short mutestate;
 
-  if(argc < 2){
+  if(argc < 2) {
     post("muteslot: pattern number, slot number");
     return;
   }
@@ -149,7 +149,7 @@ void dmach_muteslot(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   mutestate = (short)atom_getfloatarg(1,argc,argv);
 
 
-  if(slot < 0 || slot > drum_count - 1){
+  if(slot < 0 || slot > drum_count - 1) {
     error("muteslot: illegal slot index: %d",slot);
     return;
   }
@@ -167,27 +167,27 @@ void dmach_playsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   int i;
   int pnum;
 
-  if(argc < 1){
+  if(argc < 1) {
     error("%s: zero length sequence",OBJECT_NAME);
     return;
   }
   /* need safety check here */
-  for(i = 0; i < argc; i++){
+  for(i = 0; i < argc; i++) {
     pnum = (int) atom_getfloatarg(i,argc,argv);
-    if(! x->stored_patterns[pnum]){
+    if(! x->stored_patterns[pnum]) {
       error("%d is not currently stored",pnum);
       return;
     }
   }
 
-  for(i = 0; i < argc; i++){
+  for(i = 0; i < argc; i++) {
     x->sequence[i] = (int) atom_getfloatarg(i,argc,argv);
   }
 
   //
 
 
-  if(x->instant_recall){
+  if(x->instant_recall) {
     x->this_pattern = x->sequence[0];
     x->clocker = x->patterns[x->this_pattern].dsamps;
   } else {
@@ -205,24 +205,24 @@ void dmach_loopsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   int i;
   int pnum;
 
-  if(argc < 1){
+  if(argc < 1) {
     error("%s: zero length sequence",OBJECT_NAME);
     return;
   }
 
-  for(i = 0; i < argc; i++){
+  for(i = 0; i < argc; i++) {
     pnum = (int) atom_getfloatarg(i,argc,argv);
-    if(! x->stored_patterns[pnum]){
+    if(! x->stored_patterns[pnum]) {
       error("%d is not currently stored",pnum);
       return;
     }
   }
 
-  for(i = 0; i < argc; i++){
+  for(i = 0; i < argc; i++) {
     x->sequence[i] = (int) atom_getfloatarg(i,argc,argv);
   }
 
-  if(x->instant_recall){
+  if(x->instant_recall) {
     x->this_pattern = x->sequence[0];
     x->clocker = x->patterns[x->this_pattern].dsamps;
   } else {
@@ -247,11 +247,11 @@ void dmach_gain(t_dmach *x, t_floatarg slotf, t_floatarg new_gain_factor)
   int drum_count = x->drum_count;
   //  int i,j,k;
 
-  if(slot < 0 || slot > drum_count - 1){
+  if(slot < 0 || slot > drum_count - 1) {
     error("illegal slot index: %d",slot);
     return;
   }
-  /* if(new_gain_factor <= 0){
+  /* if(new_gain_factor <= 0) {
      error("illegal gain factor %f", new_gain_factor);
      return;
      } */
@@ -266,11 +266,11 @@ void dmach_transpose(t_dmach *x, t_floatarg slotf, t_floatarg new_transpose_fact
   float *gtranspose = x->gtranspose;
   int drum_count = x->drum_count;
 
-  if(slot < 0 || slot > drum_count - 1){
+  if(slot < 0 || slot > drum_count - 1) {
     error("%s: transpose given illegal slot index: %d",OBJECT_NAME, slot);
     return;
   }
-  if(new_transpose_factor == 0){
+  if(new_transpose_factor == 0) {
     error("illegal transpose factor %f", new_transpose_factor);
     return;
   }
@@ -285,15 +285,15 @@ void dmach_recall(t_dmach *x, t_floatarg pnf)
 
   /* post("requested recall of %d, ignored",pnum);
      return;*/
-  if(pnum < 0){
+  if(pnum < 0) {
     error("requested index is less than zero");
     return;
   }
-  if(pnum >= MAX_PATTERNS){
+  if(pnum >= MAX_PATTERNS) {
     error("requested index is greater than the maximum of %d",MAX_PATTERNS-1);
     return;
   }
-  if(! x->stored_patterns[pnum]){
+  if(! x->stored_patterns[pnum]) {
     error("%d is not currently stored",pnum);
     return;
   }
@@ -308,15 +308,15 @@ void dmach_arm(t_dmach *x, t_floatarg pnf)
   int i;
   t_pattern *p = x->patterns;
 
-  if(pnum < 0){
+  if(pnum < 0) {
     error("requested index is less than zero");
     return;
   }
-  if(pnum > MAX_PATTERNS){
+  if(pnum > MAX_PATTERNS) {
     error("%s: requested index is greater than the maximum of %d",OBJECT_NAME,MAX_PATTERNS-1);
     return;
   }
-  if(! x->stored_patterns[pnum]){
+  if(! x->stored_patterns[pnum]) {
     error("%s: %d is not currently stored",OBJECT_NAME,pnum);
     return;
   }
@@ -338,7 +338,7 @@ void dmach_tempo(t_dmach *x, t_floatarg new_tempo)
   int drum_count = x->drum_count;
   float sr = x->sr;
   float tempo_factor = x->tempo_factor;
-  if(new_tempo <= 0.0){
+  if(new_tempo <= 0.0) {
     error("tempo must be greater than zero, but was %f",new_tempo);
     return;
   }
@@ -347,12 +347,12 @@ void dmach_tempo(t_dmach *x, t_floatarg new_tempo)
   x->tempo = new_tempo;
   tempo_factor = (60.0/new_tempo);
 
-  for(i = 0; i < MAX_PATTERNS; i++){
-    if(stored_patterns[i]){
+  for(i = 0; i < MAX_PATTERNS; i++) {
+    if(stored_patterns[i]) {
       p[i].dsamps = p[i].beats * tempo_factor * sr;
-      for(j = 0; j < drum_count; j++){
-        if(p[i].drumlines[j].active){
-          for(k = 0; k < p[i].drumlines[j].attack_count; k++){
+      for(j = 0; j < drum_count; j++) {
+        if(p[i].drumlines[j].active) {
+          for(k = 0; k < p[i].drumlines[j].attack_count; k++) {
             p[i].drumlines[j].attacks[k].trigger_point *= ratio;
           }
         }
@@ -369,24 +369,24 @@ void dmach_show(t_dmach *x, t_floatarg fn)
   t_attack *ptr;
   int drum_count = x->drum_count;
 
-  if(pnum < 0 || pnum > MAX_PATTERNS-1){
+  if(pnum < 0 || pnum > MAX_PATTERNS-1) {
     error("illegal pattern number: %d",pnum);
     return;
   }
 
-  if(! x->stored_patterns[pnum]){
+  if(! x->stored_patterns[pnum]) {
     error("%d is not currently stored",pnum);
     return;
   }
   post("showing pattern %d",pnum);
   /* need to check if pattern is valid */
 
-  for(j = 0; j < drum_count; j++){
-    if(p[pnum].drumlines[j].active){
+  for(j = 0; j < drum_count; j++) {
+    if(p[pnum].drumlines[j].active) {
       post("*** drum line for slot %d ***",j);
       ptr = p[pnum].drumlines[j].attacks;
       post("there are %d attacks",p[pnum].drumlines[j].attack_count);
-      for(i = 0; i < p[pnum].drumlines[j].attack_count; i++){
+      for(i = 0; i < p[pnum].drumlines[j].attack_count; i++) {
         post("amp: %f, transp: %f, trigger: %f",
              ptr->amplitude, ptr->increment, ptr->trigger_point);
         ptr++;
@@ -406,27 +406,27 @@ void dmach_printraw(t_dmach *x, t_floatarg fn)
   float tempo_factor = x->tempo_factor;
   float sr = x->sr;
 
-  if(pnum < 0 || pnum > MAX_PATTERNS-1){
+  if(pnum < 0 || pnum > MAX_PATTERNS-1) {
     error("illegal pattern number: %d",pnum);
     return;
   }
 
-  if(! x->stored_patterns[pnum]){
+  if(! x->stored_patterns[pnum]) {
     error("%d is not currently stored",pnum);
     return;
   }
-  if(!tempo_factor){
+  if(!tempo_factor) {
     error("tempo factor is zero!");
     return;
   }
 
   post("readraw %d %f",pnum, p[pnum].beats);
-  for(j = 0; j < drum_count; j++){
-    if(p[pnum].drumlines[j].active){
+  for(j = 0; j < drum_count; j++) {
+    if(p[pnum].drumlines[j].active) {
       ptr = p[pnum].drumlines[j].attacks;
       post("%d %d",j, p[pnum].drumlines[j].attack_count);
 
-      for(i = 0; i < p[pnum].drumlines[j].attack_count; i++){
+      for(i = 0; i < p[pnum].drumlines[j].attack_count; i++) {
         /* scale attack times to factor out sample rate and tempo */
         normalized_trigger = ptr->trigger_point / (tempo_factor * sr);
         post("%f %f %f",
@@ -450,21 +450,21 @@ void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   int ldex = 0;
   t_atom *listdata = x->listdata;
 
-  if(argc < 1){
+  if(argc < 1) {
     pnum = x->this_pattern;
   } else {
     pnum = (int) atom_getfloatarg(0,argc,argv);
   }
-  if(pnum < 0 || pnum > MAX_PATTERNS-1){
+  if(pnum < 0 || pnum > MAX_PATTERNS-1) {
     error("illegal pattern number: %d",pnum);
     return;
   }
 
-  if(! x->stored_patterns[pnum]){
+  if(! x->stored_patterns[pnum]) {
     error("%d is not currently stored",pnum);
     return;
   }
-  if(!tempo_factor){
+  if(!tempo_factor) {
     error("tempo factor is zero!");
     return;
   }
@@ -478,13 +478,13 @@ void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   SETFLOAT(listdata + ldex, (float)pnum);  ++ldex;
   SETFLOAT(listdata + ldex, p[pnum].beats);  ++ldex;
 
-  for(j = 0; j < drum_count; j++){
-    if(p[pnum].drumlines[j].active){
+  for(j = 0; j < drum_count; j++) {
+    if(p[pnum].drumlines[j].active) {
       ptr = p[pnum].drumlines[j].attacks;
       SETFLOAT(listdata + ldex, (float)j); ++ldex;
       SETFLOAT(listdata + ldex, (float)(p[pnum].drumlines[j].attack_count)); ++ldex;
 
-      for(i = 0; i < p[pnum].drumlines[j].attack_count; i++){
+      for(i = 0; i < p[pnum].drumlines[j].attack_count; i++) {
         normalized_trigger = ptr->trigger_point / (tempo_factor * sr);
         SETFLOAT(listdata + ldex, ptr->amplitude); ++ldex;
         SETFLOAT(listdata + ldex, ptr->increment); ++ldex;
@@ -505,19 +505,19 @@ void dmach_copypattern(t_dmach *x, t_floatarg pn1, t_floatarg pn2)
   t_attack *ptr_from, *ptr_to;
   int drum_count = x->drum_count;
 
-  if(pnum_from < 0 || pnum_from > MAX_PATTERNS-1){
+  if(pnum_from < 0 || pnum_from > MAX_PATTERNS-1) {
     error("illegal source pattern number: %d",pnum_from);
     return;
   }
-  if(pnum_to < 0 || pnum_to > MAX_PATTERNS-1){
+  if(pnum_to < 0 || pnum_to > MAX_PATTERNS-1) {
     error("illegal dest pattern number: %d",pnum_to);
     return;
   }
-  if(pnum_from == pnum_to){
+  if(pnum_from == pnum_to) {
     error("source and dest patterns are the same");
     return;
   }
-  if(! x->stored_patterns[pnum_from]){
+  if(! x->stored_patterns[pnum_from]) {
     error("%d is not currently stored",pnum_from);
     return;
   }
@@ -527,13 +527,13 @@ void dmach_copypattern(t_dmach *x, t_floatarg pn1, t_floatarg pn2)
   p[pnum_to].beats = p[pnum_from].beats;
   p[pnum_to].dsamps = p[pnum_from].dsamps;
 
-  for(j = 0; j < drum_count; j++){
+  for(j = 0; j < drum_count; j++) {
     p[pnum_to].drumlines[j].active = p[pnum_from].drumlines[j].active;
-    if(p[pnum_from].drumlines[j].active){
+    if(p[pnum_from].drumlines[j].active) {
       ptr_from = p[pnum_from].drumlines[j].attacks;
       ptr_to = p[pnum_to].drumlines[j].attacks;
       p[pnum_to].drumlines[j].attack_count = p[pnum_from].drumlines[j].attack_count;
-      for(i = 0; i < p[pnum_from].drumlines[j].attack_count; i++){
+      for(i = 0; i < p[pnum_from].drumlines[j].attack_count; i++) {
         ptr_to->amplitude = ptr_from->amplitude;
         ptr_to->increment = ptr_from->increment;
         ptr_to->trigger_point = ptr_from->trigger_point;
@@ -563,12 +563,12 @@ void dmach_readraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   pnum = (int) atom_getfloatarg(pdex++,argc,argv);
 
 
-  if(pnum < 0 || pnum > MAX_PATTERNS-1){
+  if(pnum < 0 || pnum > MAX_PATTERNS-1) {
     error("%s: illegal pattern number: %d",OBJECT_NAME,pnum);
     return;
   }
 
-  if(! x->stored_patterns[pnum]){
+  if(! x->stored_patterns[pnum]) {
     x->stored_patterns[pnum] = 1; // means there's something there now
     dmach_init_pattern(x,pnum);
     post("readraw: loading pattern %d",pnum);
@@ -580,13 +580,13 @@ void dmach_readraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   //  p[pnum].dsamps = atom_getfloatarg(pdex++,argc,argv);
   p[pnum].dsamps = p[pnum].beats * tempo_factor * sr;
   //  post("dsamps calculated to be %f", p[pnum].dsamps);
-  while(pdex < argc){
+  while(pdex < argc) {
     slot = (int) atom_getfloatarg(pdex++,argc,argv);
     p[pnum].drumlines[slot].active = 1;
     p[pnum].drumlines[slot].attack_count = (int) atom_getfloatarg(pdex++,argc,argv);
     p[pnum].drumlines[slot].adex = 0;
     ptr = p[pnum].drumlines[slot].attacks;
-    for(i = 0; i < p[pnum].drumlines[slot].attack_count; i++){
+    for(i = 0; i < p[pnum].drumlines[slot].attack_count; i++) {
       ptr->amplitude = atom_getfloatarg(pdex++,argc,argv);
       ptr->increment = atom_getfloatarg(pdex++,argc,argv);
       ptr->trigger_point = (sr * tempo_factor) * atom_getfloatarg(pdex++,argc,argv);
@@ -626,23 +626,23 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
     post("skipping slotamps for %d",pnum);
     return;*/
 
-  if(pnum < 0 || pnum > MAX_PATTERNS - 1){
+  if(pnum < 0 || pnum > MAX_PATTERNS - 1) {
     error("%s: invalid pattern number: %d",OBJECT_NAME,pnum);
     return;
   }
 
-  if(!x->stored_patterns[pnum]){
+  if(!x->stored_patterns[pnum]) {
     error("%s: no pattern found at location : %d",OBJECT_NAME,pnum);
     return;
   }
 
   slot = (int) atom_getfloatarg(pdex++,argc,argv);
-  if(slot < 0 || slot >= x->drum_count){
+  if(slot < 0 || slot >= x->drum_count) {
     post("%s: %d is an illegal slot",OBJECT_NAME,slot);
     return;
   }
   //  post("filling slotamps %d for %d",slot, pnum);
-  if(tempo <= 0){
+  if(tempo <= 0) {
     tempo = 60;
     error("zero tempo found");
   }
@@ -658,9 +658,9 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   // clean me
   memset((void *)tmpatks, 0, MAX_ATTACKS * sizeof(t_attack) );
 
-  for(i = 0; i < subdiv; i++){
+  for(i = 0; i < subdiv; i++) {
     val = atom_getfloatarg(pdex++,argc,argv);
-    if(val){
+    if(val) {
       tmpatks[local_attacks].amplitude = val;
       // force to integer sample point
       tmpatks[local_attacks].trigger_point = (int)trigger_point;
@@ -670,7 +670,7 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   }
 
   /* initialize with increment of 1.0 for each non-zero amplitude attack. */
-  for(i = 0; i < local_attacks; i++){
+  for(i = 0; i < local_attacks; i++) {
     if(tmpatks[i].amplitude) {
       tmpatks[i].increment = 1.0;
     } else {
@@ -709,19 +709,19 @@ void dmach_slotampsfull(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   float tempo = x->tempo;
   float sr = x->sr;
 
-  if(argc > MAX_ATTACKS + 1){
+  if(argc > MAX_ATTACKS + 1) {
     post("%s: %d is too long an atk message",OBJECT_NAME,argc);
     return;
   }
   pdex = 0;
   pnum = atom_getfloatarg(pdex++,argc,argv);
 
-  if(pnum < 0 || pnum > MAX_PATTERNS - 1){
+  if(pnum < 0 || pnum > MAX_PATTERNS - 1) {
     error("%s: invalid pattern number: %d",OBJECT_NAME,pnum);
     return;
   }
 
-  if(!x->stored_patterns[pnum]){
+  if(!x->stored_patterns[pnum]) {
     error("%s: no pattern found at location : %d",OBJECT_NAME,pnum);
     return;
   }
@@ -736,16 +736,16 @@ void dmach_slotampsfull(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 
   trigger_point = 0;
   attack_count = 0;
-  while(tmpbeats > 0){
+  while(tmpbeats > 0) {
     local_attacks = 0;
     beatseg = atom_getfloatarg(pdex++,argc,argv);
     subdiv = atom_getfloatarg(pdex++,argc,argv);
     beat_samps = (beatseg/subdiv) * tempo_factor * sr;
     /* read attack cycle and store any non-zero attacks */
     local_attacks = 0;
-    for(i = 0; i < subdiv; i++){
+    for(i = 0; i < subdiv; i++) {
       val = atom_getfloatarg(pdex++,argc,argv);
-      if(val){
+      if(val) {
         p[pnum].drumlines[slot].attacks[attack_count + local_attacks].amplitude = val;
         /* force to integer sample point (couldn't get round() to work) */
         p[pnum].drumlines[slot].attacks[attack_count + local_attacks].trigger_point = (int)trigger_point;
@@ -753,7 +753,7 @@ void dmach_slotampsfull(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
       }
       trigger_point += beat_samps;
     }
-    for(i = 0; i < local_attacks; i++){
+    for(i = 0; i < local_attacks; i++) {
       p[pnum].drumlines[slot].attacks[i + attack_count].increment = 1.0;
     }
     tmpbeats -= beatseg;
@@ -771,31 +771,31 @@ void dmach_slotincrs(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   int pnum;
   t_pattern *p = x->patterns;
 
-  if(argc > MAX_ATTACKS + 1){
+  if(argc > MAX_ATTACKS + 1) {
     post("%s: %d is too long a slotincrs message",OBJECT_NAME,argc);
     return;
   }
   pdex = 0;
   pnum = (int) atom_getfloatarg(pdex++,argc,argv);
   slot = (int) atom_getfloatarg(pdex++,argc,argv);
-  if(slot < 0 || slot >= x->drum_count){
+  if(slot < 0 || slot >= x->drum_count) {
     post("%s: %d is an illegal slot",OBJECT_NAME,slot);
     return;
   }
   local_attacks = p[pnum].drumlines[slot].attack_count;
-  if(argc != local_attacks + 2){
+  if(argc != local_attacks + 2) {
     // post("rejected slotincrs with %d local atks, argc = %d",local_attacks, argc - 2);
     return;
   }
   //  post("%d local atks, argc = %d",local_attacks, argc);
 
 
-  if(pnum < 0 || pnum >= MAX_PATTERNS){
+  if(pnum < 0 || pnum >= MAX_PATTERNS) {
     error("%s: slotincrs sent invalid pattern number: %d",OBJECT_NAME,pnum);
     return;
   }
 
-  if(!x->stored_patterns[pnum]){
+  if(!x->stored_patterns[pnum]) {
     error("%s: slotincrs: no pattern found at location : %d",OBJECT_NAME,pnum);
     return;
   }
@@ -808,7 +808,7 @@ void dmach_slotincrs(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 
 
 
-  for(i = 0; i < local_attacks; i++){
+  for(i = 0; i < local_attacks; i++) {
     p[pnum].drumlines[slot].attacks[i].increment = atom_getfloatarg(pdex++,argc,argv);
   }
   x->this_pattern = x->next_pattern = pnum; // set current pattern to what we're working on
@@ -837,7 +837,7 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 
 
   pnum = atom_getfloatarg(0,argc,argv);
-  if(pnum < 0 || pnum > MAX_PATTERNS - 1){
+  if(pnum < 0 || pnum > MAX_PATTERNS - 1) {
     error("invalid pattern number: %d",pnum);
     return;
   }
@@ -846,11 +846,11 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   dmach_init_pattern(x,pnum);
 
   p[pnum].beats = atom_getfloatarg(1,argc,argv);
-  if(p[pnum].beats <= 0){
+  if(p[pnum].beats <= 0) {
     post("illegal beats at pnum %d: %f",pnum,p[pnum].beats);
     p[pnum].beats = 4;
   }
-  if(tempo <= 0){
+  if(tempo <= 0) {
     error("zero tempo in store msg");
     tempo = 60;
   }
@@ -859,23 +859,23 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   pdex = 2;
 
   //  post("%f beats %f samps in this pattern",p[pnum].beats,p[pnum].dsamps );
-  while(pdex < argc){
+  while(pdex < argc) {
     slot = atom_getfloatarg(pdex++,argc,argv);
     p[pnum].drumlines[slot].active = 1;
     tmpbeats = p[pnum].beats;
 
     trigger_point = 0;
     attack_count = 0;
-    while(tmpbeats > 0){
+    while(tmpbeats > 0) {
       local_attacks = 0;
       beatseg = atom_getfloatarg(pdex++,argc,argv);
       subdiv = atom_getfloatarg(pdex++,argc,argv);
       beat_samps = (beatseg/subdiv) * tempo_factor * sr;
 
       /* read attack cycle and store any non-zero attacks */
-      for(i = 0; i < subdiv; i++){
+      for(i = 0; i < subdiv; i++) {
         val = atom_getfloatarg(pdex++,argc,argv);
-        if(val){
+        if(val) {
           p[pnum].drumlines[slot].attacks[attack_count + local_attacks].amplitude = val;
           /* force to integer sample point (couldn't get round() to work) */
           p[pnum].drumlines[slot].attacks[attack_count + local_attacks].trigger_point = (int)trigger_point;
@@ -885,7 +885,7 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
       }
       /* we now know number of attacks and read that many transpose factors */
 
-      for(i = 0; i < local_attacks; i++){
+      for(i = 0; i < local_attacks; i++) {
         p[pnum].drumlines[slot].attacks[i + attack_count].increment = atom_getfloatarg(pdex++,argc,argv);
       }
       tmpbeats -= beatseg;
@@ -910,24 +910,24 @@ void dmach_init_pattern(t_dmach *x, int pnum)
   int i;
   int drum_count = x->drum_count;
   t_pattern *p = x->patterns;
-  if(pnum < 0 || pnum >= MAX_PATTERNS){
+  if(pnum < 0 || pnum >= MAX_PATTERNS) {
     error("invalid pattern number: %d",pnum);
     return;
   }
 
 
 
-  if( x->stored_patterns[pnum] ){
+  if( x->stored_patterns[pnum] ) {
     // post("replacing pattern stored at %d",pnum);
   }
 
-  if(p[pnum].drumlines == NULL){
+  if(p[pnum].drumlines == NULL) {
     // post("initializing drumline memory at location %d",pnum);
     p[pnum].drumlines = (t_drumline *)malloc(drum_count * sizeof(t_drumline));
   }
 
 
-  for(i = 0; i < drum_count; i++){
+  for(i = 0; i < drum_count; i++) {
     p[pnum].drumlines[i].attacks = (t_attack *)calloc(MAX_ATTACKS, sizeof(t_attack));
     p[pnum].drumlines[i].adex = 0;
     p[pnum].drumlines[i].active = 0;
@@ -986,7 +986,7 @@ void *dmach_new(t_symbol *s, int argc, t_atom *argv)
 
   x->outlet_count = x->drum_count * 2 + 1; // one extra for pattern start click
 
-  for(i = 0; i < x->outlet_count; i++){
+  for(i = 0; i < x->outlet_count; i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
   x->listraw_outlet = outlet_new(&x->x_obj, gensym("list"));
@@ -1014,7 +1014,7 @@ void *dmach_new(t_symbol *s, int argc, t_atom *argv)
     x->tempo = 60.0;
 
   //  post("initial tempo is %f",x->tempo);
-  for(i = 0; i < MAX_PATTERNS; i++){
+  for(i = 0; i < MAX_PATTERNS; i++) {
     x->patterns[i].drumlines = NULL;
     x->stored_patterns[i] = 0;
   }
@@ -1025,13 +1025,13 @@ void *dmach_new(t_symbol *s, int argc, t_atom *argv)
   x->sr = sys_getsr();
   x->tempo_factor = 60.0 / x->tempo ;
 
-  for(i = 0; i < x->drum_count; i++){
+  for(i = 0; i < x->drum_count; i++) {
     x->gains[i] = 1.0;
     x->gtranspose[i] = 1.0;
     x->current_increment[i] = 1.0;
   }
   // safety - init memory for all drum patterns
-  for(i = 0; i < MAX_PATTERNS; i++){
+  for(i = 0; i < MAX_PATTERNS; i++) {
     dmach_init_pattern(x,i);
   }
   x->virgin = 1;
@@ -1074,9 +1074,9 @@ t_int *dmach_perform(t_int *w)
   /* clean pnum click outlet */
   memset((void *)sync, 0, n * sizeof(float));
 
-  if( x->mute || x->virgin ){
-    for(i = 0; i < drum_count; i++){
-      if(connected[i * 2 + 1]){
+  if( x->mute || x->virgin ) {
+    for(i = 0; i < drum_count; i++) {
+      if(connected[i * 2 + 1]) {
         // post("cleaning outlet pair %d", i);
         trig_outlet = (t_float *) w[i * 2 + 3];
         memset((void *)trig_outlet, 0, n * sizeof(float));
@@ -1086,20 +1086,20 @@ t_int *dmach_perform(t_int *w)
   }
 
   /* pre-clean all connected trigger vectors */
-  for(i = 0; i < drum_count; i++){
-    if(connected[i * 2 + 1]){
+  for(i = 0; i < drum_count; i++) {
+    if(connected[i * 2 + 1]) {
       trig_outlet = (t_float *) w[i * 2 + 3];
       memset((void *)trig_outlet, 0, n * sizeof(float));
     }
   }
 
-  for(j = 0; j < n; j++){
+  for(j = 0; j < n; j++) {
     if(clocker >= dsamps){ // ready for next pattern now
       clocker -= dsamps;
       /* this is the pattern sequencer */
-      if(playsequence){
-        if (seqptr >= sequence_length){
-          if(loopsequence){
+      if(playsequence) {
+        if (seqptr >= sequence_length) {
+          if(loopsequence) {
             seqptr = 0;
           } else {
             /* this is fine, the playthrough has concluded and we now mute external */
@@ -1111,7 +1111,7 @@ t_int *dmach_perform(t_int *w)
 
       }
       /* we do this if we're not pattern sequencing: */
-      else if(next_pattern != this_pattern){
+      else if(next_pattern != this_pattern) {
         this_pattern = next_pattern;
       }
 
@@ -1121,8 +1121,8 @@ t_int *dmach_perform(t_int *w)
       /* send current bar number if in sequence. Note kludge for if
          bar is 0. We cannot send a 0 click so we alias it to something else.
       */
-      if(playsequence){
-        if(this_pattern){
+      if(playsequence) {
+        if(this_pattern) {
           sync[j] = this_pattern;
         } else {
           sync[j] = x->zeroalias;
@@ -1134,15 +1134,15 @@ t_int *dmach_perform(t_int *w)
     else {
       sync[j] = 0;
     }
-    for(i = 0; i < drum_count; i++){
+    for(i = 0; i < drum_count; i++) {
       // float locamp;
-      if(p[this_pattern].drumlines[i].active && ! muted[i]){
+      if(p[this_pattern].drumlines[i].active && ! muted[i]) {
         trig_outlet = (t_float *) w[i * 2 + 3];
         incr_outlet = (t_float *) w[i * 2 + 4];
 
         adex = p[this_pattern].drumlines[i].adex; // overflow danger ???
 
-        if((int)clocker == (int)p[this_pattern].drumlines[i].attacks[adex].trigger_point){
+        if((int)clocker == (int)p[this_pattern].drumlines[i].attacks[adex].trigger_point) {
           current_increment[i] =
             p[this_pattern].drumlines[i].attacks[adex].increment * gtranspose[i];
           /* put sync click into sample j of the output vector */
@@ -1158,7 +1158,7 @@ t_int *dmach_perform(t_int *w)
         }
         else {
           trig_outlet[j] = 0; // not sure we need these assignments ??
-          if(clickincr){
+          if(clickincr) {
             incr_outlet[j] = 0;
           } else {
             incr_outlet[j] = current_increment[i]; // samp + hold the increment to outlet
@@ -1186,11 +1186,11 @@ void dmach_dsp(t_dmach *x, t_signal **sp)
   int pointer_count;
 
 
-  if(x->virgin){
+  if(x->virgin) {
     post("%s: no patterns are stored",OBJECT_NAME);
     //    return;
   }
-  if(x->sr != sp[0]->s_sr){
+  if(x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
     /* still need to adjust every stored pattern dsamps variable */
   }
@@ -1202,13 +1202,13 @@ void dmach_dsp(t_dmach *x, t_signal **sp)
 
   // copy vector to be safe
 
-  for(i = 0; i < pointer_count - 2; i++){
+  for(i = 0; i < pointer_count - 2; i++) {
     x->connected[i] = 1;
   }
 
 
   sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object

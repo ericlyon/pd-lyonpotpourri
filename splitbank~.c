@@ -147,7 +147,7 @@ void makehamming( float *H, float *A, float *S, int Nw, int N, int I,int odd );
 void makehanning( float *H, float *A, float *S, int Nw, int N, int I,int odd );
 void convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor );
 //////////
-void splitbank_tilde_setup(void){
+void splitbank_tilde_setup(void) {
 
   splitbank_class = class_new(gensym("splitbank~"), (t_newmethod)splitbank_new,
                               (t_method)splitbank_free, sizeof(t_splitbank),0,A_GIMME,0);
@@ -198,7 +198,7 @@ void splitbank_manual_override( t_splitbank *x, t_floatarg toggle )
 void splitbank_free( t_splitbank *x )
 {
   int i;
-  if(x->initialize == 0){
+  if(x->initialize == 0) {
     free(x->list_data) ;
     free(x->current_binsplit);
     free(x->last_binsplit);
@@ -207,16 +207,16 @@ void splitbank_free( t_splitbank *x )
     free(x->bin_tmp);
     free(x->stored_slots);
     free(x->in_amps);
-    for( i = 0; i < MAXSTORE; i++ ){
+    for( i = 0; i < MAXSTORE; i++ ) {
       free(x->stored_binsplits[i]);
     }
     free(x->stored_binsplits);
-    for(i = 0; i < x->channel_count + 5; i++){
+    for(i = 0; i < x->channel_count + 5; i++) {
       free(x->ins[i]);
     }
     free(x->ins);
     free(x->outs);
-    for(i = 0; i < x->channel_count; i++){
+    for(i = 0; i < x->channel_count; i++) {
       fftease_obank_destroy(x->obanks[i]);
     }
     free(x->obanks);
@@ -226,7 +226,7 @@ void splitbank_free( t_splitbank *x )
 void splitbank_maxfreq( t_splitbank *x, t_floatarg freq )
 {
   int i;
-  for(i = 0; i < x->channel_count; i++){
+  for(i = 0; i < x->channel_count; i++) {
     fftease_obank_topfreq( x->obanks[i], freq);
   }
 }
@@ -234,7 +234,7 @@ void splitbank_maxfreq( t_splitbank *x, t_floatarg freq )
 void splitbank_minfreq( t_splitbank *x, t_floatarg freq )
 {
   int i;
-  for(i = 0; i < x->channel_count; i++){
+  for(i = 0; i < x->channel_count; i++) {
     fftease_obank_bottomfreq( x->obanks[i], freq);
   }
 }
@@ -247,11 +247,11 @@ void splitbank_store( t_splitbank *x, t_floatarg loc )
   int location = (int) loc;
   int i;
 
-  if( location < 0 || location > MAXSTORE - 1 ){
+  if( location < 0 || location > MAXSTORE - 1 ) {
     error("location must be between 0 and %d, but was %d", MAXSTORE, location);
     return;
   }
-  for(i = 0; i < x->N2; i++ ){
+  for(i = 0; i < x->N2; i++ ) {
     stored_binsplits[location][i] = current_binsplit[i];
   }
   stored_slots[location] = 1;
@@ -267,16 +267,16 @@ void splitbank_recall( t_splitbank *x, t_floatarg loc )
   short *stored_slots = x->stored_slots;
   int i;
   int location = (int) loc;
-  if( location < 0 || location > MAXSTORE - 1 ){
+  if( location < 0 || location > MAXSTORE - 1 ) {
     error("location must be between 0 and %d, but was %d", MAXSTORE, location);
     return;
   }
-  if( ! stored_slots[location] ){
+  if( ! stored_slots[location] ) {
     error("nothing stored at location %d", location);
     return;
   }
 
-  for(i = 0; i < x->N2; i++ ){
+  for(i = 0; i < x->N2; i++ ) {
     last_binsplit[i] = current_binsplit[i];
     current_binsplit[i] = stored_binsplits[location][i];
   }
@@ -285,16 +285,16 @@ void splitbank_recall( t_splitbank *x, t_floatarg loc )
   x->interpolation_completed = 0;
   x->frames_left = x->ramp_frames;
   if(! x->ramp_frames) { // Ramp Off - Immediately set last to current
-    for( i = 0; i < x->N2; i++ ){
+    for( i = 0; i < x->N2; i++ ) {
       x->last_binsplit[ i ] = x->current_binsplit[ i ];
     }
   }
 }
 
-int splitbank_closestPowerOfTwo(int p){
+int splitbank_closestPowerOfTwo(int p) {
   int base = 2;
-  if(p > 2){
-    while(base < p){
+  if(p > 2) {
+    while(base < p) {
       base *= 2;
     }
   }
@@ -312,22 +312,22 @@ void *splitbank_new(t_symbol *s, int argc, t_atom *argv)
   // post("theoretic chan count: %d",x->channel_count );
   // x->channel_count = 8;
   srand( time( 0 ) );
-  for(i = 0; i < x->channel_count + 4; i++){
+  for(i = 0; i < x->channel_count + 4; i++) {
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal"));
   }
-  for(i = 0; i < x->channel_count + 1; i++){
+  for(i = 0; i < x->channel_count + 1; i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
 
   x->ins = (t_float **) malloc(sizeof(t_float *) * (x->channel_count + 5));
   x->outs = (t_float **) malloc(sizeof(t_float *) * (x->channel_count + 1));
-  for(i = 0; i < x->channel_count + 5; i++){
+  for(i = 0; i < x->channel_count + 5; i++) {
     x->ins[i] = (t_float *) malloc(8192 * sizeof(t_float));
   }
   x->list_outlet = (t_outlet *) outlet_new(&x->x_obj, gensym("list"));
 
   x->obanks = (t_oscbank **) malloc(x->channel_count * sizeof(t_oscbank *));
-  for(i = 0; i < x->channel_count; i++){
+  for(i = 0; i < x->channel_count; i++) {
     x->obanks[i] = (t_oscbank *) malloc(sizeof(t_oscbank));
   }
 
@@ -382,10 +382,10 @@ t_int *splitbank_perform(t_int *w)
 
   // mute branch: clear outlets and return
 
-  if(x->mute){
-    for(i = 0; i < (channel_count + 1); i++){
+  if(x->mute) {
+    for(i = 0; i < (channel_count + 1); i++) {
       outlet = (t_float *) w[i + (channel_count + 7)];
-      for(j = 0; j < n; j++){
+      for(j = 0; j < n; j++) {
         outlet[j] = 0.0;
       }
     }
@@ -394,9 +394,9 @@ t_int *splitbank_perform(t_int *w)
 
   // Copy all inlets
 
-  for(i = 0; i < channel_count + 5; i++){
+  for(i = 0; i < channel_count + 5; i++) {
     inlet = (t_float *) w[2 + i];
-    for(j = 0; j < n; j++){
+    for(j = 0; j < n; j++) {
       ins[i][j] = inlet[j];
     }
   }
@@ -411,13 +411,13 @@ t_int *splitbank_perform(t_int *w)
 
   // assign outlet pointers
 
-  for(i = 0; i < (channel_count + 1); i++){
+  for(i = 0; i < (channel_count + 1); i++) {
     outs[i] = (t_float *) w[i + (channel_count + 7)]; // was 5
   }
 
   sync = outs[channel_count];
 
-  for(i = 0; i < channel_count; i++){
+  for(i = 0; i < channel_count; i++) {
     obanks[i]->pitch_increment = ins[i+1][0] * obanks[i]->table_si;
     obanks[i]->synthesis_threshold = synthesis_threshold[0];
   }
@@ -436,20 +436,20 @@ t_int *splitbank_perform(t_int *w)
 
 
   // copy input amplitudes from analyzed frame
-  for( i = 0, j = 0; i < N; i += 2 , j++){
+  for( i = 0, j = 0; i < N; i += 2 , j++) {
     in_amps[j] = obanks[0]->interleaved_spectrum[i];
   }
 
   // zero the amps next
 
-  for(i = 0; i < channel_count; i++){
-    for(j = 0; j < N; j += 2){
+  for(i = 0; i < channel_count; i++) {
+    for(j = 0; j < N; j += 2) {
       obanks[i]->interleaved_spectrum[j] = 0.0;
     }
   }
 
-  if( x->manual_override ){
-    for(i = 0; i < channel_count; i++){
+  if( x->manual_override ) {
+    for(i = 0; i < channel_count; i++) {
       splitbank_spliti( x, obanks[i]->interleaved_spectrum,
                         N2*i/channel_count, N2*(i+1)/channel_count, manual_control_value);
     }
@@ -459,14 +459,14 @@ t_int *splitbank_perform(t_int *w)
 
     x->new_distribution = 0;
 
-    for(i = 0; i < channel_count; i++){
+    for(i = 0; i < channel_count; i++) {
       splitbank_split( x, last_binsplit, obanks[i]->interleaved_spectrum,
                        N2*i/channel_count, N2*(i+1)/channel_count);
     }
     frac = 0.0;
   }
   else if ( x->interpolation_completed ) {
-    for(i = 0; i < channel_count; i++){
+    for(i = 0; i < channel_count; i++) {
       splitbank_split( x, current_binsplit, obanks[i]->interleaved_spectrum,
                        N2*i/channel_count, N2*(i+1)/channel_count);
     }
@@ -474,7 +474,7 @@ t_int *splitbank_perform(t_int *w)
   } else {
     frac = (float) counter / (float) countdown_samps;
 
-    for(i = 0; i < channel_count; i++){
+    for(i = 0; i < channel_count; i++) {
       splitbank_spliti( x, obanks[i]->interleaved_spectrum,
                         N2*i/channel_count, N2*(i+1)/channel_count, 1.0 - frac);
     }
@@ -485,20 +485,20 @@ t_int *splitbank_perform(t_int *w)
       x->interpolation_completed = 1;
     }
   }
-  for( i = 0; i < n; i++ ){
+  for( i = 0; i < n; i++ ) {
     sync[i] = frac;
   }
   // copy frequency information to other banks
 
-  for(i = 1; i < channel_count; i++){
-    for( j = 1; j < N; j += 2){
+  for(i = 1; i < channel_count; i++) {
+    for( j = 1; j < N; j += 2) {
       obanks[i]->interleaved_spectrum[j] = obanks[0]->interleaved_spectrum[j];
     }
   }
 
   // SYNTHESIS
 
-  for(i = 0; i < channel_count; i++){
+  for(i = 0; i < channel_count; i++) {
     fftease_obank_synthesize( obanks[i] );
     fftease_shiftout( obanks[i], outs[i] );
   }
@@ -526,12 +526,12 @@ void splitbank_scramble (t_splitbank *x)
 
   // Copy current mapping to last mapping (first time this will be all zeros)
 
-  for( i = 0; i < x->N2; i++ ){
+  for( i = 0; i < x->N2; i++ ) {
     last_binsplit[i] = current_binsplit[i];
   }
 
 
-  for( i = 0; i < max; i++ ){
+  for( i = 0; i < max; i++ ) {
     bin_tmp[i] = i;
   }
 
@@ -539,7 +539,7 @@ void splitbank_scramble (t_splitbank *x)
 
   // This randomly distributes each bin number (to occur once each in a random location)
 
-  for( i = 0; i < max; i++ ){
+  for( i = 0; i < max; i++ ) {
     bindex = rand_index( used );
     current_binsplit[i] = bin_tmp[bindex];
     for(j = bindex; j < used - 1; j++) {
@@ -549,7 +549,7 @@ void splitbank_scramble (t_splitbank *x)
   }
   x->counter = 0;
   if(! x->countdown_samps ) { // Ramp Off - Immediately set last to current
-    for( i = 0; i < x->N2; i++ ){
+    for( i = 0; i < x->N2; i++ ) {
       last_binsplit[ i ] = current_binsplit[ i ];
     }
   }
@@ -563,11 +563,11 @@ int rand_index( int max) {
 void splitbank_setstate (t_splitbank *x, t_symbol *msg, short argc, t_atom *argv) {
   short i;
 
-  if( argc != x->N2 ){
+  if( argc != x->N2 ) {
     error("list must be of length %d, but actually was %d", x->N2, argc);
     return;
   }
-  for( i = 0; i < x->N2; i++ ){
+  for( i = 0; i < x->N2; i++ ) {
     x->last_binsplit[ i ] = x->current_binsplit[ i ];
     x->current_binsplit[ i ] = 0;
   }
@@ -577,7 +577,7 @@ void splitbank_setstate (t_splitbank *x, t_symbol *msg, short argc, t_atom *argv
   }
   x->frames_left = x->ramp_frames;
   if(! x->ramp_frames) { // Ramp Off - Immediately set last to current
-    for( i = 0; i < x->N2; i++ ){
+    for( i = 0; i < x->N2; i++ ) {
       x->last_binsplit[ i ] = x->current_binsplit[ i ];
     }
   }
@@ -691,7 +691,7 @@ void splitbank_split(t_splitbank *x, int *binsplit, float *dest_mag, int start, 
   if( bin_offset  < 0 )
     bin_offset *= -1;
 
-  for( i = start; i < end; i++){
+  for( i = start; i < end; i++) {
     bindex = binsplit[ (i + table_offset) % n ];
     bindex = ( bindex + bin_offset ) % n;
     dest_mag[ bindex * 2 ] = in_amps[ bindex ]; // putting amps into interleaved spectrum
@@ -720,7 +720,7 @@ void splitbank_spliti( t_splitbank *x, float *dest_mag, int start, int end, floa
   if( oldfrac > 1.0 )
     oldfrac = 1.0;
 
-  if( x->powerfade ){
+  if( x->powerfade ) {
     phase = oldfrac * PIOVERTWO;
     oldfrac = sin( phase );
     newfrac = cos( phase );
@@ -733,11 +733,11 @@ void splitbank_spliti( t_splitbank *x, float *dest_mag, int start, int end, floa
   if( bin_offset  < 0 )
     bin_offset *= -1;
 
-  for( i = 0; i < n; i++ ){
+  for( i = 0; i < n; i++ ) {
     last_mag[i] = current_mag[i] = 0.0;
   }
 
-  for( i = start; i < end; i++ ){
+  for( i = start; i < end; i++ ) {
     bindex = current_binsplit[ (i + table_offset) % n ];
     bindex = ( bindex + bin_offset ) % n;
     current_mag[ bindex ] = in_amps[ bindex ];
@@ -746,8 +746,8 @@ void splitbank_spliti( t_splitbank *x, float *dest_mag, int start, int end, floa
     bindex = ( bindex + bin_offset ) % n;
     last_mag[ bindex ] = in_amps[ bindex ];
   }
-  for( i = 0; i < n; i++){
-    if(! current_mag[i] && ! last_mag[i]){
+  for( i = 0; i < n; i++) {
+    if(! current_mag[i] && ! last_mag[i]) {
       dest_mag[i * 2] = 0.0;
     }
     else if( current_mag[i] && last_mag[i]) {
@@ -777,7 +777,7 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
 
   pointer_count = (channel_count * 2) + 8;
   sigvec = (t_int **) malloc(sizeof(t_int *) * pointer_count);
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
@@ -795,12 +795,12 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
 //         sp[0]->s_n, sys_getblksize(), fftsize);
 
   // generate FFT size from x->overlap * x->vector_size
-  if( ! sp[0]->s_sr ){
+  if( ! sp[0]->s_sr ) {
     error("splitbank~: zero sample rate! Perhaps no audio driver is selected.");
     return;
   }
-  if(x->initialize || x->R != sys_getsr() || x->vector_size != sp[0]->s_n || x->N != fftsize){
-    if( (x->initialize || x->R != sys_getsr()) && (! x->countdown_samps) ){
+  if(x->initialize || x->R != sys_getsr() || x->vector_size != sp[0]->s_n || x->N != fftsize) {
+    if( (x->initialize || x->R != sys_getsr()) && (! x->countdown_samps) ) {
       x->counter = 0;
       x->countdown_samps = 1.0 * x->R; // 1 second fade time by default
     }
@@ -816,15 +816,15 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
     x->current_mag = malloc(x->N2 * sizeof(float));
     x->stored_slots = malloc(x->N2 * sizeof(short));
     x->stored_binsplits = malloc(MAXSTORE * sizeof(int *));
-    for( i = 0; i < MAXSTORE; i++ ){
+    for( i = 0; i < MAXSTORE; i++ ) {
       x->stored_binsplits[i] = malloc(x->N2 * sizeof(int));
     }
     splitbank_scramble( x );
 
-    for( i = 0; i < x->N2; i++ ){
+    for( i = 0; i < x->N2; i++ ) {
       x->last_binsplit[i] = x->current_binsplit[i];
     }
-    for(i = 0; i < channel_count; i++){
+    for(i = 0; i < channel_count; i++) {
       fftease_obank_initialize(obanks[i], lo_freq, hi_freq, overlap, R, vector_size,x->N);
     }
 
@@ -907,7 +907,7 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
     x->lastamp[i] = x->lastfreq[i] = x->index[i] = 0.0;
   }
 
-  for( i = 0; i < x->Nw; i++ ){
+  for( i = 0; i < x->Nw; i++ ) {
     x->input_buffer[i] = x->output_buffer[i] = 0.0;
   }
 
@@ -1006,7 +1006,7 @@ void fftease_shiftin( t_oscbank *x, float *input )
   int Nw = x->Nw;
   float *input_buffer = x->input_buffer;
 
-  for ( i = 0 ; i < (Nw - vector_size) ; i++ ){
+  for ( i = 0 ; i < (Nw - vector_size) ; i++ ) {
     input_buffer[i] = input_buffer[i + vector_size];
   }
   for ( i = (Nw - vector_size) ; i < Nw; i++ ) {
@@ -1023,13 +1023,13 @@ void fftease_shiftout( t_oscbank *x, float *output )
   float *output_buffer = x->output_buffer;
   float mult = x->mult;
 
-  for ( i = 0; i < vector_size; i++ ){
+  for ( i = 0; i < vector_size; i++ ) {
     *output++ = output_buffer[i] * mult;
   }
-  for ( i = 0; i < Nw - vector_size; i++ ){
+  for ( i = 0; i < Nw - vector_size; i++ ) {
     output_buffer[i] = output_buffer[i + vector_size];
   }
-  for ( i = Nw - vector_size; i < Nw; i++ ){
+  for ( i = Nw - vector_size; i < Nw; i++ ) {
     output_buffer[i] = 0.;
   }
 
@@ -1059,7 +1059,7 @@ void fftease_obank_synthesize( t_oscbank *x )
   for ( chan = lo_bin; chan < hi_bin; chan++ ) {
 
     freq = ( amp = ( chan << 1 ) ) + 1;
-    if ( interleaved_spectrum[amp] > synthesis_threshold ){
+    if ( interleaved_spectrum[amp] > synthesis_threshold ) {
       interleaved_spectrum[freq] *= pitch_increment;
       finc = ( interleaved_spectrum[freq] - ( f = lastfreq[chan] ) ) * i_vector_size;
       ainc = ( interleaved_spectrum[amp] - ( a = lastamp[chan] ) ) * i_vector_size;

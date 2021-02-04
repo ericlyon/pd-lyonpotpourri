@@ -18,7 +18,7 @@ void *arrayfilt_new(t_symbol *msg, short argc, t_atom *argv);
 void arrayfilt_dsp(t_arrayfilt *x, t_signal **sp);
 void arrayfilt_setarray(t_arrayfilt *x);
 
-void arrayfilt_tilde_setup(void){
+void arrayfilt_tilde_setup(void) {
   arrayfilt_class = class_new(gensym("arrayfilt~"), (t_newmethod)arrayfilt_new,
                               0, sizeof(t_arrayfilt),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(arrayfilt_class, t_arrayfilt, x_f);
@@ -73,7 +73,7 @@ t_int *arrayfilt_perform(t_int *w)
   if(a_frames < N2+1) {
     goto exit;
   }
-  for(i = 0; i < N2 + 1; i++){
+  for(i = 0; i < N2 + 1; i++) {
     mag = mag_in[i];
     phase = phase_in[i];
     mag_out[i] = mag * a_samples[i].w_float;

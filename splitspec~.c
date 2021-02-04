@@ -75,7 +75,7 @@ void splitspec_dsp_free( t_splitspec *x );
 
 void splitspec_phaseout(t_splitspec *x);
 int splitspec_closestPowerOfTwo(int p);
-void splitspec_tilde_setup(void){
+void splitspec_tilde_setup(void) {
   splitspec_class = class_new(gensym("splitspec~"), (t_newmethod)splitspec_new,
                               (t_method)splitspec_dsp_free, sizeof(t_splitspec),0,A_GIMME,0);
 
@@ -105,7 +105,7 @@ void splitspec_phaseout(t_splitspec *x)
 void splitspec_overlap( t_splitspec *x, t_floatarg fol )
 {
   int overlap = (int)fol;
-  if( overlap < 2 ){
+  if( overlap < 2 ) {
     post("splitspec~: illegal overlap %d",overlap);
   }
   x->overlap_factor = overlap;
@@ -126,17 +126,17 @@ void splitspec_spiral(t_splitspec *x)
 
   x->new_distribution = 1;
   x->interpolation_completed = 0;
-  for( i = 0; i < N2; i++ ){
+  for( i = 0; i < N2; i++ ) {
     last_binsplit[i] = current_binsplit[i];
   }
   k = 0;
-  for( i = 0; i < N2 / channel_count; i++){
-    for(j = 0; j < channel_count; j++){
+  for( i = 0; i < N2 / channel_count; i++) {
+    for(j = 0; j < channel_count; j++) {
       current_binsplit[i + (j * offset)] = k++;
     }
   }
   if(! x->counter) { // Ramp Off - Immediately set last to current
-    for( i = 0; i < N2; i++ ){
+    for( i = 0; i < N2; i++ ) {
       last_binsplit[ i ] = current_binsplit[ i ];
     }
   }
@@ -156,7 +156,7 @@ void splitspec_squantize(t_splitspec *x, t_floatarg bb)
   int channel_count = x->channel_count;
   blockbins = splitspec_closestPowerOfTwo( blockbins );
   maxblock = N2 / channel_count;
-  if( blockbins < 1 || blockbins > maxblock ){
+  if( blockbins < 1 || blockbins > maxblock ) {
     error("%d is out of bounds - must be between 1 and %d", blockbins, maxblock);
     return;
   }
@@ -166,20 +166,20 @@ void splitspec_squantize(t_splitspec *x, t_floatarg bb)
   x->interpolation_completed = 0;
 
 
-  for( i = 0; i < N2; i++ ){
+  for( i = 0; i < N2; i++ ) {
     last_binsplit[i] = current_binsplit[i];
   }
 
-  if( iterations == 1 ){
-    for( i = 0; i < N2 ; i++ ){
+  if( iterations == 1 ) {
+    for( i = 0; i < N2 ; i++ ) {
       current_binsplit[i] = i;
     }
   }
   else {
     for( k = 0; k < iterations; k++ ) {
-      for( i = 0; i < N2; i += maxblock  ){
-        for( j = 0; j < blockbins; j++ ){
-          if( i + j + k * blockbins < N2 ){
+      for( i = 0; i < N2; i += maxblock  ) {
+        for( j = 0; j < blockbins; j++ ) {
+          if( i + j + k * blockbins < N2 ) {
             current_binsplit[i + j + k * blockbins] = bincount++;
             // post("assigning %d to position %d", bincount-1, i+j+k*blockbins);
           } else {
@@ -193,7 +193,7 @@ void splitspec_squantize(t_splitspec *x, t_floatarg bb)
 
 //    x->frames_left = x->ramp_frames;
   if(! x->counter) { // Ramp Off - Immediately set last to current
-    for( i = 0; i < N2; i++ ){
+    for( i = 0; i < N2; i++ ) {
       last_binsplit[ i ] = current_binsplit[ i ];
     }
   }
@@ -209,16 +209,16 @@ void splitspec_manual_override( t_splitspec *x, t_floatarg toggle )
   x->manual_override = (int) toggle;
 }
 
-void splitspec_dsp_free( t_splitspec *x ){
+void splitspec_dsp_free( t_splitspec *x ) {
   int i;
-  if(x->initialize == 0){
+  if(x->initialize == 0) {
     free(x->list_data);
     free(x->last_binsplit);
     free(x->current_binsplit);
     free(x->last_mag);
     free(x->current_mag);
     free(x->stored_slots);
-    for(i = 0; i < MAXSTORE; i++){
+    for(i = 0; i < MAXSTORE; i++) {
       free(x->stored_binsplits[i]);
     }
     free(x->stored_binsplits);
@@ -239,10 +239,10 @@ void splitspeci( int *current_binsplit, int *last_binsplit, int bin_offset, int 
   int i;
   int bindex;
 
-  for( i = 0; i < n; i++ ){
+  for( i = 0; i < n; i++ ) {
     last_mag[i] = current_mag[i] = 0.0;
   }
-  for( i = start; i < end; i++ ){
+  for( i = start; i < end; i++ ) {
     bindex = current_binsplit[ (i + table_offset) % n ];
     bindex = ( bindex + bin_offset ) % n;
     current_mag[ bindex ] = inmag[ bindex ];
@@ -250,8 +250,8 @@ void splitspeci( int *current_binsplit, int *last_binsplit, int bin_offset, int 
     bindex = ( bindex + bin_offset ) % n;
     last_mag[ bindex ] = inmag[ bindex ];
   }
-  for( i = 0; i < n; i++){
-    if(! current_mag[i] && ! last_mag[i]){
+  for( i = 0; i < n; i++) {
+    if(! current_mag[i] && ! last_mag[i]) {
       dest_mag[i] = 0.0;
     } else {
       dest_mag[i] = oldfrac * last_mag[i] + newfrac * current_mag[i];
@@ -266,7 +266,7 @@ void splitspec( int *binsplit, int bin_offset, int table_offset,
   int i;
   int bindex;
   // n is actually N2
-  for( i = start; i < end; i++){
+  for( i = start; i < end; i++) {
     bindex = binsplit[ (i + table_offset) % n ];
     bindex = ( bindex + bin_offset ) % n;
     dest_mag[ bindex ] = inmag[ bindex ];
@@ -282,11 +282,11 @@ void splitspec_store( t_splitspec *x, t_floatarg floc)
   int location = (int)floc;
   int i;
 
-  if( location < 0 || location > MAXSTORE - 1 ){
+  if( location < 0 || location > MAXSTORE - 1 ) {
     error("location must be between 0 and %d, but was %d", MAXSTORE, location);
     return;
   }
-  for(i = 0; i < x->N2; i++ ){
+  for(i = 0; i < x->N2; i++ ) {
     stored_binsplits[location][i] = current_binsplit[i];
   }
   stored_slots[location] = 1;
@@ -302,16 +302,16 @@ void splitspec_recall( t_splitspec *x, t_floatarg floc)
   short *stored_slots = x->stored_slots;
   int i;
   int location = (int)floc;
-  if( location < 0 || location > MAXSTORE - 1 ){
+  if( location < 0 || location > MAXSTORE - 1 ) {
     error("location must be between 0 and %d, but was %d", MAXSTORE, location);
     return;
   }
-  if( ! stored_slots[location] ){
+  if( ! stored_slots[location] ) {
     error("nothing stored at location %d", location);
     return;
   }
 
-  for(i = 0; i < x->N2; i++ ){
+  for(i = 0; i < x->N2; i++ ) {
     last_binsplit[i] = current_binsplit[i];
     current_binsplit[i] = stored_binsplits[location][i];
   }
@@ -320,7 +320,7 @@ void splitspec_recall( t_splitspec *x, t_floatarg floc)
   x->interpolation_completed = 0;
   //   x->frames_left = x->ramp_frames;
   if(! x->counter) { // Ramp Off - Immediately set last to current
-    for( i = 0; i < x->N2; i++ ){
+    for( i = 0; i < x->N2; i++ ) {
       x->last_binsplit[ i ] = x->current_binsplit[ i ];
     }
   }
@@ -337,10 +337,10 @@ void *splitspec_new(t_symbol *s, int argc, t_atom *argv)
   // post("Channel count is: %d", x->channel_count);
   srand( time( 0 ) );
 
-  for(i=0; i < 4; i++){
+  for(i=0; i < 4; i++) {
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal"));
   }
-  for(i=0; i < x->channel_count * 2; i++){
+  for(i=0; i < x->channel_count * 2; i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
   x->list_outlet = (t_outlet *) outlet_new(&x->x_obj, gensym("list")); // to report random distribution
@@ -369,9 +369,9 @@ void *splitspec_new(t_symbol *s, int argc, t_atom *argv)
   return x;
 }
 
-int splitspec_closestPowerOfTwo(int p){
+int splitspec_closestPowerOfTwo(int p) {
   int base = 2;
-  while(base < p){
+  while(base < p) {
     base *= 2;
   }
   return base;
@@ -417,7 +417,7 @@ t_int *splitspec_perform(t_int *w)
 
   // copy inputs to local buffers
 
-  for(i = 0; i < n; i++){
+  for(i = 0; i < n; i++) {
     inmag_loc[i] = inmag[i];
     inphase_loc[i] = inphase[i];
     t_offset_loc[i] = t_offset[i];
@@ -426,7 +426,7 @@ t_int *splitspec_perform(t_int *w)
   }
 
   // assign local vector pointers
-  for(i = 0, j= 0; i < channel_count * 2; i+=2, j++){
+  for(i = 0, j= 0; i < channel_count * 2; i+=2, j++) {
     magvecs[j] = (t_float *) w[ 7 + i ];
     phasevecs[j] = (t_float *) w[ 8 + i ];
   }
@@ -443,9 +443,9 @@ t_int *splitspec_perform(t_int *w)
   // n == fftsize / 2 (N2)
   // n is the number of "bins", and is also the number of values in each signal vector
 
-  if( x->bypass ){
-    for( i = 0; i < n; i++){
-      for(j = 0; j < channel_count; j++){
+  if( x->bypass ) {
+    for( i = 0; i < n; i++) {
+      for(j = 0; j < channel_count; j++) {
         magvecs[j][i] = inmag_loc[i] * 0.5;;
         phasevecs[j][i] = inphase_loc[i];
       }
@@ -454,15 +454,15 @@ t_int *splitspec_perform(t_int *w)
   }
 
   // ZERO OUT MAGNITUDES AND COPY PHASES TO OUTPUT
-  for( i = 0; i < n; i++ ){
-    for(j = 0; j < channel_count; j++){
+  for( i = 0; i < n; i++ ) {
+    for(j = 0; j < channel_count; j++) {
       magvecs[j][i] = 0.0;
       phasevecs[j][i] = inphase_loc[i];
     }
   }
 
   // Special case of live control over interpolation
-  if( x->manual_override ){
+  if( x->manual_override ) {
 
     // do interpolation
     frac = *manual_control_loc;
@@ -472,7 +472,7 @@ t_int *splitspec_perform(t_int *w)
     oldgain = cos( frac * PIOVERTWO );
     newgain = sin( frac * PIOVERTWO );
 
-    for(j = 0; j < channel_count; j++){
+    for(j = 0; j < channel_count; j++) {
       splitspeci( current_binsplit, last_binsplit, bin_offset, table_offset,
                   current_mag, last_mag, inmag_loc, magvecs[j],
                   N2*j/channel_count, N2*(j+1)/channel_count, N2, oldgain, newgain );
@@ -481,10 +481,10 @@ t_int *splitspec_perform(t_int *w)
   }
 
   // Normal operation
-  if( x->new_distribution ){
+  if( x->new_distribution ) {
     x->new_distribution = 0;
     // put out contents of last distribution
-    for(j = 0; j < channel_count; j++){
+    for(j = 0; j < channel_count; j++) {
       splitspec(last_binsplit, bin_offset, table_offset, inmag_loc, magvecs[j],
                 N2*j/channel_count, N2*(j+1)/channel_count, N2);
     }
@@ -492,7 +492,7 @@ t_int *splitspec_perform(t_int *w)
 
   } else if ( x->interpolation_completed ) {
     // put out contents of current distribution
-    for(j = 0; j < channel_count; j++){
+    for(j = 0; j < channel_count; j++) {
       splitspec(current_binsplit, bin_offset, table_offset, inmag_loc, magvecs[j],
                 N2*j/channel_count, N2*(j+1)/channel_count, N2);
     }
@@ -502,7 +502,7 @@ t_int *splitspec_perform(t_int *w)
     frac = (float) counter / (float) countdown_samps;
     oldgain = cos( frac * PIOVERTWO );
     newgain = sin( frac * PIOVERTWO );
-    for(j = 0; j < channel_count; j++){
+    for(j = 0; j < channel_count; j++) {
       splitspeci( current_binsplit, last_binsplit, bin_offset, table_offset,
                   current_mag, last_mag, inmag_loc, magvecs[j],
                   N2*j/channel_count, N2*(j+1)/channel_count, N2, oldgain, newgain );
@@ -539,15 +539,15 @@ void splitspec_scramble (t_splitspec *x)
 
   // Copy current mapping to last mapping (first time this will be all zeros)
 
-  for( i = 0; i < x->N2; i++ ){
+  for( i = 0; i < x->N2; i++ ) {
     last_binsplit[i] = current_binsplit[i];
   }
 
-  for( i = 0; i < N2; i++ ){
+  for( i = 0; i < N2; i++ ) {
     current_binsplit[i] = i;
   }
   max = N2;
-  for(i = 0; i < N2; i++){
+  for(i = 0; i < N2; i++) {
     swapi = rand() % max;
     tmp = current_binsplit[swapi];
     current_binsplit[swapi] = current_binsplit[max - 1];
@@ -555,13 +555,13 @@ void splitspec_scramble (t_splitspec *x)
     --max;
   }
   /*
-    for(i = 0; i < N2; i++){
+    for(i = 0; i < N2; i++) {
     post("i: %d, dex: %d", i, current_binsplit[i]);
     }
   */
   x->counter = 0;
   if(! x->countdown_samps ) { // Ramp Off - Immediately set last to current
-    for( i = 0; i < x->N2; i++ ){
+    for( i = 0; i < x->N2; i++ ) {
       last_binsplit[ i ] = current_binsplit[ i ];
     }
   }
@@ -571,11 +571,11 @@ void splitspec_scramble (t_splitspec *x)
 void splitspec_setstate (t_splitspec *x, t_symbol *msg, int argc, t_atom *argv) {
   short i;
 
-  if( argc != x->N2 ){
+  if( argc != x->N2 ) {
     error("list must be of length %d, but actually was %d", x->N2, argc);
     return;
   }
-  for( i = 0; i < x->N2; i++ ){
+  for( i = 0; i < x->N2; i++ ) {
     x->last_binsplit[ i ] = x->current_binsplit[ i ];
     x->current_binsplit[ i ] = 0;
   }
@@ -585,7 +585,7 @@ void splitspec_setstate (t_splitspec *x, t_symbol *msg, int argc, t_atom *argv) 
   }
   // x->frames_left = x->ramp_frames;
   if(!x->counter) { // Ramp Off - Immediately set last to current
-    for( i = 0; i < x->N2; i++ ){
+    for( i = 0; i < x->N2; i++ ) {
       x->last_binsplit[ i ] = x->current_binsplit[ i ];
     }
   }
@@ -612,7 +612,7 @@ void splitspec_showstate (t_splitspec *x ) {
   count = 0;
   // post("showing %d data points", x->N2);
 
-  if(! x->initialize){
+  if(! x->initialize) {
     for( i = 0; i < x->N2; i++ ) {
       SETFLOAT(list_data+count,(float)x->current_binsplit[i]);
       ++count;
@@ -632,7 +632,7 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
 
   pointer_count = (x->channel_count * 2) + 7;
   sigvec = (t_int **) malloc(sizeof(t_int *) * pointer_count);
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
@@ -651,13 +651,13 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
   */
   // post("vector size %d, sys vector size: %d",vector_size, sys_getblksize() );
   // post("splitspec: samples per vector: %d, sys blocksize %d", sp[0]->s_n, sys_getblksize());
-  if( ! sp[0]->s_sr ){
+  if( ! sp[0]->s_sr ) {
     error("splitspec~: zero sample rate!");
     return;
   }
 
 
-  if( x->initialize || x->sr != sys_getsr() || x->N != sp[0]->s_n){
+  if( x->initialize || x->sr != sys_getsr() || x->N != sp[0]->s_n) {
 
     x->sr = sys_getsr();
     x->N = sp[0]->s_n;
@@ -667,7 +667,7 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
 //        post("sampling rate: %f, vector thinks it is: %f", sys_getsr(), sp[0]->s_sr);
     //funda = R / (2. * (float) x->N) ;
 
-    if(x->initialize){
+    if(x->initialize) {
       x->list_data = (t_atom *) calloc((x->N + 2),sizeof(t_atom));
       x->last_binsplit = (int *) calloc( x->N2,sizeof(int));
       x->current_binsplit = (int *) calloc( x->N2,sizeof(int));
@@ -675,7 +675,7 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
       x->current_mag = (float *) calloc(x->N2,sizeof(float)) ;
       x->stored_slots = (short *) calloc(x->N2,sizeof(short));
       x->stored_binsplits = (int **) calloc(MAXSTORE,sizeof(int *));
-      for( i = 0; i < MAXSTORE; i++ ){
+      for( i = 0; i < MAXSTORE; i++ ) {
         x->stored_binsplits[i] = (int *)calloc(x->N2,sizeof(int));
       }
     } else {
@@ -685,10 +685,10 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
       x->last_mag = (float *) realloc((void *)x->last_mag,x->N2 * sizeof(float));
       x->current_mag = (float *) realloc((void *)x->current_mag,x->N2 * sizeof(float));
       x->stored_slots = (short *) realloc((void *)x->stored_slots,x->N2 * sizeof(short));
-      for( i = 0; i < MAXSTORE; i++ ){
+      for( i = 0; i < MAXSTORE; i++ ) {
         x->stored_binsplits[i] = (int *) realloc((void *)x->stored_binsplits[i],x->N2 * sizeof(int));
       }
-      for(i = 0; i < x->N2; i++){
+      for(i = 0; i < x->N2; i++) {
         x->last_mag[i] = 0.0;
         x->current_mag[i] = 0.0;
         x->current_binsplit[i] = i;
@@ -699,7 +699,7 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
     x->frame_duration = (float) sp[0]->s_n / sp[0]->s_sr;
 
     splitspec_scramble( x );
-    for( i = 0; i < x->N2; i++ ){
+    for( i = 0; i < x->N2; i++ ) {
       x->last_binsplit[i] = x->current_binsplit[i];
     }
 

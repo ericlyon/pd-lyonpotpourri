@@ -90,7 +90,7 @@ float erand(void);
 
 t_symbol *ps_buffer;
 
-void stutter_tilde_setup(void){
+void stutter_tilde_setup(void) {
   stutter_class = class_new(gensym("stutter~"), (t_newmethod)stutter_new,
                             NO_FREE_FUNCTION,sizeof(t_stutter), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(stutter_class, t_stutter, x_f);
@@ -149,7 +149,7 @@ void stutter_setarray(t_stutter *x)
     x->theBuffer = b;
     garray_usedindsp(b);
   }
-  if(! x->b_valid ){
+  if(! x->b_valid ) {
     post("stutter~ got invalid buffer");
   }
 }
@@ -198,13 +198,13 @@ t_int *stutter_perform(t_int *w)
     }
 
     while( n-- ) {
-      if( b_index < 0 ){
+      if( b_index < 0 ) {
         b_index = 0;
       } else if( b_index > b_frames - 1) {
         b_index = 0;
       }
       theSample = tab[ b_index ].w_float;
-      if( samps_to_go > loop_samps - taper_samps ){
+      if( samps_to_go > loop_samps - taper_samps ) {
         *out1++ = theSample * ( (float)(loop_samps - samps_to_go)/(float)taper_samps );
         ++b_index;
       } else if( samps_to_go < taper_samps ) {
@@ -215,10 +215,10 @@ t_int *stutter_perform(t_int *w)
         *out1++ = theSample;
         ++b_index;
       }
-      if( ! --samps_to_go ){
+      if( ! --samps_to_go ) {
         b_index = loop_start ;
         sdev = ldev * loop_samps ;
-        if( erand() < .5 ){
+        if( erand() < .5 ) {
           sdev = -sdev;
         }
         if(  ( --echos <= 0 ) && ( ! lock_loop ) ) {
@@ -229,7 +229,7 @@ t_int *stutter_perform(t_int *w)
         } else {
           loop_samps += sdev;
 
-          if( loop_samps < loop_min_samps ){
+          if( loop_samps < loop_min_samps ) {
             loop_samps = loop_min_samps;
           } else if( loop_samps > loop_max_samps ) {
             loop_samps = loop_max_samps;
@@ -237,7 +237,7 @@ t_int *stutter_perform(t_int *w)
           samps_to_go = loop_samps;
           if( st_dev ) {
             startdev = erand() * st_dev * (t_float) loop_samps;
-            if( erand() < .5 ){
+            if( erand() < .5 ) {
               startdev = -startdev;
             }
             loop_start += startdev ;
@@ -247,7 +247,7 @@ t_int *stutter_perform(t_int *w)
               loop_start = b_frames - loop_samps;
             }
           }
-          if( loop_start + loop_samps >= b_frames ){
+          if( loop_start + loop_samps >= b_frames ) {
             loop_start = (b_frames - loop_samps) - 1;
           }
 
@@ -302,7 +302,7 @@ void stutter_recall_loop(t_stutter *x, t_floatarg loop_b_index)
   // need to add warning
   int i = loop_b_index;
 
-  if(!x->stored_samps[i]){
+  if(!x->stored_samps[i]) {
     error("no loop stored at position %d!", i);
     return;
   }
@@ -340,11 +340,11 @@ void stutter_min_looptime(t_stutter *x, t_floatarg n)
 {
   n /= 1000.0;
 
-  if( n < .0001 ){
+  if( n < .0001 ) {
     n = .0001;
   }
   x->loop_min_samps = x->R * n ;
-  if( x->loop_min_samps >= x->loop_max_samps ){
+  if( x->loop_min_samps >= x->loop_max_samps ) {
     x->loop_min_samps = x->loop_max_samps - 1;
   }
 
@@ -381,7 +381,7 @@ void stutter_max_looptime(t_stutter *x, t_floatarg n)
     }
   }
   x->loop_max_samps = x->R * n ;
-  if( x->loop_max_samps <= x->loop_min_samps ){
+  if( x->loop_max_samps <= x->loop_min_samps ) {
     x->loop_max_samps = x->loop_min_samps + 1;
   }
 }
@@ -396,7 +396,7 @@ void *stutter_new(t_symbol *msg, short argc, t_atom *argv)
 
   srand(time(0));
 
-  if(argc<1){
+  if(argc<1) {
     error("stutter~ requires a buffer name");
     return NULL;
   }
@@ -428,7 +428,7 @@ float boundrand(float min, float max)
 void stutter_taper(t_stutter *x,  t_floatarg f)
 {
   f *= .001;
-  if(f>0){
+  if(f>0) {
     x->taper_duration = f;
     x->taper_samps = x->R * x->taper_duration;
   }
@@ -437,7 +437,7 @@ void stutter_taper(t_stutter *x,  t_floatarg f)
 void stutter_min_echo(t_stutter *x,  t_floatarg f)
 {
   int ec = (int)f;
-  if(ec>0 && ec < x->max_echo){
+  if(ec>0 && ec < x->max_echo) {
     x->min_echo = ec;
   } else {
     error("min echo must be less than max echo, and greater than zero");
@@ -447,7 +447,7 @@ void stutter_max_echo(t_stutter *x,  t_floatarg f)
 {
   int ec = (int)f;
 
-  if(ec > x->min_echo){
+  if(ec > x->min_echo) {
     x->max_echo = ec;
   } else {
     error("max echo must be greater than min echo");
@@ -459,7 +459,7 @@ void stutter_minmax_echo(t_stutter *x,  t_floatarg minf, t_floatarg maxf)
   int minec = (int)minf;
   int maxec = (int)maxf;
 
-  if( minec < maxec){
+  if( minec < maxec) {
     x->min_echo = minec;
     x->max_echo = maxec;
   }
@@ -473,7 +473,7 @@ void stutter_init(t_stutter *x,short initialized)
 {
   int i;
 
-  if(!initialized){
+  if(!initialized) {
     x->loop_min_samps = x->loop_min_duration * (float)x->R;
     x->loop_max_samps = x->loop_max_duration * (float)x->R;
     x->samps_to_go = x->loop_samps = x->loop_min_samps +
@@ -496,7 +496,7 @@ void stutter_init(t_stutter *x,short initialized)
     x->verbose = 0;
     x->stored_starts = t_getbytes(1024 * sizeof(int));
     x->stored_samps = t_getbytes(1024 * sizeof(int));
-    for(i = 0; i < 1024; i++){
+    for(i = 0; i < 1024; i++) {
       x->stored_samps[i] = 0;
     }
   } else {
@@ -520,7 +520,7 @@ void stutter_dsp(t_stutter *x, t_signal **sp)
 {
   stutter_setarray(x);
 
-  if(x->R != sp[0]->s_sr){
+  if(x->R != sp[0]->s_sr) {
     x->R = sp[0]->s_sr;
     x->taper_samps = x->R * x->taper_duration;
     x->loop_min_samps = .02 * (t_float)x->R;

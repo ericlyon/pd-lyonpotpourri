@@ -91,7 +91,7 @@ void granule_dsp_free(t_granule *x);
 void granule_init(t_granule *x,short initialized);
 void granule_constrain(int *index_min, int *index_max, float minfreq, float maxfreq, float *scale, int steps);
 
-void granule_tilde_setup(void){
+void granule_tilde_setup(void) {
   granule_class = class_new(gensym("granule~"), (t_newmethod)granule_new,
                             (t_method)granule_dsp_free,sizeof(t_granule), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(granule_class, t_granule, x_f);
@@ -120,21 +120,21 @@ void granule_constrain_scale(t_granule *x, t_floatarg toggle)
 }
 void granule_lowblock(t_granule *x, t_floatarg f)
 {
-  if(f > 0){
+  if(f > 0) {
     x->lowblock_freq = f;
   }
 }
 
 void granule_highblock(t_granule *x, t_floatarg f)
 {
-  if(f > 0){
+  if(f > 0) {
     x->highblock_freq = f;
   }
 }
 
 void granule_pitchdev(t_granule *x, t_floatarg d)
 {
-  if(d < 0 ){
+  if(d < 0 ) {
     error("pitch deviation must be positive");
     return;
   }
@@ -153,7 +153,7 @@ void granule_steady(t_granule *x, t_floatarg toggle)
 
 void granule_events(t_granule *x, t_floatarg e)
 {
-  if( e <= 0 ){
+  if( e <= 0 ) {
     post("events must be positive!");
     return;
   }
@@ -163,7 +163,7 @@ void granule_events(t_granule *x, t_floatarg e)
 
 void granule_transpose(t_granule *x, t_floatarg t)
 {
-  if( t <= 0 ){
+  if( t <= 0 ) {
     error("transpose factor must be greater than zero!");
     return;
   }
@@ -174,15 +174,15 @@ void *granule_setscale(t_granule *x, t_symbol *msg, short argc, t_atom *argv)
 {
   int i;
   float *pitchscale = x->pitchscale;
-  if( argc >= MAXSCALE ){
+  if( argc >= MAXSCALE ) {
     error("%d is the maximum size scale", MAXSCALE);
     return 0;
   }
-  if( argc < 2 ){
+  if( argc < 2 ) {
     error("there must be at least 2 members in scale");
     return 0;
   }
-  for(i=0; i < argc; i++){
+  for(i=0; i < argc; i++) {
     pitchscale[i] = atom_getfloatarg(i,argc,argv);
   }
   x->pitchsteps = argc;
@@ -194,19 +194,19 @@ void granule_constrain(int *index_min, int *index_max, float minfreq, float maxf
 {
   int imax = steps - 1;
   int imin = 0;
-  while(scale[imin] < minfreq && imin < imax){
+  while(scale[imin] < minfreq && imin < imax) {
     ++imin;
   }
-  if(imin == imax){
+  if(imin == imax) {
     //    post("could not constrain minimum index  - your grist parameters are out of range for this scale");
     *index_min = 0;
     *index_max = steps - 1;
     return;
   }
-  while(scale[imax] > maxfreq && imax > 0){
+  while(scale[imax] > maxfreq && imax > 0) {
     --imax;
   }
-  if(imax < 1 || imax <= imin){
+  if(imax < 1 || imax <= imin) {
     //    post("could not constrain maximum index - your grist parameters are out of range for this scale");
     *index_min = 0;
     *index_max = steps - 1;
@@ -250,19 +250,19 @@ void granule_pitchspray(t_granule *x)
   t_grain *grains = x->grains;
 
 
-  if( steps < 2 ){
+  if( steps < 2 ) {
     error("scale is undefined");
     return;
   }
-  if( pitch_deviation ){
+  if( pitch_deviation ) {
     pdev = 1.0 + pitch_deviation;
     pdev_invert = 1.0 / pdev;
   }
-  for( i = 0; i < x->events; i++ ){
+  for( i = 0; i < x->events; i++ ) {
     inserted = 0;
-    for(j = 0; j < MAXGRAINS; j++ ){
-      if( grains[j].ephase >= eframes ){
-        if(steady){
+    for(j = 0; j < MAXGRAINS; j++ ) {
+      if( grains[j].ephase >= eframes ) {
+        if(steady) {
           grains[j].delay = (float)(i * horizon) / (float) x->events ;
         } else {
           grains[j].delay = granule_boundrand(0.0,(float) horizon);
@@ -275,26 +275,26 @@ void granule_pitchspray(t_granule *x)
         grains[j].panR = sin(pan * PIOVERTWO);
         grains[j].amplitude = granule_boundrand(minamp, maxamp);
         grains[j].esi =  (float) eframes / (float) grains[j].duration ;
-        if(constrain_scale){
+        if(constrain_scale) {
           granule_constrain(&index_min,&index_max,minfreq, maxfreq, scale, steps);
           windex = (int) granule_boundrand((float)index_min, (float)index_max);
         } else {
           windex = (int) granule_boundrand(0.0, (float)(steps-1));
         }
         grains[j].si = transpose * scale[windex] * (float) frames / sr;
-        if( pitch_deviation ){
+        if( pitch_deviation ) {
           grains[j].si *= granule_boundrand(pdev_invert,pdev);
         }
         /* must add this code to spray, and also do for high frequencies
          */
         if(lowblock_freq > 0.0) {
-          if(grains[j].si * (sr/frames) < lowblock_freq){
+          if(grains[j].si * (sr/frames) < lowblock_freq) {
             post("lowblock: aborted grain with %f frequency",grains[j].si * (sr/frames));
             grains[j].ephase = eframes; // abort grain
           }
         }
         if(highblock_freq > 0.0) {
-          if(grains[j].si * (sr/frames) > highblock_freq){
+          if(grains[j].si * (sr/frames) > highblock_freq) {
             post("highblock: aborted grain with %f frequency, greater than %f",
                  grains[j].si * (sr/frames), highblock_freq);
             grains[j].ephase = eframes; // abort grain
@@ -304,7 +304,7 @@ void granule_pitchspray(t_granule *x)
         goto nextgrain;
       }
     }
-    if(!inserted){
+    if(!inserted) {
       error("could not insert grain");
       return;
     }
@@ -334,11 +334,11 @@ void granule_spray(t_granule *x)
   t_grain *grains = x->grains;
   short inserted;
 
-  for( i = 0; i < x->events; i++ ){
+  for( i = 0; i < x->events; i++ ) {
     inserted = 0;
-    for(j = 0; j < MAXGRAINS; j++ ){
-      if( grains[j].ephase >= eframes ){
-        if(steady){
+    for(j = 0; j < MAXGRAINS; j++ ) {
+      if( grains[j].ephase >= eframes ) {
+        if(steady) {
           grains[j].delay = (float)(i * horizon) / (float) x->events ;
         } else {
           grains[j].delay = granule_boundrand(0.0,(float) horizon);
@@ -356,7 +356,7 @@ void granule_spray(t_granule *x)
         goto nextgrain;
       }
     }
-    if(! inserted){
+    if(! inserted) {
       error("could not insert grain");
       return;
     }
@@ -379,7 +379,7 @@ void *granule_grain(t_granule *x, t_symbol *msg, short argc, t_atom *argv)
   frames = x->wavebuf->b_frames;
   sr = x->sr;
 
-  if(argc < 4){
+  if(argc < 4) {
     error("grain takes 4 arguments, not %d",argc);
     post("duration frequency amplitude pan");
     return 0;
@@ -388,21 +388,21 @@ void *granule_grain(t_granule *x, t_symbol *msg, short argc, t_atom *argv)
   frequency = atom_getfloatarg(1,argc,argv); // in ms
   amplitude = atom_getfloatarg(2,argc,argv);
   pan = atom_getfloatarg(3,argc,argv);
-  if(duration <= 0.0){
+  if(duration <= 0.0) {
     error("illegal duration:%f",duration);
     return 0;
   }
-  if(frequency <= 0.0){
+  if(frequency <= 0.0) {
     error("illegal frequency:%f",frequency);
     return 0;
   }
-  if(pan < 0.0 || pan > 1.0){
+  if(pan < 0.0 || pan > 1.0) {
     error("illegal pan:%f",pan);
     return 0;
   }
   inserted = 0;
-  for(j = 0; j < MAXGRAINS; j++ ){
-    if( grains[j].ephase >= eframes ){
+  for(j = 0; j < MAXGRAINS; j++ ) {
+    if( grains[j].ephase >= eframes ) {
       grains[j].delay = 0.0;// immediate deployment
       grains[j].duration = (long) (.001 * x->sr * duration);
       grains[j].phase = 0.0;
@@ -468,7 +468,7 @@ void granule_init(t_granule *x,short initialized)
 {
   int i;
 
-  if(!initialized){
+  if(!initialized) {
     x->pitchsteps = 0; // we could predefine a 12t scale
     x->mute = 0;
     x->steady = 0;
@@ -503,7 +503,7 @@ void granule_info(t_granule *x)
   long eframes = x->windowbuf->b_frames;
   int i;
 
-  for(i = 0; i < MAXGRAINS; i++ ){
+  for(i = 0; i < MAXGRAINS; i++ ) {
     if( grains[i].ephase < eframes )
       ++tcount;
   }
@@ -515,7 +515,7 @@ void granule_info(t_granule *x)
 
 void *granule_grist(t_granule *x, t_symbol *msg, short argc, t_atom *argv)
 {
-  if(argc < 10 ){
+  if(argc < 10 ) {
     error("grist takes 10 arguments:");
     post("events horizon minfreq maxfreq minpan maxpan minamp maxamp mindur maxdur");
     return 0;
@@ -535,10 +535,10 @@ void *granule_grist(t_granule *x, t_symbol *msg, short argc, t_atom *argv)
   x->maxdur = .001 * x->sr * x->maxdur_ms;
   x->horizon = .001 * x->sr * x->horizon_ms;
 
-  if(x->minfreq < 0){
+  if(x->minfreq < 0) {
     x->minfreq *= -1.0;
   }
-  if(x->maxfreq < 0){
+  if(x->maxfreq < 0) {
     x->maxfreq *= -1.0;
   }
   if(x->minpan < 0.0) {
@@ -547,7 +547,7 @@ void *granule_grist(t_granule *x, t_symbol *msg, short argc, t_atom *argv)
   if(x->maxpan > 1.0) {
     x->maxpan = 1.0;
   }
-  if(x->events < 0){
+  if(x->events < 0) {
     x->events = 0;
   }
   return 0;
@@ -639,19 +639,19 @@ t_int *granule_perform(t_int *w)
   /* grain parameters */
 
 
-  if( x->mute ){
+  if( x->mute ) {
     while(n--) *outputL++ = *outputR++ = 0;
     return (w+6);
   }
 
   // pre-clean buffer
-  for( i = 0; i < n; i++ ){
+  for( i = 0; i < n; i++ ) {
     outputL[i] = outputR[i] = 0;
   }
 
   for (j=0; j<MAXGRAINS; j++) {
 
-    if(grains[j].ephase >= eframes){
+    if(grains[j].ephase >= eframes) {
       goto nextgrain;
     }
     amplitude = grains[j].amplitude;
@@ -664,12 +664,12 @@ t_int *granule_perform(t_int *w)
     panR = grains[j].panR;
 
 
-    for(i = 0; i < n; i++ ){
+    for(i = 0; i < n; i++ ) {
       // ++(x->sampcount); // not really needed
-      if( delay > 0 ){
+      if( delay > 0 ) {
         --delay;
       }
-      if( delay <= 0 && ephase < eframes){
+      if( delay <= 0 && ephase < eframes) {
         sample = wavetable[(int)phase].w_float;
 
         envelope = amplitude * window[(int)ephase].w_float;
@@ -681,7 +681,7 @@ t_int *granule_perform(t_int *w)
         while( phase >= frames )
           phase -= frames;
 
-        if( ephase >= eframes ){
+        if( ephase >= eframes ) {
           grains[j].ephase = ephase;
           goto nextgrain; // must escape loop now
         }
@@ -712,15 +712,15 @@ void granule_dsp(t_granule *x, t_signal **sp)
 
   granule_reload(x);
 
-  if( x->hosed ){
+  if( x->hosed ) {
     post("You need some valid buffers");
     dsp_add(granule_performhose, 5, x,
             sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
     return;
   }
-  if( x->sr != sp[0]->s_sr){
+  if( x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
-    if( !x->sr ){
+    if( !x->sr ) {
       post("warning: zero sampling rate!");
       x->sr = 44100;
     }

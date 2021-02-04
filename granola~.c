@@ -43,7 +43,7 @@ void granola_size(t_granola *x, t_floatarg newsize);
 void granola_clear(t_granola *x);
 void granola_init(t_granola *x);
 
-void granola_tilde_setup(void){
+void granola_tilde_setup(void) {
   granola_class = class_new(gensym("granola~"), (t_newmethod)granola_new,
                             (t_method)granola_dsp_free ,sizeof(t_granola), 0,A_FLOAT,0);
   CLASS_MAINSIGNALIN(granola_class, t_granola, x_f);
@@ -79,17 +79,17 @@ void granola_clear(t_granola *x) {
 void granola_size(t_granola *x, t_floatarg newsize) {
   int newsamps, i;
   newsamps = newsize * 0.001 * sys_getsr();
-  if( newsamps >= x->maxgrainsamps ){
+  if( newsamps >= x->maxgrainsamps ) {
     error("granola~: specified size over preset maximum, no action taken");
     return;
   }
-  if( newsamps < 8 ){
+  if( newsamps < 8 ) {
     error("granola~: grainsize too small");
     return;
   }
   x->grainsamps = newsamps; // will use for shrinkage
   x->buflen = x->grainsamps * 4;
-  for(i = 0; i < x->grainsamps; i++ ){
+  for(i = 0; i < x->grainsamps; i++ ) {
     x->grainenv[i] = .5 + (-.5 * cos( TWOPI * ((float)i/(float)x->grainsamps) ) );
   }
   x->gpt1 = 0;
@@ -130,7 +130,7 @@ void *granola_new(t_floatarg val)
     x->buflen = x->grainsamps * 4;
     x->gbuf = (float *) calloc( x->buflen, sizeof(float) ) ;
     x->grainenv = (float *) calloc( x->grainsamps, sizeof(float) );
-    for(i = 0; i < x->grainsamps; i++ ){
+    for(i = 0; i < x->grainsamps; i++ ) {
     x->grainenv[i] = .5 + (-.5 * cos( TWOPI * ((float)i/(float)x->grainsamps) ) );
     }
     x->gpt1 = 0;
@@ -150,7 +150,7 @@ void *granola_new(t_floatarg val)
 void granola_init(t_granola *x)
 {
   int i;
-  if(x->sr == 0){
+  if(x->sr == 0) {
     post("granola~: dodging zero sampling rate!");
     return;
   }
@@ -162,7 +162,7 @@ void granola_init(t_granola *x)
   x->maxgrainsamps = x->grainsamps; // will use for shrinkage
   x->buflen = x->grainsamps * 4;
   // first time only
-  if(x->gbuf == NULL){
+  if(x->gbuf == NULL) {
     x->gbuf = (float *) calloc(x->buflen, sizeof(float));
     x->grainenv = (float *) calloc(x->grainsamps, sizeof(float));
     x->incr = .5;
@@ -173,7 +173,7 @@ void granola_init(t_granola *x)
     x->gbuf = (float *) realloc(x->gbuf, x->buflen * sizeof(float));
     x->grainenv = (float *) realloc(x->grainenv, x->grainsamps * sizeof(float));
   }
-  for(i = 0; i < x->grainsamps; i++ ){
+  for(i = 0; i < x->grainsamps; i++ ) {
     x->grainenv[i] = .5 + (-.5 * cos(TWOPI * ((float)i/(float)x->grainsamps)));
   }
   x->gpt1 = 0;
@@ -214,7 +214,7 @@ t_int *granola_perform(t_int *w)
   float incr = x->incr;
 
   if( x->mute_me ) {
-    while( n-- ){
+    while( n-- ) {
       *out++ = 0.0;
     }
     return (w+6);
@@ -228,7 +228,7 @@ t_int *granola_perform(t_int *w)
       x->incr = .5 ;
     }
 
-    if( curdel >= buflen ){
+    if( curdel >= buflen ) {
       curdel = 0 ;
     }
     gbuf[ curdel ] = *in++;

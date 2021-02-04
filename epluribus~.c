@@ -44,12 +44,12 @@ void *epluribus_new(t_symbol *msg, int argc, t_atom *argv)
   int i;
   x = (t_epluribus *)pd_new(epluribus_class);
   x->incount = (int) atom_getfloatarg(0,argc,argv);
-  for(i = 0; i < x->incount - 1; i++){
+  for(i = 0; i < x->incount - 1; i++) {
     inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal"));
   }
   outlet_new(&x->x_obj, gensym("signal"));
   outlet_new(&x->x_obj, gensym("signal"));
-  if(x->incount < 2 || x->incount > 256 ){
+  if(x->incount < 2 || x->incount > 256 ) {
     error("%s: there must be between 2 and 256 input vectors", OBJECT_NAME);
     return (NULL);
   }
@@ -76,13 +76,13 @@ t_int *epluribus_perform(t_int *w)
   selection = (t_float *) w[incount + 3];
   n = (int) w[incount + 4];
 
-  if( x->inverse ){
-    for(k = 0; k < n; k ++ ){
+  if( x->inverse ) {
+    for(k = 0; k < n; k ++ ) {
       maxamp = 99999999.0;
       maxloc = 0;
-      for(i = 0, j=2; i < incount ; i++, j++){
+      for(i = 0, j=2; i < incount ; i++, j++) {
         inlet = (t_float *) (w[j]);
-        if( maxamp > fabs( inlet[k] ) ){
+        if( maxamp > fabs( inlet[k] ) ) {
           maxamp = fabs( inlet[k] );
           maxout = inlet[k]; // don't actually change signal
           maxloc = i + 1; // record location of max amp
@@ -93,12 +93,12 @@ t_int *epluribus_perform(t_int *w)
     }
   }
   else {
-    for(k = 0; k < n; k ++ ){
+    for(k = 0; k < n; k ++ ) {
       maxamp = 0.0;
       maxloc = 0;
-      for(i = 0, j=2; i < incount ; i++, j++){
+      for(i = 0, j=2; i < incount ; i++, j++) {
         inlet = (t_float *) (w[j]);
-        if( maxamp < fabs( inlet[k] ) ){
+        if( maxamp < fabs( inlet[k] ) ) {
           maxamp = fabs( inlet[k] );
           maxout = inlet[k]; // don't actually change signal
           maxloc = i + 1; // record location of max amp
@@ -120,14 +120,14 @@ void epluribus_dsp(t_epluribus *x, t_signal **sp)
   int pointer_count;
 
 
-  if( x->incount < 2 || x->incount > 256 ){
+  if( x->incount < 2 || x->incount > 256 ) {
     post("bad vector count");
     return;
   }
   pointer_count = x->incount + 4; // all metros, plus 2 outlets, plus the object pointer, plus N
 
   sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object

@@ -145,12 +145,12 @@ void buffet_info(t_buffet *x)
   long totalframes;
   buffet_setbuf(x, x->wavename);
 
-  if( x->hosed ){
+  if( x->hosed ) {
     error("buffet~ needs a valid buffer");
     return;
   }
 
-  if( ! x->sr){
+  if( ! x->sr) {
     error("zero sample rate!");
     return;
   }
@@ -161,7 +161,7 @@ void buffet_info(t_buffet *x)
 
 void buffet_overlap(t_buffet *x, t_floatarg f)
 {
-  if( f < 0.01 ){
+  if( f < 0.01 ) {
     error("minimum fade time is 0.01 milliseconds");
     return;
   }
@@ -201,10 +201,10 @@ void buffet_events(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   buffer_duration = 1000.0 * (float)b_frames / x->sr;
 
   bufsize = .001 * atom_getfloatarg(0,argc,argv);
-  if(bufsize > MAX_RMS_BUFFER){
+  if(bufsize > MAX_RMS_BUFFER) {
     bufsize = MAX_RMS_BUFFER;
     post("%s: setting analysis buffer to maximum: %f",OBJECT_NAME, MAX_RMS_BUFFER * 1000.0);
-  } else if(bufsize < MIN_RMS_BUFFER){
+  } else if(bufsize < MIN_RMS_BUFFER) {
     bufsize = MIN_RMS_BUFFER;
     post("%s: setting analysis buffer to maximum: %f",OBJECT_NAME, MIN_RMS_BUFFER * 1000.0);
   }
@@ -217,16 +217,16 @@ void buffet_events(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   tadv = (float)bufsamps / x->sr;
   //  post("actual window size: %f",tadv);
   aframes = (long) ( (float) b_frames / (float)bufsamps ) - 1;
-  if(aframes < 2){
+  if(aframes < 2) {
     error("%s: this buffer is too short to analyze",OBJECT_NAME);
     return;
   }
   //  post("analyzing %d frames",aframes);
-  for(i = 0; i < aframes; i++){
+  for(i = 0; i < aframes; i++) {
     meansq = 0.0;
     ipos = b_nchans * i * bufsamps;
     /* only analyze first channel */
-    for(j = 0; j < bufsamps; j+= b_nchans){
+    for(j = 0; j < bufsamps; j+= b_nchans) {
       bindex = ipos + j;
       meansq += b_samples[bindex].w_float * b_samples[bindex].w_float;
     }
@@ -238,21 +238,21 @@ void buffet_events(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 
       //      post("event %d starts at %f",event_count+1, realtime);
 
-      if(event_count >= MAX_EVENTS){
+      if(event_count >= MAX_EVENTS) {
         error("%s: exceeded maximum of %d events",OBJECT_NAME, MAX_EVENTS);
         break;
       }
       SETFLOAT(listdata+(event_count*2), realtime * 1000.0);
 
     }
-    else if( rmsval < offthresh && activated ){
+    else if( rmsval < offthresh && activated ) {
       activated = 0;
       //      post("event %d ends at %f",event_count, realtime);
       SETFLOAT(listdata+((event_count*2) + 1), realtime * 1000.0);
       ++event_count;
     }
   }
-  if(activated){
+  if(activated) {
     post("%s: missed the end of the last event; setting to end of buffer",OBJECT_NAME);
     SETFLOAT(listdata+((event_count*2) + 1), buffer_duration);
     ++event_count;
@@ -299,10 +299,10 @@ void buffet_pevents(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   buffer_duration = 1000.0 * (float)b_frames / x->sr;
 
   bufsize = .001 * atom_getfloatarg(0,argc,argv);
-  if(bufsize > MAX_RMS_BUFFER){
+  if(bufsize > MAX_RMS_BUFFER) {
     bufsize = MAX_RMS_BUFFER;
     post("%s: setting analysis buffer to maximum: %f",OBJECT_NAME, MAX_RMS_BUFFER * 1000.0);
-  } else if(bufsize < MIN_RMS_BUFFER){
+  } else if(bufsize < MIN_RMS_BUFFER) {
     bufsize = MIN_RMS_BUFFER;
     post("%s: setting analysis buffer to maximum: %f",OBJECT_NAME, MIN_RMS_BUFFER * 1000.0);
   }
@@ -314,20 +314,20 @@ void buffet_pevents(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   tadv = (float)bufsamps / x->sr;
 
   aframes = (long) ( (float) b_frames / (float)bufsamps );
-  if(aframes < 2){
+  if(aframes < 2) {
     error("%s: this buffer is too short to analyze",OBJECT_NAME);
     return;
   }
-  if(aframes > MAX_RMS_FRAMES){
+  if(aframes > MAX_RMS_FRAMES) {
     post("too many frames: try a larger buffer size");
     return;
   }
   analbuf[0] = 0; // for first comparison
-  for(i = 1; i < aframes; i++){
+  for(i = 1; i < aframes; i++) {
     meansq = 0.0;
     ipos = b_nchans * i * bufsamps;
     /* only analyze first channel */
-    for(j = 0; j < bufsamps; j+= b_nchans){
+    for(j = 0; j < bufsamps; j+= b_nchans) {
       bindex = ipos + j;
       meansq += b_samples[bindex].w_float * b_samples[bindex].w_float;
     }
@@ -341,12 +341,12 @@ void buffet_pevents(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   mindiff = 9999.;
   maxdiff = 0.0;
   /* LPF - use elsewhere?
-     for(i = 1; i < aframes; i++ ){
+     for(i = 1; i < aframes; i++ ) {
      analbuf[i] = (analbuf[i] + analbuf[i-1]) * 0.5;
      }
   */
   // look for big changes in direction
-  for(i = 1; i < aframes; i++ ){
+  for(i = 1; i < aframes; i++ ) {
     rmsdiff = analbuf[i] - analbuf[i-1];
     absdiff = fabs(rmsdiff);
     if(absdiff > maxdiff)
@@ -354,7 +354,7 @@ void buffet_pevents(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
     if(absdiff < mindiff)
       mindiff = absdiff;
 
-    if( rmsdiff > diffthresh ){
+    if( rmsdiff > diffthresh ) {
       // new
 
       onset[event_count] = (realtime + bufsize) * 1000.0;
@@ -366,12 +366,12 @@ void buffet_pevents(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
     realtime += tadv;
   }
   //  post("mindiff %f maxdiff %f",mindiff,maxdiff);
-  if(event_count == 0){
+  if(event_count == 0) {
     post("%s: no events found",OBJECT_NAME);
   }
 
 
-  for(i = 0; i < event_count; i++){
+  for(i = 0; i < event_count; i++) {
     SETFLOAT(listdata + i, onset[i]);
   }
   outlet_list(x->list, 0, event_count, listdata);
@@ -388,36 +388,36 @@ void buffet_internal_fadeout(t_buffet *x, t_symbol *msg, short argc, t_atom *arg
   long startframe;
   long endframe;
 
-  if( ! x->sr){
+  if( ! x->sr) {
     error("zero sample rate!");
     return;
   }
 
 
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
   b_nchans = x->wavebuf->b_nchans;
   totalframes = x->wavebuf->b_frames;
 
-  if(argc < 2){
+  if(argc < 2) {
     post("%s: internal_fadeout requires start and end times",OBJECT_NAME);
     return;
   }
   startframe = .001 * x->sr * atom_getfloatarg(0,argc,argv);
   endframe = .001 * x->sr * atom_getfloatarg(1,argc,argv);
 
-  if(startframe < 0 || endframe > totalframes || endframe <= startframe){
+  if(startframe < 0 || endframe > totalframes || endframe <= startframe) {
     error("%s: bad frame boundaries to internal_fadeout: %ld and %ld",OBJECT_NAME,startframe, endframe);
     return;
   }
   fadeframes = endframe - startframe;
 
-  for(i = (endframe-1) * b_nchans , k = 0; k < fadeframes ; i -= b_nchans, k++ ){
+  for(i = (endframe-1) * b_nchans , k = 0; k < fadeframes ; i -= b_nchans, k++ ) {
     env = (float) k / (float) fadeframes;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       b_samples[i + j].w_float *= env;
     }
   }
@@ -435,36 +435,36 @@ void buffet_internal_fadein(t_buffet *x, t_symbol *msg, short argc, t_atom *argv
   long startframe;
   long endframe;
 
-  if( ! x->sr){
+  if( ! x->sr) {
     error("zero sample rate!");
     return;
   }
 
 
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
   b_nchans = x->wavebuf->b_nchans;
   totalframes = x->wavebuf->b_frames;
 
-  if(argc < 2){
+  if(argc < 2) {
     post("%s: internal_fadeout requires start and end times",OBJECT_NAME);
     return;
   }
   startframe = .001 * x->sr * atom_getfloatarg(0,argc,argv);
   endframe = .001 * x->sr * atom_getfloatarg(1,argc,argv);
 
-  if(startframe < 0 || endframe > totalframes || endframe <= startframe){
+  if(startframe < 0 || endframe > totalframes || endframe <= startframe) {
     error("%s: bad frame boundaries to internal_fadein: %ld and %ld",OBJECT_NAME,startframe, endframe);
     return;
   }
   fadeframes = endframe - startframe;
 
-  for(i = startframe * b_nchans , k = 0; k < fadeframes ; i += b_nchans, k++ ){
+  for(i = startframe * b_nchans , k = 0; k < fadeframes ; i += b_nchans, k++ ) {
     env = (float) k / (float) fadeframes;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       b_samples[i + j].w_float *= env;
     }
   }
@@ -483,15 +483,15 @@ void buffet_reverse(t_buffet *x)
   long lenm1;
 
   buffet_setbuf(x, x->wavename);
-  if(!x->wavebuf->b_valid){
+  if(!x->wavebuf->b_valid) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
   b_nchans = x->wavebuf->b_nchans;
   b_frames = x->wavebuf->b_frames;
   lenm1 = (b_frames - 1) * b_nchans;
-  for( i = 0; i < (b_frames * b_nchans) / 2; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for( i = 0; i < (b_frames * b_nchans) / 2; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       tmpsamp = b_samples[(lenm1 - i) + j].w_float;
       b_samples[(lenm1 - i) + j].w_float = b_samples[i + j].w_float;
       b_samples[i + j].w_float = tmpsamp;
@@ -504,7 +504,7 @@ void buffet_reverse(t_buffet *x)
 void buffet_update(t_buffet *x)
 {
   outlet_bang(x->bang);
-  if(x->autoredraw){
+  if(x->autoredraw) {
     buffet_redraw(x);
   }
 }
@@ -563,7 +563,7 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 
   destname = atom_getsymbolarg(0,argc,argv);
 
-  if(! buffet_setdestbuf(x, destname)){
+  if(! buffet_setdestbuf(x, destname)) {
     post("%s: could not find buffer %s",OBJECT_NAME,destname->s_name);
     return;
   }
@@ -574,58 +574,58 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   startframe = atom_getfloatarg(1,argc,argv) * .001 * x->sr;
   endframe = atom_getfloatarg(2,argc,argv) * .001 * x->sr;
   chunkframes = endframe - startframe;
-  if(chunkframes <= 0){
+  if(chunkframes <= 0) {
     return;
   }
-  if(b_nchans != b_dest_nchans){
+  if(b_nchans != b_dest_nchans) {
     error("%s: channel mismatch with buffer %s",OBJECT_NAME, destname->s_name);
     return;
   }
-  if(b_dest_frames < chunkframes ){
+  if(b_dest_frames < chunkframes ) {
     //    post("%s: %s is too small, truncating copy region",OBJECT_NAME, destname->s_name);
     chunkframes = b_dest_frames;
   }
-  if(startframe < 0 || endframe >= b_frames){
+  if(startframe < 0 || endframe >= b_frames) {
     error("%s: bad frame range for source buffer: %ld %ld",OBJECT_NAME, startframe,endframe);
     return;
   }
   /* first clean out destination */
-  for(i = 0; i < b_dest_frames; i++){
+  for(i = 0; i < b_dest_frames; i++) {
     b_dest_samples[i].w_float = 0.0;
   }
   // memset((char *)b_dest_samples, 0, b_dest_frames * b_dest_nchans * sizeof(float));
 
   /* now copy segment */
-  for(i = 0; i < chunkframes; i++){
+  for(i = 0; i < chunkframes; i++) {
     b_dest_samples[i].w_float = b_samples[i+startframe].w_float;
   }
 
   /* memcpy(b_dest_samples, b_samples + (startframe * b_nchans),
      chunkframes * b_nchans * sizeof(float) ); */
 
-  if(argc == 5){
+  if(argc == 5) {
     //    post("enveloping");
     fadein = atom_getfloatarg(3,argc,argv);
     fadeout = atom_getfloatarg(4,argc,argv);
-    if(fadein > 0){
+    if(fadein > 0) {
       //      post("fading in");
       fadeframes = fadein * .001 * x->sr;
 
-      if( fadeframes > b_dest_frames){
+      if( fadeframes > b_dest_frames) {
         error("%s: fadein is too long",OBJECT_NAME);
         return;
       }
 
 
-      for(i = 0 , k = 0; k < fadeframes ; i += b_dest_nchans, k++ ){
+      for(i = 0 , k = 0; k < fadeframes ; i += b_dest_nchans, k++ ) {
         env = (float) k / (float) fadeframes;
-        for(j = 0; j < b_dest_nchans; j++){
+        for(j = 0; j < b_dest_nchans; j++) {
           b_dest_samples[i + j].w_float *= env;
         }
       }
     }
 
-    if(fadeout > 0){
+    if(fadeout > 0) {
       //      post("fading out");
       //      totalframes = chunkframes;
       fadeframes = fadeout * .001 * x->sr;
@@ -634,16 +634,16 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 
       //    endframe = .001 * x->sr * atom_getfloatarg(1,argc,argv); // stays the same
 
-      if(startframe < 0){
+      if(startframe < 0) {
         error("%s: bad frame boundaries to internal_fadeout: %ld and %ld",
               OBJECT_NAME,startframe, endframe);
         return;
       }
       //    fadeframes = endframe - startframe; // we already know this
 
-      for(i = (chunkframes-1) * b_dest_nchans , k = 0; k < fadeframes ; i -= b_dest_nchans, k++ ){
+      for(i = (chunkframes-1) * b_dest_nchans , k = 0; k < fadeframes ; i -= b_dest_nchans, k++ ) {
         env = (float) k / (float) fadeframes;
-        for(j = 0; j < b_dest_nchans; j++){
+        for(j = 0; j < b_dest_nchans; j++) {
           b_dest_samples[i + j].w_float *= env;
         }
       }
@@ -706,11 +706,11 @@ void buffet_rmschunk(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 
   startframe = .001 * x->sr * atom_getfloatarg(0,argc,argv);
   endframe = .001 * x->sr * atom_getfloatarg(1,argc,argv);
-  if(startframe < 0 || startframe >= b_frames - 1){
+  if(startframe < 0 || startframe >= b_frames - 1) {
     error("%s: naughty start frame: %ld",OBJECT_NAME,startframe);
     return;
   }
-  if(endframe < 2 || endframe >= b_frames){
+  if(endframe < 2 || endframe >= b_frames) {
     error("%s: naughty start frame: %ld",OBJECT_NAME,startframe);
     return;
   }
@@ -718,13 +718,13 @@ void buffet_rmschunk(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 
   bufsamps = (endframe - startframe);
   //  post("analyzing %d samples",bufsamps);
-  if(!bufsamps){
+  if(!bufsamps) {
     //  post("%s: start and end are identical!",OBJECT_NAME);
     //  post("instantaneous sample value [ch 1 only]: %f", b_samples[startframe*b_nchans]);
     return;
   }
   meansq = 0.0;
-  for(i = startframe; i < endframe; i++){
+  for(i = startframe; i < endframe; i++) {
 
     bindex = b_nchans * i;    /* only analyze first channel */
     meansq += b_samples[bindex].w_float * b_samples[bindex].w_float;
@@ -756,7 +756,7 @@ void buffet_autoredraw(t_buffet *x, t_floatarg f)
 
 void buffet_minswap(t_buffet *x, t_floatarg f)
 {
-  if(f < 2.0 * 1000.0 * x->fade  / x->sr){
+  if(f < 2.0 * 1000.0 * x->fade  / x->sr) {
     error("minimum must be at least twice fade time which is %f", 1000. * x->fade / x->sr);
     return;
   }
@@ -771,10 +771,10 @@ void buffet_maxswap(t_buffet *x, t_floatarg f)
   long newframes;
 
   newframes = f * .001 * x->sr;
-  if(newframes <= x->minframes){
+  if(newframes <= x->minframes) {
     error("max blocksize must exceed minimum blocksize, which is %f", 1000. * x->minframes/ x->sr);
   }
-  if(newframes > x->storage_maxframes ){
+  if(newframes > x->storage_maxframes ) {
     //  post("extending memory");
     oldmem = x->storage_bytes;
     //  post("old memory %d", oldmem);
@@ -797,12 +797,12 @@ void buffet_erase(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   //int offset;
   int i;
 
-  if(argc < 2){
+  if(argc < 2) {
     post("%s: erase requires start and end times",OBJECT_NAME);
     return;
   }
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
@@ -811,22 +811,22 @@ void buffet_erase(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 
   startframe = .001 * x->sr * atom_getfloatarg(0,argc,argv);
   endframe = .001 * x->sr * atom_getfloatarg(1,argc,argv);
-  if(startframe < 0){
+  if(startframe < 0) {
     startframe = 0;
   }
-  if(endframe > b_frames - 1){
+  if(endframe > b_frames - 1) {
     endframe = b_frames - 1;
   }
-  if(startframe >= b_frames - 1){
+  if(startframe >= b_frames - 1) {
     error("%s: naughty start frame: %ld",OBJECT_NAME,startframe);
     return;
   }
-  if(endframe < 2 || endframe <= startframe){
+  if(endframe < 2 || endframe <= startframe) {
     error("%s: naughty end frame: %ld",OBJECT_NAME,endframe);
     return;
   }
 
-  for(i = startframe * b_nchans; i < endframe * b_nchans; i++){
+  for(i = startframe * b_nchans; i < endframe * b_nchans; i++) {
     b_samples[i].w_float = 0.0;
   }
 
@@ -848,7 +848,7 @@ void buffet_rotatetozero(t_buffet *x, t_floatarg f)
 
 
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
@@ -856,7 +856,7 @@ void buffet_rotatetozero(t_buffet *x, t_floatarg f)
   b_frames = x->wavebuf->b_frames;
 
 
-  if(shiftframes <= 0 || shiftframes >= b_frames){
+  if(shiftframes <= 0 || shiftframes >= b_frames) {
     error("%s: shift target %f is out of range",OBJECT_NAME,target);
     return;
   }
@@ -864,14 +864,14 @@ void buffet_rotatetozero(t_buffet *x, t_floatarg f)
   tmpmem = (float *) malloc(shiftframes * b_nchans * sizeof(float));
 
   /* copy shift block to tmp */
-  for(i = 0; i < shiftframes; i++){
+  for(i = 0; i < shiftframes; i++) {
     tmpmem[i] = b_samples[i].w_float;
   }
   // memcpy(tmpmem, b_samples, shiftframes * b_nchans * sizeof(float));
 
 
   /* now shift the rest to the top */
-  for(i = 0; i < b_frames - shiftframes; i++){
+  for(i = 0; i < b_frames - shiftframes; i++) {
     b_samples[i].w_float =b_samples[i+shiftframes].w_float;
   }
   /*
@@ -881,7 +881,7 @@ void buffet_rotatetozero(t_buffet *x, t_floatarg f)
 
   /* finally copy tmp to the tail */
 
-  for(i = 0; i < shiftframes; i++){
+  for(i = 0; i < shiftframes; i++) {
     b_samples[(b_frames - shiftframes)+i].w_float = tmpmem[i];
   }
   /* memcpy(b_samples + (b_frames - shiftframes) * b_nchans,tmpmem,
@@ -903,33 +903,33 @@ void buffet_normalize(t_buffet *x, t_floatarg f)
   float amptest;
   float rescale;
 
-  if(target <= 0.0){
+  if(target <= 0.0) {
     error("%s: normalize target %f is too low",OBJECT_NAME,target);
     return;
   }
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
   b_nchans = x->wavebuf->b_nchans;
   b_frames = x->wavebuf->b_frames;
-  for(i = 0; i < b_frames * b_nchans; i++){
+  for(i = 0; i < b_frames * b_nchans; i++) {
     amptest = fabs(b_samples[i].w_float);
     if(maxamp < amptest)
       maxamp = amptest;
   }
 
-  if(maxamp < .000000001){
+  if(maxamp < .000000001) {
     post("%s: amplitude zero or too low to normalize in \"%s\"",OBJECT_NAME,x->wavename->s_name);
     return;
   }
   rescale = target / maxamp;
-  if(rescale > .99 && rescale < 1.01){
+  if(rescale > .99 && rescale < 1.01) {
     post("%s: \"%s\" already normalized to %f",OBJECT_NAME,x->wavename->s_name,target);
   }
   else {
-    for(i = 0; i < b_frames * b_nchans; i++){
+    for(i = 0; i < b_frames * b_nchans; i++) {
       b_samples[i].w_float *= rescale;
     }
   }
@@ -947,14 +947,14 @@ void buffet_fadein(t_buffet *x, t_floatarg f)
   long b_nchans;
 
 
-  if( ! x->sr){
+  if( ! x->sr) {
     error("zero sample rate!");
     return;
   }
   fadeframes = f * .001 * x->sr;
   //post("fading in %d frames",fadeframes);
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
@@ -963,13 +963,13 @@ void buffet_fadein(t_buffet *x, t_floatarg f)
 
 
 
-  if( fadeframes > totalframes){
+  if( fadeframes > totalframes) {
     error("fadein is too long");
     return;
   }
-  for(i = 0, k = 0;i < fadeframes * b_nchans; i += b_nchans, k++ ){
+  for(i = 0, k = 0;i < fadeframes * b_nchans; i += b_nchans, k++ ) {
     env = (float) k / (float) fadeframes;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       b_samples[i + j].w_float *= env;
     }
   }
@@ -986,13 +986,13 @@ void buffet_fadeout(t_buffet *x, t_floatarg f)
   long b_nchans;
 
 
-  if( ! x->sr){
+  if( ! x->sr) {
     error("zero sample rate!");
     return;
   }
   fadeframes = f * .001 * x->sr;
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
@@ -1001,13 +1001,13 @@ void buffet_fadeout(t_buffet *x, t_floatarg f)
 
 
 
-  if( fadeframes > totalframes){
+  if( fadeframes > totalframes) {
     error("%s: fadein is too long",OBJECT_NAME);
     return;
   }
-  for(i = (totalframes-1) * b_nchans , k = 0; k < fadeframes ; i -= b_nchans, k++ ){
+  for(i = (totalframes-1) * b_nchans , k = 0; k < fadeframes ; i -= b_nchans, k++ ) {
     env = (float) k / (float) fadeframes;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       b_samples[i + j].w_float *= env;
     }
   }
@@ -1030,7 +1030,7 @@ void buffet_killdc(t_buffet *x)
   float b1[MAX_CHANNELS];
 
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
@@ -1041,12 +1041,12 @@ void buffet_killdc(t_buffet *x)
     error("buffer has too many channels");
     return;
   }
-  for(j = 0; j < b_nchans; j++){
+  for(j = 0; j < b_nchans; j++) {
     a0[j] = a1[j] = b0[j] = b1[j] = 0.0;
   }
 
-  for(i = 0; i < totalframes * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = 0; i < totalframes * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       a0[j] = b_samples[i + j].w_float;
       b0[j] = a0[j] - a1[j] + dc_coef * b1[j];
       b_samples[i + j].w_float = b0[j];
@@ -1075,7 +1075,7 @@ void *buffet_new(t_symbol *msg, short argc, t_atom *argv)
   if(! x->sr )
     x->sr = 44100;
 
-  if(argc < 1){
+  if(argc < 1) {
     error("%s: you must provide a valid buffer name",OBJECT_NAME);
     return 0;
   }
@@ -1101,7 +1101,7 @@ void buffet_init(t_buffet *x, short initialized)
   if(x->maxframes <= 0)
     x->maxframes = 1000;
 
-  if(!initialized){
+  if(!initialized) {
     x->minframes *= .001 * x->sr;
     x->storage_maxframes = x->maxframes *= .001 * x->sr;
     x->fade = .001 * 20 * x->sr; // 20 ms fadetime to start
@@ -1150,12 +1150,12 @@ void buffet_nosync_setswap(t_buffet *x)
   r1endframe = r1startframe + swapframes;
   region1 = r1startframe;
   region2 = totalframes - r1endframe;
-  if(swapframes > region1){
+  if(swapframes > region1) {
     r2startframe = buffet_boundrand((float)r1endframe,(float)(totalframes-swapframes));
   } else if(swapframes > region2) {
     r2startframe = buffet_boundrand(0.0,(float)(r1startframe-swapframes));
   } else { // either region ok
-    if(buffet_boundrand(0.0,1.0) > 0.5){
+    if(buffet_boundrand(0.0,1.0) > 0.5) {
       r2startframe = buffet_boundrand(0.0,(float)(r1startframe-swapframes));
     } else {
       r2startframe = buffet_boundrand((float)r1endframe,(float)(totalframes-swapframes));
@@ -1163,11 +1163,11 @@ void buffet_nosync_setswap(t_buffet *x)
   }
   r2endframe = r2startframe + swapframes;
 
-  if(r2startframe < 0 || r1startframe < 0){
+  if(r2startframe < 0 || r1startframe < 0) {
     error("start frame less than zero!");
     return;
   }
-  if(r2endframe >= totalframes || r1endframe >= totalframes){
+  if(r2endframe >= totalframes || r1endframe >= totalframes) {
     error("end frame reads beyond buffer!");
     return;
   }
@@ -1196,18 +1196,18 @@ void buffet_swap(t_buffet *x)
   long b_nchans;
   int i,j,k;
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
   b_nchans = x->wavebuf->b_nchans;
   totalframes = x->wavebuf->b_frames;
 
-  if(totalframes < maxframes * 2 + 1){
+  if(totalframes < maxframes * 2 + 1) {
     error("buffer must contain at least twice as many samples as the maximum swap size");
     return;
   }
-  if(b_nchans > 2){
+  if(b_nchans > 2) {
     error("buffet~ only accepts mono or stereo buffers");
     return;
   }
@@ -1220,36 +1220,36 @@ void buffet_swap(t_buffet *x)
   swapframes = x->swapframes;
 
   // store block1 samples
-  for(i = 0; i < swapframes * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = 0; i < swapframes * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       storage[i+j] = b_samples[start_sample1 + i + j].w_float;
     }
   }
   // swap block2 into block1 location, fadein
 
-  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++){
+  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++) {
     fadephase = ((float)k / (float) fade) * PIOVERTWO;
     fadein_gain = sin(fadephase);
     fadeout_gain = cos(fadephase);
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadein_gain * b_samples[start_sample2 + i + j].w_float + fadeout_gain * b_samples[start_sample1 + i + j].w_float;
       b_samples[start_sample1 + i + j].w_float = mix_sample;
     }
   }
   // middle part, pure swap
 
-  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       b_samples[start_sample1 + i + j].w_float = b_samples[start_sample2 + i + j].w_float;
     }
   }
   // fade out
 
-  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++){
+  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++) {
     fadephase = ((float)k / (float) fade) * PIOVERTWO;
     fadein_gain = sin(fadephase);
     fadeout_gain = cos(fadephase);
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadeout_gain * b_samples[start_sample2 + i + j].w_float + fadein_gain * b_samples[start_sample1 + i + j].w_float;
       b_samples[start_sample1 + i + j].w_float = mix_sample;
     }
@@ -1257,27 +1257,27 @@ void buffet_swap(t_buffet *x)
   // now mix stored block1 into block2 location
   // swap block2 into block1 location, fadein
 
-  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++){
+  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++) {
     fadein_gain = (float)k / (float) fade;
     fadeout_gain = 1.0 - fadein_gain;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadein_gain * storage[i + j] + fadeout_gain * b_samples[start_sample2 + i + j].w_float;
       b_samples[start_sample2 + i + j].w_float = mix_sample;
     }
   }
   // middle part, pure swap
 
-  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       b_samples[start_sample2 + i + j].w_float = storage[i + j];
     }
   }
   // fade out
 
-  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++){
+  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++) {
     fadein_gain = (float)k / (float) fade;
     fadeout_gain = 1.0 - fadein_gain;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadeout_gain * storage[i + j] + fadein_gain * b_samples[start_sample2 + i + j].w_float;
       b_samples[start_sample2 + i + j].w_float = mix_sample;
     }
@@ -1310,18 +1310,18 @@ void buffet_specswap(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   long b_nchans;
   int i,j,k;
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
   b_nchans = x->wavebuf->b_nchans;
   totalframes = x->wavebuf->b_frames;
 
-  if(totalframes < maxframes * 2 + 1){
+  if(totalframes < maxframes * 2 + 1) {
     error("buffer must contain at least twice as many samples as the maximum swap size");
     return;
   }
-  if(b_nchans > 2){
+  if(b_nchans > 2) {
     error("buffet~ only accepts mono or stereo buffers");
     return;
   }
@@ -1329,11 +1329,11 @@ void buffet_specswap(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   r1startframe = x->sr * .001 * atom_getfloatarg(0,argc,argv);
   r2startframe = x->sr * .001 * atom_getfloatarg(1,argc,argv);
   swapframes = x->sr * .001 * atom_getfloatarg(2,argc,argv);
-  if( r1startframe < 0 || r1startframe >= totalframes){
+  if( r1startframe < 0 || r1startframe >= totalframes) {
     error("bad first skip time");
     return;
   }
-  if( r2startframe < 0 || r2startframe >= totalframes){
+  if( r2startframe < 0 || r2startframe >= totalframes) {
     error("bad second skip time");
     return;
   }
@@ -1351,11 +1351,11 @@ void buffet_specswap(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
     error("swapsize %ld is larger than %ld; reset maximum swap.", swapframes,x->storage_maxframes );
     return;
   }
-  if(r1endframe >= totalframes){
+  if(r1endframe >= totalframes) {
     error("block 1 reads beyond buffer!");
     return;
   }
-  if(r2endframe >= totalframes){
+  if(r2endframe >= totalframes) {
     error("block 2 reads beyond buffer!");
     return;
   }
@@ -1363,36 +1363,36 @@ void buffet_specswap(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   // store block1 samples
   start_sample1 = r1startframe * b_nchans;
   start_sample2 = r2startframe * b_nchans;
-  for(i = 0; i < swapframes * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = 0; i < swapframes * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       storage[i+j] = b_samples[start_sample1 + i + j].w_float;
     }
   }
   // swap block2 into block1 location, fadein
 
-  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++){
+  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++) {
     fadephase = ((float)k / (float) fade) * PIOVERTWO;
     fadein_gain = sin(fadephase);
     fadeout_gain = cos(fadephase);
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadein_gain * b_samples[start_sample2 + i + j].w_float + fadeout_gain * b_samples[start_sample1 + i + j].w_float;
       b_samples[start_sample1 + i + j].w_float = mix_sample;
     }
   }
   // middle part, pure swap
 
-  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       b_samples[start_sample1 + i + j].w_float = b_samples[start_sample2 + i + j].w_float;
     }
   }
   // fade out
 
-  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++){
+  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++) {
     fadephase = ((float)k / (float) fade) * PIOVERTWO;
     fadein_gain = sin(fadephase);
     fadeout_gain = cos(fadephase);
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadeout_gain * b_samples[start_sample2 + i + j].w_float + fadein_gain * b_samples[start_sample1 + i + j].w_float;
       b_samples[start_sample1 + i + j].w_float = mix_sample;
     }
@@ -1400,27 +1400,27 @@ void buffet_specswap(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   // now mix stored block1 into block2 location
   // swap block2 into block1 location, fadein
 
-  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++){
+  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++) {
     fadein_gain = (float)k / (float) fade;
     fadeout_gain = 1.0 - fadein_gain;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadein_gain * storage[i + j] + fadeout_gain * b_samples[start_sample2 + i + j].w_float;
       b_samples[start_sample2 + i + j].w_float = mix_sample;
     }
   }
   // middle part, pure swap
 
-  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       b_samples[start_sample2 + i + j].w_float = storage[i + j];
     }
   }
   // fade out
 
-  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++){
+  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++) {
     fadein_gain = (float)k / (float) fade;
     fadeout_gain = 1.0 - fadein_gain;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadeout_gain * storage[i + j] + fadein_gain * b_samples[start_sample2 + i + j].w_float;
       b_samples[start_sample2 + i + j].w_float = mix_sample;
     }
@@ -1452,18 +1452,18 @@ void buffet_retroblock(t_buffet *x)
   long syncframe;
   int i,j,k;
   buffet_setbuf(x, x->wavename);
-  if(x->hosed){
+  if(x->hosed) {
     return;
   }
   b_samples = x->wavebuf->b_samples;
   b_nchans = x->wavebuf->b_nchans;
   totalframes = x->wavebuf->b_frames;
 
-  if(totalframes < maxframes * b_nchans + 1){
+  if(totalframes < maxframes * b_nchans + 1) {
     error("buffer must contain at least twice as many samples as the maximum swap size");
     return;
   }
-  if(b_nchans > 2){
+  if(b_nchans > 2) {
     error("buffet~ only accepts mono or stereo buffers");
     return;
   }
@@ -1485,8 +1485,8 @@ void buffet_retroblock(t_buffet *x)
       error("could not reverse block");
       return;
     }
-    if(block1size >= maxframes && block2size >= maxframes){
-      if(buffet_boundrand(0.0,1.0) > 0.5){
+    if(block1size >= maxframes && block2size >= maxframes) {
+      if(buffet_boundrand(0.0,1.0) > 0.5) {
         r1startframe = buffet_boundrand(0.0, (float)(ub1-swapframes));
       } else {
         r1startframe = buffet_boundrand((float)lb2, (float)(ub2-swapframes));
@@ -1500,7 +1500,7 @@ void buffet_retroblock(t_buffet *x)
   }
 
 
-  if(r1endframe >= totalframes){
+  if(r1endframe >= totalframes) {
     error("%s: retro beyond bounds",OBJECT_NAME);
     return;
   }
@@ -1509,17 +1509,17 @@ void buffet_retroblock(t_buffet *x)
   start_sample1 = r1startframe * b_nchans;
   // start_sample2 = r2startframe * b_nchans;
   // store block in reversed order
-  for(k = 0, i = (swapframes-1) * b_nchans; i > 0; i -= b_nchans, k += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(k = 0, i = (swapframes-1) * b_nchans; i > 0; i -= b_nchans, k += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       storage[i+j] = b_samples[start_sample1 + k + j].w_float;
     }
   }
   // swap block2 into block1 location, fadein
 
-  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++){
+  for(i = 0, k = 0; i < fade * b_nchans; i += b_nchans, k++) {
     fadein_gain = (float)k / (float) fade;
     fadeout_gain = 1.0 - fadein_gain;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadein_gain * storage[i + j] + fadeout_gain * b_samples[start_sample1 + i + j].w_float;
       b_samples[start_sample1 + i + j].w_float = mix_sample;
     }
@@ -1527,17 +1527,17 @@ void buffet_retroblock(t_buffet *x)
   // middle part, pure swap
 
 
-  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = fade * b_nchans; i < (swapframes-fade) * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       b_samples[start_sample1 + i + j].w_float = storage[i + j];
     }
   }
   // fade out
 
-  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++){
+  for(i = (swapframes-fade) * b_nchans, k = 0; i < swapframes * b_nchans; i += b_nchans, k++) {
     fadein_gain = (float)k / (float) fade;
     fadeout_gain = 1.0 - fadein_gain;
-    for(j = 0; j < b_nchans; j++){
+    for(j = 0; j < b_nchans; j++) {
       mix_sample = fadeout_gain * storage[i + j] + fadein_gain * b_samples[start_sample1 + i + j].w_float;
       b_samples[start_sample1 + i + j].w_float = mix_sample;
     }
@@ -1571,11 +1571,11 @@ void buffet_nakedswap(t_buffet *x)
   b_nchans = x->wavebuf->b_nchans;
   totalframes = x->wavebuf->b_frames;
 
-  if(totalframes < maxframes * 2 + 1){
+  if(totalframes < maxframes * 2 + 1) {
     error("buffer must contain at least twice as many samples as the maximum swap size");
     return;
   }
-  if(b_nchans != 2){
+  if(b_nchans != 2) {
     error("buffet~ only accepts stereo buffers");
     return;
   }
@@ -1585,43 +1585,43 @@ void buffet_nakedswap(t_buffet *x)
   region1 = r1startframe;
   region2 = totalframes - r1endframe;
 
-  if(swapframes > region1){
+  if(swapframes > region1) {
     r2startframe = buffet_boundrand((float)r1endframe,(float)(totalframes-swapframes));
   } else if(swapframes > region2) {
     r2startframe = buffet_boundrand(0.0,(float)(r1startframe-swapframes));
   } else {
-    if(buffet_boundrand(0.0,1.0) > 0.5){
+    if(buffet_boundrand(0.0,1.0) > 0.5) {
       r2startframe = buffet_boundrand(0.0,(float)(r1startframe-swapframes));
     } else {
       r2startframe = buffet_boundrand((float)r1endframe,(float)(totalframes-swapframes));
     }
   }
   r2endframe = r2startframe + swapframes;
-  if(r2startframe < 0 || r1startframe < 0){
+  if(r2startframe < 0 || r1startframe < 0) {
     error("start frame less than zero!");
     return;
   }
-  if(r2endframe >= totalframes || r1endframe >= totalframes){
+  if(r2endframe >= totalframes || r1endframe >= totalframes) {
     error("end frame reads beyond buffer!");
     return;
   }
   // Now swap the samples. For now no cross fade
   start_sample1 = r1startframe * b_nchans;
   start_sample2 = r2startframe * b_nchans;
-  for(i = 0; i < swapframes * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = 0; i < swapframes * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       storage[i+j] = b_samples[start_sample1 + i + j].w_float;
     }
   }
   // swap block1 into block2
-  for(i = 0; i < swapframes * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = 0; i < swapframes * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       b_samples[start_sample1 + i + j].w_float = b_samples[start_sample2 + i + j].w_float;
     }
   }
   // swap stored block into block1
-  for(i = 0; i < swapframes * b_nchans; i += b_nchans){
-    for(j = 0; j < b_nchans; j++){
+  for(i = 0; i < swapframes * b_nchans; i += b_nchans) {
+    for(j = 0; j < b_nchans; j++) {
       b_samples[start_sample2 + i + j].w_float = storage[i + j];
     }
   }
@@ -1660,7 +1660,7 @@ t_int *buffet_perform(t_int *w)
   float *sync = (t_float *)(w[2]);
   int n = (int) w[3];
 
-  while(n--){
+  while(n--) {
     x->sync = *sync++;
   }
 
@@ -1732,11 +1732,11 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   int onset_count = 0;
 
   buffet_setbuf(x, x->wavename);
-  if( x->hosed ){
+  if( x->hosed ) {
     error("buffet~ needs a valid buffer");
     return;
   }
-  if(argc < 4){
+  if(argc < 4) {
     post("%s: detect_onsets requires start and end times,threshold and FFTsize",OBJECT_NAME);
     return;
   }
@@ -1792,9 +1792,9 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 
   freqs = (float *) getbytes(N * sizeof(float));
   amps = (float *) getbytes(N * sizeof(float));
-  for(i = 0; i < fft_frames; i++){
+  for(i = 0; i < fft_frames; i++) {
     loveboat[i] = (float *) getbytes((N+2) * sizeof(float));
-    if(loveboat[i] == NULL){
+    if(loveboat[i] == NULL) {
       error("memory error");
       return;
     }
@@ -1816,13 +1816,13 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 
   currentframe = startframe;
 
-  for(k = 0; k < fft_frames; k++){
-    for(j = 0; j < D; j++){
+  for(k = 0; k < fft_frames; k++) {
+    for(j = 0; j < D; j++) {
       input_vec[j] = b_samples[(currentframe + j) * b_nchans].w_float;// only read first channel
     }
     currentframe += D;
 
-    for ( j = 0 ; j < Nw - D ; j++ ){
+    for ( j = 0 ; j < Nw - D ; j++ ) {
       input[j] = input[j+D];
     }
     for (i = 0, j = Nw - D; j < Nw; j++, i++) {
@@ -1839,7 +1839,7 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   for(j = 0; j < 5; j++)
     lastfreqs[j] = 0;
 
-  for(i = 0, k = 1; i < fft_frames - 1; i++, k++){
+  for(i = 0, k = 1; i < fft_frames - 1; i++, k++) {
 
     for(j = 0; j < 5; j++)
       lastfreqs[j] = freqs[j];
@@ -1853,9 +1853,9 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
        vacillate over which is the weakest since it will swap places and generate spurious
        change of frequency info. */
 
-    for(j = 0; j < topanalbin-1; j++){
-      for(m = j + 1 ; m < topanalbin; m++){
-        if(amps[m]> amps[j]){
+    for(j = 0; j < topanalbin-1; j++) {
+      for(m = j + 1 ; m < topanalbin; m++) {
+        if(amps[m]> amps[j]) {
           tmp = amps[j];
           amps[j] = amps[m];
           amps[m] = tmp;
@@ -1866,13 +1866,13 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
       }
     }
 
-    if(first){
+    if(first) {
       first = 0;
-      for(j = 0; j < 5; j++){
+      for(j = 0; j < 5; j++) {
         lastfreqs[j] = freqs[j];
       }
     }
-    for(j = 0; j < 5; j++){
+    for(j = 0; j < 5; j++) {
       fave = (lastfreqs[j] + freqs[j]) * 0.5;
       if(fave > 0)
         fdiffs[j] = fabs(lastfreqs[j] - freqs[j])/fave;
@@ -1880,7 +1880,7 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
         fdiffs[j] = 0;
     }
     dsum = fdiffs[0] + .5 * fdiffs[1] + .25 * fdiffs[2] + .125 * fdiffs[3] + .0625 * fdiffs[4];
-    if(dsum > threshold && ! suppress){
+    if(dsum > threshold && ! suppress) {
       suppress = 1;
       suppressrt = 0;
       onsets[onset_count++] = rt;
@@ -1900,7 +1900,7 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   }
 
   post("%s: %d onsets detected",OBJECT_NAME,onset_count);
-  for(i = 0; i < onset_count; i++){
+  for(i = 0; i < onset_count; i++) {
     SETFLOAT(listdata + i, onsets[i]);
   }
 
@@ -1966,11 +1966,11 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom
   int MAX_ONSETS = 2048;
 
   buffet_setbuf(x, x->wavename);
-  if( x->hosed ){
+  if( x->hosed ) {
     error("buffet~ needs a valid buffer");
     return;
   }
-  if(argc < 4){
+  if(argc < 4) {
     post("%s: detect_onsets requires start and end times,threshold and FFTsize",OBJECT_NAME);
     return;
   }
@@ -2028,9 +2028,9 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom
 
   freqs = (float *) getbytes(N * sizeof(float));
   amps = (float *) getbytes(N * sizeof(float));
-  for(i = 0; i < fft_frames; i++){
+  for(i = 0; i < fft_frames; i++) {
     loveboat[i] = (float *) getbytes((N+2) * sizeof(float));
-    if(loveboat[i] == NULL){
+    if(loveboat[i] == NULL) {
       error("memory error");
       return;
     }
@@ -2052,18 +2052,18 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom
 
   currentframe = startframe;
 
-  for(k= 0; k < 5; k++){
+  for(k= 0; k < 5; k++) {
     minbin = subband_bincuts[k]; maxbin = subband_bincuts[k+1];
     post("%d: minbin %d maxbin %d",k, minbin,maxbin);
   }
 
-  for(k = 0; k < fft_frames; k++){
-    for(j = 0; j < D; j++){
+  for(k = 0; k < fft_frames; k++) {
+    for(j = 0; j < D; j++) {
       input_vec[j] = b_samples[(currentframe + j) * b_nchans].w_float;// only read first channel
     }
     currentframe += D;
 
-    for ( j = 0 ; j < Nw - D ; j++ ){
+    for ( j = 0 ; j < Nw - D ; j++ ) {
       input[j] = input[j+D];
     }
     for (i = 0, j = Nw - D; j < Nw; j++, i++) {
@@ -2075,17 +2075,17 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom
   }
 
   rt = rtadv;
-  for(i = 0, j = 1; i < fft_frames - 1; i++, j++){
+  for(i = 0, j = 1; i < fft_frames - 1; i++, j++) {
 
 
-    for(k= 0; k < 5; k++){
+    for(k= 0; k < 5; k++) {
       minbin = subband_bincuts[k]; maxbin = subband_bincuts[k+1];
       subband_energy[k] = 0;
       subband_freqdiff[k] = 0;
       /* maxamp = 0;
-         for(l = minbin * 2; l < maxbin * 2; l += 2){
+         for(l = minbin * 2; l < maxbin * 2; l += 2) {
          } */
-      for(l = minbin * 2; l < maxbin * 2; l += 2){
+      for(l = minbin * 2; l < maxbin * 2; l += 2) {
         //    subband_energy[k] += (loveboat[j][l] * loveboat[j][l])  - (loveboat[i][l] * loveboat[i][l]);
         subband_freqdiff[k] += (fabs(loveboat[j][l+1] - loveboat[i][l+1])/loveboat[i][l+1]) *
           loveboat[j][l] * loveboat[j][l] ;// scale by energy
@@ -2109,7 +2109,7 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom
   }
   /*
     post("%s: %d onsets detected",OBJECT_NAME,onset_count);
-    for(i = 0; i < onset_count; i++){
+    for(i = 0; i < onset_count; i++) {
     SETFLOAT(listdata + i, onsets[i]);
     }
 
@@ -2139,14 +2139,14 @@ void buffet_dsp(t_buffet *x, t_signal **sp)
 
   buffet_setbuf(x, x->wavename);
 
-  if( x->hosed ){
+  if( x->hosed ) {
     error("buffet~ needs a valid buffer");
     return;
   }
-  if( x->sr != sp[0]->s_sr){
+  if( x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
 
-    if(!x->sr){
+    if(!x->sr) {
       post("%s: warning: zero sampling rate!",OBJECT_NAME);
       x->sr = 44100;
     }

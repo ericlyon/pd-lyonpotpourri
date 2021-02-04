@@ -33,7 +33,7 @@ void phasemod_mute(t_phasemod *x, t_floatarg toggle);
 void phasemod_dsp(t_phasemod *x, t_signal **sp);
 void phasemod_dsp_free(t_phasemod *x);
 
-void phasemod_tilde_setup(void){
+void phasemod_tilde_setup(void) {
   phasemod_class = class_new(gensym("phasemod~"), (t_newmethod)phasemod_new,
                              (t_method)phasemod_dsp_free,sizeof(t_phasemod), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(phasemod_class, t_phasemod, x_f);
@@ -108,22 +108,22 @@ t_int *phasemod_perform(t_int *w)
   float incr = x->frequency * si_fac ;
   float alpha = x->alpha;
 
-  if( x->mute ){
-    while(n--){
+  if( x->mute ) {
+    while(n--) {
       *out++ = 0.0;
     }
     return (w + 6);
   }
 
   while (n--) {
-    if( connections[1] ){
+    if( connections[1] ) {
       alpha = *alpha_vec++;
     }
-    if( alpha == 0 ){
+    if( alpha == 0 ) {
       alpha = .000001;
     }
 
-    if( connections[0] ){
+    if( connections[0] ) {
       incr = *frequency_vec++ * si_fac ;
     }
     // NO NEGATIVE FREQUENCIES
@@ -138,7 +138,7 @@ t_int *phasemod_perform(t_int *w)
     while( phs < 0.0 ) {
       phs += FUNC_LEN;
     }
-    while( phs >= FUNC_LEN ){
+    while( phs >= FUNC_LEN ) {
       phs -= FUNC_LEN;
     }
     *out++ =  wavetab[(int) phs] ;
@@ -154,8 +154,8 @@ void phasemod_dsp(t_phasemod *x, t_signal **sp)
   x->connections[0] = 1;
   x->connections[1] = 1;
 
-  if(x->sr != sp[0]->s_sr){
-    if(!sp[0]->s_sr){
+  if(x->sr != sp[0]->s_sr) {
+    if(!sp[0]->s_sr) {
       error("zero sampling rate");
       return;
     }

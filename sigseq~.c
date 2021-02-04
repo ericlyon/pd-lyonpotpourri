@@ -77,7 +77,7 @@ void sigseq_free(t_sigseq *x);
 void sigseq_init(t_sigseq *x,short initialized);
 
 
-void sigseq_tilde_setup(void){
+void sigseq_tilde_setup(void) {
   sigseq_class = class_new(gensym("sigseq~"), (t_newmethod)sigseq_new,
                            (t_method)sigseq_free ,sizeof(t_sigseq), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(sigseq_class, t_sigseq, x_f);
@@ -106,7 +106,7 @@ void sigseq_gozero(t_sigseq *x)
 
 void sigseq_internal_clock(t_sigseq *x, t_floatarg toggle)
 {
-  if(toggle){
+  if(toggle) {
     x->method = internal_clock;
   } else {
     x->method = EXTERNAL_CLOCK;
@@ -115,7 +115,7 @@ void sigseq_internal_clock(t_sigseq *x, t_floatarg toggle)
 
 void sigseq_external_clock(t_sigseq *x, t_floatarg toggle)
 {
-  if(toggle){
+  if(toggle) {
     x->method = EXTERNAL_CLOCK;
   } else {
     x->method = internal_clock;
@@ -131,7 +131,7 @@ void sigseq_report(t_sigseq *x)
   post("seqpt: %d", x->seq_ptr);
   post("manual rnd pos: %d", x->rval % x->seq_len);
 
-  for(i=0;i<x->seq_len;i++){
+  for(i=0;i<x->seq_len;i++) {
     post("%f",x->sequence[i]);
   }
 }
@@ -142,11 +142,11 @@ void sigseq_readfile(t_sigseq *x, t_symbol *filename)
   float data;
   post("requested path: %s", filename->s_name);
   fp = fopen(filename->s_name, "r");
-  if( fp == NULL ){
+  if( fp == NULL ) {
     post("could not open file!");
     return;
   }
-  while( fscanf(fp, "%f", &data) != EOF ){
+  while( fscanf(fp, "%f", &data) != EOF ) {
     post("%f",data);
   }
   fclose(fp);
@@ -199,7 +199,7 @@ void sigseq_tempo(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
   x->ebreak1 = x->asamps;
   x->ebreak2 = x->asamps+x->dsamps;
   x->ebreak3 = x->asamps+x->dsamps+x->ssamps;
-  if( x->ssamps < 0 ){
+  if( x->ssamps < 0 ) {
     x->ssamps = 0;
     // post("adsr: Warning: zero duration sustain");
   }
@@ -224,7 +224,7 @@ void *sigseq_new(t_symbol *s, int argc, t_atom *argv)
     x->flat_gain = 0.5;
 
   x->sr = sys_getsr();
-  if(!x->sr){
+  if(!x->sr) {
     x->sr = 44100;
     error("zero sampling rate - set to 44100");
   }
@@ -239,7 +239,7 @@ void sigseq_init(t_sigseq *x,short initialized)
   int asamp, dsamp, ssamp, rsamp;
   //  int i;
 
-  if(!initialized){
+  if(!initialized) {
     x->sequence = (float *) t_getbytes(MAX_SEQ * sizeof(float));
     x->trigger_vec = (float *) t_getbytes(MAX_VEC * sizeof(float));
     x->seq_len = 3;
@@ -269,7 +269,7 @@ void sigseq_init(t_sigseq *x,short initialized)
   dsamp = x->sr * x->d;
   rsamp = x->sr * x->r;
   ssamp = x->tsamps - (asamp+dsamp+rsamp);
-  if( ssamp < 0 ){
+  if( ssamp < 0 ) {
     ssamp = 0;
   }
   x->ebreak1 = asamp;
@@ -293,12 +293,12 @@ void sigseq_list (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
 {
   short i;
 
-  if( argc < 1 ){
+  if( argc < 1 ) {
     // post("null list ignored");
     return;
   }
   x->seq_len = 0;
-  for( i = 0; i < argc; i++ ){
+  for( i = 0; i < argc; i++ ) {
     x->sequence[i] = atom_getfloatarg(i,argc,argv);
     ++(x->seq_len);
   }
@@ -313,7 +313,7 @@ void sigseq_adsr (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
 {
   //  short i;
 
-  if( argc != 4 ){
+  if( argc != 4 ) {
     error("sigseq~: bad arguments for adsr");
     return;
   }
@@ -329,7 +329,7 @@ void sigseq_adsr (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
   x->ebreak1 = x->asamps;
   x->ebreak2 = x->asamps+x->dsamps;
   x->ebreak3 = x->asamps+x->dsamps+x->ssamps;
-  if( x->ssamps < 0 ){
+  if( x->ssamps < 0 ) {
     x->ssamps = 0;
     // post("adsr: Warning: zero duration sustain");
   }
@@ -371,7 +371,7 @@ t_int *sigseq_perform(t_int *w)
   //  short bang_me_now = 0 ;
   float trand;
   /*********************************************/
-  if(x->mute){
+  if(x->mute) {
     while (n--) {
       *out++ = 0.0;
     }
@@ -379,7 +379,7 @@ t_int *sigseq_perform(t_int *w)
   } else {
 
     while(n--) {
-      if(counter >= tsamps){
+      if(counter >= tsamps) {
         counter = 0;
         bang_ptr = (bang_ptr + 1) % seq_len ;
         if (rand_state) {
@@ -408,7 +408,7 @@ t_int *sigseq_perform(t_int *w)
       }
       *out++ = val;
       if( do_envelope ) {
-        if( counter < ebreak1 ){
+        if( counter < ebreak1 ) {
           env_val = (float) counter / (float) asamps;
         } else if (counter < ebreak2) {
           etmp = (float) (counter - ebreak1) / (float) dsamps;
@@ -476,18 +476,18 @@ t_int *sigseq_perform_clickin(t_int *w)
   float trand;
   int i;
   /*********************************************/
-  if(x->mute){
+  if(x->mute) {
     while (n--) {
       *out++ = 0.0;
     }
     return (w+6);
   }
 
-  for(i = 0; i < n; i++){
+  for(i = 0; i < n; i++) {
     trigger_vec[i] = trigger[i];
   }
   for(i = 0; i < n; i++) {
-    if(trigger_vec[i]){
+    if(trigger_vec[i]) {
       counter = 0;
       //     bang_ptr = (bang_ptr + 1) % seq_len ;
 
@@ -516,7 +516,7 @@ t_int *sigseq_perform_clickin(t_int *w)
     }
     out[i] = x->val;
     if( do_envelope ) {
-      if( counter < ebreak1 ){
+      if( counter < ebreak1 ) {
         env_val = (float) counter / (float) asamps;
       } else if (counter < ebreak2) {
         etmp = (float) (counter - ebreak1) / (float) dsamps;
@@ -557,11 +557,11 @@ void sigseq_dsp(t_sigseq *x, t_signal **sp)
 {
   if(!sp[0]->s_sr)
     return;
-  if(x->sr != sp[0]->s_sr){
+  if(x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
     sigseq_init(x,1);
   }
-  if(x->method == EXTERNAL_CLOCK){
+  if(x->method == EXTERNAL_CLOCK) {
     dsp_add(sigseq_perform_clickin, 5, x,
             sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
   } else {

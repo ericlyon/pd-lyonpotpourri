@@ -114,14 +114,14 @@ t_int *rtrig_perform(t_int *w)
   float max = x->max;
   float odds = x->odds;
 
-  if(x->mute){
+  if(x->mute) {
     memset( (void *)out_vec, 0, n * sizeof(float) );
     return (w+4);
   }
 
-  while( n-- ){
+  while( n-- ) {
     rval = (float) rand() / (float) RAND_MAX2;
-    if(rval < odds){
+    if(rval < odds) {
       rval = min + (max-min) * ((float) rand() / (float) RAND_MAX2);
       *out_vec++ = rval;
     } else {

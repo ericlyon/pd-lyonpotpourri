@@ -43,7 +43,7 @@ t_int *clickhold_perform(t_int *w)
   float hold_value = x->hold_value;
 
   while( n-- ) {
-    if(*in_vec){
+    if(*in_vec) {
       hold_value = *in_vec;
     }
     in_vec++;

@@ -107,7 +107,7 @@ void vdb_maxdelay(t_vdb *x, t_floatarg delay)
   long newlen;
   x->maxdelay = 50.0;
   newlen = delay * .001 * x->sr;
-  if(newlen > x->len){
+  if(newlen > x->len) {
     error("%s: requested a max delay that exceeds buffer size",OBJECT_NAME);
     return;
   }
@@ -200,16 +200,16 @@ t_int *vdb_perform(t_int *w)
 
   n = (int) w[b_nchans * 2 + 4];
 
-  if(x->always_update){
+  if(x->always_update) {
     vdb_attach_buffer(x);
     maxdelay_len = x->maxdelay_len;
     phs = x->phs;
   }
 
   if( x->mute ) {
-    for(i = 0; i < b_nchans; i++){
+    for(i = 0; i < b_nchans; i++) {
       output = (t_float *) w[4 + b_nchans + i];
-      for(j = 0; j < n; j++){
+      for(j = 0; j < n; j++) {
         *output++ = 0.0;
       }
     }
@@ -218,10 +218,10 @@ t_int *vdb_perform(t_int *w)
 
 
 
-  if(!x->b_valid){
-    for(i = 0; i < b_nchans; i++){
+  if(!x->b_valid) {
+    for(i = 0; i < b_nchans; i++) {
       output = (t_float *) w[4 + b_nchans + i];
-      for(j = 0; j < n; j++){
+      for(j = 0; j < n; j++) {
         *output++ = 0.0;
       }
     }
@@ -232,11 +232,11 @@ t_int *vdb_perform(t_int *w)
   feedback = x->feedback;
   delay_vec = (t_float *) w[b_nchans + 2];
   feedback_vec = (t_float *) w[b_nchans + 3];
-  for(i = 0; i < b_nchans; i++){
+  for(i = 0; i < b_nchans; i++) {
     input = (t_float *) w[i+2];
     output = (t_float *) w[4 + b_nchans + i];
     phs = x->phs; // reset for each channel
-    for(j = 0; j < n; j++){
+    for(j = 0; j < n; j++) {
 
       //    insamp = input[j];
 
@@ -249,8 +249,8 @@ t_int *vdb_perform(t_int *w)
           fdelay = maxdelay_len - 1;
         x->delay_time = fdelay;
       }
-      if(! inf_hold ){
-        if(connections[feedback_inlet]){
+      if(! inf_hold ) {
+        if(connections[feedback_inlet]) {
           feedback = feedback_vec[j];
           if( feedback_protect ) {
             if( feedback > 0.99)
@@ -264,26 +264,26 @@ t_int *vdb_perform(t_int *w)
 
       idelay = floor(fdelay);
 
-      if(phs < 0 || phs >= maxdelay_len){
+      if(phs < 0 || phs >= maxdelay_len) {
         error("%s: bad phase %d",OBJECT_NAME,phs);
         phs = 0;
       }
 
-      if(interpolate){
+      if(interpolate) {
         frac = (fdelay - idelay);
         dphs1 = phs - idelay;
         dphs2 = dphs1 - 1;
 
-        while(dphs1 >= maxdelay_len){
+        while(dphs1 >= maxdelay_len) {
           dphs1 -= maxdelay_len;
         }
-        while(dphs1 < 0){
+        while(dphs1 < 0) {
           dphs1 += maxdelay_len;
         }
-        while(dphs2 >= maxdelay_len){
+        while(dphs2 >= maxdelay_len) {
           dphs2 -= maxdelay_len;
         }
-        while(dphs2 < 0){
+        while(dphs2 < 0) {
           dphs2 += maxdelay_len;
         }
 
@@ -293,13 +293,13 @@ t_int *vdb_perform(t_int *w)
 
       } else {
         dphs = phs - idelay;
-        while(dphs >= maxdelay_len){
+        while(dphs >= maxdelay_len) {
           dphs -= maxdelay_len;
         }
-        while(dphs < 0){
+        while(dphs < 0) {
           dphs += maxdelay_len;
         }
-        if(dphs < 0 || dphs >= maxdelay_len){
+        if(dphs < 0 || dphs >= maxdelay_len) {
           error("bad dphase %d",dphs);
           dphs = 0;
         }
@@ -308,15 +308,15 @@ t_int *vdb_perform(t_int *w)
 
       }
       output[j] = outsamp;
-      if(! inf_hold ){
+      if(! inf_hold ) {
         insamp = input[j];
         delay_line[phs * b_nchans + i].w_float = insamp + outsamp * feedback;
       }
       ++phs;
-      while(phs >= maxdelay_len){
+      while(phs >= maxdelay_len) {
         phs -= maxdelay_len;
       }
-      while(phs < 0){
+      while(phs < 0) {
         phs += maxdelay_len;
       }
 
@@ -326,7 +326,7 @@ t_int *vdb_perform(t_int *w)
 
 
   x->phs = phs;
-  if(x->redraw_flag){
+  if(x->redraw_flag) {
     vdb_redraw(x);
   }
   return (w + b_nchans * 2 + 5);
@@ -343,12 +343,12 @@ void *vdb_new(t_symbol *s, int argc, t_atom *argv)
   t_vdb *x = (t_vdb *)pd_new(vdb_class);
 
   x->sr = sys_getsr();
-  if(argc < 2){
+  if(argc < 2) {
     error("%s: you must provide a valid buffer name and channel count",OBJECT_NAME);
     return (void *)NULL;
   }
 
-  if(!x->sr){
+  if(!x->sr) {
     error("zero sampling rate - set to 44100");
     x->sr = 44100;
   }
@@ -379,7 +379,7 @@ void *vdb_new(t_symbol *s, int argc, t_atom *argv)
   x->delay_inlet = x->b_nchans;
   x->feedback_inlet = x->delay_inlet + 1;
 
-  for(i = 0; i < x->inlet_count - 1; i++){
+  for(i = 0; i < x->inlet_count - 1; i++) {
     inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
   }
   outlet_new(&x->x_obj, gensym("signal") );
@@ -401,7 +401,7 @@ void vdb_init(t_vdb *x,short initialized)
   // int i;
 
 
-  if(!initialized){
+  if(!initialized) {
     if(!x->maxdelay)
       x->maxdelay = 50.0;
     x->maxdelay_len = x->maxdelay * .001 * x->sr;
@@ -447,7 +447,7 @@ int vdb_attach_buffer(t_vdb *x)
     x->b_samples = b_samples;
     x->b_valid = 1;
     x->len = x->b_frames;
-    if(x->maxdelay_len > x->len){
+    if(x->maxdelay_len > x->len) {
       x->maxdelay_len = x->len;
       post("%s: shortened maxdelay to %d frames",OBJECT_NAME,x->maxdelay_len);
     }
@@ -482,7 +482,7 @@ void vdb_dsp(t_vdb *x, t_signal **sp)
   vector_count = x->inlet_count+x->outlet_count + 2;
 
 
-  for(i = 0; i < vector_count - 2; i++){
+  for(i = 0; i < vector_count - 2; i++) {
 
     x->connections[i] = 1;
   }
@@ -497,7 +497,7 @@ void vdb_dsp(t_vdb *x, t_signal **sp)
 
   sigvec[vector_count - 1] = (t_int *)sp[0]->s_n;
 
-  for(i = 1; i < vector_count - 1; i++){
+  for(i = 1; i < vector_count - 1; i++) {
     sigvec[i] = (t_int *)sp[i-1]->s_vec;
   }
 

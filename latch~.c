@@ -68,22 +68,22 @@ static t_int *latch_perform(t_int *w)
 
 
 
-  for(i = 0; i < n; i++){
+  for(i = 0; i < n; i++) {
 
-    if(connected){
+    if(connected) {
       duration = vec_duration[i];
       if( duration > 0.0 ){ // dummy proof
         dsamps = sr * duration * 0.001;
       }
     }
 
-    if(trigger[i]){
+    if(trigger[i]) {
       latch = 0;
       status = LATCH_RUNNING;
       current = trigger[i];
     } else {
       latch++;
-      if(latch >= dsamps){
+      if(latch >= dsamps) {
         status = LATCH_WAITING;
         current = 0.0;
       }
@@ -103,7 +103,7 @@ static t_int *latch_perform(t_int *w)
 static void latch_dsp(t_latch *x, t_signal **sp)
 {
   x->connected = 1;
-  if(x->sr != sp[0]->s_sr){
+  if(x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
     x->dsamps = x->duration * x->sr;
   }

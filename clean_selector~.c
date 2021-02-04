@@ -60,15 +60,15 @@ void *clean_selector_new(t_symbol *s, int argc, t_atom *argv)
   x = (t_clean_selector *)pd_new(clean_selector_class);
   x->fadetime = 0.05;
   x->inlet_count = 8;
-  if(argc >= 1){
+  if(argc >= 1) {
     x->inlet_count = (int)atom_getfloatarg(0,argc,argv);
-    if(x->inlet_count < 2 || x->inlet_count > MAX_CHANS){
+    if(x->inlet_count < 2 || x->inlet_count > MAX_CHANS) {
       error("%s: %d is illegal number of inlets",OBJECT_NAME,x->inlet_count);
       return (void *) NULL;
     }
 
   }
-  if(argc >= 2){
+  if(argc >= 2) {
     x->fadetime = atom_getfloatarg(1,argc,argv) / 1000.0;
   }
 
@@ -81,7 +81,7 @@ void *clean_selector_new(t_symbol *s, int argc, t_atom *argv)
 
 
   x->sr = sys_getsr();
-  if(!x->sr){
+  if(!x->sr) {
     x->sr = 44100.0;
     error("zero sampling rate - set to 44100");
   }
@@ -95,7 +95,7 @@ void *clean_selector_new(t_symbol *s, int argc, t_atom *argv)
   x->fadesamps = x->fadetime * x->sr;
 
   x->connected_list = (short *) t_getbytes(MAX_CHANS * sizeof(short));
-  for(i=0;i<16;i++){
+  for(i=0;i<16;i++) {
     x->connected_list[i] = 0;
   }
   x->active_chan = x->last_chan = 0;
@@ -114,7 +114,7 @@ void clean_selector_fadetime(t_clean_selector *x, t_floatarg f)
 {
   float fades = (float)f / 1000.0;
 
-  if( fades < .0001 || fades > 1000.0 ){
+  if( fades < .0001 || fades > 1000.0 ) {
     error("fade time is constrained to 0.1 - 1000000, but you wanted %f",f );
     return;
   }
@@ -152,7 +152,7 @@ t_int *clean_selector_perform(t_int *w)
   if ( active_chan >= 0 ) {
     while( n-- ) {
       if ( samps_to_fade >= 0 ) {
-        if( fadetype == CS_POWER ){
+        if( fadetype == CS_POWER ) {
           phase = pi_over_two * (1.0 - (samps_to_fade / (float) fadesamps)) ;
           m1 = sin( phase );
           m2 = cos( phase );
@@ -183,7 +183,7 @@ void clean_selector_dsp(t_clean_selector *x, t_signal **sp)
 
   pointer_count = x->inlet_count + 3; // all inlets, 1 outlet, object pointer and vec-samps
   sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
-  for(i = 0; i < pointer_count; i++){
+  for(i = 0; i < pointer_count; i++) {
     sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
@@ -194,7 +194,7 @@ void clean_selector_dsp(t_clean_selector *x, t_signal **sp)
     sigvec[i] = (t_int *)sp[i-1]->s_vec;
   }
 
-  if(x->sr != sp[0]->s_sr){
+  if(x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
     x->fadesamps = x->fadetime * x->sr;
     x->samps_to_fade = 0;
@@ -216,7 +216,7 @@ void clean_selector_dsp(t_clean_selector *x, t_signal **sp)
 void clean_selector_channel(t_clean_selector *x, t_floatarg i) // Look at int at inlets
 {
   int chan = i;
-  if(chan < 0 || chan > x->inlet_count - 1){
+  if(chan < 0 || chan > x->inlet_count - 1) {
     post("%s: channel %d out of range",OBJECT_NAME, chan);
     return;
   }

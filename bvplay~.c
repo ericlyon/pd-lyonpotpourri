@@ -66,7 +66,7 @@ void bvplay_tilde_setup(void)
 
 void bvplay_taper(t_bvplay *x, t_floatarg t)
 {
-  if(t>0){
+  if(t>0) {
     x->taper_dur = (float)t/1000.0;
     x->taper_frames = x->R * x->taper_dur;
   }
@@ -87,20 +87,20 @@ void bvplay_verbose(t_bvplay *x, t_floatarg f)
 void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv)
 {
 
-  if( x->active ){
+  if( x->active ) {
     if( x->verbose )
       error("object still playing - cannot add note!");
     return;
   }
   bvplay_set(x, x->sfname);
-  if(! x->wavebuf->b_valid){
+  if(! x->wavebuf->b_valid) {
     post("%s: no valid buffer yet",OBJECT_NAME);
     return;
   }
 
   // read note data
-  if( argc != 4 ){
-    if( x->verbose ){
+  if( argc != 4 ) {
+    if( x->verbose ) {
       post("improper note data");
       post("notelist parameters: skiptime, duration, increment, amplitude");
     }
@@ -115,7 +115,7 @@ void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv)
   x->increment = x->notedata[2];
   x->index = x->findex = x->start_frame;
 
-  if( x->increment == 0.0 ){
+  if( x->increment == 0.0 ) {
     if( x->verbose )
       post("zero increment!");
     return;
@@ -124,12 +124,12 @@ void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv)
   x->end_frame = x->start_frame + x->note_frames;
 
   x->amp = x->notedata[3];
-  if( x->start_frame < 0 || x->start_frame >= x->wavebuf->b_frames){
+  if( x->start_frame < 0 || x->start_frame >= x->wavebuf->b_frames) {
     if( x->verbose )
       post("%s: bad start time",OBJECT_NAME);
     return;
   }
-  if( x->end_frame < 0 || x->end_frame >= x->wavebuf->b_frames){
+  if( x->end_frame < 0 || x->end_frame >= x->wavebuf->b_frames) {
     if( x->verbose )
       post("%s: bad end time",OBJECT_NAME);
     return;
@@ -162,13 +162,13 @@ t_int *bvplay_perform_mono(t_int *w)
   }
   tab = x->wavebuf->b_samples;
 
-  if(x->active){
-    while(n--){
+  if(x->active) {
+    while(n--) {
       // post("index: %d endframe %d", iindex, end_frame);
       if((increment > 0 && iindex < end_frame) || (increment < 0 && iindex > end_frame)) {
         // envelope
-        if( increment > 0 ){
-          if( findex < start_frame + taper_frames ){
+        if( increment > 0 ) {
+          if( findex < start_frame + taper_frames ) {
             amp = noteamp * ((findex - (float) start_frame) / (float) taper_frames );
           } else if ( findex > end_frame - taper_frames) {
             amp = noteamp * (((float)end_frame - findex) / (float) taper_frames);
@@ -176,7 +176,7 @@ t_int *bvplay_perform_mono(t_int *w)
             amp = noteamp;
           }
         } else { // negative increment case
-          if( findex > start_frame - taper_frames ){
+          if( findex > start_frame - taper_frames ) {
             amp =  noteamp * ( (start_frame - findex) / taper_frames );
           } else if ( findex < end_frame + taper_frames) {
             amp = noteamp * (( findex - end_frame ) / taper_frames) ;
@@ -197,7 +197,7 @@ t_int *bvplay_perform_mono(t_int *w)
 
   }
   else{
-    while(n--){
+    while(n--) {
       *out++ = 0;
     }
   }
@@ -248,7 +248,7 @@ void *bvplay_new(t_symbol *s, t_floatarg taperdur)
     taperdur = .005;
   x->sfname = s;
   x->R = sys_getsr();
-  if(! x->R){
+  if(! x->R) {
     error("zero sampling rate - set to 44100");
     x->R = 44100;
   }
@@ -278,7 +278,7 @@ void bvplay_dsp(t_bvplay *x, t_signal **sp)
 {
   bvplay_set(x,x->sfname);
 
-  if(x->R != sp[0]->s_sr){
+  if(x->R != sp[0]->s_sr) {
     x->R = sp[0]->s_sr;
     x->taper_frames = x->R * x->taper_dur;
   }

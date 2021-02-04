@@ -40,7 +40,7 @@ void markov_event_odds(t_markov *x, t_symbol *msg, short argc, t_atom *argv);
 void markov_free( t_markov *x);
 void markov_bang( t_markov *x);
 
-void markov_tilde_setup(void){
+void markov_tilde_setup(void) {
   markov_class = class_new(gensym("markov~"), (t_newmethod)markov_new,
                            (t_method)markov_free,sizeof(t_markov), 0,A_DEFFLOAT,0);
   CLASS_MAINSIGNALIN(markov_class, t_markov, x_f);
@@ -76,11 +76,11 @@ void markov_values(t_markov *x, t_symbol *msg, short argc, t_atom *argv)
 {
   int i;
 
-  if( argc != x->event_count ){
+  if( argc != x->event_count ) {
     error("there must be %d values in this list", x->event_count);
     return;
   }
-  for( i = 0; i < x->event_count ; i++){
+  for( i = 0; i < x->event_count ; i++) {
     x->values[i] = atom_getfloatarg(i, argc, argv);
   }
 }
@@ -93,25 +93,25 @@ void markov_event_odds(t_markov *x, t_symbol *msg, short argc, t_atom *argv)
 
   float **event_weights = x->event_weights;
 
-  if( argc != x->event_count + 1){
+  if( argc != x->event_count + 1) {
     error("there must be %d values in this list", x->event_count + 1);
     return;
   }
   event = atom_getfloatarg(0, argc, argv);
-  if( event < 0 || event > x->event_count - 1 ){
+  if( event < 0 || event > x->event_count - 1 ) {
     error("attempt to set event outside range of 0 to %d",x->event_count - 1);
     return;
   }
-  for( i = 0; i < x->event_count; i++){
+  for( i = 0; i < x->event_count; i++) {
     event_weights[event][i] = atom_getfloatarg( (i+1), argc, argv);
     sum += event_weights[event][i];
   }
-  if( sum == 0.0 ){
+  if( sum == 0.0 ) {
     error("zero sum for odds - this is a very bad thing");
     return;
-  } else if( sum != 1.0 ){
+  } else if( sum != 1.0 ) {
     // post("sum was %f, rescaling to 1.0", sum);
-    for( i = 0; i < x->event_count; i++ ){
+    for( i = 0; i < x->event_count; i++ ) {
       event_weights[event][i] /= sum;
     }
   }
@@ -119,7 +119,7 @@ void markov_event_odds(t_markov *x, t_symbol *msg, short argc, t_atom *argv)
 
 void markov_set_length(t_markov *x, t_floatarg length)
 {
-  if( length < 1 || length > x->maximum_length ){
+  if( length < 1 || length > x->maximum_length ) {
     error("%d is an illegal length", (int) length);
     return;
   }
@@ -150,7 +150,7 @@ void *markov_new(t_floatarg event_count)
   outlet_new(&x->x_obj, gensym("signal"));
   outlet_new(&x->x_obj, gensym("signal"));
   // event_count is MAXIMUM event_count
-  if( event_count < 2 || event_count > 256 ){
+  if( event_count < 2 || event_count > 256 ) {
     error("maximum event length limited to 256, set to 16 here");
     event_count = 16 ;
   }
@@ -160,7 +160,7 @@ void *markov_new(t_floatarg event_count)
   x->count = 0;
 
   x->event_weights = (float **) malloc( event_count * sizeof(float *) );
-  for( i = 0; i < 10; i++ ){
+  for( i = 0; i < 10; i++ ) {
     x->event_weights[i] = (float *) malloc( event_count * sizeof(float) );
   }
   x->values = (float *) malloc( event_count * sizeof(float) );
@@ -191,7 +191,7 @@ void *markov_new(t_floatarg event_count)
   x->count = 0;
   x->tempo = 60.0;
   x->sr = sys_getsr();
-  if( ! x->sr ){
+  if( ! x->sr ) {
     error("zero sampling rate - set to 44100");
     x->sr = 44100;
   }
@@ -221,9 +221,9 @@ t_int *markov_perform(t_int *w)
   float current_value = x->current_value;
 
 
-  if( x->manual_override ){
+  if( x->manual_override ) {
     while (n--) {
-      if( x->trigger ){
+      if( x->trigger ) {
         current_event = markov_domarkov( current_event, event_weights, event_count );
         current_value = values[ current_event ];
         x->trigger = 0;
@@ -237,7 +237,7 @@ t_int *markov_perform(t_int *w)
 
   while (n--) {
 
-    if( ++count >= event_samples ){
+    if( ++count >= event_samples ) {
       current_event = markov_domarkov( current_event, event_weights, event_count );
       current_value = values[ current_event ];
       count = 0;
@@ -265,8 +265,8 @@ int markov_domarkov(int current_event, float **event_weights, int event_count)
   randval /= 32768.0;
 
 
-  for( i = 0; i < event_count; i++ ){
-    if( randval < event_weights[current_event][i] ){
+  for( i = 0; i < event_count; i++ ) {
+    if( randval < event_weights[current_event][i] ) {
       return i;
     }
     randval -= event_weights[current_event][i];
@@ -277,7 +277,7 @@ int markov_domarkov(int current_event, float **event_weights, int event_count)
 void markov_dsp(t_markov *x, t_signal **sp)
 {
   //  long i;
-  if(x->sr!=sp[0]->s_sr){
+  if(x->sr!=sp[0]->s_sr) {
     x->sr=sp[0]->s_sr;// BUG!!! in MSP code was !=
     x->event_samples = x->sr * (60.0/x->tempo) / (float) x->subdiv;
     x->count = 0;

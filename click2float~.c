@@ -52,7 +52,7 @@ t_int *click2float_perform(t_int *w)
   int n = (int) w[3];
 
   while( n-- ) {
-    if(*in_vec){
+    if(*in_vec) {
       x->float_value = *in_vec;
       clock_delay(x->clock, 0);
     }

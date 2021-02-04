@@ -49,7 +49,7 @@ void kbuffer_float(t_kbuffer *x, double f);
 void kbuffer_int(t_kbuffer *x, int i);
 void kbuffer_init(t_kbuffer *x,short initialized);
 
-void kbuffer_tilde_setup(void){
+void kbuffer_tilde_setup(void) {
   kbuffer_class = class_new(gensym("kbuffer~"), (t_newmethod)kbuffer_new,
                             (t_method)kbuffer_dsp_free,sizeof(t_kbuffer), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(kbuffer_class, t_kbuffer, x_f);
@@ -78,7 +78,7 @@ void kbuffer_size(t_kbuffer *x, t_floatarg ms) {
   x->memsize = x->ksrate * x->duration * sizeof(float);
   x->length = x->duration * x->ksrate ;
   x->data = (float*) realloc(x->data,x->memsize*sizeof(float));
-  for( i = 0; i < x->length; i++){
+  for( i = 0; i < x->length; i++) {
     x->data[i] = 0.0;
   }
 }
@@ -92,7 +92,7 @@ void kbuffer_ksrate(t_kbuffer *x, t_floatarg ksrate) {
   x->length = x->duration * x->ksrate ;
   x->si = x->ksrate / x->srate;
   x->data = (float*) realloc(x->data,x->memsize*sizeof(float));
-  for( i = 0; i < x->length; i++){
+  for( i = 0; i < x->length; i++) {
     x->data[i] = 0.0;
   }
 }
@@ -181,30 +181,30 @@ t_int *kbuffer_perform(t_int *w)
   float fval = x->fval;
   /*********************/
 
-  while( n-- ){
-    if( in_connected ){
+  while( n-- ) {
+    if( in_connected ) {
       sample = *in++ ;
     } else {
       sample = fval;
     }
-    if( record_flag ){
+    if( record_flag ) {
       iphase = phase;
       /*    phase += (si * speed); Bug!! */
       phase += si;
-      if( iphase >= length ){
+      if( iphase >= length ) {
         record_flag = 0;
         // post("end of recording at %d samples",length);
       }
-      else if( iphase > lastphase ){
+      else if( iphase > lastphase ) {
         lastphase = iphase ;
         data[ iphase ] = sample ;
       }
       *sync_out++ = phase / (float) length ;
       *out++ = sample ; // mirror input to output
-    } else if ( play_flag ){
+    } else if ( play_flag ) {
       iphase = phase;
       phase += (si * speed);
-      if( iphase >= length ){
+      if( iphase >= length ) {
         play_flag = 0;
         *out++ = data[ length - 1 ]; // lock at final value
       } else if (iphase < 0 ) {
@@ -216,10 +216,10 @@ t_int *kbuffer_perform(t_int *w)
       }
       *sync_out++ = phase / (float) length ;
     }
-    else if ( loop_flag ){
+    else if ( loop_flag ) {
       iphase = phase;
       phase += (si * speed);
-      if( iphase >= length ){
+      if( iphase >= length ) {
         phase = iphase = 0;
       } else if (iphase < 0 ) {
         phase = iphase = length - 1;
@@ -231,7 +231,7 @@ t_int *kbuffer_perform(t_int *w)
     else if ( dump_flag ) {
       iphase = phase ;
       phase += 1.0 ;
-      if( iphase >= length ){
+      if( iphase >= length ) {
         dump_flag = 0;
       } else {
         *out++ = data[ iphase ];
@@ -262,7 +262,7 @@ void *kbuffer_new(t_symbol *s, int argc, t_atom *argv)
   outlet_new(&x->x_obj, gensym("signal"));
 
   x->srate = sys_getsr();
-  if( x->srate == 0 ){
+  if( x->srate == 0 ) {
     error("zero sampling rate - set to 44100");
     x->srate = 44100;
   }
@@ -279,7 +279,7 @@ void *kbuffer_new(t_symbol *s, int argc, t_atom *argv)
 
 void kbuffer_init(t_kbuffer *x,short initialized)
 {
-  if(!initialized){
+  if(!initialized) {
     x->record_flag = 0;
     x->play_flag = 0;
     x->dump_flag = 0;
@@ -299,7 +299,7 @@ void kbuffer_dsp(t_kbuffer *x, t_signal **sp)
 
   x->in_connected = 1;
 
-  if(x->srate != sp[0]->s_sr){
+  if(x->srate != sp[0]->s_sr) {
     x->srate = sp[0]->s_sr;
     kbuffer_init(x,1);
   }
