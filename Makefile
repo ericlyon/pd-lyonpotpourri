@@ -8,7 +8,6 @@ lib.name = lyonpotpourri
 # sources for the objectclasses
 class.sources = \
 	adsr~.c \
-	bashfest~.c \
 	buffet~.c \
 	bvplay~.c \
 	channel~.c \
@@ -63,26 +62,41 @@ class.sources = \
 	splitbank~.c \
 	$(empty)
 
-# sources for the shared library
-shared.sources = \
+bashfest~.class.sources = \
+	bashfest~.c \
 	bashfest_dsp.c \
 	bashfest_helper.c \
 	ellipse.c \
-	PenroseOscil.c \
-	PenroseRand.c \
-	bloscbank.c \
+	$(empty)
+
+## sources for the shared library
+# fft.c       :?: convert.c convolver~.c leanunconvert.c     splitbank~.c
+# fft4.c      :?: buffet~.c convolver~.c magfreq_analysis~.c splitbank~.c
+# fold.c        : buffet~.c              magfreq_analysis~.c splitbank~.c !squash~.c
+# convert.c     : buffet~.c              magfreq_analysis~.c !splitbank~.c
+# makewindows.c : buffet~.c magfreq_analysis~.c splitbank~.c !squash~.c
+# power_of_two.c:           magfreq_analysis~.c
+# from_msp.c: adsr~.c bashfest~.c buffet~.c counter~.c stutter~.c vdp~.c
+
+shared.sources = \
 	convert.c \
 	fft.c \
 	fft4.c \
 	fold.c \
+	makewindows.c \
+	power_of_two.c \
+	from_msp.c \
+	$(empty)
+
+unused_shared_sources = \
+	PenroseRand.c \
+	PenroseOscil.c \
+	bloscbank.c \
+	overlapadd.c \
 	leanconvert.c \
 	leanunconvert.c \
-	makewindows.c \
-	overlapadd.c \
-	power_of_two.c \
-	qsortE.c \
 	unconvert.c \
-	from_msp.c \
+	qsortE.c \
 	$(empty)
 
 # extra files
