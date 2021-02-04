@@ -76,6 +76,7 @@ void adsr_tilde_setup(void) {
   class_addmethod(adsr_class,(t_method)adsr_set_gain2,gensym("set_gain2"),A_FLOAT,0);
   class_addbang(adsr_class,(t_method)adsr_bang);
   potpourri_announce(OBJECT_NAME);
+
 }
 
 
@@ -247,6 +248,7 @@ static void *adsr_new(t_symbol *s, int argc, t_atom *argv)
   x->click_gain = 0.0;
   x->mute = 0;
   return x;
+
 }
 
 t_int *adsr_perform(t_int *w)
@@ -308,6 +310,7 @@ t_int *adsr_perform(t_int *w)
   x->click_gain = click_gain;
   return (w+5);
 }
+
 
 void adsr_dsp(t_adsr *x, t_signal **sp)
 {
