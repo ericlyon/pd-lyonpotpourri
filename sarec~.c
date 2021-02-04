@@ -127,7 +127,7 @@ t_int *sarec_perform(t_int *w)
   t_float *click_inlet = (t_float *) (w[2]);
   t_float *record_inlet;
   t_float *sync;
-  t_int channel_count = x->channel_count;
+  int channel_count = x->channel_count;
   int n;
   int next_pointer = channel_count + 5;
   int status = x->status;

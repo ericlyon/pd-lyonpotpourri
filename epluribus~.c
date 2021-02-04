@@ -65,7 +65,7 @@ t_int *epluribus_perform(t_int *w)
   t_float *inlet;
   t_float *outlet;
   t_float *selection;
-  t_int n;
+  int n;
   t_float maxamp = 0.0;
   t_float maxout = 0.0;
   int maxloc;

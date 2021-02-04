@@ -35,7 +35,6 @@ t_int *clean_selector_perform(t_int *w);
 void clean_selector_dsp(t_clean_selector *x, t_signal **sp);
 void clean_selector_float(t_clean_selector *x, t_float f);
 void clean_selector_fadetime(t_clean_selector *x, t_floatarg f);
-void clean_selector_int(t_clean_selector *x, t_int i);
 void clean_selector_channel(t_clean_selector *x, t_floatarg i);
 void clean_selector_dsp_free(t_clean_selector *x);
 

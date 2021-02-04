@@ -16,12 +16,12 @@ typedef struct _sel
   t_float x_f;
   t_float *matches; // store numbers to match against
   t_float *trigger_vec; // copy of input vector
-  t_int length; // number of matches to check
+  int length; // number of matches to check
   t_float **ins; // array of input signal vectors
   t_float **outs; // array of output signal vectors
 } t_sel;
 
-void *sel_new(t_symbol *msg, short argc, t_atom *argv);
+void *sel_new(t_symbol *msg, int argc, t_atom *argv);
 void sel_free(t_sel *x);
 void sel_dsp(t_sel *x, t_signal **sp);
 
@@ -34,12 +34,12 @@ void sel_tilde_setup(void) {
   potpourri_announce(OBJECT_NAME);
 }
 
-void *sel_new(t_symbol *msg, short argc, t_atom *argv)
+void *sel_new(t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
 
   t_sel *x = (t_sel *)pd_new(sel_class);
-  x->length = (t_int)argc;
+  x->length = (int)argc;
 
   for(i=0;i< x->length ;i++) {
     outlet_new(&x->x_obj, gensym("signal"));
@@ -78,7 +78,7 @@ t_int *sel_perform(t_int *w)
   t_float *inlet;
   t_float *match_outlet;
   t_float *matches = x->matches;
-  t_int length = x->length;
+  int length = x->length;
 
   int n = (int) w[length + 3]; // obj, func, 1 inlet
 

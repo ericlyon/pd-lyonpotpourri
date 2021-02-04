@@ -188,7 +188,7 @@ t_int *vdb_perform(t_int *w)
   long b_nchans = x->b_nchans;
   int delay_inlet = x->delay_inlet;
   int feedback_inlet = x->feedback_inlet;
-  t_int i,j;
+  int i,j;
   t_float *input;
   t_float *output;
   t_float *delay_vec;
@@ -501,11 +501,7 @@ void vdb_dsp(t_vdb *x, t_signal **sp)
     sigvec[i] = (t_int *)sp[i-1]->s_vec;
   }
 
-
-
   dsp_addv(vdb_perform, vector_count, (t_int *)sigvec);
 
   free(sigvec);
-
-
 }
