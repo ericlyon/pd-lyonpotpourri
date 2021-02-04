@@ -40,7 +40,7 @@ void pulser_tilde_setup(void) {
   pulser_class = class_new(gensym("pulser~"), (t_newmethod)pulser_new,
                            (t_method)pulser_free,sizeof(t_pulser), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(pulser_class, t_pulser, x_f);
-  class_addmethod(pulser_class,(t_method)pulser_dsp,gensym("dsp"),0);
+  class_addmethod(pulser_class,(t_method)pulser_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(pulser_class,(t_method)pulser_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(pulser_class,(t_method)pulser_harmonics,gensym("harmonics"),A_FLOAT,0);
   potpourri_announce(OBJECT_NAME);

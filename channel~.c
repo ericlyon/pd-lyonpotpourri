@@ -29,7 +29,7 @@ void channel_tilde_setup(void)
   channel_class = class_new(gensym("channel~"), (t_newmethod)channel_new,
                             NO_FREE_FUNCTION,sizeof(t_channel), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(channel_class, t_channel, x_f);
-  class_addmethod(channel_class, (t_method)channel_dsp, gensym("dsp"), 0);
+  class_addmethod(channel_class, (t_method)channel_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(channel_class,(t_method)channel_channel,gensym("channel"),A_FLOAT,0);
   potpourri_announce(OBJECT_NAME);
 }

@@ -60,7 +60,7 @@ void samm_tilde_setup(void) {
   samm_class = class_new(gensym("samm~"), (t_newmethod)samm_new,
                          (t_method)samm_free,sizeof(t_samm), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(samm_class, t_samm, x_f);
-  class_addmethod(samm_class,(t_method)samm_dsp,gensym("dsp"),0);
+  class_addmethod(samm_class,(t_method)samm_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(samm_class,(t_method)samm_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(samm_class,(t_method)samm_tempo,gensym("tempo"),A_FLOAT,0);
   class_addmethod(samm_class,(t_method)samm_beatinfo,gensym("beatinfo"),0);

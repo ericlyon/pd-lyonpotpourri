@@ -107,7 +107,7 @@ void dmach_tilde_setup(void) {
   dmach_class = class_new(gensym("dmach~"), (t_newmethod)dmach_new,
                           (t_method)dmach_dsp_free,sizeof(t_dmach), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(dmach_class, t_dmach, x_f);
-  class_addmethod(dmach_class,(t_method)dmach_dsp,gensym("dsp"),0);
+  class_addmethod(dmach_class,(t_method)dmach_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(dmach_class,(t_method)dmach_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(dmach_class,(t_method)dmach_show,gensym("show"),A_FLOAT,0);
   class_addmethod(dmach_class,(t_method)dmach_tempo,gensym("tempo"),A_FLOAT,0);

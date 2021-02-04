@@ -85,7 +85,7 @@ void player_tilde_setup(void)
   player_class = class_new(gensym("player~"), (t_newmethod)player_new,
                            (t_method)player_dsp_free ,sizeof(t_player), 0, A_GIMME,0);
   CLASS_MAINSIGNALIN(player_class, t_player, x_f );
-  class_addmethod(player_class, (t_method)player_dsp, gensym("dsp"), 0);
+  class_addmethod(player_class, (t_method)player_dsp, gensym("dsp"), A_CANT, 0);
 //  class_addmethod(player_class, (t_method)player_mute, gensym("mute"), A_DEFFLOAT,0);
   class_addmethod(player_class, (t_method)player_setbuf, gensym("setbuf"),A_DEFSYM, 0);
   class_addmethod(player_class, (t_method)player_mute, gensym("mute"), A_FLOAT, 0);

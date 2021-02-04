@@ -44,7 +44,7 @@ void markov_tilde_setup(void) {
   markov_class = class_new(gensym("markov~"), (t_newmethod)markov_new,
                            (t_method)markov_free,sizeof(t_markov), 0,A_DEFFLOAT,0);
   CLASS_MAINSIGNALIN(markov_class, t_markov, x_f);
-  class_addmethod(markov_class,(t_method)markov_dsp,gensym("dsp"),0);
+  class_addmethod(markov_class,(t_method)markov_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(markov_class,(t_method)markov_subdiv,gensym("subdiv"),A_FLOAT,0);
   class_addmethod(markov_class,(t_method)markov_tempo,gensym("tempo"),A_FLOAT,0);
   class_addmethod(markov_class,(t_method)markov_set_length,gensym("set_length"),A_FLOAT,0);

@@ -83,7 +83,7 @@ void squash_tilde_setup(void) {
   squash_class = class_new(gensym("squash~"), (t_newmethod)squash_new,
                            (t_method)squash_free, sizeof(t_squash),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(squash_class, t_squash, x_f);
-  class_addmethod(squash_class, (t_method)squash_dsp, gensym("dsp"),0);
+  class_addmethod(squash_class, (t_method)squash_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(squash_class,(t_method)squash_thresh, gensym("thresh"), A_FLOAT,  0);
   class_addmethod(squash_class,(t_method)squash_nt, gensym("nt"), A_FLOAT,  0);
   class_addmethod(squash_class,(t_method)squash_nmult, gensym("nmult"), A_FLOAT,  0);

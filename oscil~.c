@@ -83,7 +83,7 @@ void oscil_tilde_setup(void)
   oscil_class = class_new(gensym("oscil~"), (t_newmethod)oscil_new,
                           (t_method)oscil_dsp_free ,sizeof(t_oscil), 0, A_GIMME,0);
   CLASS_MAINSIGNALIN(oscil_class, t_oscil, x_f );
-  class_addmethod(oscil_class, (t_method)oscil_dsp, gensym("dsp"), 0);
+  class_addmethod(oscil_class, (t_method)oscil_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(oscil_class, (t_method)oscil_mute, gensym("mute"), A_DEFFLOAT,0);
   class_addmethod(oscil_class, (t_method)oscil_sine, gensym("sine"), 0);
   class_addmethod(oscil_class, (t_method)oscil_triangle, gensym("triangle"), 0);

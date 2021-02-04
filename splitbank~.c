@@ -152,7 +152,7 @@ void splitbank_tilde_setup(void) {
   splitbank_class = class_new(gensym("splitbank~"), (t_newmethod)splitbank_new,
                               (t_method)splitbank_free, sizeof(t_splitbank),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(splitbank_class, t_splitbank, x_f);
-  class_addmethod(splitbank_class, (t_method)splitbank_dsp, gensym("dsp"),0);
+  class_addmethod(splitbank_class, (t_method)splitbank_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(splitbank_class, (t_method)splitbank_showstate, gensym("showstate"),0);
   class_addmethod(splitbank_class, (t_method)splitbank_manual_override, gensym("manual_override"),A_FLOAT,0);
   class_addmethod(splitbank_class, (t_method)splitbank_store, gensym("store"),A_FLOAT,0);

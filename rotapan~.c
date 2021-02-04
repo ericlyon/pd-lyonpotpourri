@@ -32,7 +32,7 @@ void rotapan_tilde_setup(void) {
   rotapan_class = class_new(gensym("rotapan~"), (t_newmethod)rotapan_new,
                             (t_method)rotapan_free, sizeof(t_rotapan),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(rotapan_class, t_rotapan, x_f);
-  class_addmethod(rotapan_class, (t_method)rotapan_dsp, gensym("dsp"),0);
+  class_addmethod(rotapan_class, (t_method)rotapan_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 

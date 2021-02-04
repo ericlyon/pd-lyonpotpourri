@@ -24,7 +24,7 @@ void click2bang_tilde_setup(void)
   click2bang_class = class_new(gensym("click2bang~"), (t_newmethod)click2bang_new,(t_method)click2bang_free,
                                sizeof(t_click2bang), 0,0);
   CLASS_MAINSIGNALIN(click2bang_class, t_click2bang, x_f);
-  class_addmethod(click2bang_class, (t_method)click2bang_dsp, gensym("dsp"), 0);
+  class_addmethod(click2bang_class, (t_method)click2bang_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 

@@ -82,7 +82,7 @@ void splitspec_tilde_setup(void) {
   /* splitspec_class = class_new(gensym("splitspec~"), (t_newmethod)splitspec_new,
      0, sizeof(t_splitspec),0,A_GIMME,0); */
   CLASS_MAINSIGNALIN(splitspec_class, t_splitspec, x_f);
-  class_addmethod(splitspec_class, (t_method)splitspec_dsp, gensym("dsp"),0);
+  class_addmethod(splitspec_class, (t_method)splitspec_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(splitspec_class, (t_method)splitspec_showstate, gensym("showstate"),0);
   class_addmethod(splitspec_class, (t_method)splitspec_scramble, gensym("scramble"),0);
   class_addmethod(splitspec_class, (t_method)splitspec_spiral, gensym("spiral"),0);

@@ -25,7 +25,7 @@ void npan_tilde_setup(void) {
   npan_class = class_new(gensym("npan~"), (t_newmethod)npan_new,
                          (t_method)npan_free, sizeof(t_npan),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(npan_class, t_npan, x_f);
-  class_addmethod(npan_class, (t_method)npan_dsp, gensym("dsp"),0);
+  class_addmethod(npan_class, (t_method)npan_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 

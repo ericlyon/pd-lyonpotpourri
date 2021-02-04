@@ -21,7 +21,7 @@ void clickhold_tilde_setup(void)
   clickhold_class = class_new(gensym("clickhold~"), (t_newmethod)clickhold_new,
                               NO_FREE_FUNCTION,sizeof(t_clickhold), 0,0);
   CLASS_MAINSIGNALIN(clickhold_class, t_clickhold, x_f);
-  class_addmethod(clickhold_class, (t_method)clickhold_dsp, gensym("dsp"), 0);
+  class_addmethod(clickhold_class, (t_method)clickhold_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 

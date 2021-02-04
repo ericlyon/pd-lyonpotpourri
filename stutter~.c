@@ -94,7 +94,7 @@ void stutter_tilde_setup(void) {
   stutter_class = class_new(gensym("stutter~"), (t_newmethod)stutter_new,
                             NO_FREE_FUNCTION,sizeof(t_stutter), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(stutter_class, t_stutter, x_f);
-  class_addmethod(stutter_class,(t_method)stutter_dsp,gensym("dsp"),0);
+  class_addmethod(stutter_class,(t_method)stutter_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(stutter_class,(t_method)stutter_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(stutter_class,(t_method)stutter_show_loop,gensym("show_loop"),0);
   class_addmethod(stutter_class,(t_method)stutter_set_loop,gensym("set_loop"),A_GIMME,0);

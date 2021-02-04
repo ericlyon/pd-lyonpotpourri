@@ -95,7 +95,7 @@ void granule_tilde_setup(void) {
   granule_class = class_new(gensym("granule~"), (t_newmethod)granule_new,
                             (t_method)granule_dsp_free,sizeof(t_granule), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(granule_class, t_granule, x_f);
-  class_addmethod(granule_class,(t_method)granule_dsp,gensym("dsp"),0);
+  class_addmethod(granule_class,(t_method)granule_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(granule_class,(t_method)granule_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(granule_class,(t_method)granule_setbuf,gensym("setbuf"),A_DEFSYM,A_DEFSYM,0);
   class_addmethod(granule_class,(t_method)granule_spray,gensym("spray"),0);

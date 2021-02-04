@@ -81,7 +81,7 @@ void sigseq_tilde_setup(void) {
   sigseq_class = class_new(gensym("sigseq~"), (t_newmethod)sigseq_new,
                            (t_method)sigseq_free ,sizeof(t_sigseq), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(sigseq_class, t_sigseq, x_f);
-  class_addmethod(sigseq_class,(t_method)sigseq_dsp,gensym("dsp"),0);
+  class_addmethod(sigseq_class,(t_method)sigseq_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(sigseq_class,(t_method)sigseq_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(sigseq_class,(t_method)sigseq_list,gensym("list"),A_GIMME,0);
   class_addmethod(sigseq_class,(t_method)sigseq_adsr,gensym("adsr"),A_GIMME,0);

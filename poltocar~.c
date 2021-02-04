@@ -20,7 +20,7 @@ void poltocar_tilde_setup(void) {
   poltocar_class = class_new(gensym("poltocar~"), (t_newmethod)poltocar_new,
                              0, sizeof(t_poltocar),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(poltocar_class, t_poltocar, x_f);
-  class_addmethod(poltocar_class, (t_method)poltocar_dsp, gensym("dsp"),0);
+  class_addmethod(poltocar_class, (t_method)poltocar_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 

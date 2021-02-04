@@ -26,7 +26,7 @@ void epluribus_tilde_setup(void)
   c = class_new(gensym("epluribus~"), (t_newmethod)epluribus_new,
                 0,sizeof(t_epluribus), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(c, t_epluribus, x_f);
-  class_addmethod(c, (t_method)epluribus_dsp, gensym("dsp"), 0);
+  class_addmethod(c, (t_method)epluribus_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(c, (t_method)epluribus_inverse, gensym("inverse"),A_FLOAT, 0);
   epluribus_class = c;
   potpourri_announce(OBJECT_NAME);

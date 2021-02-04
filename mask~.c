@@ -61,7 +61,7 @@ void mask_tilde_setup(void) {
   mask_class = class_new(gensym("mask~"), (t_newmethod)mask_new,
                          (t_method)mask_free ,sizeof(t_mask), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(mask_class, t_mask, x_f);
-  class_addmethod(mask_class,(t_method)mask_dsp,gensym("dsp"),0);
+  class_addmethod(mask_class,(t_method)mask_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(mask_class,(t_method)mask_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(mask_class,(t_method)mask_phaselock,gensym("phaselock"),A_FLOAT,0);
   class_addmethod(mask_class,(t_method)mask_gate,gensym("gate"),A_FLOAT,0);

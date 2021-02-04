@@ -44,7 +44,7 @@ void clean_selector_tilde_setup(void) {
   clean_selector_class = class_new(gensym("clean_selector~"), (t_newmethod)clean_selector_new,
                                    (t_method)clean_selector_dsp_free,sizeof(t_clean_selector), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(clean_selector_class, t_clean_selector, x_f);
-  class_addmethod(clean_selector_class,(t_method)clean_selector_dsp,gensym("dsp"),0);
+  class_addmethod(clean_selector_class,(t_method)clean_selector_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(clean_selector_class,(t_method)clean_selector_fadetime,gensym("fadetime"),A_FLOAT,0);
   class_addmethod(clean_selector_class,(t_method)clean_selector_channel,gensym("channel"),A_FLOAT,0);
   potpourri_announce(OBJECT_NAME);

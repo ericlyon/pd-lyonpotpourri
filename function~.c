@@ -36,7 +36,7 @@ void function_tilde_setup(void)
   function_class = class_new(gensym("function~"), (t_newmethod)function_new,
                              NO_FREE_FUNCTION,sizeof(t_function), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(function_class, t_function, x_f);
-  class_addmethod(function_class,(t_method)function_dsp,gensym("dsp"),0);
+  class_addmethod(function_class,(t_method)function_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(function_class,(t_method)function_addsyn,gensym("addsyn"),A_GIMME,0);
   class_addmethod(function_class,(t_method)function_aenv,gensym("aenv"),A_GIMME,0);
   class_addmethod(function_class,(t_method)function_adenv,gensym("adenv"),A_GIMME,0);

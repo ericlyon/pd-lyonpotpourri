@@ -26,7 +26,7 @@ void click2float_tilde_setup(void)
 {
   click2float_class = class_new(gensym("click2float~"), (t_newmethod)click2float_new, NO_FREE_FUNCTION,sizeof(t_click2float), 0,0);
   CLASS_MAINSIGNALIN(click2float_class, t_click2float, x_f);
-  class_addmethod(click2float_class, (t_method)click2float_dsp, gensym("dsp"), 0);
+  class_addmethod(click2float_class, (t_method)click2float_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 

@@ -20,7 +20,7 @@ void cartopol_tilde_setup(void) {
   cartopol_class = class_new(gensym("cartopol~"), (t_newmethod)cartopol_new,
                              0, sizeof(t_cartopol),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(cartopol_class, t_cartopol, x_f);
-  class_addmethod(cartopol_class, (t_method)cartopol_dsp, gensym("dsp"),0);
+  class_addmethod(cartopol_class, (t_method)cartopol_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 

@@ -32,7 +32,7 @@ void shoehorn_tilde_setup(void) {
   shoehorn_class = class_new(gensym("shoehorn~"), (t_newmethod)shoehorn_new,
                              (t_method)shoehorn_free, sizeof(t_shoehorn),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(shoehorn_class, t_shoehorn, x_f);
-  class_addmethod(shoehorn_class, (t_method)shoehorn_dsp, gensym("dsp"),0);
+  class_addmethod(shoehorn_class, (t_method)shoehorn_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 

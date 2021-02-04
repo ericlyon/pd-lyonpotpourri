@@ -77,7 +77,7 @@ void convolver_tilde_setup(void) {
   convolver_class = class_new(gensym("convolver~"), (t_newmethod)convolver_new,
                               (t_method)convolver_dsp_free,sizeof(t_convolver), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(convolver_class, t_convolver, x_f);
-  // class_addmethod(convolver_class,(t_method)convolver_dsp,gensym("dsp"),0);
+  // class_addmethod(convolver_class,(t_method)convolver_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(convolver_class,(t_method)convolver_spikeimp,gensym("spikeimp"), A_FLOAT, 0);
   class_addmethod(convolver_class,(t_method)convolver_noiseimp, gensym("noiseimp"),A_FLOAT, 0);
   class_addmethod(convolver_class,(t_method)convolver_convolve, gensym("convolve"),0);

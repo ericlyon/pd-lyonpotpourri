@@ -110,7 +110,7 @@ void granulesf_tilde_setup(void) {
   granulesf_class = class_new(gensym("granulesf~"), (t_newmethod)granulesf_new,
                               (t_method)granulesf_dsp_free,sizeof(t_granulesf), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(granulesf_class, t_granulesf, x_f);
-  class_addmethod(granulesf_class,(t_method)granulesf_dsp,gensym("dsp"),0);
+  class_addmethod(granulesf_class,(t_method)granulesf_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(granulesf_class,(t_method)granulesf_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(granulesf_class,(t_method)granulesf_setbuf,gensym("setbuf"),A_DEFSYM,A_DEFSYM,0);
   class_addmethod(granulesf_class,(t_method)granulesf_spray,gensym("spray"),0);

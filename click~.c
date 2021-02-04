@@ -25,7 +25,7 @@ void click_tilde_setup(void)
   click_class = class_new(gensym("click~"), (t_newmethod)click_new,
                           NO_FREE_FUNCTION,sizeof(t_click), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(click_class, t_click, x_f);
-  class_addmethod(click_class, (t_method)click_dsp, gensym("dsp"), 0);
+  class_addmethod(click_class, (t_method)click_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(click_class, (t_method)click_bang, gensym("bang"), 0);
   class_addmethod(click_class, (t_method)click_set, gensym("set"), A_FLOAT, 0);
   potpourri_announce(OBJECT_NAME);

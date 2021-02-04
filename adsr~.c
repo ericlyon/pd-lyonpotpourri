@@ -65,7 +65,7 @@ void adsr_tilde_setup(void) {
   adsr_class = class_new(gensym("adsr~"), (t_newmethod)adsr_new,
                          0,sizeof(t_adsr), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(adsr_class, t_adsr, x_f);
-  class_addmethod(adsr_class,(t_method)adsr_dsp,gensym("dsp"),0);
+  class_addmethod(adsr_class,(t_method)adsr_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(adsr_class,(t_method)adsr_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(adsr_class,(t_method)adsr_list,gensym("list"),A_GIMME,0);
   class_addmethod(adsr_class,(t_method)adsr_set_a,gensym("set_a"),A_FLOAT,0);

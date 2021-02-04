@@ -33,7 +33,7 @@ void counter_tilde_setup(void)
   class_addmethod(c, (t_method)counter_minmax,gensym("minmax"),A_FLOAT,A_FLOAT,0);
   class_addmethod(c, (t_method)counter_direction,gensym("direction"),A_FLOAT,0);
   class_addmethod(c, (t_method)counter_setnext,gensym("setnext"),A_FLOAT,0);
-  class_addmethod(c, (t_method)counter_dsp, gensym("dsp"), 0);
+  class_addmethod(c, (t_method)counter_dsp, gensym("dsp"), A_CANT, 0);
   counter_class = c;
   potpourri_announce(OBJECT_NAME);
 }

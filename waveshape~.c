@@ -36,7 +36,7 @@ void waveshape_tilde_setup(void) {
   waveshape_class = class_new(gensym("waveshape~"), (t_newmethod)waveshape_new,
                               (t_method)waveshape_free,sizeof(t_waveshape), 0,0);
   CLASS_MAINSIGNALIN(waveshape_class, t_waveshape, x_f);
-  class_addmethod(waveshape_class,(t_method)waveshape_dsp,gensym("dsp"),0);
+  class_addmethod(waveshape_class,(t_method)waveshape_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(waveshape_class,(t_method)waveshape_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(waveshape_class,(t_method)waveshape_list,gensym("list"),A_GIMME,0);
   potpourri_announce(OBJECT_NAME);

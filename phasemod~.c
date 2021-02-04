@@ -37,7 +37,7 @@ void phasemod_tilde_setup(void) {
   phasemod_class = class_new(gensym("phasemod~"), (t_newmethod)phasemod_new,
                              (t_method)phasemod_dsp_free,sizeof(t_phasemod), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(phasemod_class, t_phasemod, x_f);
-  class_addmethod(phasemod_class,(t_method)phasemod_dsp,gensym("dsp"),0);
+  class_addmethod(phasemod_class,(t_method)phasemod_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(phasemod_class,(t_method)phasemod_mute,gensym("mute"),A_FLOAT,0);
   potpourri_announce(OBJECT_NAME);
 }

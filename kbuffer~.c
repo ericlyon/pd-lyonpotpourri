@@ -53,7 +53,7 @@ void kbuffer_tilde_setup(void) {
   kbuffer_class = class_new(gensym("kbuffer~"), (t_newmethod)kbuffer_new,
                             (t_method)kbuffer_dsp_free,sizeof(t_kbuffer), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(kbuffer_class, t_kbuffer, x_f);
-  class_addmethod(kbuffer_class,(t_method)kbuffer_dsp,gensym("dsp"),0);
+  class_addmethod(kbuffer_class,(t_method)kbuffer_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(kbuffer_class,(t_method)kbuffer_record,gensym("record"),0);
   class_addmethod(kbuffer_class,(t_method)kbuffer_play,gensym("play"),0);
   class_addmethod(kbuffer_class,(t_method)kbuffer_loop,gensym("loop"),0);

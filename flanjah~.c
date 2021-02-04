@@ -66,7 +66,7 @@ void flanjah_tilde_setup(void) {
   flanjah_class = class_new(gensym("flanjah~"), (t_newmethod)flanjah_new,
                             (t_method)flanjah_dsp_free,sizeof(t_flanjah), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(flanjah_class, t_flanjah, x_f);
-  class_addmethod(flanjah_class,(t_method)flanjah_dsp,gensym("dsp"),0);
+  class_addmethod(flanjah_class,(t_method)flanjah_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(flanjah_class,(t_method)flanjah_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(flanjah_class,(t_method)flanjah_protect,gensym("protect"),A_FLOAT,0);
   class_addmethod(flanjah_class,(t_method)flanjah_report,gensym("report"),0);

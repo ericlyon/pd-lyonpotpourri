@@ -129,7 +129,7 @@ void chopper_tilde_setup(void) {
   chopper_class = class_new(gensym("chopper~"), (t_newmethod)chopper_new,
                             (t_method)chopper_free ,sizeof(t_chopper), 0,A_GIMME,0);
   CLASS_MAINSIGNALIN(chopper_class, t_chopper, x_f);
-  class_addmethod(chopper_class,(t_method)chopper_dsp,gensym("dsp"),0);
+  class_addmethod(chopper_class,(t_method)chopper_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(chopper_class,(t_method)chopper_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(chopper_class,(t_method)chopper_taper,gensym("taper"),A_FLOAT,0);
   class_addmethod(chopper_class,(t_method)chopper_fixed_increment,gensym("fixed_increment"),A_FLOAT,0);

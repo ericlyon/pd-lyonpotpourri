@@ -47,7 +47,7 @@ void granola_tilde_setup(void) {
   granola_class = class_new(gensym("granola~"), (t_newmethod)granola_new,
                             (t_method)granola_dsp_free ,sizeof(t_granola), 0,A_FLOAT,0);
   CLASS_MAINSIGNALIN(granola_class, t_granola, x_f);
-  class_addmethod(granola_class,(t_method)granola_dsp,gensym("dsp"),0);
+  class_addmethod(granola_class,(t_method)granola_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(granola_class,(t_method)granola_clear,gensym("clear"),0);
   class_addmethod(granola_class,(t_method)granola_mute,gensym("mute"),A_FLOAT,0);
   class_addmethod(granola_class,(t_method)granola_size,gensym("size"),A_FLOAT,0);

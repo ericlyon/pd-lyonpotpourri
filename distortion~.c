@@ -33,7 +33,7 @@ void distortion_tilde_setup(void) {
   distortion_class = class_new(gensym("distortion~"), (t_newmethod)distortion_new,
                                0,sizeof(t_distortion), 0,A_DEFFLOAT,A_DEFFLOAT,0);
   CLASS_MAINSIGNALIN(distortion_class, t_distortion, x_f);
-  class_addmethod(distortion_class,(t_method)distortion_dsp,gensym("dsp"),0);
+  class_addmethod(distortion_class,(t_method)distortion_dsp, gensym("dsp"), A_CANT, 0);
   class_addmethod(distortion_class,(t_method)distortion_mute,gensym("mute"),A_FLOAT,0);
   potpourri_announce(OBJECT_NAME);
 }

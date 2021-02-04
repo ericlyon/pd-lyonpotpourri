@@ -30,7 +30,7 @@ void sel_tilde_setup(void) {
   sel_class = class_new(gensym("sel~"), (t_newmethod)sel_new,
                         (t_method)sel_free, sizeof(t_sel),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(sel_class, t_sel, x_f);
-  class_addmethod(sel_class, (t_method)sel_dsp, gensym("dsp"),0);
+  class_addmethod(sel_class, (t_method)sel_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 

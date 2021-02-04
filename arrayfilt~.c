@@ -22,7 +22,7 @@ void arrayfilt_tilde_setup(void) {
   arrayfilt_class = class_new(gensym("arrayfilt~"), (t_newmethod)arrayfilt_new,
                               0, sizeof(t_arrayfilt),0,A_GIMME,0);
   CLASS_MAINSIGNALIN(arrayfilt_class, t_arrayfilt, x_f);
-  class_addmethod(arrayfilt_class, (t_method)arrayfilt_dsp, gensym("dsp"),0);
+  class_addmethod(arrayfilt_class, (t_method)arrayfilt_dsp, gensym("dsp"), A_CANT, 0);
   potpourri_announce(OBJECT_NAME);
 }
 
