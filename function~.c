@@ -61,11 +61,11 @@ void function_rcos(t_function *x)
         return;
     }
     for(i=0;i<b_frames;i++){
-        x->b_samples[i].w_float = (t_float) (0.5 - 0.5 * cos(TWOPI * (t_float)i/(t_float)b_frames));
+        b_samples[i].w_float = (t_float) (0.5 - 0.5 * cos(TWOPI * (t_float)i/(t_float)b_frames));
     }
     function_redraw(x);
     /* for(i=0;i<b_frames;i++){
-        post("%f", x->b_samples[i].w_float);
+        post("%f", b_samples[i].w_float);
     } */
 }
 
