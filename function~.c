@@ -140,7 +140,7 @@ void function_gaussian(t_function *x)
     t_word *b_samples;
     t_float arg, xarg,in;
 
-    if(!b_frames){
+    if(!x->b_frames){
         post("* zero length function!");
         return;
     }
