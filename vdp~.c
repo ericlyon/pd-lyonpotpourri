@@ -15,7 +15,7 @@ typedef struct
 } t_lpf;
 
 typedef struct {
-  float *b_samples;
+  t_word *b_samples;
   long b_valid;
   long b_nchans;
   long b_frames;
@@ -38,7 +38,7 @@ typedef struct _vdp
   float delay_samps;
   float maxdel;
 
-  float *delay_line ;
+  t_float *delay_line ;
   float *write_ptr; // location to write current input
   float *startmem; // first address in delay line
   float *endmem; // last address to read in delay line
@@ -325,7 +325,7 @@ void vdp_free(t_vdp *x)
 
 void vdp_clear(t_vdp *x)
 {
-  memset((char*)x->delay_line,0,(x->len + 2) * sizeof(float));
+  memset((char*)x->delay_line,0,(x->len + 2) * sizeof(t_float));
 }
 
 
@@ -348,15 +348,15 @@ void vdp_init(t_vdp *x,short initialized)
     x->len = x->maxdel * .001 * x->sr;
     x->lpf.coef = 0.5;
     x->lpf.x1 = 0.0;
-    x->delay_line = (float *) calloc((x->len + 2), sizeof(float));
+    x->delay_line = (t_float *) calloc((x->len + 2), sizeof(t_float));
     x->destbuf = (t_guffer *) calloc(1,sizeof(t_guffer));
     x->phs = 0;
     x->mute = 0;
     x->tap = 0;
   } else {
     x->len = x->maxdel * .001 * x->sr;
-    x->delay_line = (float *) realloc(x->delay_line, (x->len + 2) * sizeof(float));
-    memset((char*)x->delay_line,0,(x->len + 2) * sizeof(float));
+    x->delay_line = (t_float *) realloc(x->delay_line, (x->len + 2) * sizeof(t_float));
+    memset((char*)x->delay_line,0,(x->len + 2) * sizeof(t_float));
   }
   x->startmem = x->delay_line;
   x->endmem = x->startmem + x->len;
@@ -395,11 +395,12 @@ void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, int argc, t_atom *argv)
 {
   t_symbol *destname;
 
-  float *b_samples = x->delay_line;
+  t_float *b_samples = x->delay_line;
   long b_nchans = 1;
   long b_frames = x->len + 2;
+  long i;
 
-  float *b_dest_samples;
+  t_word *b_dest_samples;
   long b_dest_nchans;
   long b_dest_frames;
 
@@ -425,12 +426,14 @@ void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, int argc, t_atom *argv)
   }
   // post("cleaning out %d frames",b_dest_frames);
   /* first clean out destination */
-  memset((char *)b_dest_samples, 0, b_dest_frames * 1 * sizeof(float));
+  memset((char *)b_dest_samples, 0, b_dest_frames * 1 * sizeof(t_word));
 
   // post("copying %d frames",b_frames);
 
   /* now copy segment */
-  memcpy(b_dest_samples, b_samples, b_frames * 1 * sizeof(float) );
+  for (i=0; i<b_frames; i++) {
+    b_dest_samples[i].w_float = b_samples[i];
+  }
   vdp_redraw(x);
 }
 
@@ -440,14 +443,14 @@ int vdp_setdestbuf(t_vdp *x, t_symbol *wavename)
   t_garray *a;
   //  t_symbol *wavename = x->buffername;
   int b_frames;
-  float *b_samples;
+  t_word *b_samples;
   if (!(a = (t_garray *)pd_findbyclass(wavename, garray_class))) {
     if (*wavename->s_name) pd_error(x, "%s: %s: no such array",OBJECT_NAME,wavename->s_name);
 
     x->destbuf->b_valid = 0;
     return 0;
   }
-  else if (!garray_getfloatarray(a, &b_frames, &b_samples)) {
+  else if (!garray_getfloatwords(a, &b_frames, &b_samples)) {
     pd_error(x, "%s: bad array for %s", wavename->s_name,OBJECT_NAME);
     x->destbuf->b_valid = 0;
     return 0;
