@@ -1,6 +1,6 @@
 #include "m_pd.h"
 //#include "lpp.h"
-#include "fftease_oldskool.h"
+#include "fftease.h"
 #include "MSPd.h"
 
 #define OBJECT_NAME "convolver~"
