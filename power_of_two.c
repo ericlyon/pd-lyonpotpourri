@@ -5,7 +5,7 @@ int power_of_two(int test)
   int compare = 1;
   //  post("testing what we thing is an int:%d",test);
   do {
-    if(test == compare){
+    if(test == compare) {
       //      post("good power of 2 found!");
       return 1;
     }

@@ -5,7 +5,7 @@
 
 
 /*
-The new improved fftease.h
+  The new improved fftease.h
 */
 
 #define getbytes t_getbytes
@@ -46,7 +46,7 @@ void makehamming( float *H, float *A, float *S, int Nw, int N, int I,int odd );
 void makehanning( float *H, float *A, float *S, int Nw, int N, int I,int odd );
 void overlapadd( float *I, int N, float *W, float *O, int Nw, int n );
 void bloscbank( float *S, float *O, int D, float iD, float *lf, float *la,
-	float *bindex, float *tab, int len, float synt, int lo, int hi );
+                float *bindex, float *tab, int len, float synt, int lo, int hi );
 
 float randf( float min, float max );
 int randi( int min, int max );

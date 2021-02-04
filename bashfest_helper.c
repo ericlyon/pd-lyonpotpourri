@@ -53,7 +53,7 @@ void setweights(float *a, int len)
   int i;
   for(i=0;i<len;i++)
     sum += a[i];
-  if(sum == 0.0){
+  if(sum == 0.0) {
     error("zero odds sum");
   }
   for(i=0;i<len;i++)
@@ -140,14 +140,14 @@ void butterHipass(float *in, float *out, float cutoff, int frames,int channels, 
 
 }
 
-void butset(float *a)		
+void butset(float *a)
 {
   a[6] = a[7] = 0.0;
 }
 
-void lobut(float *a, float cutoff,float SR)			
+void lobut(float *a, float cutoff,float SR)
 {
-  register float	 c;
+  register float   c;
 
   c = 1.0 / tan( PI * cutoff / SR);
   a[1] = 1.0 / ( 1.0 + ROOT2 * c + c * c);
@@ -156,13 +156,13 @@ void lobut(float *a, float cutoff,float SR)
   a[4] = 2.0 * ( 1.0 - c*c) * a[1];
   a[5] = ( 1.0 - ROOT2 * c + c * c) * a[1];
 
-	
+
 }
 
-void hibut(float *a, float cutoff, float SR)			
+void hibut(float *a, float cutoff, float SR)
 {
 
-  register float	c;
+  register float  c;
 
   c = tan( PI * cutoff / SR);
   a[1] = 1.0 / ( 1.0 + ROOT2 * c + c * c);
@@ -184,7 +184,7 @@ void bpbut(float *a, float formant, float bandwidth,float  SR)
   a[3] = -a[1];
   a[4] = - c * d * a[1];
   a[5] = ( c - 1.0) * a[1];
-	
+
 }
 /* in array can == out array */
 
@@ -195,13 +195,13 @@ void butter_filter(float *in,float *out,float *a, int frames, int channels, int 
   float t ,y ;
 
   for( i = channel ; i < frames * channels; i+= channels )
-    {
-      t = *(in + i) - a[4] * a[6] - a[5] * a[7];
-      y = t * a[1] + a[2] * a[6] + a[3] * a[7];
-      a[7] = a[6];
-      a[6] = t;
-      *(out + i) = y;
-    }
+  {
+    t = *(in + i) - a[4] * a[6] - a[5] * a[7];
+    y = t * a[1] + a[2] * a[6] + a[3] * a[7];
+    a[7] = a[6];
+    a[6] = t;
+    *(out + i) = y;
+  }
 }
 
 void rsnset2(float cf,float bw,float scl,float xinit,float *a,float srate)
@@ -256,7 +256,7 @@ void init_reverb_data(float *a)
 }
 
 void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
-	       int channel, float revtime, float dry, t_bashfest *x)
+               int channel, float revtime, float dry, t_bashfest *x)
 {
   float dels[4];// stick into main structure
   float **alpo = x->mini_delay ;
@@ -278,29 +278,28 @@ void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
   dry = sin(1.570796 * dry);
 
   /* combset uses reverb time , mycombset uses feedback */
-  for( i = 0; i < 4; i++ ){
+  for( i = 0; i < 4; i++ ) {
     dels[i] = boundrand(.005, .1 );
-	if(dels[i] < .005 || dels[i] > 0.1) {
-		post("reverb1: bad random delay time: %f",dels[i]);
-		dels[i] = .05;
-	}
+    if(dels[i] < .005 || dels[i] > 0.1) {
+      post("reverb1: bad random delay time: %f",dels[i]);
+      dels[i] = .05;
+    }
     mycombset(dels[i], revtime, 0, alpo[i], srate);
   }
 
   ellipset(fltdata,eel,&nsects,&xnorm);
 
-  for( i = channel ; i < inFrames * nchans; i += nchans ){
+  for( i = channel ; i < inFrames * nchans; i += nchans ) {
 
     a1 = allpass(in[i], alpo[0]);
     a2 = allpass(in[i], alpo[1]);
     a3 = allpass(in[i], alpo[2]);
     a4 = allpass(in[i], alpo[3]);
 
-
     out[i] = in[i] * dry + ellipse((a1+a2+a3+a4), eel, nsects,xnorm) * wet;
   }
 
-  for( i = channel + inFrames * nchans; i < out_frames * nchans; i += nchans ){
+  for( i = channel + inFrames * nchans; i < out_frames * nchans; i += nchans ) {
 
     a1 = allpass(0.0, alpo[0]);
     a2 = allpass(0.0, alpo[1]);
@@ -314,8 +313,8 @@ void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
 }
 
 void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channels, float *functab1,
-	   float *functab2,float *functab3,float *functab4,int funclen,
-	   float duration, float maxDelay, t_bashfest *x)
+           float *functab2,float *functab3,float *functab4,int funclen,
+           float duration, float maxDelay, t_bashfest *x)
 {
   int i;
   float srate = x->sr;
@@ -323,8 +322,8 @@ void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channe
   float *delayLine2a = x->mini_delay[1];
   float *delayLine1b = x->mini_delay[2];
   float *delayLine2b = x->mini_delay[3];
-  int dv1a[2], dv2a[2];		/* cmix bookkeeping */
-  int dv1b[2], dv2b[2];		/* cmix bookkeeping */
+  int dv1a[2], dv2a[2];   /* cmix bookkeeping */
+  int dv1b[2], dv2b[2];   /* cmix bookkeeping */
   float delsamp1a=0, delsamp2a=0 ;
   float delsamp1b=0, delsamp2b=0 ;
   float delay1, delay2, feedback1, feedback2;
@@ -337,20 +336,19 @@ void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channe
 
   // read once during note
 
-
   funcSi = ((float) funclen / srate) / duration ;
 
 
   delset2(delayLine1a, dv1a, maxDelay,srate);
   delset2(delayLine2a, dv2a, maxDelay,srate);
 
-  if( channels == 2 ){
+  if( channels == 2 ) {
     delset2(delayLine1b, dv1b, maxDelay,srate);
     delset2(delayLine2b, dv2b, maxDelay,srate);
   }
 
 
-  for(i = 0; i < out_frames*channels; i += channels ){
+  for(i = 0; i < out_frames*channels; i += channels ) {
     // buffer loop
 
     delay1 = functab1[ (int) funcPhs ];
@@ -363,7 +361,7 @@ void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channe
       funcPhs = 0;
 
     putsamp = i < in_frames * channels ? inbuf[i] + delsamp1a*feedback1 : 0.0;
-	outbuf[i] = putsamp; // zero instead ??
+    outbuf[i] = putsamp; // zero instead ??
 
     delput2( putsamp, delayLine1a, dv1a);
     delsamp1a = dliget2(delayLine1a, delay1, dv1a,srate);
@@ -371,33 +369,30 @@ void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channe
     putsamp = delsamp1a+delsamp2a*feedback2 ;
 
     delput2( putsamp, delayLine2a, dv2a);
-	delsamp2a = dliget2(delayLine2a, delay2, dv2a, srate);
+    delsamp2a = dliget2(delayLine2a, delay2, dv2a, srate);
     outbuf[i] += delsamp2a;
 
 
-    if( channels == 2 ){
+    if( channels == 2 ) {
       putsamp = i < in_frames * channels ? inbuf[i+1] + delsamp1a*feedback1 : 0.0;
-	  outbuf[i+1] = putsamp;
+      outbuf[i+1] = putsamp;
       delput2( putsamp, delayLine1b, dv1b);
       delsamp1b = dliget2(delayLine1b, delay1, dv1b, srate);
       putsamp = delsamp1b+delsamp2b*feedback2;
       delput2( putsamp, delayLine2b, dv2b);
-	  delsamp2b = dliget2(delayLine2b, delay2, dv2b, srate);
+      delsamp2b = dliget2(delayLine2b, delay2, dv2b, srate);
       outbuf[i+1] += delsamp2b;
     }
-
   }
-
 }
 
 void setflamfunc1(float *arr, int flen)
 {
   int i;
   float x;
-  for ( i = 0; i < flen; i++){
+  for ( i = 0; i < flen; i++) {
     x = (float)i / (float) flen ;
     *(arr + i) = ((x - 1) / (x + 1)) * -1.  ;
-
   }
 }
 
@@ -409,14 +404,14 @@ void setExpFlamFunc(float *arr, int flen, float v1,float v2,float alpha)
   if( alpha == 0 )
     alpha = .00000001 ;
 
-  for ( i = 0; i < flen; i++){
+  for ( i = 0; i < flen; i++) {
     *(arr + i) = v1 + (v2-v1) * ((1-exp((float)i*alpha/((float)flen-1.)))/(1-exp(alpha)));
   }
 }
 
 void funcgen1(float *outArray, int outlen, float duration, float outMin, float outMax,
-	 float speed1, float speed2, float gain1, float gain2, float *phs1, float *phs2,
-	 float *sine, int sinelen)
+              float speed1, float speed2, float gain1, float gain2, float *phs1, float *phs2,
+              float *sine, int sinelen)
 {
   float si1, si2;
   float localSR;
@@ -428,12 +423,11 @@ void funcgen1(float *outArray, int outlen, float duration, float outMin, float o
   si1 = ((float)sinelen/localSR)  * speed1;
   si2 = ((float)sinelen/localSR)  * speed2;
 
-  for( i = 0; i < outlen; i++ ){
+  for( i = 0; i < outlen; i++ ) {
     *(outArray + i) = oscil(gain1, si1, sine, sinelen, phs1) ;
     *(outArray + i) += oscil(gain2, si2, sine, sinelen, phs2) ;
   }
   normtab( outArray, outArray, outMin, outMax, outlen);
-
 }
 
 
@@ -443,7 +437,7 @@ void normtab(float *inarr,float *outarr, float min, float max, int len)
 
   float imin=9999999999., imax=-9999999999.;
 
-  for(i = 0; i < len ; i++){
+  for(i = 0; i < len ; i++) {
     if( imin > inarr[i] )
       imin = inarr[i];
     if( imax < inarr[i] )
@@ -451,15 +445,14 @@ void normtab(float *inarr,float *outarr, float min, float max, int len)
   }
   for(i = 0; i < len; i++ )
     outarr[i] = mapp(inarr[i], imin, imax, min, max);
-
 }
 
 float mapp(float in,float imin,float imax,float omin,float omax)
 {
   if( imax == 0.0 )
-    {
-      return 0.0 ;
-    }
+  {
+    return 0.0 ;
+  }
   return( omin+((omax-omin)*((in-imin)/(imax-imin))) );
 }
 
@@ -490,7 +483,7 @@ void killdc( float *inbuf, int in_frames, int channels, t_bashfest *x)
   for( j = 0; j < channels; j++) {
     ellipset(dcflt,eel,&nsects,&xnorm);
 
-    for( i = j; i < in_frames * channels ; i += channels ){
+    for( i = j; i < in_frames * channels ; i += channels ) {
       inbuf[i] = ellipse(inbuf[i], eel, nsects,xnorm);
     }
   }
@@ -520,7 +513,7 @@ void set_distortion_table(float *arr, float cut, float max, int len)
   float samp;
 
   len2 = len>>1 ;
-  for( i = len2; i < len; i++ ){
+  for( i = len2; i < len; i++ ) {
     samp = (float)(i - len2) / (float) len2 ;
     if( samp > cut )
       samp = mapp( samp, cut, 1.0,  cut, max );
@@ -533,30 +526,25 @@ void set_distortion_table(float *arr, float cut, float max, int len)
 float dlookup(float samp,float *arr,int len)
 {
   return arr[(int) (((samp+1.0)/2.0) * (float) len)];
-
 }
 
 void do_compdist(float *in,float *out,int sampFrames,int nchans,int channel,
-	    float cutoff,float maxmult,int lookupflag,float *table,int range,float bufMaxamp)
+                 float cutoff,float maxmult,int lookupflag,float *table,int range,float bufMaxamp)
 {
-
   int i;
-
   float rectsamp;
 
-  for( i = channel ; i < sampFrames * nchans; i+= nchans )
-    {
-	
-      if( lookupflag){
-	*(out + i) = dlookup( *(in + i)/bufMaxamp, table, range );
-      } else {
-	rectsamp = fabs( *(in + i) ) / bufMaxamp;
-	if( rectsamp > cutoff ){
-	  *(in + i) = *(out + i) *
-	    mapp( rectsamp, cutoff, 1.0, cutoff, maxmult);
-	}
+  for( i = channel ; i < sampFrames * nchans; i+= nchans ) {
+    if( lookupflag) {
+      *(out + i) = dlookup( *(in + i)/bufMaxamp, table, range );
+    } else {
+      rectsamp = fabs( *(in + i) ) / bufMaxamp;
+      if( rectsamp > cutoff ) {
+        *(in + i) = *(out + i) *
+          mapp( rectsamp, cutoff, 1.0, cutoff, maxmult);
       }
     }
+  }
 }
 
 float getmaxamp(float *arr, int len)
@@ -564,7 +552,7 @@ float getmaxamp(float *arr, int len)
   int i;
   float max = 0;
 
-  for(i = 0; i < len; i++ ){
+  for(i = 0; i < len; i++ ) {
     if( fabs(arr[i]) > max )
       max = fabs(arr[i]);
   }
@@ -596,53 +584,50 @@ void buildadsr(CMIXADSR *a)
   segs[2] = (S/total) * funclen;
   segs[3] = funclen - (segs[0]+segs[1]+segs[2]);
 
-  if( f1 > 20000. || f1 < -20000. ){
+  if( f1 > 20000. || f1 < -20000. ) {
     f1 = 250.0;
   }
-  if( f2 > 20000. || f2 < -20000. ){
+  if( f2 > 20000. || f2 < -20000. ) {
     f2 = 1250.0;
   }
-  if( f3 > 20000. || f3 < -20000. ){
+  if( f3 > 20000. || f3 < -20000. ) {
     f3 = 950.0;
   }
-  if( f4 > 20000. || f4 < -20000. ){
+  if( f4 > 20000. || f4 < -20000. ) {
     f4 = f1;
   }
 
-  if( segs[0] <= 0 || segs[1] <= 0 || segs[2] <= 0 || segs[3] <= 0 ){
-
-    for( i = 0; i < 4; i++ ){
+  if( segs[0] <= 0 || segs[1] <= 0 || segs[2] <= 0 || segs[3] <= 0 ) {
+    for( i = 0; i < 4; i++ ) {
       segs[i] = funclen / 4;
     }
   }
 
-  for( i = 0 ; i < segs[0]; i++ ){
+  for( i = 0 ; i < segs[0]; i++ ) {
     m1 = 1.-(float)i/(float)(segs[0]);
     m2 = 1. - m1;
     *(func +i ) = f1 * m1 + f2 * m2;
   }
   ipoint = i;
 
-  for( i = 0 ; i < segs[1]; i++ ){
+  for( i = 0 ; i < segs[1]; i++ ) {
     m1 = 1.-(float)i/(float)(segs[1]);
     m2 = 1. - m1;
     *(func + i + ipoint) = f2 * m1 + f3 * m2;
   }
   ipoint += i;
 
-  for( i = 0 ; i < segs[2]; i++ ){
+  for( i = 0 ; i < segs[2]; i++ ) {
     m1 = 1.-(float)i/(float)(segs[2]);
     m2 = 1. - m1;
     *(func + i + ipoint) = f3;
   }
   ipoint += i;
 
-  for( i = 0 ; i < segs[3]; i++ ){
+  for( i = 0 ; i < segs[3]; i++ ) {
     m1 = 1.-(float)i/(float)(segs[3]);
     m2 = 1. - m1;
     *(func + ipoint + i) = f3 * m1 + f4 * m2;
   }
   ipoint += i;
-
 }
-

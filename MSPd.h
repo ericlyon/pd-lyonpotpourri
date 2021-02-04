@@ -12,8 +12,8 @@
 
 
 /* because Max and Pd have different ideas of what A_FLOAT is, use t_floatarg
-to force consistency. Otherwise functions that look good will fail on some
-hardware. Also note that Pd messages cannot accept arguments of type A_LONG. */
+   to force consistency. Otherwise functions that look good will fail on some
+   hardware. Also note that Pd messages cannot accept arguments of type A_LONG. */
 
 
 #include "m_pd.h"

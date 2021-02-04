@@ -21,7 +21,7 @@
 #define COMB4 16
 #define RINGFEED 17
 #define RESONADSR 18
-#define STV 19	
+#define STV 19
 //////
 #define ROOT2 (1.4142135623730950488)
 #define PI2 (6.2831853071795862319959)
@@ -38,9 +38,9 @@
 
 typedef struct
 {
-	float *data;//contains cycle data
-	int len;//length of array
-	int p;//position pointer
+  float *data;//contains cycle data
+  int len;//length of array
+  int p;//position pointer
 } t_cycle;
 
 typedef struct
@@ -163,8 +163,8 @@ void init_ellipse_data(float **a);
 void setExpFlamFunc(float *arr, int flen, float v1,float v2,float alpha);
 void setflamfunc1(float *arr, int flen);
 void funcgen1(float *outArray, int outlen, float duration, float outMin, float outMax,
-	 float speed1, float speed2, float gain1, float gain2, float *phs1, float *phs2,
-	 float *sine, int sinelen);
+              float speed1, float speed2, float gain1, float gain2, float *phs1, float *phs2,
+              float *sine, int sinelen);
 void normtab(float *inarr,float *outarr, float min, float max, int len);
 float mapp(float in,float imin,float imax,float omin,float omax);
 float oscil(float amp,float si,float *farray,int len,float *phs);
@@ -173,13 +173,13 @@ void set_dcflt(float *a);
 void set_distortion_table(float *arr, float cut, float max, int len);
 float dlookup(float samp,float *arr,int len);
 void do_compdist(float *in,float *out,int sampFrames,int nchans,int channel,
-	    float cutoff,float maxmult,int lookupflag,float *table,int range,float bufMaxamp);
+                 float cutoff,float maxmult,int lookupflag,float *table,int range,float bufMaxamp);
 float getmaxamp(float *arr, int len);
 void buildadsr(CMIXADSR *a);
 /*bashfest dsp functions */
 void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channels, float *functab1,
-	   float *functab2,float *functab3,float *functab4,int funclen,
-	   float duration, float maxDelay, t_bashfest *x);
+           float *functab2,float *functab3,float *functab4,int funclen,
+           float duration, float maxDelay, t_bashfest *x);
 void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
-	       int channel, float revtime, float dry, t_bashfest *x);
-	       void killdc( float *inbuf, int in_frames, int channels, t_bashfest *x);
+               int channel, float revtime, float dry, t_bashfest *x);
+void killdc( float *inbuf, int in_frames, int channels, t_bashfest *x);

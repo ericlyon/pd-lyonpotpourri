@@ -3,14 +3,11 @@
 
 
 float frequencyToIncrement( float samplingRate, float frequency, int bufferLength ) {
-
   return (frequency / samplingRate) * (float) bufferLength;
 }
 
 void makeSineBuffer( float *buffer, int bufferLength ) {
-
   int   i;
-
   float myTwoPi = 8. * atan(1.);
 
   for ( i=0; i <= bufferLength; i++ )
@@ -23,7 +20,6 @@ void makeSineBuffer( float *buffer, int bufferLength ) {
 float bufferOscil( float *phase, float increment, float *buffer,
                    int bufferLength )
 {
-
   float sample;
 
   while ( *phase > bufferLength )
