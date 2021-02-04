@@ -150,7 +150,7 @@ t_int *sarec_perform(t_int *w)
 	n = (int) w[4 + channel_count];
     if(! b_valid)
         goto escape;
-	if(! regionsamps ){
+    if(! regionsamps ){
 		x->regionsamps = regionsamps = end_frame - start_frame;
 	}
 	for(i = 0; i < n; i++){

@@ -360,7 +360,7 @@ void chopper_init(t_chopper *x, short initialized)
 	  x->taper_duration /= 1000.0;
 	  if( x->taper_duration < .0001 || x->taper_duration > 10.0 )
 		x->taper_duration = .0001;
-		x->increment_adjusts_loop = 0;
+          x->increment_adjusts_loop = 0;
 	  x->taper_samps = x->R * x->taper_duration;
 	  if(x->taper_samps < 2)
 		x->taper_samps = 2;

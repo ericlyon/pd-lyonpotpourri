@@ -256,8 +256,8 @@ void *samm_new(t_symbol *msg, short argc, t_atom *argv)
     x->metro_count = argc - 1;
     for(i=0;i< x->metro_count;i++)
         outlet_new(&x->x_obj, gensym("signal"));
-	x->sr = sys_getsr();
-	x->vs = sys_getblksize();
+    x->sr = sys_getsr();
+    x->vs = sys_getblksize();
 
     x->pause = 0;
     x->mute = 0;
