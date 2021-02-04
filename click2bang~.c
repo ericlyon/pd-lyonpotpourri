@@ -17,23 +17,26 @@ void *click2bang_new(void);
 t_int *click2bang_perform(t_int *w);
 void click2bang_dsp(t_click2bang *x, t_signal **sp);
 void click2bang_tick(t_click2bang *x) ;
+void click2bang_free(t_click2bang *x);
 
 void click2bang_tilde_setup(void)
 {
-	click2bang_class = class_new(gensym("click2bang~"), (t_newmethod)click2bang_new,
-								 NO_FREE_FUNCTION,sizeof(t_click2bang), 0,0);
+	click2bang_class = class_new(gensym("click2bang~"), (t_newmethod)click2bang_new,(t_method)click2bang_free,
+        sizeof(t_click2bang), 0,0);
 	CLASS_MAINSIGNALIN(click2bang_class, t_click2bang, x_f);
 	class_addmethod(click2bang_class, (t_method)click2bang_dsp, gensym("dsp"), 0);
 	potpourri_announce(OBJECT_NAME);
 }
 
+void click2bang_free(t_click2bang *x)
+{
+  free(x->clock);
+}
 
 void click2bang_tick(t_click2bang *x)
 {
     outlet_bang(x->bang);
 }
-
-
 
 void *click2bang_new(void)
 {
