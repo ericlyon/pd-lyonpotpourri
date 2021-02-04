@@ -30,7 +30,7 @@ void click2bang_tilde_setup(void)
 
 void click2bang_free(t_click2bang *x)
 {
-  free(x->clock);
+  clock_free(x->clock);
 }
 
 void click2bang_tick(t_click2bang *x)
