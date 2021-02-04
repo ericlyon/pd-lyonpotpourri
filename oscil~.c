@@ -161,9 +161,9 @@ void oscil_fadetype(t_oscil *x, t_floatarg ftype)
 	x->fadetype = ftype;
 }
 
-void oscil_harmcount(t_oscil *x, t_floatarg harms)
+void oscil_harmcount(t_oscil *x, t_floatarg fharms)
 {
-
+        int harms = (int)fharms;
 	if( harms < 1 || harms > OSCIL_MAXIMUM_HARMONICS-1) {
 		error("%d is out of range and must be between 1 to %d", harms,OSCIL_MAXIMUM_HARMONICS-1 );
 		return;
