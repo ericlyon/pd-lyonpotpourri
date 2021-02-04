@@ -962,7 +962,7 @@ void flam2(t_bashfest *x, int slot, int *pcount)
   delay2 = params[(*pcount)++];
 
   if( attacks <= 1 ) {
-    error("flam2: recieved too few attacks: %d",attacks);
+    error("flam2: received too few attacks: %d",attacks);
     return;
   }
   out_start = (in_start + halfbuffer) % buflen ;
@@ -1058,7 +1058,7 @@ void expflam(t_bashfest *x, int slot, int *pcount)
   slope = params[(*pcount)++];
 
   if( attacks <= 1 ) {
-    error("expflam: recieved too few attacks: %d",attacks);
+    error("expflam: received too few attacks: %d",attacks);
     return;
   }
   out_start = (in_start + halfbuffer) % buflen ;

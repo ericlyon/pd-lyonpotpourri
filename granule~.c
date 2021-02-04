@@ -47,10 +47,10 @@ typedef struct _granule
   float minfreq; // minimum frequency for a grain
   float maxfreq; // maximum frequency for a grain
   float minpan; // minimum pan for a grain
-  float maxpan; // maxium pan for a grain
+  float maxpan; // maximum pan for a grain
   float minamp; // minimum amplitude for a grain
   float maxamp; // maximum amplitude for a grain
-  float mindur; // minumum duration for a grain
+  float mindur; // minimum duration for a grain
   float maxdur; // maximum duration for a grain
   t_grain *grains; // stores grain data
   float *pitchscale; // contains a frequency grid for pitch constraint
@@ -229,7 +229,7 @@ void granule_pitchspray(t_granule *x)
   float minfreq = x->minfreq; // minimum frequency for a grain
   float maxfreq = x->maxfreq; // maximum frequency for a grain
   float minpan = x->minpan; // minimum pan for a grain
-  float maxpan = x->maxpan; // maxium pan for a grain
+  float maxpan = x->maxpan; // maximum pan for a grain
   float minamp = x->minamp; // minimum amplitude for a grain
   float maxamp = x->maxamp; // maximum amplitude for a grain
   float transpose = x->transpose; // pitch scalar
@@ -324,7 +324,7 @@ void granule_spray(t_granule *x)
   float minfreq = x->minfreq; // minimum frequency for a grain
   float maxfreq = x->maxfreq; // maximum frequency for a grain
   float minpan = x->minpan; // minimum pan for a grain
-  float maxpan = x->maxpan; // maxium pan for a grain
+  float maxpan = x->maxpan; // maximum pan for a grain
   float minamp = x->minamp; // minimum amplitude for a grain
   float maxamp = x->maxamp; // maximum amplitude for a grain
   float transpose = x->transpose; // pitch scalar

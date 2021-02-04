@@ -400,7 +400,7 @@ t_int *splitbank_perform(t_int *w)
       ins[i][j] = inlet[j];
     }
   }
-  // local assigments:
+  // local assignments:
 
   input = ins[0];
 
