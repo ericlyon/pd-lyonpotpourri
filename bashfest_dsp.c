@@ -776,7 +776,7 @@ void feed1me(t_bashfest *x, int slot, int *pcount)
   float *params = x->params;
   float srate = x->sr;
   int out_frames;
-  /* process specfic*/
+  /* process specific */
   int flen = x->feedfunclen ;
   float *func1 = x->feedfunc1;
   float *func2 = x->feedfunc2;
@@ -868,7 +868,7 @@ void flam1(t_bashfest *x, int slot, int *pcount)
   int in_frames = x->events[slot].sample_frames;
   int out_frames;
   int halfbuffer = x->halfbuffer;
-  /* process specfic*/
+  /* process specific */
   ++(*pcount);
   attacks = params[(*pcount)++];
   gain2 = params[(*pcount)++];
@@ -952,7 +952,7 @@ void flam2(t_bashfest *x, int slot, int *pcount)
   int halfbuffer = x->halfbuffer;
   float *flamfunc1 = x->flamfunc1;
   int flamfunclen = x->flamfunc1len;
-  /* process specfic*/
+  /* process specific */
 
   ++(*pcount);
   attacks = params[(*pcount)++];
@@ -962,7 +962,7 @@ void flam2(t_bashfest *x, int slot, int *pcount)
   delay2 = params[(*pcount)++];
 
   if( attacks <= 1 ) {
-    error("flam2: recieved too few attacks: %d",attacks);
+    error("flam2: received too few attacks: %d",attacks);
     return;
   }
   out_start = (in_start + halfbuffer) % buflen ;
@@ -1047,7 +1047,7 @@ void expflam(t_bashfest *x, int slot, int *pcount)
   int halfbuffer = x->halfbuffer;
   float *expfunc = x->feedfunc1;
   //  int funclen = x->feedfunclen;
-  /* process specfic*/
+  /* process specific */
 
   ++(*pcount);
   attacks = params[(*pcount)++];
@@ -1058,7 +1058,7 @@ void expflam(t_bashfest *x, int slot, int *pcount)
   slope = params[(*pcount)++];
 
   if( attacks <= 1 ) {
-    error("expflam: recieved too few attacks: %d",attacks);
+    error("expflam: received too few attacks: %d",attacks);
     return;
   }
   out_start = (in_start + halfbuffer) % buflen ;
@@ -1218,7 +1218,7 @@ void compdist(t_bashfest *x, int slot, int *pcount)
   //  int buf_frames = x->buf_frames;
   float *params = x->params;
   //  float srate = x->sr;
-  /* function specific*/
+  /* function specific */
   int range = x->tf_len;
   float *table = x->transfer_function;
 
@@ -1270,7 +1270,7 @@ void ringfeed(t_bashfest *x, int slot, int *pcount)
   int buf_frames = x->buf_frames;
   float *params = x->params;
   float srate = x->sr;
-  /*function specific*/
+  /* function specific */
   float *sinewave = x->sinewave;
   int sinelen = x->sinelen ;
   CMIXCOMB *combies = x->combies;
@@ -1388,7 +1388,7 @@ void resonadsr(t_bashfest *x, int slot, int *pcount)
   int buflen = x->buf_samps;
   int halfbuffer = x->halfbuffer;
 
-  /*function specific*/
+  /* function specific */
   CMIXADSR *a = x->adsr;
   int funclen = a->len;
   float *adsrfunc = a->func;
@@ -1452,7 +1452,7 @@ void stv(t_bashfest *x, int slot, int *pcount)
   //  int buf_frames = x->buf_frames;
   float *params = x->params;
   float srate = x->sr;
-  /*function specific*/
+  /* function specific */
   float *sinewave = x->sinewave;
   int sinelen = x->sinelen ;
   float *delayline1 = x->delayline1;

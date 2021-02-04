@@ -28,7 +28,7 @@ typedef struct _mask
   short mute;// stops all computation (try z-disable)
   short gate; // continues masking but inhibits all output
   short phaselock; // indicates all patterns are the same size and use the same phase count
-  short indexmode;//special mode where input clicks are also mask indicies (+ 1)
+  short indexmode;//special mode where input clicks are also mask indices (+ 1)
   int phase;//phase of current pattern
   int current_mask;// currently selected pattern
   t_maskpat *masks;// contains the mask patterns
