@@ -59,14 +59,14 @@ typedef struct _buffet
 } t_buffet;
 
 void buffet_setbuf(t_buffet *x, t_symbol *wavename);
-void *buffet_new(t_symbol *msg, short argc, t_atom *argv);
+void *buffet_new(t_symbol *msg, int argc, t_atom *argv);
 t_int *buffet_perform(t_int *w);
 void buffet_dsp(t_buffet *x, t_signal **sp);
 float buffet_boundrand(float min, float max);
 void buffet_assist (t_buffet *x, void *b, long msg, long arg, char *dst);
 void buffet_dsp_free(t_buffet *x);
 void buffet_swap(t_buffet *x);
-void buffet_specswap(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
+void buffet_specswap(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
 void buffet_retroblock(t_buffet *x);
 void buffet_nakedswap(t_buffet *x);
 void buffet_overlap(t_buffet *x, t_floatarg f);
@@ -75,22 +75,22 @@ void buffet_maxswap(t_buffet *x, t_floatarg f);
 void buffet_nosync_setswap(t_buffet *x);
 void buffet_info(t_buffet *x);
 void buffet_killdc(t_buffet *x);
-void buffet_rmschunk(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
+void buffet_rmschunk(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
 void buffet_fadein(t_buffet *x, t_floatarg f);
 void buffet_fadeout(t_buffet *x, t_floatarg f);
-void buffet_internal_fadein(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
-void buffet_internal_fadeout(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
+void buffet_internal_fadein(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
+void buffet_internal_fadeout(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
 void buffet_dc_gain(t_buffet *x, t_floatarg f);
 void buffet_dc_coef(t_buffet *x, t_floatarg f);
 void buffet_normalize(t_buffet *x, t_floatarg f);
 void buffet_rotatetozero(t_buffet *x, t_floatarg f);
 void buffet_autoredraw(t_buffet *x, t_floatarg f);
-void buffet_erase(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
-void buffet_events(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
-void buffet_pevents(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
-void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
-void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
-void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, short argc, t_atom *argv);
+void buffet_erase(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
+void buffet_events(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
+void buffet_pevents(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
+void buffet_detect_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
+void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
+void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, int argc, t_atom *argv);
 int buffet_setdestbuf(t_buffet *x, t_symbol *wavename);
 void buffet_init(t_buffet *x, short initialized);
 void buffet_reverse(t_buffet *x);
@@ -168,7 +168,7 @@ void buffet_overlap(t_buffet *x, t_floatarg f)
   x->fade = f * .001 * x->sr;
 }
 
-void buffet_events(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_events(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
   t_word *b_samples;
   int b_nchans;
@@ -261,7 +261,7 @@ void buffet_events(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
 }
 
 
-void buffet_pevents(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_pevents(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
   t_word *b_samples;
   int b_nchans;
@@ -377,7 +377,7 @@ void buffet_pevents(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   outlet_list(x->list, 0, event_count, listdata);
 }
 
-void buffet_internal_fadeout(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_internal_fadeout(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
   long fadeframes;
   long totalframes;
@@ -424,7 +424,7 @@ void buffet_internal_fadeout(t_buffet *x, t_symbol *msg, short argc, t_atom *arg
   buffet_update(x);
 }
 
-void buffet_internal_fadein(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_internal_fadein(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
   long fadeframes;
   long totalframes;
@@ -533,7 +533,7 @@ void buffet_redraw(t_buffet *x)
   }
 }
 
-void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
   t_symbol *destname;
 
@@ -678,7 +678,7 @@ int buffet_setdestbuf(t_buffet *x, t_symbol *wavename)
   return x->destbuf->b_valid;
 }
 
-void buffet_rmschunk(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_rmschunk(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
 
   t_word *b_samples;
@@ -787,7 +787,7 @@ void buffet_maxswap(t_buffet *x, t_floatarg f)
   x->maxframes = newframes;
 }
 
-void buffet_erase(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_erase(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
   t_word *b_samples;
   long b_nchans;
@@ -1058,7 +1058,7 @@ void buffet_killdc(t_buffet *x)
 }
 
 
-void *buffet_new(t_symbol *msg, short argc, t_atom *argv)
+void *buffet_new(t_symbol *msg, int argc, t_atom *argv)
 {
 
 
@@ -1286,7 +1286,7 @@ void buffet_swap(t_buffet *x)
 }
 
 
-void buffet_specswap(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_specswap(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
   //  float minframes = x->minframes;
   float maxframes = x->maxframes;
@@ -1673,7 +1673,7 @@ float buffet_boundrand(float min, float max)
   return min + (max-min) * ((float) (rand() % RAND_MAX)/ (float) RAND_MAX);
 }
 
-void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_detect_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
   t_word *b_samples;
   long b_nchans;
@@ -1909,7 +1909,7 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
   // free memory at end of routine
 }
 
-void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, short argc, t_atom *argv)
+void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
 {
   t_word *b_samples;
   long b_nchans;

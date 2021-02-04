@@ -34,7 +34,7 @@ typedef struct _squash
 
 
 float boundrand(float min, float max);
-void *squash_new(t_symbol *msg, short argc, t_atom *argv);
+void *squash_new(t_symbol *msg, int argc, t_atom *argv);
 void squash_mute(t_squash *x, t_floatarg toggle);
 void squash_assist (t_squash *x, void *b, long msg, long arg, char *dst);
 void squash_dsp_free(t_squash *x);
@@ -92,7 +92,7 @@ void squash_tilde_setup(void) {
   potpourri_announce(OBJECT_NAME);
 }
 
-void *squash_new(t_symbol *msg, short argc, t_atom *argv)
+void *squash_new(t_symbol *msg, int argc, t_atom *argv)
 {
 
   t_squash *x = (t_squash *)pd_new(squash_class);

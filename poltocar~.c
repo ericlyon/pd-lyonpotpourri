@@ -11,7 +11,7 @@ typedef struct _poltocar
   t_float x_f;
 } t_poltocar;
 
-void *poltocar_new(t_symbol *msg, short argc, t_atom *argv);
+void *poltocar_new(t_symbol *msg, int argc, t_atom *argv);
 void poltocar_free(t_poltocar *x);
 void poltocar_dsp(t_poltocar *x, t_signal **sp);
 
@@ -24,7 +24,7 @@ void poltocar_tilde_setup(void) {
   potpourri_announce(OBJECT_NAME);
 }
 
-void *poltocar_new(t_symbol *msg, short argc, t_atom *argv)
+void *poltocar_new(t_symbol *msg, int argc, t_atom *argv)
 {
   t_poltocar *x = (t_poltocar *)pd_new(poltocar_class);
   inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));

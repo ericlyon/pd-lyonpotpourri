@@ -35,8 +35,8 @@ void markov_subdiv(t_markov *x, t_floatarg subdiv);
 void markov_tempo(t_markov *x, t_floatarg tempo);
 void markov_set_length(t_markov *x, t_floatarg length);
 void markov_manual_override(t_markov *x, t_floatarg toggle);
-void markov_values(t_markov *x, t_symbol *msg, short argc, t_atom *argv);
-void markov_event_odds(t_markov *x, t_symbol *msg, short argc, t_atom *argv);
+void markov_values(t_markov *x, t_symbol *msg, int argc, t_atom *argv);
+void markov_event_odds(t_markov *x, t_symbol *msg, int argc, t_atom *argv);
 void markov_free( t_markov *x);
 void markov_bang( t_markov *x);
 
@@ -72,7 +72,7 @@ void markov_bang(t_markov *x)
   x->trigger = 1;
 }
 
-void markov_values(t_markov *x, t_symbol *msg, short argc, t_atom *argv)
+void markov_values(t_markov *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
 
@@ -85,7 +85,7 @@ void markov_values(t_markov *x, t_symbol *msg, short argc, t_atom *argv)
   }
 }
 
-void markov_event_odds(t_markov *x, t_symbol *msg, short argc, t_atom *argv)
+void markov_event_odds(t_markov *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
   int event;

@@ -59,7 +59,7 @@ typedef struct _player
 } t_player;
 
 void player_setbuf(t_player *x, t_symbol *wavename);
-void *player_new(t_symbol *msg, short argc, t_atom *argv);
+void *player_new(t_symbol *msg, int argc, t_atom *argv);
 t_int *player_perform_mono(t_int *w);
 t_int *player_perform_mono_interpol(t_int *w);
 t_int *player_perform_stereo(t_int *w);
@@ -121,7 +121,7 @@ void player_mute(t_player *x, t_floatarg f)
 
 
 
-void *player_new(t_symbol *msg, short argc, t_atom *argv)
+void *player_new(t_symbol *msg, int argc, t_atom *argv)
 {
 
   t_player *x = (t_player *)pd_new(player_class);

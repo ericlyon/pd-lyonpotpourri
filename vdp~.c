@@ -72,7 +72,7 @@ void vdp_filter(t_vdp *x, t_floatarg t);
 void vdp_init(t_vdp *x,short initialized);
 void vdp_clear(t_vdp *x);
 void vdp_inf_hold(t_vdp *x,t_floatarg state);
-void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, short argc, t_atom *argv);
+void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, int argc, t_atom *argv);
 int vdp_setdestbuf(t_vdp *x, t_symbol *wavename);
 void vdp_redraw(t_vdp *x);
 void vdp_free(t_vdp *x);
@@ -391,7 +391,7 @@ void vdp_protect(t_vdp *x, double state)
   x->feedback_protect = state;
 }
 
-void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, short argc, t_atom *argv)
+void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, int argc, t_atom *argv)
 {
   t_symbol *destname;
 

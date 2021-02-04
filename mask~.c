@@ -39,19 +39,19 @@ typedef struct _mask
   float *in_vec;//copy space for input to avoid dreaded vector sharing override
 } t_mask;
 
-void *mask_new(t_symbol *msg, short argc, t_atom *argv);
+void *mask_new(t_symbol *msg, int argc, t_atom *argv);
 t_int *mask_perform(t_int *w);
 void mask_dsp(t_mask *x, t_signal **sp);
 void mask_mute(t_mask *x, t_floatarg f);
 void mask_phaselock(t_mask *x, t_floatarg f);
 void mask_gate(t_mask *x, t_floatarg f);
-void mask_addmask(t_mask *x, t_symbol *msg, short argc, t_atom *argv);
+void mask_addmask(t_mask *x, t_symbol *msg, int argc, t_atom *argv);
 void mask_recall(t_mask *x, t_floatarg p);
 void mask_showmask(t_mask *x, t_floatarg p);
 void mask_indexmode(t_mask *x, t_floatarg t);
 void mask_gozero(t_mask *x);
 void mask_free(t_mask *x);
-void mask_sequence(t_mask *x, t_symbol *msg, short argc, t_atom *argv);
+void mask_sequence(t_mask *x, t_symbol *msg, int argc, t_atom *argv);
 void mask_noloop(t_mask *x, t_floatarg f);
 void mask_playonce(t_mask *x, t_floatarg pnum);
 
@@ -163,7 +163,7 @@ void mask_recall(t_mask *x, t_floatarg p)
 }
 
 //initiate mask recall sequence
-void mask_sequence(t_mask *x, t_symbol *msg, short argc, t_atom *argv)
+void mask_sequence(t_mask *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
 
@@ -191,7 +191,7 @@ void mask_sequence(t_mask *x, t_symbol *msg, short argc, t_atom *argv)
   // ideally would check that each sequence number is a valid stored location
 }
 
-void mask_addmask(t_mask *x, t_symbol *msg, short argc, t_atom *argv)
+void mask_addmask(t_mask *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int location;
   int i;
@@ -234,7 +234,7 @@ void mask_free(t_mask *x)
   free(x->in_vec);
 }
 
-void *mask_new(t_symbol *msg, short argc, t_atom *argv)
+void *mask_new(t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
   t_mask *x = (t_mask *)pd_new(mask_class);

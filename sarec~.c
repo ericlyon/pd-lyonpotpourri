@@ -41,7 +41,7 @@ typedef struct _sarec
 
 void *sarec_new(t_symbol *bufname);
 
-// void sarec_region(t_sarec *x, t_symbol *msg, short argc, t_atom *argv);
+// void sarec_region(t_sarec *x, t_symbol *msg, int argc, t_atom *argv);
 void sarec_regionsamps(t_sarec *x, t_floatarg start_frame, t_floatarg end_frame);
 void sarec_region(t_sarec *x, t_floatarg start_time, t_floatarg end_time);
 

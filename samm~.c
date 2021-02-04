@@ -26,15 +26,15 @@ typedef struct _samm
   short vs;
 } t_samm;
 
-void *samm_new(t_symbol *msg, short argc, t_atom *argv);
-void *samm_beatlist(t_samm *x, t_symbol *msg, short argc, t_atom *argv);
+void *samm_new(t_symbol *msg, int argc, t_atom *argv);
+void *samm_beatlist(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
 t_int *samm_perform(t_int *w);
 void samm_dsp(t_samm *x, t_signal **sp);
 void samm_tempo(t_samm *x, t_floatarg f);
-void samm_divbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv);
-void samm_msbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv);
-void samm_sampbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv);
-void samm_ratiobeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv);
+void samm_divbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
+void samm_msbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
+void samm_sampbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
+void samm_ratiobeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
 void samm_free(t_samm *x);
 void samm_beatinfo(t_samm *x);
 void samm_init(t_samm *x,short initialized);
@@ -42,7 +42,7 @@ void samm_mute(t_samm *x, t_floatarg f);
 void samm_pause(t_samm *x);
 void samm_arm(t_samm *x);
 void samm_resume(t_samm *x);
-void samm_beats(t_samm *x, t_symbol *msg, short argc, t_atom *argv);
+void samm_beats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
 
 
 void samm_beatinfo(t_samm *x)
@@ -103,7 +103,7 @@ void samm_resume(t_samm *x)
   x->pause = 0;
 }
 
-void samm_beats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
+void samm_beats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
   double beatdur;
@@ -126,7 +126,7 @@ void samm_beats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
   }
 }
 
-void samm_divbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
+void samm_divbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
   double divisor;
@@ -149,7 +149,7 @@ void samm_divbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
   }
 }
 
-void samm_msbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
+void samm_msbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
   double msecs;
@@ -170,7 +170,7 @@ void samm_msbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
 
 }
 
-void samm_sampbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
+void samm_sampbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
   double samples;
@@ -190,7 +190,7 @@ void samm_sampbeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
   }
 }
 
-void samm_ratiobeats(t_samm *x, t_symbol *msg, short argc, t_atom *argv)
+void samm_ratiobeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i,j;
   double num,denom;
@@ -236,7 +236,7 @@ void samm_tempo(t_samm *x, t_floatarg f)
 }
 
 
-void *samm_new(t_symbol *msg, short argc, t_atom *argv)
+void *samm_new(t_symbol *msg, int argc, t_atom *argv)
 {
   int i,j;
   double divisor;

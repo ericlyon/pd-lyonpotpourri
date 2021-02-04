@@ -18,7 +18,7 @@ typedef struct _vecdex {
 
 /* Function prototypes */
 
-void *vecdex_new(t_symbol *msg, short argc, t_atom *argv);
+void *vecdex_new(t_symbol *msg, int argc, t_atom *argv);
 void vecdex_dsp(t_vecdex *x, t_signal **sp);
 t_int *vecdex_perform(t_int *w);
 
@@ -35,7 +35,7 @@ void vecdex_tilde_setup(void)
 
 /* The new instance routine */
 
-void *vecdex_new(t_symbol *msg, short argc, t_atom *argv)
+void *vecdex_new(t_symbol *msg, int argc, t_atom *argv)
 {
   t_vecdex *x = (t_vecdex *)pd_new(vecdex_class);
   outlet_new(&x->obj, gensym("signal"));

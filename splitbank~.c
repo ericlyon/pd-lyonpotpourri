@@ -104,8 +104,8 @@ t_int *splitbank_perform( t_int *w );
 void splitbank_dsp(t_splitbank *x, t_signal **sp);
 void splitbank_showstate( t_splitbank *x );
 void splitbank_manual_override( t_splitbank *x, t_floatarg toggle );
-void splitbank_setstate( t_splitbank *x, t_symbol *msg, short argc, t_atom *argv);
-void splitbank_ramptime( t_splitbank *x, t_symbol *msg, short argc, t_atom *argv);
+void splitbank_setstate( t_splitbank *x, t_symbol *msg, int argc, t_atom *argv);
+void splitbank_ramptime( t_splitbank *x, t_symbol *msg, int argc, t_atom *argv);
 int rand_index( int max);
 void splitbank_scramble (t_splitbank *x);
 void splitbank_store( t_splitbank *x, t_floatarg location );
@@ -560,7 +560,7 @@ int rand_index( int max) {
   return ( rand() % max );
 }
 
-void splitbank_setstate (t_splitbank *x, t_symbol *msg, short argc, t_atom *argv) {
+void splitbank_setstate (t_splitbank *x, t_symbol *msg, int argc, t_atom *argv) {
   short i;
 
   if( argc != x->N2 ) {
@@ -585,7 +585,7 @@ void splitbank_setstate (t_splitbank *x, t_symbol *msg, short argc, t_atom *argv
   return;
 }
 
-void splitbank_ramptime (t_splitbank *x, t_symbol *msg, short argc, t_atom *argv) {
+void splitbank_ramptime (t_splitbank *x, t_symbol *msg, int argc, t_atom *argv) {
   float rampdur;
   rampdur = atom_getfloatarg(0,argc,argv) * 0.001;
   x->countdown_samps = rampdur * x->R;

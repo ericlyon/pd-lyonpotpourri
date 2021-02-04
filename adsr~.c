@@ -47,8 +47,8 @@ void adsr_dsp(t_adsr *x, t_signal **sp);
 void adsr_assist(t_adsr *x, void *b, long m, long a, char *s);
 void adsr_bang(t_adsr *x);
 void adsr_manual_override(t_adsr *x, t_floatarg toggle);
-void adsr_list (t_adsr *x, t_atom *msg, short argc, t_atom *argv);
-void adsr_tempomode(t_adsr *x, t_atom *msg, short argc, t_atom *argv);
+void adsr_list (t_adsr *x, t_atom *msg, int argc, t_atom *argv);
+void adsr_tempomode(t_adsr *x, t_atom *msg, int argc, t_atom *argv);
 void adsr_set_a(t_adsr *x, t_floatarg f);
 void adsr_set_d(t_adsr *x, t_floatarg f);
 void adsr_set_s(t_adsr *x, t_floatarg f);
@@ -177,7 +177,7 @@ void adsr_set_r(t_adsr *x, t_floatarg f)
   return ;
 }
 
-void adsr_list (t_adsr *x, t_atom *msg, short argc, t_atom *argv)
+void adsr_list (t_adsr *x, t_atom *msg, int argc, t_atom *argv)
 {
   (void)msg; // make compiler happy
   x->rsamps = x->tsamps - (x->asamps+x->dsamps+x->ssamps);

@@ -52,7 +52,7 @@ typedef struct _convolver
 float boundrand(float min, float max);
 void convolver_setbuf(t_buffy *trybuf);
 
-void *convolver_new(t_symbol *msg, short argc, t_atom *argv);
+void *convolver_new(t_symbol *msg, int argc, t_atom *argv);
 t_int *convolver_perform(t_int *w);
 
 void convolver_mute(t_convolver *x, t_floatarg toggle);
@@ -63,7 +63,7 @@ void convolver_seed(t_convolver *x, t_floatarg seed);
 void convolver_attach_buffers(t_convolver *x) ;
 void convolver_spikeimp(t_convolver *x, t_floatarg density);
 void convolver_convolve(t_convolver *x);
-void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *argv);
+void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *argv);
 void convolver_version(t_convolver *x);
 void convolver_noiseimp(t_convolver *x, t_floatarg curve);
 
@@ -180,7 +180,7 @@ void convolver_convolve(t_convolver *x)
   outlet_bang(x->bang);
 }
 
-void convolver_convolvechans(t_convolver *x, t_symbol *msg, short argc, t_atom *argv)
+void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *argv)
 {
   float *tbuf = x->tbuf;
   float *sbuf = x->sbuf;
@@ -513,7 +513,7 @@ float boundrand(float min, float max)
 }
 
 
-void *convolver_new(t_symbol *msg, short argc, t_atom *argv)
+void *convolver_new(t_symbol *msg, int argc, t_atom *argv)
 {
 
   t_convolver *x = (t_convolver *)pd_new(convolver_class);

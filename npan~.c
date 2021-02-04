@@ -16,7 +16,7 @@ typedef struct _npan
   t_float *panner_locvec;
 } t_npan;
 
-void *npan_new(t_symbol *s, short argc, t_atom *argv);
+void *npan_new(t_symbol *s, int argc, t_atom *argv);
 t_int *npan_perform(t_int *w);
 void npan_dsp(t_npan *x, t_signal **sp);
 void npan_free(t_npan *x);
@@ -29,7 +29,7 @@ void npan_tilde_setup(void) {
   potpourri_announce(OBJECT_NAME);
 }
 
-void *npan_new(t_symbol *s, short argc, t_atom *argv)
+void *npan_new(t_symbol *s, int argc, t_atom *argv)
 {
   t_npan *x;
   x = (t_npan *)pd_new(npan_class);

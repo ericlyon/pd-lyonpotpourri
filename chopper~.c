@@ -74,7 +74,7 @@ void chopper_set(t_chopper *x, t_symbol *s);
 void chopper_mute(t_chopper *x, t_floatarg toggle);
 void chopper_increment_adjust(t_chopper *x, t_floatarg toggle);
 void chopper_adjust_inverse(t_chopper *x, t_floatarg toggle);
-void *chopper_new(t_symbol *msg, short argc, t_atom *argv);
+void *chopper_new(t_symbol *msg, int argc, t_atom *argv);
 void chopper_in1(t_chopper *x, long n);
 void chopper_set_minincr(t_chopper *x, t_floatarg n);
 void chopper_set_maxincr(t_chopper *x, t_floatarg n);
@@ -88,7 +88,7 @@ float chopper_boundrand(float min, float max);
 void chopper_assist(t_chopper *x, void *b, long m, long a, char *s);
 void chopper_dblclick(t_chopper *x);
 void chopper_show_loop(t_chopper *x);
-void chopper_set_loop(t_chopper *x, t_symbol *msg, short argc, t_atom *argv);
+void chopper_set_loop(t_chopper *x, t_symbol *msg, int argc, t_atom *argv);
 void chopper_randloop( t_chopper *x);
 void chopper_store_loop(t_chopper *x, t_floatarg loop_bindex);
 void chopper_recall_loop(t_chopper *x,  t_floatarg loop_bindex);
@@ -300,7 +300,7 @@ void chopper_recall_loop(t_chopper *x, t_floatarg f)
   //  x->data_recalled = 1;
 }
 
-void chopper_set_loop(t_chopper *x, t_symbol *msg, short argc, t_atom *argv)
+void chopper_set_loop(t_chopper *x, t_symbol *msg, int argc, t_atom *argv)
 {
   if( argc < 3 ) {
     error("format: start samples increment");
@@ -329,7 +329,7 @@ void chopper_taper(t_chopper *x, t_floatarg f)
 
 
 
-void *chopper_new(t_symbol *msg, short argc, t_atom *argv)
+void *chopper_new(t_symbol *msg, int argc, t_atom *argv)
 {
   t_chopper *x = (t_chopper *)pd_new(chopper_class);
   outlet_new(&x->x_obj, gensym("signal"));

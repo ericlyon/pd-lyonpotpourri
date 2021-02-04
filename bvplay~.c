@@ -44,7 +44,7 @@ t_int *bvplay_perform_stereo(t_int *w);
 void bvplay_dsp(t_bvplay *x, t_signal **sp);
 void bvplay_set(t_bvplay *x, t_symbol *s);
 void *bvplay_new(t_symbol *s, t_floatarg taperdur);
-void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv );
+void bvplay_notelist(t_bvplay *x, t_symbol *msg, int argc, t_atom *argv );
 void bvplay_verbose(t_bvplay *x, t_floatarg t);
 void bvplay_mute(t_bvplay *x, t_floatarg t);
 void bvplay_taper(t_bvplay *x, t_floatarg t);
@@ -84,7 +84,7 @@ void bvplay_verbose(t_bvplay *x, t_floatarg f)
 }
 
 
-void bvplay_notelist(t_bvplay *x, t_symbol *msg, short argc, t_atom *argv)
+void bvplay_notelist(t_bvplay *x, t_symbol *msg, int argc, t_atom *argv)
 {
 
   if( x->active ) {

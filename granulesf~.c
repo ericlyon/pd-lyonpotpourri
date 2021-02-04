@@ -75,7 +75,7 @@ typedef struct _granulesf
 } t_granulesf;
 
 void granulesf_setbuf(t_granulesf *x, t_symbol *wavename, t_symbol *windowname);
-void *granulesf_new(t_symbol *msg, short argc, t_atom *argv);
+void *granulesf_new(t_symbol *msg, int argc, t_atom *argv);
 t_int *granulesf_perform(t_int *w);
 t_int *granulesf_perform_no_interpolation(t_int *w);
 t_int *granulesf_performhose(t_int *w);
@@ -89,9 +89,9 @@ void granulesf_lowblock(t_granulesf *x, t_floatarg f);
 void granulesf_highblock(t_granulesf *x, t_floatarg f);
 void granulesf_events(t_granulesf *x, t_floatarg e);
 float granulesf_boundrand(float min, float max);
-void *granulesf_grist(t_granulesf *x, t_symbol *msg, short argc, t_atom *argv);
-void *granulesf_grain(t_granulesf *x, t_symbol *msg, short argc, t_atom *argv);
-void *granulesf_setscale(t_granulesf *x, t_symbol *msg, short argc, t_atom *argv);
+void *granulesf_grist(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
+void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
+void *granulesf_setscale(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
 void granulesf_info(t_granulesf *x);
 void granulesf_mute(t_granulesf *x, t_floatarg toggle);
 void granulesf_steady(t_granulesf *x, t_floatarg toggle);
@@ -219,7 +219,7 @@ void granulesf_transpose(t_granulesf *x, t_floatarg t)
   x->transpose = t;
 }
 
-void *granulesf_setscale(t_granulesf *x, t_symbol *msg, short argc, t_atom *argv)
+void *granulesf_setscale(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
   float *pitchscale = x->pitchscale;
@@ -492,7 +492,7 @@ void granulesf_spray(t_granulesf *x)
   }
 }
 
-void *granulesf_grain(t_granulesf *x, t_symbol *msg, short argc, t_atom *argv)
+void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
 {
   short inserted;
   int j;
@@ -566,7 +566,7 @@ float granulesf_boundrand(float min, float max)
 }
 
 
-void *granulesf_new(t_symbol *msg, short argc, t_atom *argv)
+void *granulesf_new(t_symbol *msg, int argc, t_atom *argv)
 {
 
   t_granulesf *x = (t_granulesf *)pd_new(granulesf_class);
@@ -655,7 +655,7 @@ void granulesf_info(t_granulesf *x)
 }
 
 
-void *granulesf_grist(t_granulesf *x, t_symbol *msg, short argc, t_atom *argv)
+void *granulesf_grist(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
 {
   if(argc < 10 ) {
     error("grist takes 10 arguments:");

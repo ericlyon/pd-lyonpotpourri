@@ -14,7 +14,7 @@ typedef struct _arrayfilt
   t_symbol *arrayname;
 } t_arrayfilt;
 
-void *arrayfilt_new(t_symbol *msg, short argc, t_atom *argv);
+void *arrayfilt_new(t_symbol *msg, int argc, t_atom *argv);
 void arrayfilt_dsp(t_arrayfilt *x, t_signal **sp);
 void arrayfilt_setarray(t_arrayfilt *x);
 
@@ -26,7 +26,7 @@ void arrayfilt_tilde_setup(void) {
   potpourri_announce(OBJECT_NAME);
 }
 
-void *arrayfilt_new(t_symbol *msg, short argc, t_atom *argv)
+void *arrayfilt_new(t_symbol *msg, int argc, t_atom *argv)
 {
   t_arrayfilt *x = (t_arrayfilt *)pd_new(arrayfilt_class);
   // t_symbol *arrayname;

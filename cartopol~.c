@@ -11,7 +11,7 @@ typedef struct _cartopol
   t_float x_f;
 } t_cartopol;
 
-void *cartopol_new(t_symbol *msg, short argc, t_atom *argv);
+void *cartopol_new(t_symbol *msg, int argc, t_atom *argv);
 void cartopol_free(t_cartopol *x);
 void cartopol_dsp(t_cartopol *x, t_signal **sp);
 
@@ -24,7 +24,7 @@ void cartopol_tilde_setup(void) {
   potpourri_announce(OBJECT_NAME);
 }
 
-void *cartopol_new(t_symbol *msg, short argc, t_atom *argv)
+void *cartopol_new(t_symbol *msg, int argc, t_atom *argv)
 {
   t_cartopol *x = (t_cartopol *)pd_new(cartopol_class);
   inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));

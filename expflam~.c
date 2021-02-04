@@ -49,7 +49,7 @@ typedef struct _expflam
 void *expflam_new(void);
 t_int *expflam_perform(t_int *w);
 void expflam_dsp(t_expflam *x, t_signal **sp);
-void expflam_setflam(t_expflam *x, t_symbol *msg, short argc, t_atom *argv);
+void expflam_setflam(t_expflam *x, t_symbol *msg, int argc, t_atom *argv);
 void expflam_free(t_expflam *x);
 void expflam_assist(t_expflam *x, void *b, long msg, long arg, char *dst);
 void expflam_flamall(t_expflam *x, t_floatarg tog);
@@ -116,7 +116,7 @@ void *expflam_new(void)
   return x;
 }
 
-void expflam_setflam(t_expflam *x, t_symbol *msg, short argc, t_atom *argv)
+void expflam_setflam(t_expflam *x, t_symbol *msg, int argc, t_atom *argv)
 {
   if( argc != 5 ) {
     error("%s: setflam format: startdelay enddelay attacks slope gainatten",OBJECT_NAME);

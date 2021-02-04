@@ -67,7 +67,7 @@ typedef struct _granule
 } t_granule;
 
 void granule_setbuf(t_granule *x, t_symbol *wavename, t_symbol *windowname);
-void *granule_new(t_symbol *msg, short argc, t_atom *argv);
+void *granule_new(t_symbol *msg, int argc, t_atom *argv);
 t_int *granule_perform(t_int *w);
 t_int *granule_performhose(t_int *w);
 void granule_dsp(t_granule *x, t_signal **sp);
@@ -80,9 +80,9 @@ void granule_lowblock(t_granule *x, t_floatarg f);
 void granule_highblock(t_granule *x, t_floatarg f);
 void granule_events(t_granule *x, t_floatarg e);
 float granule_boundrand(float min, float max);
-void *granule_grist(t_granule *x, t_symbol *msg, short argc, t_atom *argv);
-void *granule_grain(t_granule *x, t_symbol *msg, short argc, t_atom *argv);
-void *granule_setscale(t_granule *x, t_symbol *msg, short argc, t_atom *argv);
+void *granule_grist(t_granule *x, t_symbol *msg, int argc, t_atom *argv);
+void *granule_grain(t_granule *x, t_symbol *msg, int argc, t_atom *argv);
+void *granule_setscale(t_granule *x, t_symbol *msg, int argc, t_atom *argv);
 void granule_info(t_granule *x);
 void granule_mute(t_granule *x, t_floatarg toggle);
 void granule_steady(t_granule *x, t_floatarg toggle);
@@ -170,7 +170,7 @@ void granule_transpose(t_granule *x, t_floatarg t)
   x->transpose = t;
 }
 
-void *granule_setscale(t_granule *x, t_symbol *msg, short argc, t_atom *argv)
+void *granule_setscale(t_granule *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
   float *pitchscale = x->pitchscale;
@@ -364,7 +364,7 @@ void granule_spray(t_granule *x)
   }
 }
 
-void *granule_grain(t_granule *x, t_symbol *msg, short argc, t_atom *argv)
+void *granule_grain(t_granule *x, t_symbol *msg, int argc, t_atom *argv)
 {
   short inserted;
   int j;
@@ -427,7 +427,7 @@ float granule_boundrand(float min, float max)
 }
 
 
-void *granule_new(t_symbol *msg, short argc, t_atom *argv)
+void *granule_new(t_symbol *msg, int argc, t_atom *argv)
 {
 
   t_granule *x = (t_granule *)pd_new(granule_class);
@@ -513,7 +513,7 @@ void granule_info(t_granule *x)
 }
 
 
-void *granule_grist(t_granule *x, t_symbol *msg, short argc, t_atom *argv)
+void *granule_grist(t_granule *x, t_symbol *msg, int argc, t_atom *argv)
 {
   if(argc < 10 ) {
     error("grist takes 10 arguments:");

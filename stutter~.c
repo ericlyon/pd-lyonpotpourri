@@ -60,7 +60,7 @@ typedef struct _stutter
 t_int *stutter_perform(t_int *w);
 
 void stutter_dsp(t_stutter *x, t_signal **sp);
-void *stutter_new(t_symbol *msg, short argc, t_atom *argv);
+void *stutter_new(t_symbol *msg, int argc, t_atom *argv);
 void stutter_in1(t_stutter *x, long n);
 void stutter_min_looptime(t_stutter *x, t_floatarg n);
 void stutter_max_looptime(t_stutter *x, t_floatarg n);
@@ -74,7 +74,7 @@ void stutter_dblclick(t_stutter *x);
 void stutter_verbose(t_stutter *x, t_floatarg t);
 void stutter_mute(t_stutter *x, t_floatarg t);
 void stutter_show_loop(t_stutter *x);
-void stutter_set_loop(t_stutter *x, t_symbol *msg, short argc, t_atom *argv);
+void stutter_set_loop(t_stutter *x, t_symbol *msg, int argc, t_atom *argv);
 void stutter_store_loop(t_stutter *x, t_floatarg loop_b_index);
 void stutter_recall_loop(t_stutter *x,  t_floatarg loop_b_index);
 void stutter_taper(t_stutter *x,  t_floatarg f);
@@ -316,7 +316,7 @@ void stutter_recall_loop(t_stutter *x, t_floatarg loop_b_index)
 }
 
 
-void stutter_set_loop(t_stutter *x, t_symbol *msg, short argc, t_atom *argv)
+void stutter_set_loop(t_stutter *x, t_symbol *msg, int argc, t_atom *argv)
 {
   float temp;
   atom_arg_getfloat(&temp, 0, argc, argv);
@@ -389,7 +389,7 @@ void stutter_max_looptime(t_stutter *x, t_floatarg n)
 
 
 
-void *stutter_new(t_symbol *msg, short argc, t_atom *argv)
+void *stutter_new(t_symbol *msg, int argc, t_atom *argv)
 {
   t_stutter *x = (t_stutter *)pd_new(stutter_class);
   outlet_new(&x->x_obj, gensym("signal"));

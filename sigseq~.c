@@ -59,14 +59,14 @@ void *sigseq_new(t_symbol *s, int argc, t_atom *argv);
 t_int *sigseq_perform(t_int *w);
 t_int *sigseq_perform_clickin(t_int *w);
 void sigseq_dsp(t_sigseq *x, t_signal **sp);
-void sigseq_list (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv);
-void sigseq_adsr (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv);
-void sigseq_adsrgate (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv);
-void sigseq_banggate (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv);
-void sigseq_tempo(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv);
-void sigseq_retro(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv);
-void sigseq_rand(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv);
-void sigseq_mute(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv);
+void sigseq_list (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+void sigseq_adsr (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+void sigseq_adsrgate (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+void sigseq_banggate (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+void sigseq_tempo(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+void sigseq_retro(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+void sigseq_rand(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+void sigseq_mute(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
 void sigseq_tick(t_sigseq *x);
 void sigseq_report(t_sigseq *x);
 void sigseq_readfile(t_sigseq *x, t_symbol *filename);
@@ -152,36 +152,36 @@ void sigseq_readfile(t_sigseq *x, t_symbol *filename)
   fclose(fp);
 }
 
-void sigseq_mute(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
+void sigseq_mute(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 {
   x->mute = atom_getfloatarg(0,argc,argv);
 }
 
 
-void sigseq_rand(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
+void sigseq_rand(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 {
   x->rand_state = atom_getfloatarg(0,argc,argv);
 }
 
-void sigseq_retro(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
+void sigseq_retro(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 {
   x->retro_state = atom_getfloatarg(0,argc,argv);
 
 }
 
-void sigseq_adsrgate(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
+void sigseq_adsrgate(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 {
 
   x->do_envelope = atom_getfloatarg(0,argc,argv);
 }
 
-void sigseq_banggate(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
+void sigseq_banggate(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 {
 
   x->bang_on = atom_getfloatarg(0,argc,argv);
 }
 
-void sigseq_tempo(t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
+void sigseq_tempo(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 {
   float beatdur;
 
@@ -289,7 +289,7 @@ void sigseq_tick(t_sigseq *x)
   outlet_bang(x->mybang);
 }
 
-void sigseq_list (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
+void sigseq_list (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 {
   short i;
 
@@ -309,7 +309,7 @@ void sigseq_list (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
   return;
 }
 
-void sigseq_adsr (t_sigseq *x, t_symbol *msg, short argc, t_atom *argv)
+void sigseq_adsr (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 {
   //  short i;
 

@@ -20,7 +20,7 @@
 
 static t_class *bashfest_class;
 
-void *bashfest_new(t_symbol *msg, short argc, t_atom *argv);
+void *bashfest_new(t_symbol *msg, int argc, t_atom *argv);
 t_int *bashfest_perform_hosed(t_int *w);
 void bashfest_dsp(t_bashfest *x, t_signal **sp);
 void bashfest_dsp_free(t_bashfest *x);
@@ -43,8 +43,8 @@ void bashfest_verbose(t_bashfest *x, long t);
 void bashfest_block_dsp(t_bashfest *x, t_floatarg t);
 void bashfest_gozero(t_bashfest *x);
 void bashfest_grab(t_bashfest *x);
-void bashfest_setodds(t_bashfest *x,t_symbol *msg, short argc, t_atom *argv);
-void bashfest_tcycle(t_bashfest *x,t_symbol *msg, short argc, t_atom *argv);
+void bashfest_setodds(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv);
+void bashfest_tcycle(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv);
 /* function code */
 
 void killdc( float *inbuf, int in_frames, int channels, t_bashfest *x);
@@ -164,7 +164,7 @@ void bashfest_grab(t_bashfest *x)
   x->grab = 1;
 }
 
-void bashfest_tcycle(t_bashfest *x,t_symbol *msg, short argc, t_atom *argv)
+void bashfest_tcycle(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv)
 {
   t_cycle tcycle = x->tcycle;
   int i;
@@ -194,7 +194,7 @@ void bashfest_gozero(t_bashfest *x)
   x->tcycle.p = 0;
 }
 
-void bashfest_setodds(t_bashfest *x,t_symbol *msg, short argc, t_atom *argv)
+void bashfest_setodds(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
 
@@ -250,7 +250,7 @@ void bashfest_flatodds(t_bashfest *x)
 }
 
 
-void *bashfest_new(t_symbol *msg, short argc, t_atom *argv)
+void *bashfest_new(t_symbol *msg, int argc, t_atom *argv)
 {
 
   t_bashfest *x = (t_bashfest *)pd_new(bashfest_class);
