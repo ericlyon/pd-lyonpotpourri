@@ -461,7 +461,7 @@ void stutter_minmax_echo(t_stutter *x,  t_floatarg minf, t_floatarg maxf)
 
     if( minec < maxec){
         x->min_echo = minec;
-        x->max_echo - maxec;
+        x->max_echo = maxec;
     }
     else {
         error("bad inputs to minmax_echo");
