@@ -1,6 +1,9 @@
+if (! -e "lyonpotpourri"){
+    mkdir("lyonpotpourri");
+}
 while(<*>){
     chomp;
     if(/darwin$/ | /liblyonpotpourri.dylib/){
-	`mv $_ darwin_bin64`;
+	`mv $_ lyonpotpourri`;
     }
 }
