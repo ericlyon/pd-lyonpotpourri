@@ -38,29 +38,30 @@ void rotapan_tilde_setup(void) {
 
 void *rotapan_new(t_symbol *s, int argc, t_atom *argv)
 {
-  int i;
-
-  t_rotapan *x = (t_rotapan *)pd_new(rotapan_class);
-  x->rchans = (long) atom_getfloatarg(0,argc,argv);
-  /* allocate in chans plus 1 for controlling the pan */
-  for(i = 0; i < x->rchans; i++) {
-    inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal"));
-  }
-  for(i=0; i < x->rchans; i++) {
-    outlet_new(&x->x_obj, gensym("signal"));
-  }
-  x->pio2 = PI / 2.0;
-  x->inarr = (t_float *) malloc((x->rchans + 1) * sizeof(t_float));
-  // for better compatibility with Max 6
-  x->ins = (t_float **) malloc((x->rchans + 1) * sizeof(t_float *));
-  x->outs = (t_float **) malloc(x->rchans * sizeof(t_float *));
-  for(i = 0; i < x->rchans + 1; i++) {
-    x->ins[i] = (t_float *) malloc(8192 * sizeof(t_float));
-  }
-  return x;
+    int i;
+    
+    t_rotapan *x = (t_rotapan *)pd_new(rotapan_class);
+    x->rchans = (long) atom_getfloatarg(0,argc,argv);
+    if(x->rchans < 2){
+        x->rchans = 2;
+    }
+    /* allocate in chans plus 1 for controlling the pan */
+    for(i = 0; i < x->rchans; i++) {
+        inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal"));
+    }
+    for(i=0; i < x->rchans; i++) {
+        outlet_new(&x->x_obj, gensym("signal"));
+    }
+    x->pio2 = PI / 2.0;
+    x->inarr = (t_float *) malloc((x->rchans + 1) * sizeof(t_float));
+    // for better compatibility with Max 6
+    x->ins = (t_float **) malloc((x->rchans + 1) * sizeof(t_float *));
+    x->outs = (t_float **) malloc(x->rchans * sizeof(t_float *));
+    for(i = 0; i < x->rchans + 1; i++) {
+        x->ins[i] = (t_float *) malloc(8192 * sizeof(t_float));
+    }
+    return x;
 }
-
-
 
 void rotapan_free(t_rotapan *x)
 {
