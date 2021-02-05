@@ -4,10 +4,10 @@ LyonPotpourri is a collection of externals developed for the creation and perfor
 
 The Pd platform tends toward minimalism. Therefore, it is particularly advantageous for Pd users to become adept at designing their own externals. It is hoped that in addition to the utility of specific externals in this collection, the source code will be helpful for computer musicians who wish to learn how to write their own externals. For further guidance on that subject, please see my book “Designing Audio Objects for Max/MSP and Pd.”
 
-LyonPotpourri 3.0 is Copyright Eric Lyon, 2007-2021, and is covered under the MIT license. Please see the accompanying License file for details. 
+LyonPotpourri is Copyright Eric Lyon, 2007-2021, and is covered under the MIT license. Please see the accompanying License file for details. 
 
 
-**Object Listing
+** Object Listing
 
 - adsr~ a simple ADSR envelope that can be click triggered
 - arrayfilt~ fft-based filtering by drawing into an array
