@@ -1,15 +1,13 @@
-Welcome to LyonPotpourri, version 3.0 (64-bit version).
-
-http://disis.music.vt.edu/eric/LyonSoftware/Pd/LyonPotpourri/
+# LyonPotpourri 3.0
 
 LyonPotpourri is a collection of externals developed for the creation and performance of computer music. The externals were originally developed for Max/MSP, and then extended into hybrid code that could compile for both Max/MSP and Pd. As of version 3.0, the code bases of Max/MSP and Pd have diverged to such an extent that I decided to split the LyonPotpourri code into separate Pd and Max/MSP versions. 
 
 The Pd platform tends toward minimalism. Therefore, it is particularly advantageous for Pd users to become adept at designing their own externals. It is hoped that in addition to the utility of specific externals in this collection, the source code will be helpful for computer musicians who wish to learn how to write their own externals. For further guidance on that subject, please see my book “Designing Audio Objects for Max/MSP and Pd.”
 
-LyonPotpourri 3.0 is Copyright Eric Lyon, 2007-2013, and is covered under the MIT license. Please see the accompanying License file for details. 
+LyonPotpourri 3.0 is Copyright Eric Lyon, 2007-2021, and is covered under the MIT license. Please see the accompanying License file for details. 
 
 
-Object Listing:
+**Object Listing
 
 - adsr~ a simple ADSR envelope that can be click triggered
 - arrayfilt~ fft-based filtering by drawing into an array
@@ -64,9 +62,9 @@ Object Listing:
 
 Best wishes for the success of your creative projects and explorations!
 
-Eric Lyon
-ericlyon@vt.edu
-Department of Music
-Institute for Creativity, Arts, and Technology
+Eric Lyon  
+ericlyon@vt.edu  
+School of Performing Arts | Music    
+Institute for Creativity, Arts, and Technology  
 Virginia Tech
-# lyonpotpourri3.0
+
