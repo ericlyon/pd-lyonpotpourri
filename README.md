@@ -7,7 +7,7 @@ The Pd platform tends toward minimalism. Therefore, it is particularly advantage
 LyonPotpourri is Copyright Eric Lyon, 2007-2021, and is covered under the MIT license. Please see the accompanying License file for details. 
 
 
-** Object Listing
+**Object Listing**
 
 - adsr~ a simple ADSR envelope that can be click triggered
 - arrayfilt~ fft-based filtering by drawing into an array
