@@ -1060,38 +1060,31 @@ void buffet_killdc(t_buffet *x)
 
 void *buffet_new(t_symbol *msg, int argc, t_atom *argv)
 {
-
-
-  //  int i;
-
-  srand(clock());
-
-  t_buffet *x = (t_buffet *)pd_new(buffet_class);
-  x->bang = outlet_new(&x->x_obj, gensym("bang"));
-  x->list = outlet_new(&x->x_obj, gensym("list"));
-  x->floater = outlet_new(&x->x_obj, gensym("float"));
-
-  x->sr = sys_getsr();
-  if(! x->sr )
-    x->sr = 44100;
-
-  if(argc < 1) {
-    error("%s: you must provide a valid buffer name",OBJECT_NAME);
-    return 0;
-  }
-  atom_arg_getsym(&x->wavename,0,argc,argv);
-  atom_arg_getfloat(&x->minframes,1,argc,argv);
-  atom_arg_getfloat(&x->maxframes,2,argc,argv);
-  if(!x->minframes)
-    x->minframes = 100;
-  if(!x->maxframes)
-    x->maxframes = x->minframes + 10;
-
-  buffet_init(x,0);
-
-
-
-  return (x);
+    srand(clock());
+    t_buffet *x = (t_buffet *)pd_new(buffet_class);
+    x->bang = outlet_new(&x->x_obj, gensym("bang"));
+    x->list = outlet_new(&x->x_obj, gensym("list"));
+    x->floater = outlet_new(&x->x_obj, gensym("float"));
+    x->sr = sys_getsr();
+    if(! x->sr )
+        x->sr = 44100;
+    
+    x->minframes = 0;
+    x->maxframes = 0;
+    if(argc < 1) {
+        error("%s: you must provide a valid buffer name",OBJECT_NAME);
+        x->wavename = &s_;
+    }
+    atom_arg_getsym(&x->wavename,0,argc,argv);
+    atom_arg_getfloat(&x->minframes,1,argc,argv);
+    atom_arg_getfloat(&x->maxframes,2,argc,argv);
+    if(!x->minframes)
+        x->minframes = 100;
+    if(!x->maxframes)
+        x->maxframes = x->minframes + 10;
+    buffet_init(x,0);
+    
+    return x;
 }
 
 void buffet_init(t_buffet *x, short initialized)
@@ -2153,7 +2146,6 @@ void buffet_dsp(t_buffet *x, t_signal **sp)
     buffet_init(x,1);
   }
 
-  dsp_add(buffet_perform, 3, x,
-          sp[0]->s_vec, sp[0]->s_n);
+  dsp_add(buffet_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 
 }
