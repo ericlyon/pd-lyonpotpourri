@@ -60,7 +60,7 @@ LyonPotpourri is Copyright Eric Lyon, 2007-2021, and is covered under the MIT li
 - waveshape~ a Chebychev function lookup waveshaper
 - windowvec~ apply a Hann window to the input signal vector
 
-Best wishes for the success of your creative projects and explorations!
+Best wishes for the success of your creative projects and sonic explorations!
 
 Eric Lyon  
 ericlyon@vt.edu  
