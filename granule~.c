@@ -727,5 +727,5 @@ void granule_dsp(t_granule *x, t_signal **sp)
     granule_init(x,1);
   }
   dsp_add(granule_perform, 5, x,
-          sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+          sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 }

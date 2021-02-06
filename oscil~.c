@@ -783,10 +783,10 @@ void oscil_dsp(t_oscil *x, t_signal **sp)
 
   if(1)
     dsp_add(oscil_perform_interpolate, 5, x,
-            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
   else
     dsp_add(oscil_perform, 5, x,
-            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
 
 
 }
