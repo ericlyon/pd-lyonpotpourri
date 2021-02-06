@@ -25,6 +25,7 @@ LyonPotpourri is Copyright Eric Lyon, 2007-2021, and is covered under the MIT li
 - convolver~ non-real-time convolution with impulses of arbitrary size
 - distortion~ lookup function distortion
 - dmach~ pattern based sample accurate drum machine prototype
+- epluribus~ combine several signal inputs to a single output based on min or max sample value
 - expflam~ converts a click to an exponential flam click pattern
 - flanjah~ simple flanger
 - function~ write various functions into an array
