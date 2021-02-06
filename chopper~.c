@@ -897,7 +897,7 @@ void chopper_dsp(t_chopper *x, t_signal **sp)
     return;
   }
 
-  dsp_add(chopper_pd_perform, 3, x, sp[0]->s_vec, sp[0]->s_n);
+  dsp_add(chopper_pd_perform, 3, x, sp[0]->s_vec, (t_int)sp[0]->s_n);
 
 }
 
@@ -905,5 +905,4 @@ void chopper_dsp(t_chopper *x, t_signal **sp)
 float chopper_boundrand(float min, float max)
 {
   return min + (max-min) * ((float) (rand() % RAND_MAX)/(float)RAND_MAX);
-
 }

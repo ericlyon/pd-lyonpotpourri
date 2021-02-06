@@ -206,9 +206,6 @@ void clean_selector_dsp(t_clean_selector *x, t_signal **sp)
   for (i = 0; i < MAX_CHANS; i++) {
     x->connected_list[i] = 1;
   }
-
-
-
 }
 
 
@@ -235,6 +232,5 @@ void clean_selector_channel(t_clean_selector *x, t_floatarg i) // Look at int at
         post("warning: channel %d not connected",chan);
         x->active_chan = 1; */
     }
-    // post("last: %d active %d", x->last_chan, x->active_chan);
   }
 }

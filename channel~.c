@@ -10,8 +10,6 @@ typedef struct _channel
   float x_f;
   void *float_outlet;
   int channel;
-
-
 } t_channel;
 
 #define OBJECT_NAME "channel~"
@@ -79,5 +77,5 @@ t_int *channel_perform(t_int *w)
 
 void channel_dsp(t_channel *x, t_signal **sp)
 {
-  dsp_add(channel_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+  dsp_add(channel_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
