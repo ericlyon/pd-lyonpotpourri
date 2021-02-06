@@ -30,8 +30,8 @@ LyonPotpourri is Copyright Eric Lyon, 2007-2021, and is covered under the MIT li
 - flanjah~ simple flanger
 - function~ write various functions into an array
 - granola~ granular pitch scaling
-- granulesf~ granular synthesis module reading from a soundfile in a buffer
 - granule~ granular synthesis module reading from a stored waveform in a buffer
+- granulesf~ granular synthesis module reading from a soundfile in a buffer
 - kbuffer~ low sampling rate buffer to capture gestures
 - killdc~ DC block filter
 - latch~ sustain an incoming click with sample-accurate timing
@@ -54,7 +54,7 @@ LyonPotpourri is Copyright Eric Lyon, 2007-2021, and is covered under the MIT li
 - sigseq~ signal level numerical sequencer
 - splitbank~ - split an incoming sound into complementary, independently tunable spectra
 - splitspec~ split an incoming sound into complementary spectra
-- squash~ implementation of a compression algorithm by Chris Penrose
+- squash~ implementation of a compression algorithm by Christopher Penrose
 - stutter~ stuttering playback from an array
 - vdb~ a delay line using an array for storage (no vector limit on feedback delaytime)
 - vdp~ a simple, self-contained delay unit
