@@ -19,6 +19,7 @@ LyonPotpourri is Copyright Eric Lyon, 2007-2021, and is covered under the MIT li
 - chopper~ munging loop playback from a buffer
 - clean_selector~ like selector~ but crossfades when switching channels
 - click~ converts a bang to a click
+- click2bang~ converts a signal click to a bang message
 - click2float~ translates a signal click to a float message
 - clickhold~ sample and hold a click
 - convolver~ non-real-time convolution with impulses of arbitrary size
