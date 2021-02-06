@@ -2,8 +2,6 @@
 
 static t_class *arrayfilt_class;
 
-/* Pd version of arrayfilt~ */
-
 #define OBJECT_NAME "arrayfilt~"
 typedef struct _arrayfilt
 {
@@ -86,5 +84,5 @@ exit:
 void arrayfilt_dsp(t_arrayfilt *x, t_signal **sp)
 {
   dsp_add(arrayfilt_perform,6, x,
-          sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n);
+          sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, (t_int)sp[0]->s_n);
 }

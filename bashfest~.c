@@ -1331,25 +1331,9 @@ void bashfest_dsp(t_bashfest *x, t_signal **sp)
 
   if(x->hosed) {
     dsp_add(bashfest_perform_hosed, 5, x,
-            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
   } else {
     dsp_add(bashfest_perform, 5, x,
-            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n);
+            sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, (t_int)sp[0]->s_n);
   }
 }
-/*
-  void bashfest_assist (t_bashfest *x, void *b, long msg, long arg, char *dst)
-  {
-  if (msg==1) {
-  switch (arg) {
-  case 0: sprintf(dst,"(signal) Click Trigger"); break;
-  }
-  }
-  else if (msg==2) {
-  switch(arg) {
-  case 0: sprintf(dst,"(signal) Channel 1 Output"); break;
-  case 1: sprintf(dst,"(signal) Channel 2 Output"); break;
-  }
-  }
-  }
-*/
