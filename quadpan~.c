@@ -159,5 +159,5 @@ void quadpan_dsp(t_quadpan *x, t_signal **sp)
   }
   dsp_add(quadpan_perform, 9, x, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec,
           sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec,
-          sp[0]->s_n);
+          (t_int)sp[0]->s_n);
 }

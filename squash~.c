@@ -374,27 +374,13 @@ t_int *squash_perform(t_int *w)
   return w + 5;
 }
 
-/*
-  void squash_dsp64(t_squash *x, t_object *dsp64, short *count, double sr, long n, long flags)
-  {
-  if(!sr)
-  return;
-  if(n != x->D ) {
-  x->D = n;
-  error("squash~: blocksize change not implemented yet!");
-  }
-
-  object_method(dsp64, gensym("dsp_add64"),x,squash_perform64,0,NULL);
-  }
-*/
-
 void squash_dsp(t_squash *x, t_signal **sp)
 {
   if(sp[0]->s_n != x->D ) {
     x->D = sp[0]->s_n;
     error("blocksize change not implemented yet!");
   } else {
-    dsp_add(squash_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
+    dsp_add(squash_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);
   }
 }
 

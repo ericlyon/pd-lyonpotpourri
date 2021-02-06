@@ -135,10 +135,5 @@ t_int *rtrig_perform(t_int *w)
 
 void rtrig_dsp(t_rtrig *x, t_signal **sp)
 {
-
-  dsp_add(rtrig_perform, 3, x,
-          //      sp[0]->s_vec,
-          sp[1]->s_vec,
-          sp[0]->s_n
-    );
+  dsp_add(rtrig_perform, 3, x, sp[1]->s_vec, (t_int)sp[0]->s_n);
 }
