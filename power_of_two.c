@@ -1,7 +1,7 @@
-
+#include "fftease.h"
 int power_of_two(int test)
 {
-  int limit = 8192;
+  int limit = MAX_N;
   int compare = 1;
   //  post("testing what we thing is an int:%d",test);
   do {
