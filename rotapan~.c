@@ -19,14 +19,12 @@ typedef struct _rotapan
 } t_rotapan;
 
 
-void *rotapan_new(t_symbol *s, int argc, t_atom *argv);
-
-
-void rotapan_free(t_rotapan *x);
-void rotapan_assist(t_rotapan *x, void *b, long msg, long arg, char *dst);
-void rotapan_version(t_rotapan *x);
-void rotapan_dsp(t_rotapan *x, t_signal **sp);
-t_int *rotapan_perform(t_int *w);
+static void *rotapan_new(t_symbol *s, int argc, t_atom *argv);
+static void rotapan_free(t_rotapan *x);
+static void rotapan_assist(t_rotapan *x, void *b, long msg, long arg, char *dst);
+static void rotapan_version(t_rotapan *x);
+static void rotapan_dsp(t_rotapan *x, t_signal **sp);
+static t_int *rotapan_perform(t_int *w);
 
 void rotapan_tilde_setup(void) {
   rotapan_class = class_new(gensym("rotapan~"), (t_newmethod)rotapan_new,
