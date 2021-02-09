@@ -48,33 +48,33 @@ typedef struct _splitspec
   t_float **phasevecs;// point to phase input vectors
 } t_splitspec;
 
-void *splitspec_new(t_symbol *s, int argc, t_atom *argv);
-t_int *offset_perform(t_int *w);
-t_int *splitspec_perform(t_int *w);
-void splitspec_dsp(t_splitspec *x, t_signal **sp);
-void splitspec_showstate( t_splitspec *x );
-void splitspec_bypass( t_splitspec *x, t_floatarg toggle);
-void splitspec_manual_override( t_splitspec *x, t_floatarg toggle );
-void splitspec_setstate (t_splitspec *x, t_symbol *msg, int argc, t_atom *argv);
-void splitspec_ramptime (t_splitspec *x, t_symbol *msg, int argc, t_atom *argv);
-int rand_index( int max);
-void splitspec_scramble (t_splitspec *x);
-void splitspec_spiral(t_splitspec *x);
-void splitspec_squantize(t_splitspec *x, t_floatarg blockbins);
-void splitspec_overlap( t_splitspec *x, t_floatarg factor);
-
-void splitspec_store( t_splitspec *x, t_floatarg floc);
-void splitspec_recall( t_splitspec *x, t_floatarg floc);
-void splitspeci( int *current_binsplit, int *last_binsplit, int bin_offset, int table_offset,
+static void *splitspec_new(t_symbol *s, int argc, t_atom *argv);
+// static t_int *offset_perform(t_int *w);
+static t_int *splitspec_perform(t_int *w);
+static void splitspec_dsp(t_splitspec *x, t_signal **sp);
+static void splitspec_showstate( t_splitspec *x );
+static void splitspec_bypass( t_splitspec *x, t_floatarg toggle);
+static void splitspec_manual_override( t_splitspec *x, t_floatarg toggle );
+static void splitspec_setstate (t_splitspec *x, t_symbol *msg, int argc, t_atom *argv);
+static void splitspec_ramptime (t_splitspec *x, t_symbol *msg, int argc, t_atom *argv);
+// static int rand_index( int max);
+static void splitspec_scramble (t_splitspec *x);
+static void splitspec_spiral(t_splitspec *x);
+static void splitspec_squantize(t_splitspec *x, t_floatarg blockbins);
+static void splitspec_overlap( t_splitspec *x, t_floatarg factor);
+static void splitspec_store( t_splitspec *x, t_floatarg floc);
+static void splitspec_recall( t_splitspec *x, t_floatarg floc);
+static void splitspeci( int *current_binsplit, int *last_binsplit, int bin_offset, int table_offset,
                  float *current_mag, float *last_mag, float *inmag, float *dest_mag, int start, int end, int n,
                  float oldfrac, float newfrac );
-void splitspec( int *binsplit, int bin_offset, int table_offset,
+static void splitspec( int *binsplit, int bin_offset, int table_offset,
                 float *inmag, float *dest_mag, int start, int end, int n );
 
-void splitspec_dsp_free( t_splitspec *x );
+static void splitspec_dsp_free( t_splitspec *x );
 
-void splitspec_phaseout(t_splitspec *x);
-int splitspec_closestPowerOfTwo(int p);
+static void splitspec_phaseout(t_splitspec *x);
+static int splitspec_closestPowerOfTwo(int p);
+
 void splitspec_tilde_setup(void) {
   splitspec_class = class_new(gensym("splitspec~"), (t_newmethod)splitspec_new,
                               (t_method)splitspec_dsp_free, sizeof(t_splitspec),0,A_GIMME,0);
@@ -210,26 +210,27 @@ void splitspec_manual_override( t_splitspec *x, t_floatarg toggle )
 }
 
 void splitspec_dsp_free( t_splitspec *x ) {
-  int i;
-  if(x->initialize == 0) {
-    free(x->list_data);
-    free(x->last_binsplit);
-    free(x->current_binsplit);
-    free(x->last_mag);
-    free(x->current_mag);
-    free(x->stored_slots);
-    for(i = 0; i < MAXSTORE; i++) {
-      free(x->stored_binsplits[i]);
+    int i;
+    if(x->initialize == 0) {
+        free(x->list_data);
+        free(x->last_binsplit);
+        free(x->current_binsplit);
+        free(x->last_mag);
+        free(x->current_mag);
+        free(x->stored_slots);
+        for(i = 0; i < MAXSTORE; i++) {
+            free(x->stored_binsplits[i]);
+        }
+        free(x->stored_binsplits);
+        free(x->inmag_loc);
+        free(x->inphase_loc);
+        free(x->t_offset_loc);
+        free(x->b_offset_loc);
+        free(x->manual_control_loc);
+        free(x->magvecs);
+        free(x->phasevecs);
+        clock_free(x->phase_clock);
     }
-    free(x->stored_binsplits);
-    free(x->inmag_loc);
-    free(x->inphase_loc);
-    free(x->t_offset_loc);
-    free(x->b_offset_loc);
-    free(x->manual_control_loc);
-    free(x->magvecs);
-    free(x->phasevecs);
-  }
 }
 
 void splitspeci( int *current_binsplit, int *last_binsplit, int bin_offset, int table_offset,

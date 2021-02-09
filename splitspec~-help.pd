@@ -1,25 +1,25 @@
-#N canvas 323 22 903 531 10;
+#N canvas 531 40 903 531 10;
 #X obj 34 134 noise~;
-#N canvas 68 56 1321 800 splitspec-rfft 0;
+#N canvas 68 56 1679 998 splitspec-rfft 0;
 #X obj 33 76 inlet~;
-#X obj 34 461 outlet~;
+#X obj 33 461 outlet~;
 #X obj 33 108 windowvec~;
 #X obj 33 146 rfft~, f 6;
 #X obj 34 531 block~ 1024 8;
 #X obj 33 181 cartopol~;
-#X obj 34 335 poltocar~;
-#X obj 34 365 rifft~;
-#X obj 34 428 windowvec~;
-#X obj 34 395 *~ 0;
+#X obj 33 335 poltocar~;
+#X obj 33 365 rifft~;
+#X obj 33 428 windowvec~;
+#X obj 33 395 *~ 0;
 #X obj 1107 163 *;
 #X msg 1059 85 1 1024 8;
 #X obj 1059 116 unpack f f f;
 #X obj 1059 195 /;
-#X floatatom 1059 227 12 0 0 0 - - -, f 12;
+#X floatatom 1059 227 12 0 0 0 - - -;
 #X text 962 228 rescale factor;
 #X obj 1059 54 loadbang;
-#X obj 1058 256 s \$0-rescale;
-#X obj 68 385 r \$0-rescale;
+#X obj 1059 256 s \$0-rescale;
+#X obj 67 385 r \$0-rescale;
 #X obj 161 469 outlet~;
 #X obj 161 343 poltocar~;
 #X obj 161 373 rifft~;
@@ -68,7 +68,6 @@
 #X obj 626 98 inlet;
 #X obj 1335 1235 outlet;
 #X obj 1082 337 outlet;
-#X obj 35 282 splitspec~ 8, f 159;
 #X text 124 531 determines FFT size of 1024 with overlap factor 8;
 #X msg 1066 382 set \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9 \$10 \$11 \$12
 \$13 \$14 \$15 \$16 \$17 \$18 \$19 \$20 \$21 \$22 \$23 \$24 \$25 \$26
@@ -112,12 +111,13 @@
 \$481 \$482 \$483 \$484 \$485 \$486 \$487 \$488 \$489 \$490 \$491 \$492
 \$493 \$494 \$495 \$496 \$497 \$498 \$499 \$500 \$501 \$502 \$503 \$504
 \$505 \$506 \$507 \$508 \$509 \$510 \$511, f 45;
+#X obj 33 281 lyonpotpourri/splitspec~ 8, f 159;
 #X connect 0 0 2 0;
 #X connect 2 0 3 0;
 #X connect 3 0 5 0;
 #X connect 3 1 5 1;
-#X connect 5 0 67 0;
-#X connect 5 1 67 1;
+#X connect 5 0 69 0;
+#X connect 5 1 69 1;
 #X connect 6 0 7 0;
 #X connect 6 1 7 1;
 #X connect 7 0 9 0;
@@ -174,29 +174,29 @@
 #X connect 58 0 55 0;
 #X connect 59 0 58 0;
 #X connect 60 0 59 1;
-#X connect 61 0 67 0;
-#X connect 62 0 67 2;
-#X connect 63 0 67 3;
-#X connect 64 0 67 4;
-#X connect 67 0 6 0;
-#X connect 67 1 6 1;
-#X connect 67 2 20 0;
-#X connect 67 3 20 1;
-#X connect 67 4 26 0;
-#X connect 67 5 26 1;
-#X connect 67 6 32 0;
-#X connect 67 7 32 1;
-#X connect 67 8 38 0;
-#X connect 67 9 38 1;
-#X connect 67 10 44 0;
-#X connect 67 11 44 1;
-#X connect 67 12 50 0;
-#X connect 67 13 50 1;
-#X connect 67 14 56 0;
-#X connect 67 15 56 1;
-#X connect 67 16 69 0;
-#X connect 67 17 66 0;
-#X connect 69 0 65 0;
+#X connect 61 0 69 0;
+#X connect 62 0 69 2;
+#X connect 63 0 69 3;
+#X connect 64 0 69 4;
+#X connect 68 0 65 0;
+#X connect 69 0 6 0;
+#X connect 69 1 6 1;
+#X connect 69 2 20 0;
+#X connect 69 3 20 1;
+#X connect 69 4 26 0;
+#X connect 69 5 26 1;
+#X connect 69 6 32 0;
+#X connect 69 7 32 1;
+#X connect 69 8 38 0;
+#X connect 69 9 38 1;
+#X connect 69 10 44 0;
+#X connect 69 11 44 1;
+#X connect 69 12 50 0;
+#X connect 69 13 50 1;
+#X connect 69 14 56 0;
+#X connect 69 15 56 1;
+#X connect 69 16 68 0;
+#X connect 69 17 66 0;
 #X restore 34 164 pd splitspec-rfft;
 #X obj 720 115 hsl 128 15 0 1 0 0 empty empty manual_override_controller
 -2 -8 0 10 -204786 -1 -1 0 1;
@@ -242,9 +242,9 @@ only);
 #X connect 17 0 11 0;
 #X restore 34 381 pd messages;
 #X msg 114 381 <- how it works;
-#X floatatom 34 457 5 0 0.25 0 - - -, f 5;
+#X floatatom 34 457 5 0 0.25 0 - - -;
 #X obj 37 432 hsl 128 15 0 2 0 0 empty empty gain -2 -8 0 10 -204800
--1 -1 1900 1;
+-1 -1 2000 1;
 #X obj 34 485 s splitspec-help-mgain;
 #N canvas 0 22 1204 446 gain8 0;
 #X obj 36 44 inlet~;
@@ -304,7 +304,7 @@ only);
 #X connect 30 0 29 0;
 #X connect 31 0 30 1;
 #X restore 34 222 pd gain8;
-#X floatatom 433 230 5 0 0 0 sync-phase - -, f 5;
+#X floatatom 433 230 5 0 0 0 sync-phase - -;
 #N canvas 244 54 590 399 storage 0;
 #X obj 191 298 s splitspec-help-msgs;
 #X msg 85 125 store \$1;
@@ -332,8 +332,8 @@ only);
 be spatialized. Smooth transitions between spectral divisions are provided.
 , f 105;
 #X text 271 430 <- save configurations;
-#N canvas 0 22 450 300 current-bin-configuration 0;
-#X obj 124 56 inlet;
+#N canvas 0 23 450 300 current-bin-configuration 0;
+#X obj 123 50 inlet;
 #X msg 123 105 344 165 79 39 487 386 236 27 213 462 284 439 293 160
 1 173 201 242 130 144 417 274 372 119 179 332 270 24 290 348 203 111
 176 492 271 420 187 312 13 224 300 100 258 246 60 158 327 508 46 477
