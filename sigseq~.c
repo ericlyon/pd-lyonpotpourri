@@ -54,27 +54,26 @@ typedef struct _sigseq
   float sr;
 } t_sigseq;
 
-void *sigseq_new(t_symbol *s, int argc, t_atom *argv);
-
-t_int *sigseq_perform(t_int *w);
-t_int *sigseq_perform_clickin(t_int *w);
-void sigseq_dsp(t_sigseq *x, t_signal **sp);
-void sigseq_list (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
-void sigseq_adsr (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
-void sigseq_adsrgate (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
-void sigseq_banggate (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
-void sigseq_tempo(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
-void sigseq_retro(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
-void sigseq_rand(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
-void sigseq_mute(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
-void sigseq_tick(t_sigseq *x);
-void sigseq_report(t_sigseq *x);
-void sigseq_readfile(t_sigseq *x, t_symbol *filename);
-void sigseq_internal_clock(t_sigseq *x, t_floatarg toggle);
-void sigseq_external_clock(t_sigseq *x, t_floatarg toggle);
-void sigseq_gozero(t_sigseq *x);
-void sigseq_free(t_sigseq *x);
-void sigseq_init(t_sigseq *x,short initialized);
+static void *sigseq_new(t_symbol *s, int argc, t_atom *argv);
+static t_int *sigseq_perform(t_int *w);
+static t_int *sigseq_perform_clickin(t_int *w);
+static void sigseq_dsp(t_sigseq *x, t_signal **sp);
+static void sigseq_list (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+static void sigseq_adsr (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+static void sigseq_adsrgate (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+static void sigseq_banggate (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+static void sigseq_tempo(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+static void sigseq_retro(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+static void sigseq_rand(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+static void sigseq_mute(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv);
+static void sigseq_tick(t_sigseq *x);
+static void sigseq_report(t_sigseq *x);
+static void sigseq_readfile(t_sigseq *x, t_symbol *filename);
+static void sigseq_internal_clock(t_sigseq *x, t_floatarg toggle);
+static void sigseq_external_clock(t_sigseq *x, t_floatarg toggle);
+static void sigseq_gozero(t_sigseq *x);
+static void sigseq_free(t_sigseq *x);
+static void sigseq_init(t_sigseq *x,short initialized);
 
 
 void sigseq_tilde_setup(void) {
@@ -548,9 +547,9 @@ t_int *sigseq_perform_clickin(t_int *w)
 
 void sigseq_free(t_sigseq *x)
 {
-
-  t_freebytes(x->sequence, MAX_SEQ * sizeof(float));
-  t_freebytes(x->trigger_vec, MAX_VEC * sizeof(float));
+    t_freebytes(x->sequence, MAX_SEQ * sizeof(float));
+    t_freebytes(x->trigger_vec, MAX_VEC * sizeof(float));
+    clock_free(x->m_clock);
 }
 
 void sigseq_dsp(t_sigseq *x, t_signal **sp)
