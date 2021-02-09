@@ -58,27 +58,27 @@ typedef struct _player
   long b_frames; // number of frames (in Pd frames are mono)
 } t_player;
 
-void player_setbuf(t_player *x, t_symbol *wavename);
-void *player_new(t_symbol *msg, int argc, t_atom *argv);
-t_int *player_perform_mono(t_int *w);
-t_int *player_perform_mono_interpol(t_int *w);
-t_int *player_perform_stereo(t_int *w);
-t_int *player_perform_stereo_interpol(t_int *w);
-t_int *player_perform_stereo_interpol_nocopy(t_int *w);
-t_int *player_perform_hosed1(t_int *w);
-t_int *player_perform_hosed2(t_int *w);
-t_int *pd_player(t_int *w);
+static void player_setbuf(t_player *x, t_symbol *wavename);
+static void *player_new(t_symbol *msg, int argc, t_atom *argv);
+static t_int *player_perform_mono(t_int *w);
+static t_int *player_perform_mono_interpol(t_int *w);
+static t_int *player_perform_stereo(t_int *w);
+static t_int *player_perform_stereo_interpol(t_int *w);
+static t_int *player_perform_stereo_interpol_nocopy(t_int *w);
+static t_int *player_perform_hosed1(t_int *w);
+static t_int *player_perform_hosed2(t_int *w);
+static t_int *pd_player(t_int *w);
 
-void player_dsp(t_player *x, t_signal **sp);
-float player_boundrand(float min, float max);
-void player_dsp_free(t_player *x);
-void player_float(t_player *x, double f);
-void player_interpolation(t_player *x, t_float f);
-void player_mute(t_player *x, t_floatarg f);
-void player_static_increment(t_player *x, t_floatarg f);
-void player_stop(t_player *x);
-void player_info(t_player *x);
-void player_init(t_player *x,short initialized);
+static void player_dsp(t_player *x, t_signal **sp);
+static float player_boundrand(float min, float max);
+static void player_dsp_free(t_player *x);
+static void player_float(t_player *x, double f);
+static void player_interpolation(t_player *x, t_float f);
+static void player_mute(t_player *x, t_floatarg f);
+static void player_static_increment(t_player *x, t_floatarg f);
+static void player_stop(t_player *x);
+static void player_info(t_player *x);
+static void player_init(t_player *x,short initialized);
 
 void player_tilde_setup(void)
 {
@@ -123,30 +123,30 @@ void player_mute(t_player *x, t_floatarg f)
 
 void *player_new(t_symbol *msg, int argc, t_atom *argv)
 {
-
-  t_player *x = (t_player *)pd_new(player_class);
-  inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
-  outlet_new(&x->x_obj, gensym("signal") );
-  x->wavename = atom_getsymbolarg(0,argc,argv);
-  x->b_nchans = 1;
-  if(argc < 1) {
-    error("%s: must specify buffer name",OBJECT_NAME);
-    return 0;
-  }
-  x->overlap_max = atom_getfloatarg(2,argc,argv);
-  if(x->overlap_max <= 0 || x->overlap_max > 128) {
-    x->overlap_max = DEFAULT_MAX_OVERLAP;
-  }
-  // post("%d overlaps for %s",x->overlap_max,x->wavename->s_name);
-  x->sr = sys_getsr();
-  x->vs = sys_getblksize();
-  if(!x->sr)
-    x->sr = 44100;
-  if(!x->vs)
-    x->vs = 256;
-  player_init(x,0);
-  //   player_setbuf(x, x->wavename);
-  return (x);
+    
+    t_player *x = (t_player *)pd_new(player_class);
+    inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
+    outlet_new(&x->x_obj, gensym("signal") );
+    x->wavename = atom_getsymbolarg(0,argc,argv);
+    x->b_nchans = 1;
+    if(argc < 1) {
+        x->wavename = &s_;
+        error("%s: must specify buffer name",OBJECT_NAME);
+    }
+    x->overlap_max = atom_getfloatarg(2,argc,argv);
+    if(x->overlap_max <= 0 || x->overlap_max > 128) {
+        x->overlap_max = DEFAULT_MAX_OVERLAP;
+    }
+    // post("%d overlaps for %s",x->overlap_max,x->wavename->s_name);
+    x->sr = sys_getsr();
+    x->vs = sys_getblksize();
+    if(!x->sr)
+        x->sr = 44100;
+    if(!x->vs)
+        x->vs = 256;
+    player_init(x,0);
+    //   player_setbuf(x, x->wavename);
+    return x;
 }
 
 void player_init(t_player *x,short initialized)

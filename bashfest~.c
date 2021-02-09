@@ -20,35 +20,34 @@
 
 static t_class *bashfest_class;
 
-void *bashfest_new(t_symbol *msg, int argc, t_atom *argv);
-t_int *bashfest_perform_hosed(t_int *w);
-void bashfest_dsp(t_bashfest *x, t_signal **sp);
-void bashfest_dsp_free(t_bashfest *x);
-int bashfest_set_parameters(t_bashfest *x,float *params);
-t_int *bashfest_perform(t_int *w);
-void bashfest_deploy_dsp(t_bashfest *x);
-void bashfest_copy_to_MSP_buffer(t_bashfest *x, int slot);
+static void *bashfest_new(t_symbol *msg, int argc, t_atom *argv);
+static t_int *bashfest_perform_hosed(t_int *w);
+static void bashfest_dsp(t_bashfest *x, t_signal **sp);
+static void bashfest_dsp_free(t_bashfest *x);
+static int bashfest_set_parameters(t_bashfest *x,float *params);
+static t_int *bashfest_perform(t_int *w);
+static void bashfest_deploy_dsp(t_bashfest *x);
+static void bashfest_copy_to_MSP_buffer(t_bashfest *x, int slot);
 /*user messages*/
-void bashfest_stop(t_bashfest *x);
-void bashfest_info(t_bashfest *x);
-void bashfest_mute(t_bashfest *x, t_floatarg t);
-void bashfest_maximum_process(t_bashfest *x, t_floatarg n);
-void bashfest_minimum_process(t_bashfest *x, t_floatarg n);
-void bashfest_setbuf(t_bashfest *x, t_symbol *wavename);
-void bashfest_flatodds(t_bashfest *x);
-void bashfest_killproc(t_bashfest *x, long p);
-void bashfest_soloproc(t_bashfest *x, long p);
-void bashfest_latency(t_bashfest *x, long n);
-void bashfest_verbose(t_bashfest *x, long t);
-void bashfest_block_dsp(t_bashfest *x, t_floatarg t);
-void bashfest_gozero(t_bashfest *x);
-void bashfest_grab(t_bashfest *x);
-void bashfest_setodds(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv);
-void bashfest_tcycle(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv);
+static void bashfest_stop(t_bashfest *x);
+static void bashfest_info(t_bashfest *x);
+static void bashfest_mute(t_bashfest *x, t_floatarg t);
+static void bashfest_maximum_process(t_bashfest *x, t_floatarg n);
+static void bashfest_minimum_process(t_bashfest *x, t_floatarg n);
+static void bashfest_setbuf(t_bashfest *x, t_symbol *wavename);
+static void bashfest_flatodds(t_bashfest *x);
+static void bashfest_killproc(t_bashfest *x, long p);
+static void bashfest_soloproc(t_bashfest *x, long p);
+static void bashfest_latency(t_bashfest *x, long n);
+static void bashfest_verbose(t_bashfest *x, long t);
+static void bashfest_block_dsp(t_bashfest *x, t_floatarg t);
+static void bashfest_gozero(t_bashfest *x);
+static void bashfest_grab(t_bashfest *x);
+static void bashfest_setodds(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv);
+static void bashfest_tcycle(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv);
 /* function code */
 
 void killdc( float *inbuf, int in_frames, int channels, t_bashfest *x);
-
 void ringmod(t_bashfest *x, int slot, int *pcount);
 void retrograde(t_bashfest *x, int slot, int *pcount);
 void comber(t_bashfest *x, int slot, int *pcount);
@@ -252,161 +251,163 @@ void bashfest_flatodds(t_bashfest *x)
 
 void *bashfest_new(t_symbol *msg, int argc, t_atom *argv)
 {
-
-  t_bashfest *x = (t_bashfest *)pd_new(bashfest_class);
-  //  outlet_new(&x->x_obj, gensym("signal"));
-
-  int i;
-  long membytes = 0;
-  float tmpfloat;
-  srand(time(0));
-
-  x->sr = sys_getsr();
-  x->vs = sys_getblksize();
-  if(! x->sr)
-    x->sr = 44100;
-
-
-  x->work_buffer_size = DEFAULT_BUFFER_SIZE;
-  //  x->latency_samples = DEFAULT_LATENCY;
-  //  x->overlap_max = DEFAULT_MAX_OVERLAP;
-
-  /* argument list: buffer name, work buffer duration, latency in samples, number of overlaps */
-  atom_arg_getsym(&x->wavename,0,argc,argv);
-  atom_arg_getfloat(&x->work_buffer_size,1,argc,argv);
-  tmpfloat = DEFAULT_LATENCY;
-  atom_arg_getfloat(&tmpfloat,2,argc,argv);
-  x->latency_samples = tmpfloat;
-  tmpfloat = DEFAULT_MAX_OVERLAP;
-  atom_arg_getfloat(&tmpfloat,3,argc,argv);
-  x->overlap_max = tmpfloat;
-
-  outlet_new(&x->x_obj, gensym("signal"));
-  outlet_new(&x->x_obj, gensym("signal"));
-
-  x->sinelen = 8192;
-
-  x->verbose = 0;
-  x->most_recent_event = 0;
-  x->active_events = 0;
-  x->increment = 1.0;
-  x->block_dsp = 0;
-  x->grab = 0;
-  /*
-    x->tb_inpt = 0;
-    if(x->latency_samples < x->vs) {
-    x->latency_samples = x->vs;//might need x->vs * 2 here
-    error("latency forced to %d samples",x->vs);
-    }
-    x->tb_outpt = x->latency_samples - x->vs;
-  */
-  /* buffer contains space for both input and output, thus factor of 2 */
-  x->buf_frames = 2 * x->work_buffer_size * .001 * x->sr;
-
-  x->buf_samps = x->buf_frames * 2;
-  x->halfbuffer = x->buf_samps / 2;
-
-  x->maxdelay = 1.0; // in seconds
-  /*memory allocation */
-  x->events = (t_event *) t_getbytes(x->overlap_max * sizeof(t_event));
-  x->trigger_vec = (float *) t_getbytes(MAX_VEC * sizeof(float));
-  x->sinewave = t_getbytes(x->sinelen * sizeof(float));
-  x->params = t_getbytes(MAX_PARAMETERS * sizeof(float));
-  x->odds = t_getbytes(64 * sizeof(float));
-  //  x->trigger_buffer = calloc(x->latency_samples, sizeof(float));
-
-  for(i=0;i<64;i++)
+    
+    t_bashfest *x = (t_bashfest *)pd_new(bashfest_class);
+    //  outlet_new(&x->x_obj, gensym("signal"));
+    
+    int i;
+    long membytes = 0;
+    float tmpfloat;
+    srand(time(0));
+    
+    x->sr = sys_getsr();
+    x->vs = sys_getblksize();
+    if(! x->sr)
+        x->sr = 44100;
+    
+    
+    x->work_buffer_size = DEFAULT_BUFFER_SIZE;
+    //  x->latency_samples = DEFAULT_LATENCY;
+    //  x->overlap_max = DEFAULT_MAX_OVERLAP;
+    
+    /* argument list: buffer name, work buffer duration, latency in samples, number of overlaps */
+    
+    x->wavename = &s_;
+    atom_arg_getsym(&x->wavename,0,argc,argv);
+    atom_arg_getfloat(&x->work_buffer_size,1,argc,argv);
+    tmpfloat = DEFAULT_LATENCY;
+    atom_arg_getfloat(&tmpfloat,2,argc,argv);
+    x->latency_samples = tmpfloat;
+    tmpfloat = DEFAULT_MAX_OVERLAP;
+    atom_arg_getfloat(&tmpfloat,3,argc,argv);
+    x->overlap_max = tmpfloat;
+    
+    outlet_new(&x->x_obj, gensym("signal"));
+    outlet_new(&x->x_obj, gensym("signal"));
+    
+    x->sinelen = 8192;
+    
+    x->verbose = 0;
+    x->most_recent_event = 0;
+    x->active_events = 0;
+    x->increment = 1.0;
+    x->block_dsp = 0;
+    x->grab = 0;
+    /*
+     x->tb_inpt = 0;
+     if(x->latency_samples < x->vs) {
+     x->latency_samples = x->vs;//might need x->vs * 2 here
+     error("latency forced to %d samples",x->vs);
+     }
+     x->tb_outpt = x->latency_samples - x->vs;
+     */
+    /* buffer contains space for both input and output, thus factor of 2 */
+    x->buf_frames = 2 * x->work_buffer_size * .001 * x->sr;
+    
+    x->buf_samps = x->buf_frames * 2;
+    x->halfbuffer = x->buf_samps / 2;
+    
+    x->maxdelay = 1.0; // in seconds
+    /*memory allocation */
+    x->events = (t_event *) t_getbytes(x->overlap_max * sizeof(t_event));
+    x->trigger_vec = (float *) t_getbytes(MAX_VEC * sizeof(float));
+    x->sinewave = t_getbytes(x->sinelen * sizeof(float));
+    x->params = t_getbytes(MAX_PARAMETERS * sizeof(float));
+    x->odds = t_getbytes(64 * sizeof(float));
+    //  x->trigger_buffer = calloc(x->latency_samples, sizeof(float));
+    
+    for(i=0;i<64;i++)
     x->odds[i] = 0;
-  putsine(x->sinewave, x->sinelen);
-  for(i=0;i<x->overlap_max;i++) {
-    x->events[i].workbuffer = (float *) t_getbytes(x->buf_samps * sizeof(float));
-  }
-  x->delayline1 = (float *) t_getbytes(x->maxdelay * x->sr * sizeof(float));
-  x->delayline2 = (float *) t_getbytes(x->maxdelay * x->sr * sizeof(float));
-  x->max_mini_delay = .25;
-  x->eel = (LSTRUCT *) t_getbytes(MAXSECTS * sizeof(LSTRUCT));
-  for( i = 0; i < 4 ; i++ ) {
-    x->mini_delay[i] =
-      (float *) t_getbytes(((int)(x->sr * x->max_mini_delay) + 1)  * sizeof(float));
-  }
-  x->reverb_ellipse_data = (float *) t_getbytes(16 * sizeof(float));
-
-  x->ellipse_data = (float **) t_getbytes(MAXFILTER * sizeof(float *));
-  for(i=0;i<MAXFILTER;i++) {
-    x->ellipse_data[i] = (float *) t_getbytes(MAX_COEF * sizeof(float));
-  }
-  x->tf_len = 1;
-  x->tf_len <<= 16;
-  x->transfer_function = (float *) t_getbytes(x->tf_len * sizeof(float) );
-  x->feedfunclen = 8192 ;
-  x->feedfunc1 = (float *) t_getbytes( x->feedfunclen * sizeof(float) );
-  x->feedfunc2 = (float *) t_getbytes( x->feedfunclen * sizeof(float) );
-  x->feedfunc3 = (float *) t_getbytes( x->feedfunclen * sizeof(float) );
-  x->feedfunc4 = (float *) t_getbytes( x->feedfunclen * sizeof(float) );
-  x->flamfunc1len = 8192 ;
-  x->flamfunc1 = (float *) t_getbytes( x->flamfunc1len * sizeof(float));
-  setflamfunc1(x->flamfunc1,x->flamfunc1len);
-  x->max_comb_lpt = 0.15 ;// watch out here
-  x->combies = (CMIXCOMB *) t_getbytes(4 * sizeof(CMIXCOMB));
-  for( i = 0; i < 4; i++ ) {
-    x->combies[i].len = x->sr * x->max_comb_lpt + 2;
-    x->combies[i].arr = (float *) t_getbytes(x->combies[i].len * sizeof(float));
-  }
-  x->adsr = (CMIXADSR *) t_getbytes(1 * sizeof(CMIXADSR));
-  x->adsr->len = 32768 ;
-  x->adsr->func = (float *) t_getbytes(x->adsr->len * sizeof(float) );
-  x->dcflt = (float *) t_getbytes(16 * sizeof(float));
-  x->tcycle.data = (float *) t_getbytes(CYCLE_MAX * sizeof(float));
-  x->tcycle.len = 0;
-  for(i=0;i<x->overlap_max;i++) {
-    x->events[i].phasef = x->events[i].phase = 0.0;
-  }
-
-  membytes = x->overlap_max * sizeof(t_event);
-  membytes += x->sinelen * sizeof(float);
-  membytes += MAX_PARAMETERS * sizeof(float);
-  membytes += 64 * sizeof(float);
-  membytes += x->buf_samps * sizeof(float) * x->overlap_max;
-  membytes += x->maxdelay * x->sr * sizeof(float) * 2;
-  membytes += MAXSECTS * sizeof(LSTRUCT);
-  membytes += ((int)(x->sr * x->max_mini_delay) + 1)  * sizeof(float) * 4;
-  membytes += 16 * sizeof(float);
-  membytes += MAXFILTER * sizeof(float *);
-  membytes += MAX_COEF * sizeof(float) * MAXFILTER;
-  membytes += x->tf_len * sizeof(float);
-  membytes += x->feedfunclen * sizeof(float) * 4;
-  membytes += x->flamfunc1len * sizeof(float);
-  membytes += 4 * sizeof(CMIXCOMB);
-  membytes += x->combies[0].len * sizeof(float) * 4;
-  membytes += sizeof(CMIXADSR);
-  membytes += x->adsr->len * sizeof(float);
-  membytes += 16 * sizeof(float);
-  membytes += CYCLE_MAX * sizeof(float);
-
-  // post("total memory for this bashfest %.2f MBytes",(float)membytes/1000000.);
-
-  /* be sure to finish clearing memory */
-  set_dcflt(x->dcflt);
-  init_reverb_data(x->reverb_ellipse_data);
-  init_ellipse_data(x->ellipse_data);
-
-  for(i=0;i<PROCESS_COUNT;i++) {
-    x->odds[i] = 1;
-  }
-
-
-  x->max_process_per_note = 2;
-  setweights(x->odds,PROCESS_COUNT);
-
-
-  x->mute = 0;
-
-  for(i = 0; i < x->overlap_max; i++) {
-    x->events[i].status = INACTIVE;
-  }
-
-
-  return (x);
+    putsine(x->sinewave, x->sinelen);
+    for(i=0;i<x->overlap_max;i++) {
+        x->events[i].workbuffer = (float *) t_getbytes(x->buf_samps * sizeof(float));
+    }
+    x->delayline1 = (float *) t_getbytes(x->maxdelay * x->sr * sizeof(float));
+    x->delayline2 = (float *) t_getbytes(x->maxdelay * x->sr * sizeof(float));
+    x->max_mini_delay = .25;
+    x->eel = (LSTRUCT *) t_getbytes(MAXSECTS * sizeof(LSTRUCT));
+    for( i = 0; i < 4 ; i++ ) {
+        x->mini_delay[i] =
+        (float *) t_getbytes(((int)(x->sr * x->max_mini_delay) + 1)  * sizeof(float));
+    }
+    x->reverb_ellipse_data = (float *) t_getbytes(16 * sizeof(float));
+    
+    x->ellipse_data = (float **) t_getbytes(MAXFILTER * sizeof(float *));
+    for(i=0;i<MAXFILTER;i++) {
+        x->ellipse_data[i] = (float *) t_getbytes(MAX_COEF * sizeof(float));
+    }
+    x->tf_len = 1;
+    x->tf_len <<= 16;
+    x->transfer_function = (float *) t_getbytes(x->tf_len * sizeof(float) );
+    x->feedfunclen = 8192 ;
+    x->feedfunc1 = (float *) t_getbytes( x->feedfunclen * sizeof(float) );
+    x->feedfunc2 = (float *) t_getbytes( x->feedfunclen * sizeof(float) );
+    x->feedfunc3 = (float *) t_getbytes( x->feedfunclen * sizeof(float) );
+    x->feedfunc4 = (float *) t_getbytes( x->feedfunclen * sizeof(float) );
+    x->flamfunc1len = 8192 ;
+    x->flamfunc1 = (float *) t_getbytes( x->flamfunc1len * sizeof(float));
+    setflamfunc1(x->flamfunc1,x->flamfunc1len);
+    x->max_comb_lpt = 0.15 ;// watch out here
+    x->combies = (CMIXCOMB *) t_getbytes(4 * sizeof(CMIXCOMB));
+    for( i = 0; i < 4; i++ ) {
+        x->combies[i].len = x->sr * x->max_comb_lpt + 2;
+        x->combies[i].arr = (float *) t_getbytes(x->combies[i].len * sizeof(float));
+    }
+    x->adsr = (CMIXADSR *) t_getbytes(1 * sizeof(CMIXADSR));
+    x->adsr->len = 32768 ;
+    x->adsr->func = (float *) t_getbytes(x->adsr->len * sizeof(float) );
+    x->dcflt = (float *) t_getbytes(16 * sizeof(float));
+    x->tcycle.data = (float *) t_getbytes(CYCLE_MAX * sizeof(float));
+    x->tcycle.len = 0;
+    for(i=0;i<x->overlap_max;i++) {
+        x->events[i].phasef = x->events[i].phase = 0.0;
+    }
+    
+    membytes = x->overlap_max * sizeof(t_event);
+    membytes += x->sinelen * sizeof(float);
+    membytes += MAX_PARAMETERS * sizeof(float);
+    membytes += 64 * sizeof(float);
+    membytes += x->buf_samps * sizeof(float) * x->overlap_max;
+    membytes += x->maxdelay * x->sr * sizeof(float) * 2;
+    membytes += MAXSECTS * sizeof(LSTRUCT);
+    membytes += ((int)(x->sr * x->max_mini_delay) + 1)  * sizeof(float) * 4;
+    membytes += 16 * sizeof(float);
+    membytes += MAXFILTER * sizeof(float *);
+    membytes += MAX_COEF * sizeof(float) * MAXFILTER;
+    membytes += x->tf_len * sizeof(float);
+    membytes += x->feedfunclen * sizeof(float) * 4;
+    membytes += x->flamfunc1len * sizeof(float);
+    membytes += 4 * sizeof(CMIXCOMB);
+    membytes += x->combies[0].len * sizeof(float) * 4;
+    membytes += sizeof(CMIXADSR);
+    membytes += x->adsr->len * sizeof(float);
+    membytes += 16 * sizeof(float);
+    membytes += CYCLE_MAX * sizeof(float);
+    
+    // post("total memory for this bashfest %.2f MBytes",(float)membytes/1000000.);
+    
+    /* be sure to finish clearing memory */
+    set_dcflt(x->dcflt);
+    init_reverb_data(x->reverb_ellipse_data);
+    init_ellipse_data(x->ellipse_data);
+    
+    for(i=0;i<PROCESS_COUNT;i++) {
+        x->odds[i] = 1;
+    }
+    
+    
+    x->max_process_per_note = 2;
+    setweights(x->odds,PROCESS_COUNT);
+    
+    
+    x->mute = 0;
+    
+    for(i = 0; i < x->overlap_max; i++) {
+        x->events[i].status = INACTIVE;
+    }
+    
+    
+    return x;
 }
 
 
@@ -934,7 +935,7 @@ void bashfest_copy_to_MSP_buffer(t_bashfest *x, int slot)
 }
 void bashfest_deploy_dsp(t_bashfest *x)
 {
-  float *b_samples = x->b_samples;
+  t_word *b_samples = x->b_samples;
   long b_nchans = x->b_nchans;
   long b_frames = x->b_frames;
   t_event *events = x->events;
@@ -977,7 +978,7 @@ void bashfest_deploy_dsp(t_bashfest *x)
   events[slot].out_channels = b_nchans;
   events[slot].sample_frames = b_frames;
   for(i=0; i<b_frames*b_nchans; i++) {
-    events[slot].workbuffer[i] = b_samples[i];
+    events[slot].workbuffer[i] = b_samples[i].w_float;
   }
 
   // clean rest of work buffer
