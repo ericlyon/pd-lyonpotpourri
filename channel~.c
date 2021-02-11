@@ -14,12 +14,11 @@ typedef struct _channel
 
 #define OBJECT_NAME "channel~"
 
-void *channel_new(t_symbol *s, int argc, t_atom *argv);
-
-t_int *channel_perform(t_int *w);
-void channel_dsp(t_channel *x, t_signal **sp);
-void channel_channel(t_channel *x, t_floatarg chan) ;
-void channel_int(t_channel *x, long chan) ;
+static void *channel_new(t_symbol *s, int argc, t_atom *argv);
+static t_int *channel_perform(t_int *w);
+static void channel_dsp(t_channel *x, t_signal **sp);
+static void channel_channel(t_channel *x, t_floatarg chan) ;
+//static void channel_int(t_channel *x, long chan) ;
 
 #define NO_FREE_FUNCTION 0
 void channel_tilde_setup(void)

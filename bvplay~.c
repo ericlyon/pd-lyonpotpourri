@@ -39,16 +39,16 @@ typedef struct _bvplay
   short mute;
 } t_bvplay;
 
-t_int *bvplay_perform_mono(t_int *w);
-t_int *bvplay_perform_stereo(t_int *w);
-void bvplay_dsp(t_bvplay *x, t_signal **sp);
-void bvplay_set(t_bvplay *x, t_symbol *s);
-void *bvplay_new(t_symbol *s, t_floatarg taperdur);
-void bvplay_notelist(t_bvplay *x, t_symbol *msg, int argc, t_atom *argv );
-void bvplay_verbose(t_bvplay *x, t_floatarg t);
-void bvplay_mute(t_bvplay *x, t_floatarg t);
-void bvplay_taper(t_bvplay *x, t_floatarg t);
-void bvplay_dsp_free(t_bvplay *x);
+static t_int *bvplay_perform_mono(t_int *w);
+static t_int *bvplay_perform_stereo(t_int *w);
+static void bvplay_dsp(t_bvplay *x, t_signal **sp);
+static void bvplay_set(t_bvplay *x, t_symbol *s);
+static void *bvplay_new(t_symbol *s, t_floatarg taperdur);
+static void bvplay_notelist(t_bvplay *x, t_symbol *msg, int argc, t_atom *argv );
+static void bvplay_verbose(t_bvplay *x, t_floatarg t);
+static void bvplay_mute(t_bvplay *x, t_floatarg t);
+static void bvplay_taper(t_bvplay *x, t_floatarg t);
+static void bvplay_dsp_free(t_bvplay *x);
 
 void bvplay_tilde_setup(void)
 {

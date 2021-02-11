@@ -29,14 +29,13 @@ typedef struct _clean_selector
 
 #define OBJECT_NAME "clean_selector~"
 
-void *clean_selector_new(t_symbol *s, int argc, t_atom *argv);
-
-t_int *clean_selector_perform(t_int *w);
-void clean_selector_dsp(t_clean_selector *x, t_signal **sp);
-void clean_selector_float(t_clean_selector *x, t_float f);
-void clean_selector_fadetime(t_clean_selector *x, t_floatarg f);
-void clean_selector_channel(t_clean_selector *x, t_floatarg i);
-void clean_selector_dsp_free(t_clean_selector *x);
+static void *clean_selector_new(t_symbol *s, int argc, t_atom *argv);
+static t_int *clean_selector_perform(t_int *w);
+static void clean_selector_dsp(t_clean_selector *x, t_signal **sp);
+static void clean_selector_float(t_clean_selector *x, t_float f);
+static void clean_selector_fadetime(t_clean_selector *x, t_floatarg f);
+static void clean_selector_channel(t_clean_selector *x, t_floatarg i);
+static void clean_selector_dsp_free(t_clean_selector *x);
 
 
 
