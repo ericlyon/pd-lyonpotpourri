@@ -1,6 +1,6 @@
 #include "bashfest.h"
 
-float ellipse(float x, LSTRUCT *eel, int nsects, float xnorm)
+float lpp_ellipse(float x, LSTRUCT *eel, int nsects, float xnorm)
 {
   register int m;
   float op;
@@ -17,7 +17,7 @@ float ellipse(float x, LSTRUCT *eel, int nsects, float xnorm)
   return(x*xnorm);
 }
 
-void ellipset(float *list, LSTRUCT *eel, int  *nsects, float *xnorm)
+void lpp_ellipset(float *list, LSTRUCT *eel, int  *nsects, float *xnorm)
 {
 /* the first argument in the list is the number of sections */
   int m,i;
@@ -37,7 +37,7 @@ void ellipset(float *list, LSTRUCT *eel, int  *nsects, float *xnorm)
   *xnorm = list[i];
 }
 /*set biquad coefficients one time*/
-void init_ellipse_data(float **a)
+void lpp_init_ellipse_data(float **a)
 {
   /* 0: hipass at 200 */
   a[0][0] = 4;

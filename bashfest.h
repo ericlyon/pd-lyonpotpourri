@@ -135,51 +135,51 @@ typedef struct _bashfest
 
 
 /*function prototypes*/
-void putsine (float *arr, int len);
-float boundrand(float min, float max);
-void mycombset(float loopt,float rvt,int init,float *a,float srate);
-float mycomb(float samp,float *a);
-void setweights(float *a, int len);
-void delset2(float *a,int *l,float xmax, float srate);
-void delput2(float x,float *a,int *l);
-float dliget2(float *a,float dwait,int *l,float srate);
-void butterLopass( float *in, float *out, float cutoff, int frames, int channels, float srate);
-void butterBandpass(float *in, float *out,  float center, float bandwidth, int frames,int  channels, float srate);
-void butterHipass(float *in, float *out,  float cutoff, int frames,int channels, float srate);
-void butset(float *a);
-void lobut(float *a, float cutoff,float SR);
-void hibut(float *a, float cutoff, float SR);
-void bpbut(float *a, float formant, float bandwidth, float SR);
-void butter_filter(float *in,float *out,float *a, int frames, int channels, int channel);
-void rsnset2(float cf,float bw,float scl,float xinit,float *a,float srate);
-float reson(float x,float *a);
+void lpp_putsine (float *arr, int len);
+float lpp_boundrand(float min, float max);
+void lpp_mycombset(float loopt,float rvt,int init,float *a,float srate);
+float lpp_mycomb(float samp,float *a);
+void lpp_setweights(float *a, int len);
+void lpp_delset2(float *a,int *l,float xmax, float srate);
+void lpp_delput2(float x,float *a,int *l);
+float lpp_dliget2(float *a,float dwait,int *l,float srate);
+void lpp_butterLopass( float *in, float *out, float cutoff, int frames, int channels, float srate);
+void lpp_butterBandpass(float *in, float *out,  float center, float bandwidth, int frames,int  channels, float srate);
+void lpp_butterHipass(float *in, float *out,  float cutoff, int frames,int channels, float srate);
+void lpp_butset(float *a);
+void lpp_lobut(float *a, float cutoff,float SR);
+void lpp_hibut(float *a, float cutoff, float SR);
+void lpp_bpbut(float *a, float formant, float bandwidth, float SR);
+void lpp_butter_filter(float *in,float *out,float *a, int frames, int channels, int channel);
+void lpp_rsnset2(float cf,float bw,float scl,float xinit,float *a,float srate);
+float lpp_reson(float x,float *a);
 
-void ellipset(float *list, LSTRUCT *eel, int  *nsects, float *xnorm);
-float ellipse(float x, LSTRUCT *eel, int nsects, float xnorm);
-float allpass(float samp,float *a);
-void init_reverb_data(float *a);
-void init_ellipse_data(float **a);
+void lpp_ellipset(float *list, LSTRUCT *eel, int  *nsects, float *xnorm);
+float lpp_ellipse(float x, LSTRUCT *eel, int nsects, float xnorm);
+float lpp_allpass(float samp,float *a);
+void lpp_init_reverb_data(float *a);
+void lpp_init_ellipse_data(float **a);
 
-void setExpFlamFunc(float *arr, int flen, float v1,float v2,float alpha);
-void setflamfunc1(float *arr, int flen);
-void funcgen1(float *outArray, int outlen, float duration, float outMin, float outMax,
+void lpp_setExpFlamFunc(float *arr, int flen, float v1,float v2,float alpha);
+void lpp_setflamfunc1(float *arr, int flen);
+void lpp_funcgen1(float *outArray, int outlen, float duration, float outMin, float outMax,
               float speed1, float speed2, float gain1, float gain2, float *phs1, float *phs2,
               float *sine, int sinelen);
-void normtab(float *inarr,float *outarr, float min, float max, int len);
-float mapp(float in,float imin,float imax,float omin,float omax);
-float oscil(float amp,float si,float *farray,int len,float *phs);
-void set_dcflt(float *a);
+void lpp_normtab(float *inarr,float *outarr, float min, float max, int len);
+float lpp_mapp(float in,float imin,float imax,float omin,float omax);
+float lpp_oscil(float amp,float si,float *farray,int len,float *phs);
+void lpp_set_dcflt(float *a);
 
-void set_distortion_table(float *arr, float cut, float max, int len);
-float dlookup(float samp,float *arr,int len);
-void do_compdist(float *in,float *out,int sampFrames,int nchans,int channel,
+void lpp_set_distortion_table(float *arr, float cut, float max, int len);
+float lpp_dlookup(float samp,float *arr,int len);
+void lpp_do_compdist(float *in,float *out,int sampFrames,int nchans,int channel,
                  float cutoff,float maxmult,int lookupflag,float *table,int range,float bufMaxamp);
-float getmaxamp(float *arr, int len);
-void buildadsr(CMIXADSR *a);
+float lpp_getmaxamp(float *arr, int len);
+void lpp_buildadsr(CMIXADSR *a);
 /*bashfest dsp functions */
-void feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channels, float *functab1,
+void lpp_feed1(float *inbuf, float *outbuf, int in_frames, int out_frames,int channels, float *functab1,
            float *functab2,float *functab3,float *functab4,int funclen,
            float duration, float maxDelay, t_bashfest *x);
-void reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
+void lpp_reverb1me(float *in, float *out, int inFrames, int out_frames, int nchans,
                int channel, float revtime, float dry, t_bashfest *x);
-void killdc( float *inbuf, int in_frames, int channels, t_bashfest *x);
+void lpp_killdc( float *inbuf, int in_frames, int channels, t_bashfest *x);
