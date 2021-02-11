@@ -1,7 +1,7 @@
 #include <math.h>
 #include "fftease.h"
 
-void init_rdft(int n, int *ip, float *w)
+void lpp_init_rdft(int n, int *ip, float *w)
 {
 
   int nw,
@@ -20,7 +20,7 @@ void init_rdft(int n, int *ip, float *w)
 }
 
 
-void rdft(int n, int isgn, float *a, int *ip, float *w)
+void lpp_rdft(int n, int isgn, float *a, int *ip, float *w)
 {
 
   int   j,
@@ -76,7 +76,7 @@ void rdft(int n, int isgn, float *a, int *ip, float *w)
 }
 
 
-void bitrv2(int n, int *ip, float *a)
+void lpp_bitrv2(int n, int *ip, float *a)
 {
   int j, j1, k, k1, l, m, m2;
   float xr, xi;
@@ -138,7 +138,7 @@ void bitrv2(int n, int *ip, float *a)
 }
 
 
-void cftsub(int n, float *a, float *w)
+void lpp_cftsub(int n, float *a, float *w)
 {
   int j, j1, j2, j3, k, k1, ks, l, m;
   float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
@@ -261,7 +261,7 @@ void cftsub(int n, float *a, float *w)
 }
 
 
-void rftsub(int n, float *a, int nc, float *c)
+void lpp_rftsub(int n, float *a, int nc, float *c)
 {
   int j, k, kk, ks;
   float wkr, wki, xr, xi, yr, yi;
@@ -286,7 +286,7 @@ void rftsub(int n, float *a, int nc, float *c)
 }
 
 
-void makewt(int nw, int *ip, float *w)
+void lpp_makewt(int nw, int *ip, float *w)
 {
   void bitrv2(int n, int *ip, float *a);
   int nwh, j;
@@ -314,7 +314,7 @@ void makewt(int nw, int *ip, float *w)
 }
 
 
-void makect(int nc, int *ip, float *c)
+void lpp_makect(int nc, int *ip, float *c)
 {
   int nch, j;
   float delta;

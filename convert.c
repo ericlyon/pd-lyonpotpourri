@@ -11,7 +11,7 @@
    analysis channel; decimation rate D and sampling rate R are used
    to render these frequency values directly in Hz. */
 
-void convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor )
+void lpp_convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor )
 {
   float   phase, phasediff;
   int     real, imag, amp,freq;

@@ -1,5 +1,5 @@
 #include "fftease.h"
-int power_of_two(int test)
+int lpp_power_of_two(int test)
 {
   int limit = MAX_N;
   int compare = 1;

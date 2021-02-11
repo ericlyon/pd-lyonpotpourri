@@ -1,6 +1,6 @@
 #include "fftease.h"
 
-void makewindows( float *H, float *A, float *S, int Nw, int N, int I )
+void lpp_makewindows( float *H, float *A, float *S, int Nw, int N, int I )
 
 {
   int i ;
@@ -39,7 +39,7 @@ void makewindows( float *H, float *A, float *S, int Nw, int N, int I )
   }
 }
 
-void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
+void lpp_makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
 
 {
   int i;
@@ -89,7 +89,7 @@ void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
 }
 
 
-void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
+void lpp_makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
 {
   int i;
   float sum ;

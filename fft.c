@@ -10,7 +10,7 @@
    positive frequency spectrum arranged as before, and replaces it with
    2*N real values.  N MUST be a power of 2. */
 
-void rfft( float *x, int N, int forward )
+void lpp_rfft( float *x, int N, int forward )
 
 {
   float   c1,c2,
@@ -91,7 +91,7 @@ void rfft( float *x, int N, int forward )
    recursive Fast Fourier transform method due to Danielson
    and Lanczos.  NC MUST be a power of 2. */
 
-void cfft( float *x, int NC, int forward )
+void lpp_cfft( float *x, int NC, int forward )
 
 {
   float   wr,wi,
@@ -143,7 +143,7 @@ void cfft( float *x, int NC, int forward )
 /* bitreverse places float array x containing N/2 complex values
    into bit-reversed order */
 
-void bitreverse( float *x, int N )
+void lpp_bitreverse( float *x, int N )
 
 {
   float   rtemp,itemp;

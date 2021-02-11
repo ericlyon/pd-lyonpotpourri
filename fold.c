@@ -6,7 +6,7 @@
  * into output array O of (FFT) length N according to current
  * input time n
  */
-void fold( float *I, float *W, int Nw, float *O, int N, int n )
+void lpp_fold( float *I, float *W, int Nw, float *O, int N, int n )
 {
   int i;
 
