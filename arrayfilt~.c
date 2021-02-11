@@ -12,9 +12,9 @@ typedef struct _arrayfilt
   t_symbol *arrayname;
 } t_arrayfilt;
 
-void *arrayfilt_new(t_symbol *msg, int argc, t_atom *argv);
-void arrayfilt_dsp(t_arrayfilt *x, t_signal **sp);
-void arrayfilt_setarray(t_arrayfilt *x);
+static void *arrayfilt_new(t_symbol *msg, int argc, t_atom *argv);
+static void arrayfilt_dsp(t_arrayfilt *x, t_signal **sp);
+static void arrayfilt_setarray(t_arrayfilt *x);
 
 void arrayfilt_tilde_setup(void) {
   arrayfilt_class = class_new(gensym("arrayfilt~"), (t_newmethod)arrayfilt_new,

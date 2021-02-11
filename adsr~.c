@@ -39,24 +39,24 @@ typedef struct _adsr
 
 static void *adsr_new(t_symbol *s, int argc, t_atom *argv);
 
-t_int *adsr_perform(t_int *w);
-void adsr_dsp(t_adsr *x, t_signal **sp);
-void adsr_assist(t_adsr *x, void *b, long m, long a, char *s);
-void adsr_bang(t_adsr *x);
-void adsr_manual_override(t_adsr *x, t_floatarg toggle);
-void adsr_list (t_adsr *x, t_atom *msg, int argc, t_atom *argv);
-void adsr_tempomode(t_adsr *x, t_atom *msg, int argc, t_atom *argv);
-void adsr_set_a(t_adsr *x, t_floatarg f);
-void adsr_set_d(t_adsr *x, t_floatarg f);
-void adsr_set_s(t_adsr *x, t_floatarg f);
-void adsr_set_r(t_adsr *x, t_floatarg f);
-void adsr_set_gain1(t_adsr *x, t_floatarg f);
-void adsr_set_gain2(t_adsr *x, t_floatarg f);
-void set_tempo(t_adsr *x, t_floatarg f);
-void adsr_mute(t_adsr *x, t_floatarg f);
+static t_int *adsr_perform(t_int *w);
+static void adsr_dsp(t_adsr *x, t_signal **sp);
+//static void adsr_assist(t_adsr *x, void *b, long m, long a, char *s);
+static void adsr_bang(t_adsr *x);
+//static void adsr_manual_override(t_adsr *x, t_floatarg toggle);
+static void adsr_list (t_adsr *x, t_atom *msg, int argc, t_atom *argv);
+//static void adsr_tempomode(t_adsr *x, t_atom *msg, int argc, t_atom *argv);
+static void adsr_set_a(t_adsr *x, t_floatarg f);
+static void adsr_set_d(t_adsr *x, t_floatarg f);
+static void adsr_set_s(t_adsr *x, t_floatarg f);
+static void adsr_set_r(t_adsr *x, t_floatarg f);
+static void adsr_set_gain1(t_adsr *x, t_floatarg f);
+static void adsr_set_gain2(t_adsr *x, t_floatarg f);
+// static void set_tempo(t_adsr *x, t_floatarg f);
+static void adsr_mute(t_adsr *x, t_floatarg f);
 
-void atom_arg_getfloat(float *c, long idx, long ac, t_atom *av);
-void atom_arg_getsym(t_symbol **c, long idx, long ac, t_atom *av);
+//void atom_arg_getfloat(float *c, long idx, long ac, t_atom *av);
+//void atom_arg_getsym(t_symbol **c, long idx, long ac, t_atom *av);
 
 void adsr_tilde_setup(void) {
   adsr_class = class_new(gensym("adsr~"), (t_newmethod)adsr_new,
