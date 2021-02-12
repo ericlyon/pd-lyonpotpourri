@@ -12,12 +12,11 @@ typedef struct _click2bang
   void *clock;
 } t_click2bang;
 
-void *click2bang_new(void);
-
-t_int *click2bang_perform(t_int *w);
-void click2bang_dsp(t_click2bang *x, t_signal **sp);
-void click2bang_tick(t_click2bang *x) ;
-void click2bang_free(t_click2bang *x);
+static void *click2bang_new(void);
+static t_int *click2bang_perform(t_int *w);
+static void click2bang_dsp(t_click2bang *x, t_signal **sp);
+static void click2bang_tick(t_click2bang *x) ;
+static void click2bang_free(t_click2bang *x);
 
 void click2bang_tilde_setup(void)
 {

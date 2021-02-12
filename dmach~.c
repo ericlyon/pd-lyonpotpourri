@@ -73,32 +73,32 @@ typedef struct _dmach
   short instant_recall; // flag that pattern gets loaded immediately (loops only)
 } t_dmach;
 
-void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
-void *dmach_new(t_symbol *s, int argc, t_atom *argv);
-t_int *dmach_perform(t_int *w);
-void dmach_mute(t_dmach *x, t_floatarg toggle);
-void dmach_dsp(t_dmach *x, t_signal **sp);
-void dmach_dsp_free(t_dmach *x);
-void dmach_init_pattern(t_dmach *x, int pnum);
-void dmach_show(t_dmach *x, t_floatarg fn);
-void dmach_tempo(t_dmach *x, t_floatarg new_tempo);
-void dmach_recall(t_dmach *x, t_floatarg pnf);
-void dmach_transpose(t_dmach *x, t_floatarg slotf, t_floatarg new_transpose_factor);
-void dmach_gain(t_dmach *x, t_floatarg slotf, t_floatarg new_gain_factor);
-void dmach_arm(t_dmach *x, t_floatarg pnf);
-void dmach_playsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
-void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
-void dmach_printraw(t_dmach *x, t_floatarg fn);
-void dmach_readraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
-void dmach_slotincrs(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
-void dmach_loopsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
-void dmach_muteslot(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
-void dmach_slotampsfull(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
-void dmach_nosequence(t_dmach *x);
-void dmach_copypattern(t_dmach *x, t_floatarg pn1, t_floatarg pn2);
-void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
-void dmach_clickincr(t_dmach *x, t_floatarg toggle);
-void dmach_instant_recall(t_dmach *x, t_floatarg toggle);
+static void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
+static void *dmach_new(t_symbol *s, int argc, t_atom *argv);
+static t_int *dmach_perform(t_int *w);
+static void dmach_mute(t_dmach *x, t_floatarg toggle);
+static void dmach_dsp(t_dmach *x, t_signal **sp);
+static void dmach_dsp_free(t_dmach *x);
+static void dmach_init_pattern(t_dmach *x, int pnum);
+static void dmach_show(t_dmach *x, t_floatarg fn);
+static void dmach_tempo(t_dmach *x, t_floatarg new_tempo);
+static void dmach_recall(t_dmach *x, t_floatarg pnf);
+static void dmach_transpose(t_dmach *x, t_floatarg slotf, t_floatarg new_transpose_factor);
+static void dmach_gain(t_dmach *x, t_floatarg slotf, t_floatarg new_gain_factor);
+static void dmach_arm(t_dmach *x, t_floatarg pnf);
+static void dmach_playsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
+static void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
+static void dmach_printraw(t_dmach *x, t_floatarg fn);
+static void dmach_readraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
+static void dmach_slotincrs(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
+static void dmach_loopsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
+static void dmach_muteslot(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
+static void dmach_slotampsfull(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
+static void dmach_nosequence(t_dmach *x);
+static void dmach_copypattern(t_dmach *x, t_floatarg pn1, t_floatarg pn2);
+static void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv);
+static void dmach_clickincr(t_dmach *x, t_floatarg toggle);
+static void dmach_instant_recall(t_dmach *x, t_floatarg toggle);
 
 
 

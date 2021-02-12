@@ -18,13 +18,13 @@ typedef struct _distortion
   short case1;
 } t_distortion;
 
-void *distortion_new(t_floatarg knee, t_floatarg cut);
-t_int *distortion1_perform(t_int *w);
-t_int *distortion2_perform(t_int *w);
-t_int *distortion3_perform(t_int *w);
-void distortion_dsp(t_distortion *x, t_signal **sp);
-void distortion_float(t_distortion *x, double f);
-void distortion_mute(t_distortion *x, t_floatarg f);
+static void *distortion_new(t_floatarg knee, t_floatarg cut);
+static t_int *distortion1_perform(t_int *w);
+static t_int *distortion2_perform(t_int *w);
+static t_int *distortion3_perform(t_int *w);
+static void distortion_dsp(t_distortion *x, t_signal **sp);
+static void distortion_float(t_distortion *x, double f);
+static void distortion_mute(t_distortion *x, t_floatarg f);
 
 
 // no freeing function needed

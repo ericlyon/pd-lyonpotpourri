@@ -11,9 +11,9 @@ typedef struct _clickhold
   float hold_value;
 } t_clickhold;
 
-void *clickhold_new(void);
-t_int *clickhold_perform(t_int *w);
-void clickhold_dsp(t_clickhold *x, t_signal **sp);
+static void *clickhold_new(void);
+static t_int *clickhold_perform(t_int *w);
+static void clickhold_dsp(t_clickhold *x, t_signal **sp);
 
 
 void clickhold_tilde_setup(void)
