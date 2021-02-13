@@ -39,21 +39,21 @@ typedef struct _mask
   float *in_vec;//copy space for input to avoid dreaded vector sharing override
 } t_mask;
 
-void *mask_new(t_symbol *msg, int argc, t_atom *argv);
-t_int *mask_perform(t_int *w);
-void mask_dsp(t_mask *x, t_signal **sp);
-void mask_mute(t_mask *x, t_floatarg f);
-void mask_phaselock(t_mask *x, t_floatarg f);
-void mask_gate(t_mask *x, t_floatarg f);
-void mask_addmask(t_mask *x, t_symbol *msg, int argc, t_atom *argv);
-void mask_recall(t_mask *x, t_floatarg p);
-void mask_showmask(t_mask *x, t_floatarg p);
-void mask_indexmode(t_mask *x, t_floatarg t);
-void mask_gozero(t_mask *x);
-void mask_free(t_mask *x);
-void mask_sequence(t_mask *x, t_symbol *msg, int argc, t_atom *argv);
-void mask_noloop(t_mask *x, t_floatarg f);
-void mask_playonce(t_mask *x, t_floatarg pnum);
+static void *mask_new(t_symbol *msg, int argc, t_atom *argv);
+static t_int *mask_perform(t_int *w);
+static void mask_dsp(t_mask *x, t_signal **sp);
+static void mask_mute(t_mask *x, t_floatarg f);
+static void mask_phaselock(t_mask *x, t_floatarg f);
+static void mask_gate(t_mask *x, t_floatarg f);
+static void mask_addmask(t_mask *x, t_symbol *msg, int argc, t_atom *argv);
+static void mask_recall(t_mask *x, t_floatarg p);
+static void mask_showmask(t_mask *x, t_floatarg p);
+static void mask_indexmode(t_mask *x, t_floatarg t);
+static void mask_gozero(t_mask *x);
+static void mask_free(t_mask *x);
+static void mask_sequence(t_mask *x, t_symbol *msg, int argc, t_atom *argv);
+static void mask_noloop(t_mask *x, t_floatarg f);
+static void mask_playonce(t_mask *x, t_floatarg pnum);
 
 
 

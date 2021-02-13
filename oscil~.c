@@ -57,25 +57,25 @@ typedef struct _oscil
 
 } t_oscil;
 
-void *oscil_new(t_symbol *s, int argc, t_atom *argv);
+static void *oscil_new(t_symbol *s, int argc, t_atom *argv);
 static t_int *oscil_perform(t_int *w);
-void oscil_dsp(t_oscil *x, t_signal **sp);
-void build_waveform(t_oscil *x);
-void build_amph_waveform(t_oscil *x);
-void oscil_mute(t_oscil *x, t_floatarg flag);
-void oscil_sine(t_oscil *x );
-void oscil_sawtooth(t_oscil *x);
-void oscil_square(t_oscil *x) ;
-void oscil_triangle(t_oscil *x);
-void oscil_buzz(t_oscil *x );
-void oscil_list (t_oscil *x, t_symbol *msg, int argc, t_atom *argv);
-void oscil_fadetime (t_oscil *x, t_floatarg fade_ms) ;
-void oscil_fadetype(t_oscil *x, t_floatarg ftype);
-void oscil_harmcount(t_oscil *x, t_floatarg harms);
-void oscil_interpolate(t_oscil *x, t_floatarg tog);
-void oscil_dsp_free(t_oscil *x);
-void oscil_amph(t_oscil *x, t_symbol *msg, int argc, t_atom *argv);
-t_int *oscil_perform_interpolate(t_int *w);
+static void oscil_dsp(t_oscil *x, t_signal **sp);
+static void build_waveform(t_oscil *x);
+static void build_amph_waveform(t_oscil *x);
+static void oscil_mute(t_oscil *x, t_floatarg flag);
+static void oscil_sine(t_oscil *x );
+static void oscil_sawtooth(t_oscil *x);
+static void oscil_square(t_oscil *x) ;
+static void oscil_triangle(t_oscil *x);
+static void oscil_buzz(t_oscil *x );
+static void oscil_list (t_oscil *x, t_symbol *msg, int argc, t_atom *argv);
+static void oscil_fadetime (t_oscil *x, t_floatarg fade_ms) ;
+static void oscil_fadetype(t_oscil *x, t_floatarg ftype);
+static void oscil_harmcount(t_oscil *x, t_floatarg harms);
+static void oscil_interpolate(t_oscil *x, t_floatarg tog);
+static void oscil_dsp_free(t_oscil *x);
+static void oscil_amph(t_oscil *x, t_symbol *msg, int argc, t_atom *argv);
+static t_int *oscil_perform_interpolate(t_int *w);
 
 
 void oscil_tilde_setup(void)

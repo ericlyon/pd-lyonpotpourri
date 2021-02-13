@@ -27,18 +27,18 @@ typedef struct _markov
 } t_markov;
 
 //void main(void)
-void *markov_new(t_floatarg event_count);
-t_int *markov_perform(t_int *w);
-void markov_dsp(t_markov *x, t_signal **sp);
-int markov_domarkov( int current_event, float **event_weights, int event_count );
-void markov_subdiv(t_markov *x, t_floatarg subdiv);
-void markov_tempo(t_markov *x, t_floatarg tempo);
-void markov_set_length(t_markov *x, t_floatarg length);
-void markov_manual_override(t_markov *x, t_floatarg toggle);
-void markov_values(t_markov *x, t_symbol *msg, int argc, t_atom *argv);
-void markov_event_odds(t_markov *x, t_symbol *msg, int argc, t_atom *argv);
-void markov_free( t_markov *x);
-void markov_bang( t_markov *x);
+static void *markov_new(t_floatarg event_count);
+static t_int *markov_perform(t_int *w);
+static void markov_dsp(t_markov *x, t_signal **sp);
+static int markov_domarkov( int current_event, float **event_weights, int event_count );
+static void markov_subdiv(t_markov *x, t_floatarg subdiv);
+static void markov_tempo(t_markov *x, t_floatarg tempo);
+static void markov_set_length(t_markov *x, t_floatarg length);
+static void markov_manual_override(t_markov *x, t_floatarg toggle);
+static void markov_values(t_markov *x, t_symbol *msg, int argc, t_atom *argv);
+static void markov_event_odds(t_markov *x, t_symbol *msg, int argc, t_atom *argv);
+static void markov_free( t_markov *x);
+static void markov_bang( t_markov *x);
 
 void markov_tilde_setup(void) {
   markov_class = class_new(gensym("markov~"), (t_newmethod)markov_new,

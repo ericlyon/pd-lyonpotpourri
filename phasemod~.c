@@ -24,14 +24,14 @@ typedef struct _phasemod
   float sr;
 } t_phasemod;
 
-void *phasemod_new(t_symbol *s, int argc, t_atom *argv);
-t_int *offset_perform(t_int *w);
-t_int *phasemod_perform(t_int *w);
-void phasemod_float(t_phasemod *x, double f);
-void phasemod_int(t_phasemod *x, long n);
-void phasemod_mute(t_phasemod *x, t_floatarg toggle);
-void phasemod_dsp(t_phasemod *x, t_signal **sp);
-void phasemod_dsp_free(t_phasemod *x);
+static void *phasemod_new(t_symbol *s, int argc, t_atom *argv);
+//static t_int *offset_perform(t_int *w);
+static t_int *phasemod_perform(t_int *w);
+//static void phasemod_float(t_phasemod *x, double f);
+//static void phasemod_int(t_phasemod *x, long n);
+static void phasemod_mute(t_phasemod *x, t_floatarg toggle);
+static void phasemod_dsp(t_phasemod *x, t_signal **sp);
+static void phasemod_dsp_free(t_phasemod *x);
 
 void phasemod_tilde_setup(void) {
   phasemod_class = class_new(gensym("phasemod~"), (t_newmethod)phasemod_new,

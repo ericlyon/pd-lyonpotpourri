@@ -74,36 +74,36 @@ typedef struct _granulesf
   short interpolate_envelope;//flag to interpolate envelope
 } t_granulesf;
 
-void granulesf_setbuf(t_granulesf *x, t_symbol *wavename, t_symbol *windowname);
-void *granulesf_new(t_symbol *msg, int argc, t_atom *argv);
-t_int *granulesf_perform(t_int *w);
-t_int *granulesf_perform_no_interpolation(t_int *w);
-t_int *granulesf_performhose(t_int *w);
-void granulesf_dsp(t_granulesf *x, t_signal **sp);
-void granulesf_reload(t_granulesf *x);
-void granulesf_spray(t_granulesf *x);
-void granulesf_pitchspray(t_granulesf *x);
-void granulesf_transpose(t_granulesf *x, t_floatarg t);
-void granulesf_pitchdev(t_granulesf *x, t_floatarg d);
-void granulesf_lowblock(t_granulesf *x, t_floatarg f);
-void granulesf_highblock(t_granulesf *x, t_floatarg f);
-void granulesf_events(t_granulesf *x, t_floatarg e);
-float granulesf_boundrand(float min, float max);
-void *granulesf_grist(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
-void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
-void *granulesf_setscale(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
-void granulesf_info(t_granulesf *x);
-void granulesf_mute(t_granulesf *x, t_floatarg toggle);
-void granulesf_steady(t_granulesf *x, t_floatarg toggle);
-void granulesf_constrain_scale(t_granulesf *x, t_floatarg toggle);
-void granulesf_dsp_free(t_granulesf *x);
-void granulesf_init(t_granulesf *x,short initialized);
-void granulesf_constrain(int *index_min, int *index_max, float min_incr, float max_incr, float *scale, int steps);
-void granulesf_interpolate(t_granulesf *x, t_floatarg toggle);
-void granulesf_nopan(t_granulesf *x, t_floatarg toggle);
-void granulesf_retro_odds(t_granulesf *x, t_floatarg o);
-void granulesf_seed(t_granulesf *x, t_floatarg seed);
-void granulesf_interpolate_envelope(t_granulesf *x, t_floatarg toggle);
+static void granulesf_setbuf(t_granulesf *x, t_symbol *wavename, t_symbol *windowname);
+static void *granulesf_new(t_symbol *msg, int argc, t_atom *argv);
+static t_int *granulesf_perform(t_int *w);
+static t_int *granulesf_perform_no_interpolation(t_int *w);
+static t_int *granulesf_performhose(t_int *w);
+static void granulesf_dsp(t_granulesf *x, t_signal **sp);
+static void granulesf_reload(t_granulesf *x);
+static void granulesf_spray(t_granulesf *x);
+static void granulesf_pitchspray(t_granulesf *x);
+static void granulesf_transpose(t_granulesf *x, t_floatarg t);
+static void granulesf_pitchdev(t_granulesf *x, t_floatarg d);
+static void granulesf_lowblock(t_granulesf *x, t_floatarg f);
+static void granulesf_highblock(t_granulesf *x, t_floatarg f);
+static void granulesf_events(t_granulesf *x, t_floatarg e);
+static float granulesf_boundrand(float min, float max);
+static void *granulesf_grist(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
+static void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
+static void *granulesf_setscale(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
+static void granulesf_info(t_granulesf *x);
+static void granulesf_mute(t_granulesf *x, t_floatarg toggle);
+static void granulesf_steady(t_granulesf *x, t_floatarg toggle);
+static void granulesf_constrain_scale(t_granulesf *x, t_floatarg toggle);
+static void granulesf_dsp_free(t_granulesf *x);
+static void granulesf_init(t_granulesf *x,short initialized);
+static void granulesf_constrain(int *index_min, int *index_max, float min_incr, float max_incr, float *scale, int steps);
+static void granulesf_interpolate(t_granulesf *x, t_floatarg toggle);
+static void granulesf_nopan(t_granulesf *x, t_floatarg toggle);
+static void granulesf_retro_odds(t_granulesf *x, t_floatarg o);
+static void granulesf_seed(t_granulesf *x, t_floatarg seed);
+static void granulesf_interpolate_envelope(t_granulesf *x, t_floatarg toggle);
 
 
 void granulesf_tilde_setup(void) {

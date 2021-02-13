@@ -16,10 +16,10 @@ typedef struct _npan
   t_float *panner_locvec;
 } t_npan;
 
-void *npan_new(t_symbol *s, int argc, t_atom *argv);
-t_int *npan_perform(t_int *w);
-void npan_dsp(t_npan *x, t_signal **sp);
-void npan_free(t_npan *x);
+static void *npan_new(t_symbol *s, int argc, t_atom *argv);
+static t_int *npan_perform(t_int *w);
+static void npan_dsp(t_npan *x, t_signal **sp);
+static void npan_free(t_npan *x);
 
 void npan_tilde_setup(void) {
   npan_class = class_new(gensym("npan~"), (t_newmethod)npan_new,
