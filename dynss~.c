@@ -31,20 +31,20 @@ typedef struct _dynss
   t_double devscale_y;
 } t_dynss;
 
-void dynss_tilde_setup(void);
-void *dynss_new(void);
-t_int *dynss_perform(t_int *w);
-void dynss_dsp(t_dynss *x, t_signal **sp);
-void version(void);
-float boundrand(float min, float max);
-void dynss_init(t_dynss *x,short initialized);
-void dynss_devx(t_dynss *x, t_floatarg f);
-void dynss_devy(t_dynss *x, t_floatarg f);
-void dynss_freq(t_dynss *x, t_floatarg f);
-void dynss_printwave(t_dynss *x);
-void dynss_new_wave(t_dynss *x);
-void dynss_pointcount(t_dynss *x, t_floatarg f);
-void dynss_new_amps(t_dynss *x);
+static void dynss_tilde_setup(void);
+static void *dynss_new(void);
+static t_int *dynss_perform(t_int *w);
+static void dynss_dsp(t_dynss *x, t_signal **sp);
+static void version(void);
+static float boundrand(float min, float max);
+static void dynss_init(t_dynss *x,short initialized);
+static void dynss_devx(t_dynss *x, t_floatarg f);
+static void dynss_devy(t_dynss *x, t_floatarg f);
+static void dynss_freq(t_dynss *x, t_floatarg f);
+static void dynss_printwave(t_dynss *x);
+static void dynss_new_wave(t_dynss *x);
+static void dynss_pointcount(t_dynss *x, t_floatarg f);
+static void dynss_new_amps(t_dynss *x);
 
 void dynss_tilde_setup(void)
 {

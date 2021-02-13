@@ -17,13 +17,13 @@ typedef struct _counter
   short direction;
 } t_counter;
 
-void *counter_new(t_symbol *s, int argc, t_atom *argv);
-t_int *counter_perform(t_int *w);
-void counter_dsp(t_counter *x, t_signal **sp);
-void counter_setnext(t_counter *x, t_floatarg val);
-void counter_direction(t_counter *x, t_floatarg d);
-void counter_minmax(t_counter *x, t_floatarg min, t_floatarg max);
-void counter_version(t_counter *x);
+static void *counter_new(t_symbol *s, int argc, t_atom *argv);
+static t_int *counter_perform(t_int *w);
+static void counter_dsp(t_counter *x, t_signal **sp);
+static void counter_setnext(t_counter *x, t_floatarg val);
+static void counter_direction(t_counter *x, t_floatarg d);
+static void counter_minmax(t_counter *x, t_floatarg min, t_floatarg max);
+static void counter_version(t_counter *x);
 
 void counter_tilde_setup(void)
 {

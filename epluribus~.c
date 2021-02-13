@@ -15,10 +15,10 @@ typedef struct _epluribus
   short inverse; // flag to look for minimum instead
 } t_epluribus;
 
-void *epluribus_new(t_symbol *msg, int argc, t_atom *argv);
-t_int *epluribus_perform(t_int *w);
-void epluribus_dsp(t_epluribus *x, t_signal **sp);
-void epluribus_inverse(t_epluribus *x, t_floatarg tog);
+static void *epluribus_new(t_symbol *msg, int argc, t_atom *argv);
+static t_int *epluribus_perform(t_int *w);
+static void epluribus_dsp(t_epluribus *x, t_signal **sp);
+static void epluribus_inverse(t_epluribus *x, t_floatarg tog);
 
 void epluribus_tilde_setup(void)
 {

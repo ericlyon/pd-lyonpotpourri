@@ -13,11 +13,11 @@ typedef struct _click
 
 #define OBJECT_NAME "click~"
 
-void *click_new(t_symbol *s, int argc, t_atom *argv);
-void click_bang(t_click *x);
-t_int *click_perform(t_int *w);
-void click_dsp(t_click *x, t_signal **sp);
-void click_set(t_click *x, t_floatarg f);
+static void *click_new(t_symbol *s, int argc, t_atom *argv);
+static void click_bang(t_click *x);
+static t_int *click_perform(t_int *w);
+static void click_dsp(t_click *x, t_signal **sp);
+static void click_set(t_click *x, t_floatarg f);
 
 #define NO_FREE_FUNCTION 0
 void click_tilde_setup(void)
