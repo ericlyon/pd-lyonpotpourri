@@ -1,4 +1,5 @@
 #include "MSPd.h"
+#include "fftease.h"
 #define OSCBANK_TABLE_LENGTH (8192)
 #define OSCBANK_DEFAULT_TOPFREQ (15000.0)
 
@@ -99,38 +100,39 @@ typedef struct _splitbank
   t_float **outs; // output signal vectors
 } t_splitbank;
 
-void *splitbank_new(t_symbol *s, int argc, t_atom *argv);
-t_int *splitbank_perform( t_int *w );
-void splitbank_dsp(t_splitbank *x, t_signal **sp);
-void splitbank_showstate( t_splitbank *x );
-void splitbank_manual_override( t_splitbank *x, t_floatarg toggle );
-void splitbank_setstate( t_splitbank *x, t_symbol *msg, int argc, t_atom *argv);
-void splitbank_ramptime( t_splitbank *x, t_symbol *msg, int argc, t_atom *argv);
-int rand_index( int max);
-void splitbank_scramble (t_splitbank *x);
-void splitbank_store( t_splitbank *x, t_floatarg location );
-void splitbank_recall( t_splitbank *x, t_floatarg location );
-void splitbank_powerfade( t_splitbank *x, t_floatarg toggle );
-void splitbank_maxfreq( t_splitbank *x, t_floatarg freq );
-void splitbank_minfreq( t_splitbank *x, t_floatarg freq );
-void splitbank_mute( t_splitbank *x, t_floatarg toggle );
-void splitbank_fftinfo( t_splitbank *x);
-void splitbank_free( t_splitbank *x );
-void splitbank_overlap( t_splitbank *x, t_floatarg ofac );
-void splitbank_spliti( t_splitbank *x,  float *dest_mag, int start, int end, float oldfrac);
-void splitbank_split(t_splitbank *x, int *binsplit, float *dest_mag, int start, int end );
-int splitbank_closestPowerOfTwo(int p);
-void fftease_obank_analyze( t_oscbank *x ) ;
-void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int overlap,
+static void *splitbank_new(t_symbol *s, int argc, t_atom *argv);
+static t_int *splitbank_perform( t_int *w );
+static void splitbank_dsp(t_splitbank *x, t_signal **sp);
+static void splitbank_showstate( t_splitbank *x );
+static void splitbank_manual_override( t_splitbank *x, t_floatarg toggle );
+static void splitbank_setstate( t_splitbank *x, t_symbol *msg, int argc, t_atom *argv);
+static void splitbank_ramptime( t_splitbank *x, t_symbol *msg, int argc, t_atom *argv);
+static int rand_index( int max);
+static void splitbank_scramble (t_splitbank *x);
+static void splitbank_store( t_splitbank *x, t_floatarg location );
+static void splitbank_recall( t_splitbank *x, t_floatarg location );
+static void splitbank_powerfade( t_splitbank *x, t_floatarg toggle );
+static void splitbank_maxfreq( t_splitbank *x, t_floatarg freq );
+static void splitbank_minfreq( t_splitbank *x, t_floatarg freq );
+static void splitbank_mute( t_splitbank *x, t_floatarg toggle );
+static void splitbank_fftinfo( t_splitbank *x);
+static void splitbank_free( t_splitbank *x );
+static void splitbank_overlap( t_splitbank *x, t_floatarg ofac );
+static void splitbank_spliti( t_splitbank *x,  float *dest_mag, int start, int end, float oldfrac);
+static void splitbank_split(t_splitbank *x, int *binsplit, float *dest_mag, int start, int end );
+static int splitbank_closestPowerOfTwo(int p);
+static void fftease_obank_analyze( t_oscbank *x ) ;
+static void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int overlap,
                                 int R, int vector_size, int N);
-void fftease_obank_transpose( t_oscbank *x );
-void fftease_obank_synthesize( t_oscbank *x );
-void fftease_obank_destroy( t_oscbank *x );
-void fftease_shiftin( t_oscbank *x, float *input );
-void fftease_shiftout( t_oscbank *x, float *output );
-void fftease_obank_topfreq( t_oscbank *x, float topfreq );
-void fftease_obank_bottomfreq( t_oscbank *x, float bottomfreq );
+// static void fftease_obank_transpose( t_oscbank *x );
+static void fftease_obank_synthesize( t_oscbank *x );
+static void fftease_obank_destroy( t_oscbank *x );
+static void fftease_shiftin( t_oscbank *x, float *input );
+static void fftease_shiftout( t_oscbank *x, float *output );
+static void fftease_obank_topfreq( t_oscbank *x, float topfreq );
+static void fftease_obank_bottomfreq( t_oscbank *x, float bottomfreq );
 
+/*
 void rfft( float *x, int N, int forward );
 void cfft( float *x, int NC, int forward );
 void bitreverse( float *x, int N );
@@ -146,6 +148,7 @@ void makewindows( float *H, float *A, float *S, int Nw, int N, int I );
 void makehamming( float *H, float *A, float *S, int Nw, int N, int I,int odd );
 void makehanning( float *H, float *A, float *S, int Nw, int N, int I,int odd );
 void convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor );
+*/
 //////////
 void splitbank_tilde_setup(void) {
 
@@ -911,8 +914,8 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
     x->input_buffer[i] = x->output_buffer[i] = 0.0;
   }
 
-  init_rdft( x->N, x->bitshuffle, x->trigland);
-  makehanning( x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->vector_size, 0);
+  lpp_init_rdft( x->N, x->bitshuffle, x->trigland);
+  lpp_makehanning( x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->vector_size, 0);
 
 
   x->c_fundamental =  (float) x->R/(float)x->N ;
@@ -990,11 +993,11 @@ void  fftease_obank_bottomfreq( t_oscbank *x, float bottomfreq )
 /**************************************************/
 void  fftease_obank_analyze( t_oscbank *x )
 {
-  fold( x->input_buffer, x->Wanal, x->Nw, x->complex_spectrum, x->N, x->in_count );
+  lpp_fold( x->input_buffer, x->Wanal, x->Nw, x->complex_spectrum, x->N, x->in_count );
 
-  rdft( x->N, 1, x->complex_spectrum, x->bitshuffle, x->trigland );
+  lpp_rdft( x->N, 1, x->complex_spectrum, x->bitshuffle, x->trigland );
 
-  convert( x->complex_spectrum, x->interleaved_spectrum, x->N2, x->c_lastphase_in,
+  lpp_convert( x->complex_spectrum, x->interleaved_spectrum, x->N2, x->c_lastphase_in,
            x->c_fundamental, x->c_factor_in );
 
 }

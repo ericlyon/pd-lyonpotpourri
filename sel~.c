@@ -21,9 +21,9 @@ typedef struct _sel
   t_float **outs; // array of output signal vectors
 } t_sel;
 
-void *sel_new(t_symbol *msg, int argc, t_atom *argv);
-void sel_free(t_sel *x);
-void sel_dsp(t_sel *x, t_signal **sp);
+static void *sel_new(t_symbol *msg, int argc, t_atom *argv);
+static void sel_free(t_sel *x);
+static void sel_dsp(t_sel *x, t_signal **sp);
 
 
 void sel_tilde_setup(void) {

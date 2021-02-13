@@ -23,10 +23,10 @@ typedef struct _shoehorn
   long *indexList;
 } t_shoehorn;
 
-void *shoehorn_new(t_symbol *s, int argc, t_atom *argv);
-void shoehorn_free(t_shoehorn *x);
-void shoehorn_dsp(t_shoehorn *x, t_signal **sp);
-t_int *shoehorn_perform(t_int *w);
+static void *shoehorn_new(t_symbol *s, int argc, t_atom *argv);
+static void shoehorn_free(t_shoehorn *x);
+static void shoehorn_dsp(t_shoehorn *x, t_signal **sp);
+static t_int *shoehorn_perform(t_int *w);
 
 void shoehorn_tilde_setup(void) {
   shoehorn_class = class_new(gensym("shoehorn~"), (t_newmethod)shoehorn_new,
