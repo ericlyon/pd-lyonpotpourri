@@ -26,23 +26,23 @@ typedef struct _samm
   short vs;
 } t_samm;
 
-void *samm_new(t_symbol *msg, int argc, t_atom *argv);
-void *samm_beatlist(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
-t_int *samm_perform(t_int *w);
-void samm_dsp(t_samm *x, t_signal **sp);
-void samm_tempo(t_samm *x, t_floatarg f);
-void samm_divbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
-void samm_msbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
-void samm_sampbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
-void samm_ratiobeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
-void samm_free(t_samm *x);
-void samm_beatinfo(t_samm *x);
-void samm_init(t_samm *x,short initialized);
-void samm_mute(t_samm *x, t_floatarg f);
-void samm_pause(t_samm *x);
-void samm_arm(t_samm *x);
-void samm_resume(t_samm *x);
-void samm_beats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
+static void *samm_new(t_symbol *msg, int argc, t_atom *argv);
+//static void *samm_beatlist(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
+static t_int *samm_perform(t_int *w);
+static void samm_dsp(t_samm *x, t_signal **sp);
+static void samm_tempo(t_samm *x, t_floatarg f);
+static void samm_divbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
+static void samm_msbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
+static void samm_sampbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
+static void samm_ratiobeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
+static void samm_free(t_samm *x);
+static void samm_beatinfo(t_samm *x);
+static void samm_init(t_samm *x,short initialized);
+static void samm_mute(t_samm *x, t_floatarg f);
+static void samm_pause(t_samm *x);
+static void samm_arm(t_samm *x);
+static void samm_resume(t_samm *x);
+static void samm_beats(t_samm *x, t_symbol *msg, int argc, t_atom *argv);
 
 
 void samm_beatinfo(t_samm *x)

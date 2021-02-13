@@ -38,14 +38,14 @@ typedef struct _rtrig
 } t_rtrig;
 
 
-void *rtrig_new(t_symbol *s, int argc, t_atom *argv);
-t_int *rtrig_perform(t_int *w);
-void rtrig_dsp(t_rtrig *x, t_signal **sp);
-void rtrig_free(t_rtrig *x);
-void rtrig_mute(t_rtrig *x, t_floatarg tog);
-void rtrig_min(t_rtrig *x, t_floatarg v);
-void rtrig_max(t_rtrig *x, t_floatarg v);
-void rtrig_odds(t_rtrig *x, t_floatarg v);
+static void *rtrig_new(t_symbol *s, int argc, t_atom *argv);
+static t_int *rtrig_perform(t_int *w);
+static void rtrig_dsp(t_rtrig *x, t_signal **sp);
+static void rtrig_free(t_rtrig *x);
+static void rtrig_mute(t_rtrig *x, t_floatarg tog);
+static void rtrig_min(t_rtrig *x, t_floatarg v);
+static void rtrig_max(t_rtrig *x, t_floatarg v);
+static void rtrig_odds(t_rtrig *x, t_floatarg v);
 
 
 void rtrig_tilde_setup(void)

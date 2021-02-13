@@ -27,14 +27,13 @@ typedef struct _pulser
   float sr;
 } t_pulser;
 
-void *pulser_new(t_symbol *s, int argc, t_atom *argv);
-
-t_int *pulser_perform(t_int *w);
-void pulser_dsp(t_pulser *x, t_signal **sp);
-void pulser_mute(t_pulser *x, t_floatarg toggle);
-void pulser_harmonics(t_pulser *x, t_floatarg c);
-void pulser_float(t_pulser *x, double f);
-void pulser_free(t_pulser *x);
+static void *pulser_new(t_symbol *s, int argc, t_atom *argv);
+static t_int *pulser_perform(t_int *w);
+static void pulser_dsp(t_pulser *x, t_signal **sp);
+static void pulser_mute(t_pulser *x, t_floatarg toggle);
+static void pulser_harmonics(t_pulser *x, t_floatarg c);
+//static void pulser_float(t_pulser *x, double f);
+static void pulser_free(t_pulser *x);
 
 void pulser_tilde_setup(void) {
   pulser_class = class_new(gensym("pulser~"), (t_newmethod)pulser_new,

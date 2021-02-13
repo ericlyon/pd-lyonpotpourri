@@ -21,20 +21,18 @@ typedef struct _quadpan
 {
   t_object x_obj;
   t_float x_f;
-//    short bypass;
-//    float pi_over_two;
-//    float twopi;
   float *in;
   float *Xin;
   float *Yin;
 } t_quadpan;
 
-void *quadpan_new(t_symbol *s, int argc, t_atom *argv);
-t_int *offset_perform(t_int *w);
-t_int *quadpan_perform(t_int *w);
-void quadpan_dsp(t_quadpan *x, t_signal **sp);
-void quadpan_showstate( t_quadpan *x );
-void quadpan_free(t_quadpan *x);
+static  void *quadpan_new(t_symbol *s, int argc, t_atom *argv);
+//static t_int *offset_perform(t_int *w);
+static t_int *quadpan_perform(t_int *w);
+static void quadpan_dsp(t_quadpan *x, t_signal **sp);
+//static void quadpan_showstate( t_quadpan *x );
+static void quadpan_free(t_quadpan *x);
+
 void quadpan_tilde_setup(void)
 {
   quadpan_class = class_new(gensym("quadpan~"), (t_newmethod)quadpan_new, (t_method)quadpan_free,sizeof(t_quadpan),0,A_GIMME,0);
