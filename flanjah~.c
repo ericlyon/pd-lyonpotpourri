@@ -53,14 +53,14 @@ typedef struct _flanjah
 
 t_int *flanjah_perform(t_int *w);
 
-void flanjah_protect(t_flanjah *x, t_floatarg state);
-void flanjah_mute(t_flanjah *x, t_floatarg state);
-void flanjah_dsp(t_flanjah *x, t_signal **sp);
-void *flanjah_new(t_symbol *s, int argc, t_atom *argv);
-void flanjah_dsp_free( t_flanjah *x );
-void flanjah_report( t_flanjah *x );
-void flanjah_float(t_flanjah *x, double f);
-void flanjah_init(t_flanjah *x,short initialized);
+static void flanjah_protect(t_flanjah *x, t_floatarg state);
+static void flanjah_mute(t_flanjah *x, t_floatarg state);
+static void flanjah_dsp(t_flanjah *x, t_signal **sp);
+static void *flanjah_new(t_symbol *s, int argc, t_atom *argv);
+static void flanjah_dsp_free( t_flanjah *x );
+static void flanjah_report( t_flanjah *x );
+static void flanjah_float(t_flanjah *x, double f);
+static void flanjah_init(t_flanjah *x,short initialized);
 
 void flanjah_tilde_setup(void) {
   flanjah_class = class_new(gensym("flanjah~"), (t_newmethod)flanjah_new,

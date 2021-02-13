@@ -17,19 +17,19 @@ typedef struct _function
   short normalize;
 } t_function;
 
-void function_setbuf(t_function *x, t_symbol *wavename);
-void *function_new(t_symbol *msg, int argc, t_atom *argv);
-void function_dsp(t_function *x, t_signal **sp);
-void function_redraw(t_function *x);
-void function_clear(t_function *x);
-void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv);
-void function_aenv(t_function *x, t_symbol *msg, int argc, t_atom *argv);
-void function_adenv(t_function *x, t_symbol *msg, int argc, t_atom *argv);
-void function_normalize(t_function *x, t_floatarg f);
-void function_adrenv(t_function *x, t_symbol *msg, int argc, t_atom *argv);
-void function_rcos(t_function *x);
-void function_gaussian(t_function *x);
-void function_print(t_function *x);
+static void function_setbuf(t_function *x, t_symbol *wavename);
+static void *function_new(t_symbol *msg, int argc, t_atom *argv);
+static void function_dsp(t_function *x, t_signal **sp);
+static void function_redraw(t_function *x);
+static void function_clear(t_function *x);
+static void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv);
+static void function_aenv(t_function *x, t_symbol *msg, int argc, t_atom *argv);
+static void function_adenv(t_function *x, t_symbol *msg, int argc, t_atom *argv);
+static void function_normalize(t_function *x, t_floatarg f);
+static void function_adrenv(t_function *x, t_symbol *msg, int argc, t_atom *argv);
+static void function_rcos(t_function *x);
+static void function_gaussian(t_function *x);static
+static void function_print(t_function *x);
 
 void function_tilde_setup(void)
 {

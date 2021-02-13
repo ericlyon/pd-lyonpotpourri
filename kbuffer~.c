@@ -32,22 +32,22 @@ typedef struct _kbuffer
 
 t_int *kbuffer_perform(t_int *w);
 
-void kbuffer_dsp(t_kbuffer *x, t_signal **sp);
-void *kbuffer_new(t_symbol *s, int argc, t_atom *argv);
-void kbuffer_dsp_free(t_kbuffer *x);
-void kbuffer_record(t_kbuffer *x);
-void kbuffer_play(t_kbuffer *x);
-void kbuffer_loop(t_kbuffer *x);
-void kbuffer_info(t_kbuffer *x);
-void kbuffer_dump(t_kbuffer *x);
-void kbuffer_stop(t_kbuffer *x);
-void kbuffer_info(t_kbuffer *x);
-void kbuffer_speed(t_kbuffer *x, t_floatarg speed);
-void kbuffer_size(t_kbuffer *x, t_floatarg ms);
-void kbuffer_ksrate(t_kbuffer *x, t_floatarg ksrate);
-void kbuffer_float(t_kbuffer *x, double f);
-void kbuffer_int(t_kbuffer *x, int i);
-void kbuffer_init(t_kbuffer *x,short initialized);
+static void kbuffer_dsp(t_kbuffer *x, t_signal **sp);
+static void *kbuffer_new(t_symbol *s, int argc, t_atom *argv);
+static void kbuffer_dsp_free(t_kbuffer *x);
+static void kbuffer_record(t_kbuffer *x);
+static void kbuffer_play(t_kbuffer *x);
+static void kbuffer_loop(t_kbuffer *x);
+static void kbuffer_info(t_kbuffer *x);
+static void kbuffer_dump(t_kbuffer *x);
+static void kbuffer_stop(t_kbuffer *x);
+static void kbuffer_info(t_kbuffer *x);
+static void kbuffer_speed(t_kbuffer *x, t_floatarg speed);
+static void kbuffer_size(t_kbuffer *x, t_floatarg ms);
+static void kbuffer_ksrate(t_kbuffer *x, t_floatarg ksrate);
+static void kbuffer_float(t_kbuffer *x, double f);
+static void kbuffer_int(t_kbuffer *x, int i);
+static void kbuffer_init(t_kbuffer *x,short initialized);
 
 void kbuffer_tilde_setup(void) {
   kbuffer_class = class_new(gensym("kbuffer~"), (t_newmethod)kbuffer_new,

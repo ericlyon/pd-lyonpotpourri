@@ -21,10 +21,10 @@ typedef struct _killdc
   COEFS fdata;
 } t_killdc;
 
-void *killdc_new(t_symbol *s);
-t_int *offset_perform(t_int *w);
-t_int *killdc_perform(t_int *w);
-void killdc_dsp(t_killdc *x, t_signal **sp);
+static void *killdc_new(t_symbol *s);
+static t_int *offset_perform(t_int *w);
+static t_int *killdc_perform(t_int *w);
+static void killdc_dsp(t_killdc *x, t_signal **sp);
 
 
 

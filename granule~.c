@@ -66,30 +66,30 @@ typedef struct _granule
   short constrain_scale;//flag to only use bounded portion of scale rather than all of it
 } t_granule;
 
-void granule_setbuf(t_granule *x, t_symbol *wavename, t_symbol *windowname);
-void *granule_new(t_symbol *msg, int argc, t_atom *argv);
-t_int *granule_perform(t_int *w);
-t_int *granule_performhose(t_int *w);
-void granule_dsp(t_granule *x, t_signal **sp);
-void granule_reload(t_granule *x);
-void granule_spray(t_granule *x);
-void granule_pitchspray(t_granule *x);
-void granule_transpose(t_granule *x, t_floatarg t);
-void granule_pitchdev(t_granule *x, t_floatarg d);
-void granule_lowblock(t_granule *x, t_floatarg f);
-void granule_highblock(t_granule *x, t_floatarg f);
-void granule_events(t_granule *x, t_floatarg e);
-float granule_boundrand(float min, float max);
-void *granule_grist(t_granule *x, t_symbol *msg, int argc, t_atom *argv);
-void *granule_grain(t_granule *x, t_symbol *msg, int argc, t_atom *argv);
-void *granule_setscale(t_granule *x, t_symbol *msg, int argc, t_atom *argv);
-void granule_info(t_granule *x);
-void granule_mute(t_granule *x, t_floatarg toggle);
-void granule_steady(t_granule *x, t_floatarg toggle);
-void granule_constrain_scale(t_granule *x, t_floatarg toggle);
-void granule_dsp_free(t_granule *x);
-void granule_init(t_granule *x,short initialized);
-void granule_constrain(int *index_min, int *index_max, float minfreq, float maxfreq, float *scale, int steps);
+static void granule_setbuf(t_granule *x, t_symbol *wavename, t_symbol *windowname);
+static void *granule_new(t_symbol *msg, int argc, t_atom *argv);
+static t_int *granule_perform(t_int *w);
+static t_int *granule_performhose(t_int *w);
+static void granule_dsp(t_granule *x, t_signal **sp);
+static void granule_reload(t_granule *x);
+static void granule_spray(t_granule *x);
+static void granule_pitchspray(t_granule *x);
+static void granule_transpose(t_granule *x, t_floatarg t);
+static void granule_pitchdev(t_granule *x, t_floatarg d);
+static void granule_lowblock(t_granule *x, t_floatarg f);
+static void granule_highblock(t_granule *x, t_floatarg f);
+static void granule_events(t_granule *x, t_floatarg e);
+static float granule_boundrand(float min, float max);
+static void *granule_grist(t_granule *x, t_symbol *msg, int argc, t_atom *argv);
+static void *granule_grain(t_granule *x, t_symbol *msg, int argc, t_atom *argv);
+static void *granule_setscale(t_granule *x, t_symbol *msg, int argc, t_atom *argv);
+static void granule_info(t_granule *x);
+static void granule_mute(t_granule *x, t_floatarg toggle);
+static void granule_steady(t_granule *x, t_floatarg toggle);
+static void granule_constrain_scale(t_granule *x, t_floatarg toggle);
+static void granule_dsp_free(t_granule *x);
+static void granule_init(t_granule *x,short initialized);
+static void granule_constrain(int *index_min, int *index_max, float minfreq, float maxfreq, float *scale, int steps);
 
 void granule_tilde_setup(void) {
   granule_class = class_new(gensym("granule~"), (t_newmethod)granule_new,

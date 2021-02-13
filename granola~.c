@@ -32,16 +32,16 @@ typedef struct _granola
 
 
 
-void *granola_new(t_floatarg val);
-t_int *offset_perform(t_int *w);
-t_int *granola_perform(t_int *w);
-void granola_dsp(t_granola *x, t_signal **sp);
-void granola_mute(t_granola *x, t_floatarg toggle);
-void granola_float(t_granola *x, double f ) ;
-void granola_dsp_free(t_granola *x);
-void granola_size(t_granola *x, t_floatarg newsize);
-void granola_clear(t_granola *x);
-void granola_init(t_granola *x);
+static void *granola_new(t_floatarg val);
+static t_int *offset_perform(t_int *w);
+static t_int *granola_perform(t_int *w);
+static void granola_dsp(t_granola *x, t_signal **sp);
+static void granola_mute(t_granola *x, t_floatarg toggle);
+static void granola_float(t_granola *x, double f ) ;
+static void granola_dsp_free(t_granola *x);
+static void granola_size(t_granola *x, t_floatarg newsize);
+static void granola_clear(t_granola *x);
+static void granola_init(t_granola *x);
 
 void granola_tilde_setup(void) {
   granola_class = class_new(gensym("granola~"), (t_newmethod)granola_new,
