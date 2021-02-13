@@ -1,5 +1,5 @@
 #include "MSPd.h"
-
+#include "fftease.h"
 
 #define OBJECT_NAME "squash~"
 
@@ -33,50 +33,27 @@ typedef struct _squash
 } t_squash;
 
 
-float boundrand(float min, float max);
-void *squash_new(t_symbol *msg, int argc, t_atom *argv);
-void squash_mute(t_squash *x, t_floatarg toggle);
-void squash_assist (t_squash *x, void *b, long msg, long arg, char *dst);
-void squash_dsp_free(t_squash *x);
-double squash_squat( float *buffer, float thresh, float ratio, float nt, float nmult, int N );
-void squash_mute(t_squash *x, t_floatarg f);
-void squash_thresh(t_squash *x, t_floatarg f);
-void squash_nt(t_squash *x, t_floatarg f);
-void squash_ratio(t_squash *x, t_floatarg f);
-void squash_nmult(t_squash *x, t_floatarg f);
-void squash_mute(t_squash *x, t_floatarg f);
-void squash_free(t_squash *x);
-void squash_dsp(t_squash *x, t_signal **sp);
+//static float boundrand(float min, float max);
+static void *squash_new(t_symbol *msg, int argc, t_atom *argv);
+static void squash_mute(t_squash *x, t_floatarg toggle);
+//static void squash_assist (t_squash *x, void *b, long msg, long arg, char *dst);
+//static void squash_dsp_free(t_squash *x);
+static double squash_squat( float *buffer, float thresh, float ratio, float nt, float nmult, int N );
+static void squash_mute(t_squash *x, t_floatarg f);
+static void squash_thresh(t_squash *x, t_floatarg f);
+static void squash_nt(t_squash *x, t_floatarg f);
+static void squash_ratio(t_squash *x, t_floatarg f);
+static void squash_nmult(t_squash *x, t_floatarg f);
+static void squash_mute(t_squash *x, t_floatarg f);
+static void squash_free(t_squash *x);
+static void squash_dsp(t_squash *x, t_signal **sp);
+
+/*
 void overlapadd( float *I, int N, float *W, float *O, int Nw, int n );
 void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd );
 void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd );
 void fold( float *I, float *W, int Nw, float *O, int N, int n );
 void makewindows( float *H, float *A, float *S, int Nw, int N, int I );
-/*
-  void squash_perform64(t_squash *x, t_object *dsp64, double **ins,
-  long numins, double **outs,long numouts, long n,
-  long flags, void *userparam);
-  void squash_dsp64(t_squash *x, t_object *dsp64, short *count, double sr, long n, long flags);
-*/
-/*
-  int main(void)
-  {
-  t_class *c;
-  c = class_new("el.squash~", (method)squash_new, (method)squash_free, sizeof(t_squash), 0,A_GIMME,0);
-
-  class_addmethod(c, (method)squash_dsp64, "dsp64", A_CANT, 0);
-  class_addmethod(c, (method)squash_assist,"assist",A_CANT,0);
-  class_addmethod(c,(method)squash_thresh, "thresh", A_FLOAT,  0);
-  class_addmethod(c,(method)squash_nt, "nt", A_FLOAT,  0);
-  class_addmethod(c,(method)squash_nmult, "nmult", A_FLOAT,  0);
-  class_addmethod(c,(method)squash_ratio, "ratio", A_FLOAT,  0);
-  class_addmethod(c,(method)squash_mute, "mute", A_FLOAT,  0);
-  class_register(CLASS_BOX, c);
-  squash_class = c;
-
-  potpourri_announce(OBJECT_NAME);
-  return 0;
-  }
 */
 
 void squash_tilde_setup(void) {
@@ -109,7 +86,7 @@ void *squash_new(t_symbol *msg, int argc, t_atom *argv)
   x->input = (float *) calloc(x->Nw, sizeof(float));
   x->output = (float *) calloc(x->Nw, sizeof(float));
   x->buffer = (float *) calloc(x->N, sizeof(float));
-  makehanning(x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->D, 0);
+  lpp_makehanning(x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->D, 0);
   x->thresh = 0.1;
   x->ratio = 1.;
   x->nt = .0000001;
@@ -128,7 +105,7 @@ void squash_free(t_squash *x)
   free(x->output);
   free(x->buffer);
 }
-
+/*
 void makewindows( float *H, float *A, float *S, int Nw, int N, int I )
 
 {
@@ -301,7 +278,7 @@ void overlapadd( float *I, int N, float *W, float *O, int Nw, int n )
       n = 0 ;
   }
 }
-
+*/
 
 void squash_mute(t_squash *x, t_floatarg f) {
   x->mute = (short)f;
@@ -357,9 +334,9 @@ t_int *squash_perform(t_int *w)
   for ( j = Nw-D; j < Nw; j++ ) {
     input[j] = *in++;
   }
-  fold( input, Wanal, Nw, buffer, N, x->incnt );
+  lpp_fold( input, Wanal, Nw, buffer, N, x->incnt );
   squash_squat( buffer, thresh, ratio, nt, nmult, Nw );
-  overlapadd( buffer, N, Wsyn, output, Nw, x->incnt );
+  lpp_overlapadd( buffer, N, Wsyn, output, Nw, x->incnt );
 
   for ( j = 0; j < D; j++ )
     *out++ = output[j];

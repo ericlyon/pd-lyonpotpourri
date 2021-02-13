@@ -18,9 +18,9 @@ typedef struct _vecdex {
 
 /* Function prototypes */
 
-void *vecdex_new(t_symbol *msg, int argc, t_atom *argv);
-void vecdex_dsp(t_vecdex *x, t_signal **sp);
-t_int *vecdex_perform(t_int *w);
+static void *vecdex_new(t_symbol *msg, int argc, t_atom *argv);
+static void vecdex_dsp(t_vecdex *x, t_signal **sp);
+static t_int *vecdex_perform(t_int *w);
 
 /* The object setup function */
 

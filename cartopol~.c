@@ -11,9 +11,9 @@ typedef struct _cartopol
   t_float x_f;
 } t_cartopol;
 
-void *cartopol_new(t_symbol *msg, int argc, t_atom *argv);
-void cartopol_free(t_cartopol *x);
-void cartopol_dsp(t_cartopol *x, t_signal **sp);
+static void *cartopol_new(t_symbol *msg, int argc, t_atom *argv);
+//static void cartopol_free(t_cartopol *x);
+static void cartopol_dsp(t_cartopol *x, t_signal **sp);
 
 
 void cartopol_tilde_setup(void) {

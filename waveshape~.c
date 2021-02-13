@@ -7,7 +7,6 @@
 
 static t_class *waveshape_class;
 
-
 typedef struct _waveshape
 {
 
@@ -21,15 +20,14 @@ typedef struct _waveshape
   short mute;
 } t_waveshape;
 
-void *waveshape_new(void);
-
-t_int *waveshape_perform(t_int *w);
-void waveshape_dsp(t_waveshape *x, t_signal **sp);
-void waveshape_list (t_waveshape *x, t_symbol *msg, int argc, t_atom *argv);
-void update_waveshape_function( t_waveshape *x );
+static void *waveshape_new(void);
+static t_int *waveshape_perform(t_int *w);
+static void waveshape_dsp(t_waveshape *x, t_signal **sp);
+static void waveshape_list (t_waveshape *x, t_symbol *msg, int argc, t_atom *argv);
+static void update_waveshape_function( t_waveshape *x );
 //float mapp();
-void waveshape_mute(t_waveshape *x, t_floatarg tog);
-void waveshape_free(t_waveshape *x);
+static void waveshape_mute(t_waveshape *x, t_floatarg tog);
+static void waveshape_free(t_waveshape *x);
 
 
 void waveshape_tilde_setup(void) {

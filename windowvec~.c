@@ -20,9 +20,9 @@ typedef struct _windowvec {
 
 /* Function prototypes */
 
-void *windowvec_new(void);
-void windowvec_dsp(t_windowvec *x, t_signal **sp, short *count);
-t_int *windowvec_perform(t_int *w);
+static void *windowvec_new(void);
+static void windowvec_dsp(t_windowvec *x, t_signal **sp, short *count);
+static t_int *windowvec_perform(t_int *w);
 
 /* The object setup function */
 

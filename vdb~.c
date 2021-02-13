@@ -60,26 +60,25 @@ typedef struct _vdb
 
 } t_vdb;
 
-t_int *vdb_perform(t_int *w);
-
-void vdb_protect(t_vdb *x, t_floatarg state);
-void vdb_inf_hold(t_vdb *x, t_floatarg state);
-void vdb_always_update(t_vdb *x, t_floatarg state);
-void vdb_maxdelay(t_vdb *x, t_floatarg delay);
-void vdb_dsp(t_vdb *x, t_signal **sp);
-void *vdb_new(t_symbol *s, int argc, t_atom *argv);
-void vdb_float(t_vdb *x, t_float f);
-void vdb_mute(t_vdb *x, t_floatarg t);
-void vdb_interpolate(t_vdb *x, t_floatarg t);
-void vdb_show(t_vdb *x);
-void vdb_update_buffer(t_vdb *x);
-void vdb_coef(t_vdb *x, t_floatarg f);
-void vdb_filter(t_vdb *x, t_floatarg t);
-void vdb_init(t_vdb *x,short initialized);
-int vdb_attach_buffer(t_vdb *x);
-void vdb_redraw(t_vdb *x);
-void vdb_redraw_array(t_vdb *x, t_floatarg t);
-void vdb_free(t_vdb *x);
+static t_int *vdb_perform(t_int *w);
+static void vdb_protect(t_vdb *x, t_floatarg state);
+static void vdb_inf_hold(t_vdb *x, t_floatarg state);
+static void vdb_always_update(t_vdb *x, t_floatarg state);
+static void vdb_maxdelay(t_vdb *x, t_floatarg delay);
+static void vdb_dsp(t_vdb *x, t_signal **sp);
+static void *vdb_new(t_symbol *s, int argc, t_atom *argv);
+//static void vdb_float(t_vdb *x, t_float f);
+static void vdb_mute(t_vdb *x, t_floatarg t);
+static void vdb_interpolate(t_vdb *x, t_floatarg t);
+static void vdb_show(t_vdb *x);
+// static void vdb_update_buffer(t_vdb *x);
+//static void vdb_coef(t_vdb *x, t_floatarg f);
+//static void vdb_filter(t_vdb *x, t_floatarg t);
+static void vdb_init(t_vdb *x,short initialized);
+static int vdb_attach_buffer(t_vdb *x);
+static void vdb_redraw(t_vdb *x);
+static void vdb_redraw_array(t_vdb *x, t_floatarg t);
+static void vdb_free(t_vdb *x);
 
 
 void vdb_tilde_setup(void)
@@ -114,12 +113,12 @@ void vdb_maxdelay(t_vdb *x, t_floatarg delay)
   x->maxdelay_len = newlen;
 
 }
-
+/*
 void vdb_update_buffer(t_vdb *x)
 {
   vdb_attach_buffer(x);
 }
-
+*/
 void vdb_mute(t_vdb *x, t_floatarg t)
 {
   x->mute = (short)t;

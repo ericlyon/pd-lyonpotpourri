@@ -58,24 +58,23 @@ typedef struct _vdp
   float taper_feedback;
 } t_vdp;
 
-t_int *vdp_perform(t_int *w);
-
-void vdp_protect(t_vdp *x, double state);
-void vdp_dsp(t_vdp *x, t_signal **sp);
-void *vdp_new(t_symbol *s, int argc, t_atom *argv);
-void vdp_float(t_vdp *x, double f);
-void vdp_mute(t_vdp *x, t_floatarg t);
-void vdp_interpolate(t_vdp *x, t_floatarg t);
-void vdp_show(t_vdp *x);
-void vdp_coef(t_vdp *x, t_floatarg f);
-void vdp_filter(t_vdp *x, t_floatarg t);
-void vdp_init(t_vdp *x,short initialized);
-void vdp_clear(t_vdp *x);
-void vdp_inf_hold(t_vdp *x,t_floatarg state);
-void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, int argc, t_atom *argv);
-int vdp_setdestbuf(t_vdp *x, t_symbol *wavename);
-void vdp_redraw(t_vdp *x);
-void vdp_free(t_vdp *x);
+static t_int *vdp_perform(t_int *w);
+static void vdp_protect(t_vdp *x, double state);
+static void vdp_dsp(t_vdp *x, t_signal **sp);
+static void *vdp_new(t_symbol *s, int argc, t_atom *argv);
+//static void vdp_float(t_vdp *x, double f);
+static void vdp_mute(t_vdp *x, t_floatarg t);
+static void vdp_interpolate(t_vdp *x, t_floatarg t);
+static void vdp_show(t_vdp *x);
+static void vdp_coef(t_vdp *x, t_floatarg f);
+static void vdp_filter(t_vdp *x, t_floatarg t);
+static void vdp_init(t_vdp *x,short initialized);
+static void vdp_clear(t_vdp *x);
+static void vdp_inf_hold(t_vdp *x,t_floatarg state);
+static void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, int argc, t_atom *argv);
+static int vdp_setdestbuf(t_vdp *x, t_symbol *wavename);
+static void vdp_redraw(t_vdp *x);
+static void vdp_free(t_vdp *x);
 
 
 void vdp_tilde_setup(void)

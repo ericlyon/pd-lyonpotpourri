@@ -57,36 +57,34 @@ typedef struct _stutter
   long b_frames;
 } t_stutter;
 
-t_int *stutter_perform(t_int *w);
-
-void stutter_dsp(t_stutter *x, t_signal **sp);
-void *stutter_new(t_symbol *msg, int argc, t_atom *argv);
-void stutter_in1(t_stutter *x, long n);
-void stutter_min_looptime(t_stutter *x, t_floatarg n);
-void stutter_max_looptime(t_stutter *x, t_floatarg n);
-void stutter_randomize_start(t_stutter *x, t_floatarg n);
-void stutter_randomize_dur(t_stutter *x, t_floatarg n);
-void stutter_lockme(t_stutter *x, t_floatarg n);
-void stutter_new_loop(t_stutter *x);
-
-void stutter_assist(t_stutter *x, void *b, long m, long a, char *s);
-void stutter_dblclick(t_stutter *x);
-void stutter_verbose(t_stutter *x, t_floatarg t);
-void stutter_mute(t_stutter *x, t_floatarg t);
-void stutter_show_loop(t_stutter *x);
-void stutter_set_loop(t_stutter *x, t_symbol *msg, int argc, t_atom *argv);
-void stutter_store_loop(t_stutter *x, t_floatarg loop_b_index);
-void stutter_recall_loop(t_stutter *x,  t_floatarg loop_b_index);
-void stutter_taper(t_stutter *x,  t_floatarg f);
-void stutter_min_echo(t_stutter *x,  t_floatarg f);
-void stutter_max_echo(t_stutter *x,  t_floatarg f);
-void stutter_minmax_echo(t_stutter *x,  t_floatarg minf, t_floatarg maxf);
-float boundrand(float min, float max);
-void stutter_init(t_stutter *x,short initialized);
-void stutter_info(t_stutter *x);
-void stutter_version(t_stutter *x);
-void stutter_setarray(t_stutter *x);
-float erand(void);
+static t_int *stutter_perform(t_int *w);
+static void stutter_dsp(t_stutter *x, t_signal **sp);
+static void *stutter_new(t_symbol *msg, int argc, t_atom *argv);
+//static void stutter_in1(t_stutter *x, long n);
+static void stutter_min_looptime(t_stutter *x, t_floatarg n);
+static void stutter_max_looptime(t_stutter *x, t_floatarg n);
+static void stutter_randomize_start(t_stutter *x, t_floatarg n);
+static void stutter_randomize_dur(t_stutter *x, t_floatarg n);
+static void stutter_lockme(t_stutter *x, t_floatarg n);
+static void stutter_new_loop(t_stutter *x);
+//static void stutter_assist(t_stutter *x, void *b, long m, long a, char *s);
+//static void stutter_dblclick(t_stutter *x);
+//static void stutter_verbose(t_stutter *x, t_floatarg t);
+static void stutter_mute(t_stutter *x, t_floatarg t);
+static void stutter_show_loop(t_stutter *x);
+static void stutter_set_loop(t_stutter *x, t_symbol *msg, int argc, t_atom *argv);
+static void stutter_store_loop(t_stutter *x, t_floatarg loop_b_index);
+static void stutter_recall_loop(t_stutter *x,  t_floatarg loop_b_index);
+static void stutter_taper(t_stutter *x,  t_floatarg f);
+static void stutter_min_echo(t_stutter *x,  t_floatarg f);
+static void stutter_max_echo(t_stutter *x,  t_floatarg f);
+static void stutter_minmax_echo(t_stutter *x,  t_floatarg minf, t_floatarg maxf);
+static float boundrand(float min, float max);
+static void stutter_init(t_stutter *x,short initialized);
+//static void stutter_info(t_stutter *x);
+//static void stutter_version(t_stutter *x);
+static void stutter_setarray(t_stutter *x);
+static float erand(void);
 
 t_symbol *ps_buffer;
 
