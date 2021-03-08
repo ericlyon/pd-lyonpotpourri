@@ -28,11 +28,11 @@ void lpp_rdft(int n, int isgn, float *a, int *ip, float *w)
     nc;
 
   float   xi;
-
+/*
   void    bitrv2(int n, int *ip, float *a),
     cftsub(int n, float *a, float *w),
     rftsub(int n, float *a, int nc, float *c);
-
+*/
 
   nw = ip[0];
   nc = ip[1];
@@ -46,11 +46,11 @@ void lpp_rdft(int n, int isgn, float *a, int *ip, float *w)
     }
 
     if (n > 4) {
-      rftsub(n, a, nc, w + nw);
-      bitrv2(n, ip + 2, a);
+      lpp_rftsub(n, a, nc, w + nw);
+      lpp_bitrv2(n, ip + 2, a);
     }
 
-    cftsub(n, a, w);
+    lpp_cftsub(n, a, w);
 
     for (j = 1; j <= n - 1; j += 2) {
       a[j] = -a[j];
@@ -60,13 +60,13 @@ void lpp_rdft(int n, int isgn, float *a, int *ip, float *w)
   else {
 
     if (n > 4) {
-      bitrv2(n, ip + 2, a);
+      lpp_bitrv2(n, ip + 2, a);
     }
 
-    cftsub(n, a, w);
+    lpp_cftsub(n, a, w);
 
     if (n > 4) {
-      rftsub(n, a, nc, w + nw);
+      lpp_rftsub(n, a, nc, w + nw);
     }
 
     xi = a[0] - a[1];
@@ -288,7 +288,7 @@ void lpp_rftsub(int n, float *a, int nc, float *c)
 
 void lpp_makewt(int nw, int *ip, float *w)
 {
-  void bitrv2(int n, int *ip, float *a);
+//  void bitrv2(int n, int *ip, float *a);
   int nwh, j;
   float delta, x, y;
 
@@ -309,7 +309,7 @@ void lpp_makewt(int nw, int *ip, float *w)
       w[nw - j] = y;
       w[nw - j + 1] = x;
     }
-    bitrv2(nw, ip + 2, w);
+    lpp_bitrv2(nw, ip + 2, w);
   }
 }
 

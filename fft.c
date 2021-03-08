@@ -26,7 +26,7 @@ void lpp_rfft( float *x, int N, int forward )
     N2p1;
   static int  first = 1;
 /*float PI, TWOPI;*/
-  void cfft();
+//  void cfft();
 
   if ( first ) {
 
@@ -38,7 +38,7 @@ void lpp_rfft( float *x, int N, int forward )
   c1 = 0.5;
   if ( forward ) {
     c2 = -0.5;
-    cfft( x, N, forward );
+    lpp_cfft( x, N, forward );
     xr = x[0];
     xi = x[1];
   } else {
@@ -81,7 +81,7 @@ void lpp_rfft( float *x, int N, int forward )
   if ( forward )
     x[1] = xr;
   else
-    cfft( x, N, forward );
+    lpp_cfft( x, N, forward );
 }
 
 /* cfft replaces float array x containing NC complex values
@@ -104,10 +104,10 @@ void lpp_cfft( float *x, int NC, int forward )
     i,j,
     delta;
 
-  void bitreverse();
+ // void bitreverse();
 
   ND = NC<<1;
-  bitreverse( x, ND );
+  lpp_bitreverse( x, ND );
   for ( mmax = 2; mmax < ND; mmax = delta ) {
     delta = mmax<<1;
     theta = TWOPI/( forward? mmax : -mmax );
