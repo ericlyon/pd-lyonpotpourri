@@ -10,6 +10,7 @@ class.sources = \
 	adsr~.c \
 	buffet~.c \
 	bvplay~.c \
+	chameleon~.c \
 	channel~.c \
 	chopper~.c \
 	clean_selector~.c \
@@ -102,6 +103,7 @@ unused_shared_sources = \
 # extra files
 datafiles = \
 	$(wildcard *.pd) \
+	CHANGELOG.txt \
 	LICENSE.txt \
 	README.txt \
 	lyonpotpourri-meta.pd \
