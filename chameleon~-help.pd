@@ -1,0 +1,162 @@
+#N canvas 474 552 706 849 12;
+#X obj 118 309 lyonpotpourri/sfplay~;
+#X obj 43 481 clip~ -1 1;
+#X obj 200 481 clip~ -1 1;
+#X msg 43 226 set_parameters;
+#X obj 43 508 lyonpotpourri/killdc~;
+#X obj 200 508 lyonpotpourri/killdc~;
+#X obj 72 272 r chameleon-msgs;
+#X obj 43 422 lyonpotpourri/chameleon~ 5;
+#X obj 43 585 lpp-meters;
+#X obj 222 449 s chameleon_list_output;
+#N canvas 104 842 702 552 parameters 0;
+#X msg 29 52 memory;
+#X obj 29 322 s chameleon-msgs;
+#X obj 75 163 loadbang;
+#X obj 75 192 t b b;
+#X text 26 32 print memory usage of current object;
+#X text 166 206 set minimum and maximum number of DSP units in a preset
+;
+#X text 119 56 Tweak the parameters of the currently recalled preset.
+(Presets have to be saved and recalled before they can be tweaked.
+Parameter is the maximum percentage of deviation. 1 would give you
+a lot of tweakage \, 0 would do nothing.;
+#X msg 51 113 tweak_parameters 0.25;
+#X msg 212 241 maximum_process 5;
+#X msg 75 242 minimum_process 2;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X connect 3 0 9 0;
+#X connect 3 1 8 0;
+#X connect 7 0 1 0;
+#X connect 8 0 1 0;
+#X connect 9 0 1 0;
+#X restore 214 694 pd parameters;
+#X text 151 226 build a new preset;
+#X obj 118 370 *~ 0.2;
+#N canvas 0 23 1364 1143 presets 0;
+#X obj 303 387 s chameleon-msgs;
+#X msg 874 802 report;
+#X msg 637 793 recall \$1;
+#X obj 637 769 hradio 15 1 0 12 empty \$0-chameleon-recall empty 0
+-8 0 10 -262144 -1 -1 8;
+#X obj 637 823 s chameleon-msgs;
+#X msg 303 188 loadslot 0 16 5 0 259.629 2963.46 0.0209678 0.4213 0.112665
+2 375.919 1439.92 1.84536 0.150092 0 9 0 6 \, loadslot 1 18 18 0 0.0626298
+0.0230214 0.169591 2483.16 1258.91 3634.72 1632.05 0.590078 1.00359
+0 0 0.143127 0.202857 12 0 5.49939 \, loadslot 3 7 12 0 6.05593 6 0.292207
+0.570513 0 \, loadslot 4 8 8 0 0.692802 0.790209 0.075524 0.0816523
+0.0995016 0.0842145 \, loadslot 5 10 7 0 0.0152374 0.0460467 0.910523
+1 6 0.143513 0.910296 0 \, loadslot 6 10 16 0 169.581 0.00589688 0.00524167
+0.00436806 0.00349444 12 0 4.21324 \, loadslot 7 20 8 0 0.904818 0.436313
+0.0736592 0.088248 0.016765 0.037959 8 1 0.853694 0.540883 0.00684244
+0.0416407 0.061529 0.053036 13 0 1 0.180581;
+#X obj 553 586 s chameleon-msgs;
+#X obj 80 626 list prepend set;
+#X obj 80 650 list trim;
+#X msg 80 675 loadslot 0 16 5 0 259.629 2963.46 0.0209678 0.4213 0.112665
+2 375.919 1439.92 1.84536 0.150092 0 9 0 6 \\\, loadslot 1 18 18 0
+0.0626298 0.0230214 0.169591 2483.16 1258.91 3634.72 1632.05 0.590078
+1.00359 0 0 0.143127 0.202857 12 0 5.49939 \\\, loadslot 2 41 2 119.001
+2018.89 1.83557 0.53865 0 17 0 1207.45 395.569 314.106 526.047 0.00103215
+0.649252 17 1 758.24 108.013 1409.56 1402.07 0.000904088 0.496969 2
+115.973 1844.27 1.50614 0.421446 1 16 0 281.26 0.00355543 0.00296286
+0.00237029 0.00197524 7 0 0.0354027 0.0266411 0.915858 0 \\\, loadslot
+3 7 12 0 6.05593 6 0.292207 0.570513 0 \\\, loadslot 4 8 8 0 0.692802
+0.790209 0.075524 0.0816523 0.0995016 0.0842145 \\\, loadslot 5 10
+7 0 0.0152374 0.0460467 0.910523 1 6 0.143513 0.910296 0 \\\, loadslot
+6 10 16 0 169.581 0.00589688 0.00524167 0.00436806 0.00349444 12 0
+4.21324 \\\, loadslot 7 20 8 0 0.904818 0.436313 0.0736592 0.088248
+0.016765 0.037959 8 1 0.853694 0.540883 0.00684244 0.0416407 0.061529
+0.053036 13 0 1 0.180581 \\\, loadslot 8 27 1 1292.57 0 4 0 4 1 17
+0 1065.53 101.401 756.868 1464.26 0.0068224 0.309282 2 229.745 3572.17
+0.323868 0.343158 0 14 0 0.0395813 0.218369 0.742894 3 \\\, loadslot
+9 17 6 0.0821833 0.590456 0 5 0 142.096 3519.37 0.0590339 0.902002
+0.191758 14 0 0.0131103 0.427776 0.840846 3 \\\, loadslot 10 14 6 0.0887328
+0.955496 0 0 0 0.105169 0.160305 14 0 0.0339135 0.420492 0.704503 0
+\\\, loadslot 11 11 14 0 0.0146311 0.422262 0.80129 1 19 0 0.224832
+0.346194 0.0088003 \\\, loadslot 12 13 19 0 0.422654 0.143101 0.0082256
+8 0 0.405741 0.325825 0.0598449 0.0936056 0.0751705 0.0311299 \\\,
+;
+#X obj 80 597 r chameleon_list_output;
+#X text 630 746 recall stored presets;
+#X obj 553 460 hradio 15 1 0 12 empty empty empty 0 -8 0 10 -262144
+-1 -1 11;
+#X msg 553 540 store \$1;
+#X floatatom 553 488 5 0 0 0 - - -;
+#X obj 518 521 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 303 159 load a set of previously stored presets;
+#X obj 874 828 s chameleon-msgs;
+#X text 161 645 commas are backslash-escaped in pd. Remove the backslashes
+to make the messages work as intended.;
+#X obj 629 529 pipe 50;
+#X obj 629 557 s \$0-chameleon-recall;
+#X text 464 432 store presets(up to a maximum of 1024 presets);
+#X text 930 800 print all stored preset to right outlet;
+#X text 76 569 receive presets from the [chameleon~] object;
+#X connect 1 0 17 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
+#X connect 5 0 0 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 10 0 7 0;
+#X connect 12 0 14 0;
+#X connect 13 0 6 0;
+#X connect 14 0 13 0;
+#X connect 14 0 15 0;
+#X connect 14 0 19 0;
+#X connect 19 0 20 0;
+#X restore 214 720 pd presets;
+#X text 172 370 give chameleon~ some headroom;
+#X text 239 415 arg: maximum number of available DSP units for each
+processor class, f 34;
+#N canvas 346 210 574 535 init 0;
+#X obj 45 43 loadbang;
+#X obj 45 431 s chameleon-msgs;
+#X msg 45 82 loadslot 0 16 5 0 259.629 2963.46 0.0209678 0.4213 0.112665
+2 375.919 1439.92 1.84536 0.150092 0 9 0 6 \, loadslot 1 18 18 0 0.0626298
+0.0230214 0.169591 2483.16 1258.91 3634.72 1632.05 0.590078 1.00359
+0 0 0.143127 0.202857 12 0 5.49939 \, loadslot 2 41 2 119.001 2018.89
+1.83557 0.53865 0 17 0 1207.45 395.569 314.106 526.047 0.00103215 0.649252
+17 1 758.24 108.013 1409.56 1402.07 0.000904088 0.496969 2 115.973
+1844.27 1.50614 0.421446 1 16 0 281.26 0.00355543 0.00296286 0.00237029
+0.00197524 7 0 0.0354027 0.0266411 0.915858 0 \, loadslot 3 7 12 0
+6.05593 6 0.292207 0.570513 0 \, loadslot 4 13 19 0 0.422654 0.143101
+0.0082256 8 0 0.405741 0.325825 0.0598449 0.0936056 0.0751705 0.031125
+\, loadslot 5 10 7 0 0.0152374 0.0460467 0.910523 1 6 0.143513 0.910296
+0 \, loadslot 6 10 16 0 169.581 0.00589688 0.00524167 0.00436806 0.00349444
+12 0 4.21324 \, loadslot 7 20 8 0 0.904818 0.436313 0.0736592 0.088248
+0.016765 0.037959 8 1 0.853694 0.540883 0.00684244 0.0416407 0.061529
+0.053036 13 0 1 0.180581 \, loadslot 8 27 1 1292.57 0 4 0 4 1 17 0
+1065.53 101.401 756.868 1464.26 0.0068224 0.309282 2 229.745 3572.17
+0.323868 0.343158 0 14 0 0.0395813 0.218369 0.742894 3 \, loadslot
+9 17 6 0.0821833 0.590456 0 5 0 142.096 3519.37 0.0590339 0.902002
+0.191758 14 0 0.0131103 0.427776 0.840846 3 \, loadslot 10 14 6 0.0887328
+0.955496 0 0 0 0.105169 0.160305 14 0 0.0339135 0.420492 0.704503 0
+\, loadslot 11 11 14 0 0.0146311 0.422262 0.80129 1 19 0 0.224832 0.346194
+0.0088003;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X restore 214 666 pd init;
+#X text 237 51 - Oracular sound processor;
+#X obj 33 17 lpp-icon chameleon~;
+#X text 29 112 [chameleon~] is an oracular sound processor. It randomly
+assembles DSP processing from an internal bank of DSP units. This is
+a good processor to try when you're not sure what you want - it may
+surprise you. [chameleon~] can generate a wide range of amplitudes
+and frequencies irrespective of its input \, so we protect the output
+here with both a [clip~] and a [killdc~] object.;
+#X connect 0 0 12 0;
+#X connect 1 0 4 0;
+#X connect 2 0 5 0;
+#X connect 3 0 7 0;
+#X connect 4 0 8 0;
+#X connect 5 0 8 1;
+#X connect 6 0 7 0;
+#X connect 7 0 1 0;
+#X connect 7 1 2 0;
+#X connect 7 2 9 0;
+#X connect 12 0 7 0;
+#X connect 12 0 7 1;
