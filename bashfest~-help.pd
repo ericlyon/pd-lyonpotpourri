@@ -1,4 +1,4 @@
-#N canvas 251 494 724 630 12;
+#N canvas 251 494 767 631 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array bashdrum 16884 float 2;
 #X coords 0 1 16884 -1 60 20 1;
@@ -278,9 +278,20 @@ random DSP., f 74;
 #X text 25 123 Sample-accurate playback from a buffer \, with click
 triggers. Random DSP is applied to each note. [bashfest~] is triggered
 by clicks in its inlet.;
-#X text 365 457 see also:;
-#X obj 345 474 cnv 15 100 20 empty empty lyonpotpourri/player~ 20 12
+#X text 370 443 see also:;
+#X obj 350 460 cnv 15 100 20 empty empty lyonpotpourri/player~ 20 12
 0 14 -262144 -1 0;
+#N canvas 0 23 835 590 read-the-paper 0;
+#X msg 84 101 browse https://www.researchgate.net/publication/255628929_A_Sample_Accurate_Triggering_System_for_Pd_and_MaxMSP
+;
+#X obj 84 165 pdcontrol;
+#X obj 84 44 inlet;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X restore 371 552 pd read-the-paper;
+#X obj 371 523 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 392 526 read a paper about my sample-accurate externals;
 #X connect 4 0 10 0;
 #X connect 5 0 9 0;
 #X connect 9 0 14 0;
@@ -291,3 +302,4 @@ by clicks in its inlet.;
 #X connect 11 0 9 0;
 #X connect 15 0 14 0;
 #X connect 15 0 14 1;
+#X connect 20 0 19 0;
