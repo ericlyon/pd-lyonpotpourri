@@ -109,7 +109,7 @@ datafiles = \
 	lyonpotpourri-meta.pd \
 	$(empty)
 # extra dirs
-datadirs = examples \
+datadirs = sound \
 	$(empty)
 
 ##############################################################################################
