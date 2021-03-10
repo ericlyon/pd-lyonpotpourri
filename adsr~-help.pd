@@ -1,15 +1,11 @@
-#N canvas 487 392 455 385 10;
-#X obj 115 233 adsr~;
-#X msg 115 94 bang;
-#X obj 35 187 osc~ 400;
-#X obj 97 274 *~;
-#X obj 97 304 *~ 0.1;
-#X obj 97 335 dac~;
-#X msg 175 112 10 50 50 50;
-#X text 254 115 adsr data as list;
-#X msg 182 137 100 50 100 500;
-#X obj 175 90 loadbang;
-#N canvas 0 22 673 325 individual-adsr-elements 0;
+#N canvas 85 702 623 641 12;
+#X msg 56 204 bang;
+#X obj 38 165 osc~ 400;
+#X obj 38 390 *~;
+#X msg 153 228 10 50 50 50;
+#X msg 160 253 100 50 100 500;
+#X obj 153 206 loadbang;
+#N canvas 0 23 673 325 individual-adsr-elements 1;
 #X obj 62 244 outlet;
 #X msg 62 158 set_a \$1;
 #X msg 135 159 set_d \$1;
@@ -52,22 +48,44 @@
 #X connect 14 4 7 0;
 #X connect 14 5 8 0;
 #X connect 15 0 13 0;
-#X restore 194 163 pd individual-adsr-elements;
-#X obj 205 200 samm~ 40 1;
-#X text 30 39 adsr~ - An ADSR envelope triggered by signal clicks or
-bangs;
-#X obj 26 4 cnv 15 155 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X text 111 74 trigger ADSR;
-#X text 273 197 slow click metronome;
-#X connect 0 0 3 1;
-#X connect 1 0 0 0;
+#X restore 178 280 pd individual-adsr-elements;
+#X text 51 185 trigger ADSR;
+#X obj 29 9 lpp-icon adsr~;
+#X text 245 231 ADSR data as list;
+#X obj 38 416 lpp-meters;
+#X obj 56 365 lyonpotpourri/adsr~;
+#X text 266 252 softer envelope;
+#X text 223 40 - ADSR envelope triggered by signal clicks or bangs
+;
+#N canvas 603 147 893 602 click-trigger 1;
+#X text 236 120 slow click metronome;
+#X obj 56 126 lyonpotpourri/samm~ 40 1;
+#X obj 56 184 *~;
+#X obj 56 257 outlet~;
+#X obj 112 84 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 135 81 gate sample-accurate metronome;
+#X obj 112 51 inlet;
+#X connect 1 0 2 0;
 #X connect 2 0 3 0;
-#X connect 3 0 4 0;
-#X connect 4 0 5 0;
-#X connect 4 0 5 1;
-#X connect 6 0 0 0;
-#X connect 8 0 0 0;
-#X connect 9 0 6 0;
-#X connect 10 0 0 0;
-#X connect 11 0 0 0;
+#X connect 4 0 2 1;
+#X connect 6 0 4 0;
+#X restore 271 328 pd click-trigger;
+#X obj 271 302 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 35 111 An ADSR envelope with the capability for sample-accurate
+timing.;
+#X text 256 464 see also:;
+#X obj 236 481 cnv 15 100 20 empty empty lyonpotpourri/samm~ 20 12
+0 14 -262144 -1 0;
+#X connect 0 0 11 0;
+#X connect 1 0 2 0;
+#X connect 2 0 10 0;
+#X connect 2 0 10 1;
+#X connect 3 0 11 0;
+#X connect 4 0 11 0;
+#X connect 5 0 3 0;
+#X connect 6 0 11 0;
+#X connect 11 0 2 1;
+#X connect 14 0 11 0;
+#X connect 15 0 14 0;
