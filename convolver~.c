@@ -71,6 +71,7 @@ static void rfft( float *x, int N, int forward );
 static void cfft( float *x, int NC, int forward );
 static void rdft(int n, int isgn, float *a, int *ip, float *w);
 static void bitreverse( float *x, int N );
+static void init_rdft(int n, int *ip, float *w);
 static void convolver_static_memory(t_convolver *x, t_floatarg toggle);
 
 
@@ -148,7 +149,7 @@ void convolver_convolve(t_convolver *x)
     mymsg = (t_symbol *) calloc(1, sizeof(t_symbol));
     convolver_attach_buffers( x );
     if(x->source->b_nchans == x->impulse->b_nchans && x->impulse->b_nchans == x->dest->b_nchans) {
-        // post("case 1");
+        //post("case 1");
         for(i = 0; i < x->source->b_nchans; i++) {
             SETFLOAT(data, i+1); // source
             SETFLOAT(data+1, i+1); // impulse
@@ -208,7 +209,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     source_chan = atom_getfloatarg(0,argc,argv);
     impulse_chan = atom_getfloatarg(1,argc,argv);
     dest_chan = atom_getfloatarg(2,argc,argv);
-    //  post("chans %d %d %d", source_chan, impulse_chan, dest_chan);
+    // post("chans %d %d %d", source_chan, impulse_chan, dest_chan);
     if( source_chan <= 0 || impulse_chan <= 0 || dest_chan <= 0) {
         error("%s: channels are counted starting from 1",OBJECT_NAME);
         return;
@@ -239,7 +240,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     // be more careful with memory
     // also be sure to clear destination buffer
     
-    
+    // post("size of N for convolution is %d", N);
     if(! x->static_memory ) {
         if ((sbuf = (float *) calloc(N+2, sizeof(float))) == NULL)
             error("%s: insufficient memory", OBJECT_NAME);
@@ -255,7 +256,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     
     x->mult = 1. / (float) N;
     x->last_N = N;
-    lpp_init_rdft( N, bitshuffle, trigland);
+    init_rdft( N, bitshuffle, trigland);
     
     
     
@@ -263,7 +264,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
         filt[j] = impulse->b_samples[i + impulse_chan].w_float;
     }
     
-    lpp_rdft( N, 1, filt, bitshuffle, trigland );
+    rdft( N, 1, filt, bitshuffle, trigland );
     
     for (i=0; i <= N; i += 2) {
         
@@ -317,7 +318,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
         // post("ofr %d ifr %d, N %d",ofr_cnt, ifr_cnt, N);
         
         // convolve source buffer with filter buffer
-        lpp_rdft( N, 1, sbuf, bitshuffle, trigland );
+        rdft( N, 1, sbuf, bitshuffle, trigland );
         for (i=0; i<=N2; i++) {
             ip = 2*i;
             ip1 = ip + 1;
@@ -485,7 +486,12 @@ void convolver_spikeimp(t_convolver *x, t_floatarg density)
     // zero out buffer
     dur = (float) b_frames / sr;
     count = density * dur;
-    memset((char *)b_samples, 0, b_nchans * b_frames * sizeof(float));
+    // memset((char *)b_samples, 0, b_nchans * b_frames * sizeof(float));
+    // assume mono forever
+    for(i = 0; i < b_frames; i++){
+        b_samples[i].w_float = 0.0;
+    }
+    
     // return;
     for( j = 0; j < b_nchans; j++ ) {
         for( i = 0; i < count; i++ ) {
