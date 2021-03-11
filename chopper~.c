@@ -256,17 +256,17 @@ void chopper_store_loop(t_chopper *x, t_floatarg f)
   int loop_bindex = (int) f;
 
   if( loop_bindex < 0 || loop_bindex >= MAXSTORE ) {
-    error("bindex %d out of range", loop_bindex);
+      pd_error((t_object *)x,"index %d out of range", loop_bindex);
     return;
   }
 
   x->stored_starts[ loop_bindex ] = x->loop_start;
   x->stored_samps[ loop_bindex ] = x->transp_loop_samps;
   x->stored_increments[ loop_bindex ] = x->increment;
-
+/*
   post("storing loop %d: %d %d %f",loop_bindex,
        x->stored_starts[ loop_bindex ],x->stored_samps[ loop_bindex ],  x->stored_increments[ loop_bindex ] );
-
+*/
 }
 
 void chopper_recall_loop(t_chopper *x, t_floatarg f)
@@ -685,7 +685,7 @@ t_int *chopper_pd_perform(t_int *w)
       else {
 
         if( bindex < 0 || bindex >= b_frames ) {
-          error("lock_loop: bindex %d is out of range", bindex);
+          // error("lock_loop: bindex %d is out of range", bindex);
           x->fbindex = bindex = b_frames / 2;
         }
         bindex = floor( (double) x->fbindex );
@@ -757,9 +757,9 @@ t_int *chopper_pd_perform(t_int *w)
         fade_level = 1.0; /* default level */
 
         if( bindex < 0 || bindex >= b_frames ) {
-          error("force loop: bindex %d is out of range", bindex);
-          post("frames:%d start:%d, samps2go:%d, tloopsamps:%d, increment:%f",
-               x->framesize, bindex, x->samps_to_go, x->transp_loop_samps, x->increment);
+          // error("force loop: bindex %d is out of range", bindex);
+          /* post("frames:%d start:%d, samps2go:%d, tloopsamps:%d, increment:%f",
+               x->framesize, bindex, x->samps_to_go, x->transp_loop_samps, x->increment);*/
           chopper_randloop(x);
           bindex = x->fbindex;
         }
