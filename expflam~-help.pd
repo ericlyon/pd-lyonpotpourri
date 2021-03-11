@@ -1,39 +1,35 @@
-#N canvas 609 102 594 535 10;
-#N canvas 774 592 522 372 load-samples 0;
+#N canvas 861 310 683 796 12;
+#N canvas 1291 889 522 372 load-samples 0;
 #X obj 41 107 soundfiler;
 #X msg 41 39 bang;
 #X obj 41 65 openpanel;
 #X obj 154 29 loadbang;
 #X msg 41 87 read -resize \$1 expflam-drum;
-#X msg 154 54 read -resize examples/kick_11d.aiff expflam-drum;
+#X msg 154 54 read -resize sound/kick_11d.aiff expflam-drum;
 #X connect 1 0 2 0;
 #X connect 2 0 4 0;
 #X connect 3 0 5 0;
 #X connect 4 0 0 0;
 #X connect 5 0 0 0;
-#X restore 307 282 pd load-samples;
+#X restore 241 656 pd load-samples;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array expflam-drum 16884 float 2;
 #X coords 0 1 16884 -1 100 70 1;
-#X restore 296 410 graph;
-#X obj 58 370 player~ expflam-drum 1 8;
-#X obj 83 321 loadbang;
-#X obj 58 453 *~ 0.1;
-#X obj 58 487 dac~;
-#X obj 58 271 expflam~;
-#X floatatom 95 428 5 0 0 0 - - -, f 5;
-#X obj 27 166 r expflam-msg;
+#X restore 240 540 graph;
+#X obj 102 428 loadbang;
+#X obj 76 383 expflam~;
+#X obj 45 265 r expflam-msg;
 #N canvas 461 254 635 324 expflam-controls 0;
-#X msg 27 143 bypass \$1;
-#X obj 26 118 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X msg 25 198 bypass \$1;
+#X obj 25 173 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 26 226 s expflam-msg;
-#X msg 153 209 setflam \$1 \$2 \$3 \$4 \$5;
-#X floatatom 152 129 5 0 0 0 - - -, f 5;
-#X floatatom 192 130 5 0 0 0 - - -, f 5;
-#X floatatom 233 130 5 0 0 0 - - -, f 5;
-#X floatatom 273 131 5 0 0 0 - - -, f 5;
-#X floatatom 314 131 5 0 0 0 - - -, f 5;
+#X obj 24 281 s expflam-msg;
+#X msg 151 264 setflam \$1 \$2 \$3 \$4 \$5;
+#X floatatom 150 184 5 0 0 0 - - -;
+#X floatatom 190 185 5 0 0 0 - - -;
+#X floatatom 231 185 5 0 0 0 - - -;
+#X floatatom 271 186 5 0 0 0 - - -;
+#X floatatom 312 186 5 0 0 0 - - -;
 #N canvas 701 481 454 304 pak 0;
 #X obj 63 60 inlet;
 #X obj 65 150 pack f f f f f;
@@ -60,23 +56,23 @@
 #X connect 8 0 9 0;
 #X connect 9 0 1 0;
 #X connect 9 1 1 4;
-#X restore 153 170 pd pak;
-#X obj 372 -16 hsl 115 15 20 90 0 0 empty empty start-delay -2 -8 0
-10 -162854 -1 -1 0 1;
-#X obj 372 14 hsl 115 15 50 150 0 0 empty empty end-delay -2 -8 0 10
--162854 -1 -1 0 1;
-#X obj 373 46 hsl 115 15 3 32 0 0 empty empty attack-count -2 -8 0
-10 -162854 -1 -1 0 1;
-#X obj 233 114 int;
-#X obj 373 83 hsl 115 15 -6 6 0 0 empty empty slope -2 -8 0 10 -162854
--1 -1 0 1;
-#X obj 373 116 hsl 115 15 0.05 0.99 0 0 empty empty attenuation -2
--8 0 10 -162854 -1 -1 0 1;
-#X obj 75 56 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
-;
-#X msg 76 81 flamall \$1;
-#X text 96 58 flam everything;
-#X text 43 114 flam nothing;
+#X restore 151 225 pd pak;
+#X obj 370 39 hsl 115 15 20 90 0 0 empty \$0-start-delay start-delay
+-2 -8 0 10 -162854 -1 -1 1899 1;
+#X obj 370 69 hsl 115 15 50 150 0 0 empty \$0-end-delay end-delay -2
+-8 0 10 -162854 -1 -1 8550 1;
+#X obj 371 101 hsl 115 15 3 32 0 0 empty \$0-attack-count attack-count
+-2 -8 0 10 -162854 -1 -1 6290 1;
+#X obj 231 160 int;
+#X obj 371 138 hsl 115 15 -6 6 0 0 empty \$0-slope slope -2 -8 0 10
+-162854 -1 -1 11400 1;
+#X obj 371 171 hsl 115 15 0.05 0.99 0 0 empty \$0-attenuation attenuation
+-2 -8 0 10 -162854 -1 -1 11194 1;
+#X obj 74 111 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 74 136 flamall \$1;
+#X text 95 113 flam everything;
+#X text 41 169 flam nothing;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X connect 3 0 2 0;
@@ -94,43 +90,71 @@
 #X connect 15 0 8 0;
 #X connect 16 0 17 0;
 #X connect 17 0 2 0;
-#X restore 304 327 pd expflam-controls;
-#X msg 84 341 static_increment 0;
-#X obj 223 318 sig~ 1;
-#X obj 97 402 hsl 115 15 0 0.99 0 0 empty empty gain -2 -8 0 10 -162854
--1 -1 0 1;
-#X obj 172 187 mask~ 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0;
-#X floatatom 224 299 5 0 0 0 - - -, f 5;
-#X obj 227 281 hsl 64 12 0.5 2.5 0 0 empty empty increment -2 -8 0
-10 -244920 -1 -1 0 1;
-#X obj 58 237 mask~ 1 0.5 0.5 0.5 1 0 0.5 0.5 1 0.5 1 0 0 0.5 1 0.125
-;
-#X obj 172 116 samm~ 98 4;
-#X text 25 47 expflam~ replaces a click trigger with a sequence of
-triggers to create a flam., f 83;
-#X text 180 147 flam gate signal - flams only occur where a 1 in gate
+#X restore 241 631 pd expflam-controls;
+#X msg 102 453 static_increment 0;
+#X obj 241 430 sig~ 1;
+#X floatatom 242 411 5 0 0 0 - - -;
+#X obj 245 393 hsl 64 12 0.5 2.5 0 0 empty empty increment -2 -8 0
+10 -244920 -1 -1 1600 1;
+#X text 198 259 flam gate signal - flams only occur where a 1 in gate
 aligns with the attack pattern below;
-#X text 224 220 attack pattern;
-#X text 304 307 open this for more controls:;
-#X msg 172 93 tempo \$1;
-#X floatatom 172 74 5 20 200 0 - - -, f 5;
-#X obj 23 11 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X connect 2 0 4 0;
-#X connect 3 0 10 0;
-#X connect 4 0 5 0;
-#X connect 4 0 5 1;
-#X connect 6 0 2 0;
-#X connect 7 0 4 1;
-#X connect 8 0 6 0;
-#X connect 10 0 2 0;
-#X connect 11 0 2 1;
-#X connect 12 0 7 0;
-#X connect 13 0 6 1;
-#X connect 14 0 11 0;
-#X connect 15 0 14 0;
-#X connect 16 0 6 0;
-#X connect 17 0 13 0;
-#X connect 17 0 16 0;
-#X connect 22 0 17 0;
-#X connect 23 0 22 0;
+#X text 242 332 attack pattern;
+#X msg 190 205 tempo \$1;
+#X floatatom 190 186 5 20 200 0 - #0-tempo -;
+#X obj 190 299 lyonpotpourri/mask~ 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0
+;
+#X obj 76 349 lyonpotpourri/mask~ 1 0.5 0.5 0.5 1 0 0.5 0.5 1 0.5 1
+0 0 0.5 1 0.125, f 70;
+#X obj 76 520 lpp-meters;
+#X obj 18 28 lpp-icon expflam~;
+#X obj 190 228 lyonpotpourri/samm~ 98 4;
+#N canvas 1219 785 987 380 init 0;
+#X obj 19 163 symbol \$0-start-delay;
+#X obj 19 30 loadbang;
+#X obj 19 63 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 180 163 symbol \$0-end-delay;
+#X obj 327 163 symbol \$0-attack-count;
+#X obj 497 163 symbol \$0-slope;
+#X obj 629 163 symbol \$0-attenuation;
+#X obj 793 163 symbol \$0-tempo;
+#X obj 19 231 pack s s s s s s;
+#X msg 19 274 \; \$1 31.66 \; \$2 125 \; \$3 19 \; \$4 6 \; \$5 0.973
+\$6 70;
+#X obj 19 87 t b b b b b b;
+#X connect 0 0 8 0;
+#X connect 1 0 2 0;
+#X connect 2 0 10 0;
+#X connect 3 0 8 1;
+#X connect 4 0 8 2;
+#X connect 5 0 8 3;
+#X connect 6 0 8 4;
+#X connect 7 0 8 5;
+#X connect 8 0 9 0;
+#X connect 10 0 0 0;
+#X connect 10 1 3 0;
+#X connect 10 2 4 0;
+#X connect 10 3 5 0;
+#X connect 10 4 6 0;
+#X connect 10 5 7 0;
+#X restore 241 681 pd init;
+#X text 223 64 - insert non-linear click attacks into a click attack
+stream;
+#X text 20 133 [expflam~] replaces a click trigger with a sequence
+of triggers to create a flam., f 83;
+#X obj 76 482 lyonpotpourri/player~ expflam-drum 1 16;
+#X connect 2 0 6 0;
+#X connect 3 0 22 0;
+#X connect 4 0 3 0;
+#X connect 6 0 22 0;
+#X connect 7 0 22 1;
+#X connect 8 0 7 0;
+#X connect 9 0 8 0;
+#X connect 12 0 18 0;
+#X connect 13 0 12 0;
+#X connect 14 0 3 1;
+#X connect 15 0 3 0;
+#X connect 18 0 14 0;
+#X connect 18 0 15 0;
+#X connect 22 0 16 1;
+#X connect 22 0 16 0;
