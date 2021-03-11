@@ -1,11 +1,15 @@
-#N canvas 719 335 316 238 10;
-#X floatatom 34 177 5 0 0 0 - - -;
-#X obj 23 13 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X text 21 47 click2float~ - Convert a click to a float;
-#X obj 34 143 lyonpotpourri/click2float~;
-#X obj 34 77 lyonpotpourri/samm~ 120 1;
-#X obj 34 109 lyonpotpourri/mask~ 2 4 6.333 8;
-#X connect 3 0 0 0;
-#X connect 4 0 5 0;
-#X connect 5 0 3 0;
+#N canvas 719 335 473 363 12;
+#X floatatom 25 246 5 0 0 0 - - -;
+#X obj 25 212 lyonpotpourri/click2float~;
+#X obj 25 146 lyonpotpourri/samm~ 120 1;
+#X obj 25 178 lyonpotpourri/mask~ 2 4 6.333 8;
+#X text 227 47 - convert a click to a float;
+#X obj 24 19 lpp-icon click2float~;
+#X msg 26 309 \; pd dsp \$1;
+#X obj 26 284 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 53 287 DACs must be on for this to work;
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 7 0 6 0;
