@@ -1,26 +1,31 @@
-#N canvas 780 485 450 300 10;
-#X obj 69 187 click~;
+#N canvas 780 485 541 447 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array click-array 8 float 2;
 #X coords 0 1 8 -1 140 70 1;
-#X restore 218 100 graph;
-#X obj 69 249 tabwrite~ click-array;
-#X obj 34 104 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#X restore 227 172 graph;
+#X obj 78 321 tabwrite~ click-array;
+#X obj 43 176 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 23 13 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X obj 92 220 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
-#X text 52 104 record click;
-#X msg 69 156 set 0.333;
-#X text 112 221 clear array;
-#X msg 145 155 set 1;
-#X text 25 44 click~ - convert a bang into a click. the default value
+#X obj 101 292 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 61 176 record click;
+#X msg 78 228 set 0.333;
+#X text 121 293 clear array;
+#X msg 154 227 set 1;
+#X text 34 116 click~ - convert a bang into a click. the default value
 is 1 but the click can be set to any value except zero.;
-#X text 66 137 set click value;
-#X connect 0 0 2 0;
-#X connect 3 0 0 0;
-#X connect 3 0 2 0;
-#X connect 5 0 2 0;
-#X connect 7 0 0 0;
-#X connect 9 0 0 0;
+#X text 75 209 set click value;
+#X obj 78 259 lyonpotpourri/click~;
+#X msg 77 381 \; pd dsp \$1;
+#X obj 77 353 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 101 352 DACs must be on for this to work;
+#X obj 34 12 lpp-icon click~;
+#X text 239 46 - bang to single-sample click converter;
+#X connect 2 0 1 0;
+#X connect 2 0 10 0;
+#X connect 3 0 1 0;
+#X connect 5 0 10 0;
+#X connect 7 0 10 0;
+#X connect 10 0 1 0;
+#X connect 12 0 11 0;
