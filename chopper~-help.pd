@@ -1,9 +1,8 @@
-#N canvas 318 372 626 480 12;
+#N canvas 318 372 826 590 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array sound1 62079 float 2;
 #X coords 0 1 62079 -1 100 70 1;
 #X restore 402 311 graph;
-#X obj 45 192 chopper~ sound1;
 #N canvas 292 428 828 406 load-soundfile 0;
 #X obj 185 263 soundfiler;
 #X msg 184 189 bang;
@@ -19,15 +18,14 @@
 #X connect 5 0 0 0;
 #X restore 221 236 pd load-soundfile;
 #X obj 45 169 r chopper.demo.msgs;
-#X obj 193 192 chopper~ sound1;
-#X obj 193 169 r chopper.demo.msgs;
+#X obj 273 169 r chopper.demo.msgs;
 #X obj 45 229 lpp-meters;
 #X obj 40 17 lpp-icon chopper~;
 #X text 251 49 - an algorithmic array chopper;
 #N canvas 633 279 754 935 basic_controls 0;
 #X msg 49 106 force_new;
 #X msg 198 132 lockme \$1;
-#X obj 198 94 tgl 30 0 empty empty empty 0 -6 0 8 -257985 -1 -1 0 1
+#X obj 198 94 tgl 30 0 empty empty empty 0 -6 0 8 -257985 -1 -1 1 1
 ;
 #X floatatom 200 173 5 0 0 0 - minincr -;
 #X floatatom 316 171 5 0 0 0 - maxincr -;
@@ -38,9 +36,9 @@
 #X msg 316 192 set_maxincr \$1;
 #X msg 200 194 set_minincr \$1;
 #X obj 28 602 hsl 128 15 0.1 0.9999 0 0 minincr minincr-init minincr
--2 -6 0 8 -252672 -1 -1 345 1;
+-2 -6 0 8 -252672 -1 -1 5645 1;
 #X obj 28 633 hsl 128 15 1.0001 10 0 0 maxincr maxincr-init maxincr
--2 -6 0 8 -252672 -1 -1 1800 1;
+-2 -6 0 8 -252672 -1 -1 1411 1;
 #N canvas 0 23 470 320 init 0;
 #X obj 27 150 s minincr-init;
 #X msg 27 123 0.5;
@@ -65,14 +63,14 @@
 #X connect 10 0 6 0;
 #X restore 275 51 pd init;
 #X obj 28 664 hsl 128 15 3 300 0 0 minseg minseg-init minseg -2 -6
-0 8 -252672 -1 -1 648 1;
+0 8 -252672 -1 -1 4148 1;
 #X obj 28 695 hsl 128 15 20 2000 0 0 maxseg maxseg-init maxseg -2 -6
-0 8 -252672 -1 -1 600 1;
+0 8 -252672 -1 -1 12700 1;
 #X msg 362 444 fixed_increment \$1;
 #X obj 49 8 tgl 30 0 empty empty empty 0 -6 0 8 -257985 -1 -1 0 1;
 #X obj 49 53 metro 120000;
 #X obj 365 358 hsl 50 10 0.1 5 0 0 empty empty empty -2 -8 0 10 -174016
--1 -1 900 1;
+-1 -1 0 1;
 #X floatatom 362 414 5 0 0 0 - - -;
 #X obj 433 357 r fixed-incr-init;
 #X obj 316 363 t b;
@@ -109,15 +107,15 @@
 #X msg 48 244 rdur \$1;
 #X floatatom 48 220 5 0 0 0 - rdur -;
 #X obj 49 102 hsl 128 15 0 1 0 0 rdur rdur-init rdur -2 -6 0 8 -252672
--1 -1 1300 1;
+-1 -1 0 1;
 #X obj 49 134 hsl 128 15 0 1 0 0 rinc rinc-init rinc -2 -6 0 8 -252672
--1 -1 100 1;
+-1 -1 0 1;
 #X floatatom 112 220 5 0 0 0 - rinc -;
 #X msg 112 244 rinc \$1;
 #X floatatom 180 220 5 0 0 0 - jitter -;
 #X msg 180 244 jitter \$1;
 #X obj 49 166 hsl 128 15 0 1 0 0 jitter jitter-init jitter -2 -6 0
-8 -252672 -1 -1 0 1;
+8 -252672 -1 -1 12700 1;
 #X obj 48 297 s chopper.demo.msgs;
 #X text 43 51 Parametric controls to deviate a locked loop;
 #X text 189 101 factor to vary loop duration;
@@ -182,10 +180,12 @@
 #X connect 5 0 2 0;
 #X connect 6 0 2 0;
 #X restore 221 288 pd store_loops;
-#X text 309 196 arg: name of array holding sound file;
+#X text 482 194 arg: name of array holding sound file;
 #X text 41 116 This object plays random segments from an array with
 optional looping.;
-#X connect 1 0 6 0;
-#X connect 3 0 1 0;
-#X connect 4 0 6 1;
-#X connect 5 0 4 0;
+#X obj 45 192 lyonpotpourri/chopper~ sound1;
+#X obj 273 192 lyonpotpourri/chopper~ sound1;
+#X connect 2 0 14 0;
+#X connect 3 0 15 0;
+#X connect 14 0 4 0;
+#X connect 15 0 4 1;
