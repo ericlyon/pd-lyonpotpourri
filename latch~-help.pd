@@ -1,28 +1,24 @@
-#N canvas 890 538 471 305 10;
-#X obj 112 155 latch~ 250;
-#X obj 112 106 samm~ 60 1;
-#X obj 23 9 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X obj 30 207 *~;
-#X obj 30 149 osc~ 500;
-#X obj 30 268 dac~;
-#X obj 117 217 hsl 70 12 0 0.1 0 0 latch-gain latch-gain-in gain -2
--8 0 10 -262130 -1 -1 0 1;
-#X floatatom 68 218 5 0 0 0 - latch-gain -, f 5;
-#X obj 203 82 osc~ 0.1;
-#X obj 203 105 *~ 400;
-#X obj 203 133 +~ 450;
-#X text 24 42 latch~ - a sample-accurate latch generator. An incoming
+#N canvas 890 538 758 590 12;
+#X obj 54 329 *~;
+#X obj 54 271 osc~ 500;
+#X obj 301 201 osc~ 0.1;
+#X obj 301 224 *~ 400;
+#X obj 301 252 +~ 450;
+#X text 320 277 arg: latch duration in ms.;
+#X obj 54 372 lpp-meters;
+#X obj 31 6 lpp-icon latch~;
+#X text 32 100 [latch~] is a sample-accurate latch generator. An incoming
 click is held for a given amount of time.;
-#X text 193 158 arg: latch duration in ms.;
-#X obj 30 236 *~ 0;
-#X connect 0 0 3 1;
+#X text 245 44 - sample-accurate latch generator;
+#X obj 136 277 lyonpotpourri/latch~ 250;
+#X obj 136 176 lyonpotpourri/samm~ 60 1;
+#X text 360 246 <= uses [osc~] to gradually change duration of latch
+;
+#X connect 0 0 6 0;
+#X connect 0 0 6 1;
 #X connect 1 0 0 0;
-#X connect 3 0 13 0;
-#X connect 4 0 3 0;
-#X connect 7 0 13 1;
-#X connect 8 0 9 0;
-#X connect 9 0 10 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 10 1;
 #X connect 10 0 0 1;
-#X connect 13 0 5 0;
-#X connect 13 0 5 1;
+#X connect 11 0 10 0;
