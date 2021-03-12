@@ -1,5 +1,4 @@
-#N canvas 660 123 698 511 10;
-#X obj 25 302 granulesf~ gsf_wavetable gsf_window;
+#N canvas 660 123 830 702 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array gsf_window 32768 float 3;
 #A 0 0 9.19179e-09 3.67671e-08 8.27261e-08 1.47069e-07 2.29795e-07
@@ -4254,34 +4253,32 @@
 9.19178e-07 7.44534e-07 5.88274e-07 4.50397e-07 3.30904e-07 2.29795e-07
 1.47069e-07 8.27261e-08 3.67671e-08 9.19178e-09;
 #X coords 0 1 32767 -1 200 140 1;
-#X restore 431 29 graph;
-#X obj 25 156 function~ gsf_window;
-#X msg 25 133 rcos;
-#N canvas 10 37 581 367 sprayclouds 0;
+#X restore 442 83 graph;
+#X msg 36 187 rcos;
+#N canvas 92 488 581 367 sprayclouds 0;
 #X obj 9 231 outlet;
 #X msg 9 153 spray;
-#X obj 116 108 metro 1000;
-#X obj 116 87 tgl 15 0 empty dac-toggle empty 0 -6 0 8 -262144 -1 -1
+#X obj 118 108 metro 1000;
+#X obj 118 87 tgl 15 0 empty dac-toggle empty 0 -6 0 8 -262144 -1 -1
 0 1;
-#X floatatom 9 65 5 0 0 0 - - -, f 5;
-#X msg 116 155 pitchspray;
+#X floatatom 9 65 5 0 0 0 - - -;
+#X msg 118 155 pitchspray;
 #X msg 9 32 1;
 #X obj 9 12 loadbang;
 #X msg 47 33 2;
-#X obj 116 63 r dac-toggle;
 #X text 77 35 <- select cloud method (1=spray \, 2=pitchspray);
-#X text 197 108 <- time interval is the cloud horizon (also latency)
+#X text 199 108 <- time interval is the cloud horizon (also latency)
 ;
-#X text 196 158 <- either of these triggers a "cloud" of grains;
+#X text 198 158 <- either of these triggers a "cloud" of grains;
 #N canvas 666 199 458 308 select-method 0;
 #X obj 64 35 inlet;
 #X obj 138 25 inlet;
 #X obj 26 13 loadbang;
 #X obj 138 223 spigot;
 #X obj 193 224 spigot;
-#X obj 230 188 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+#X obj 230 188 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
 1;
-#X obj 175 185 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+#X obj 175 185 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
 #X obj 64 132 unpack f f;
 #X obj 64 65 sel 1 2;
@@ -4304,42 +4301,23 @@
 #X connect 9 0 7 0;
 #X connect 10 0 7 0;
 #X restore 9 131 pd select-method;
+#X obj 118 54 inlet;
 #X connect 1 0 0 0;
-#X connect 2 0 13 1;
+#X connect 2 0 12 1;
 #X connect 3 0 2 0;
-#X connect 4 0 13 0;
+#X connect 4 0 12 0;
 #X connect 5 0 0 0;
 #X connect 6 0 4 0;
 #X connect 7 0 6 0;
 #X connect 8 0 4 0;
-#X connect 9 0 3 0;
-#X connect 13 0 1 0;
-#X connect 13 1 5 0;
-#X restore 25 181 pd sprayclouds;
-#N canvas 0 22 454 304 amp 0;
-#X obj 89 108 inlet~;
-#X obj 89 149 *~;
-#X obj 89 198 outlet~;
-#X obj 176 110 inlet~;
-#X obj 176 151 *~;
-#X obj 176 200 outlet~;
-#X obj 256 109 inlet;
-#X connect 0 0 1 0;
-#X connect 1 0 2 0;
-#X connect 3 0 4 0;
-#X connect 4 0 5 0;
-#X connect 6 0 4 1;
-#X connect 6 0 1 1;
-#X restore 25 389 pd amp;
-#X obj 223 344 hsl 128 15 0 1 0 0 empty empty gain -2 -6 0 8 -81528
--1 -1 0 1;
-#X obj 25 419 dac~;
+#X connect 12 0 1 0;
+#X connect 12 1 5 0;
+#X connect 13 0 3 0;
+#X restore 36 266 pd sprayclouds;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array gsf_wavetable 4e+06 float 2;
-#X coords 0 1 4e+06 -1 200 140 1;
-#X restore 431 169 graph;
-#X text 99 431 your sound here - it should be at least 20 seconds long
-->;
+#X array gsf_wavetable 6.43566e+06 float 2;
+#X coords 0 1 6.43566e+06 -1 200 140 1;
+#X restore 442 223 graph;
 #N canvas 181 44 551 550 grist 0;
 #X obj 87 481 outlet;
 #X msg 86 91 grist 25 1000 0.25 3 0.1 0.9 0.1 0.9 50 200;
@@ -4347,7 +4325,7 @@
 #X text 15 41 args: events horizon min_incr max_incr minpan maxpan
 minamp maxamp mindur maxdur;
 #X msg 211 439 events \$1;
-#X floatatom 211 416 5 0 0 0 - - -, f 5;
+#X floatatom 211 416 5 0 0 0 - - -;
 #X text 255 417 directly set events per "cloud";
 #X msg 108 152 grist 5 1000 1 1 0.1 0.9 0.1 0.9 1000 2000;
 #X msg 120 193 grist 8 1000 0.25 3 0.1 0.9 1 1 200 200;
@@ -4365,9 +4343,9 @@ minamp maxamp mindur maxdur;
 #X connect 10 0 0 0;
 #X connect 11 0 1 0;
 #X connect 12 0 0 0;
-#X restore 40 200 pd grist;
-#X obj 25 107 loadbang;
-#N canvas 0 22 498 348 scales 0;
+#X restore 51 285 pd grist;
+#X obj 36 161 loadbang;
+#N canvas 0 23 498 348 scales 0;
 #X obj 110 246 outlet;
 #X text 66 43 these get used when you drive with "pitchspray";
 #X msg 38 94 setscale 1 1.25 1.5 2;
@@ -4382,8 +4360,8 @@ minamp maxamp mindur maxdur;
 #X connect 5 0 0 0;
 #X connect 6 0 0 0;
 #X connect 7 0 0 0;
-#X restore 51 219 pd scales;
-#N canvas 287 22 749 764 more-messages 0;
+#X restore 62 304 pd scales;
+#N canvas 287 23 749 764 more-messages 0;
 #X obj 40 615 outlet;
 #X msg 40 49 nopan \$1;
 #X obj 40 25 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
@@ -4401,15 +4379,15 @@ minamp maxamp mindur maxdur;
 1;
 #X msg 102 168 interpolate_envelope \$1;
 #X text 121 145 set envelope interpolation (off by default);
-#X floatatom 147 280 5 0 0 0 - - -, f 5;
+#X floatatom 147 280 5 0 0 0 - - -;
 #X msg 147 302 retro_odds \$1;
 #X text 186 280 odds for backwards grain (0-1);
-#X floatatom 222 324 5 0 0 0 - - -, f 5;
+#X floatatom 222 324 5 0 0 0 - - -;
 #X msg 222 346 transpose \$1;
 #X text 255 382 reseed random generator;
 #X msg 216 402 seed \$1;
-#X floatatom 216 384 5 0 0 0 - - -, f 5;
-#X floatatom 229 428 5 0 0 0 - - -, f 5;
+#X floatatom 216 384 5 0 0 0 - - -;
+#X floatatom 229 428 5 0 0 0 - - -;
 #X msg 229 446 pitchdev \$1;
 #X text 268 426 detune factor for "pitchspray";
 #X msg 220 491 grain 3300 -1 1 0.2 15000;
@@ -4417,7 +4395,7 @@ minamp maxamp mindur maxdur;
 #X text 218 509 args: dur \, incr \, amp \, pan \, skip;
 #X msg 218 541 info;
 #X obj 345 309 hsl 128 15 0.1 2 0 0 empty empty transpose -2 -6 0 8
--81528 -1 -1 0 1;
+-81528 -1 -1 6500 1;
 #X text 260 324 comment;
 #X connect 1 0 0 0;
 #X connect 2 0 1 0;
@@ -4438,82 +4416,38 @@ minamp maxamp mindur maxdur;
 #X connect 24 0 0 0;
 #X connect 27 0 0 0;
 #X connect 28 0 16 0;
-#X restore 69 261 pd more-messages;
-#X text 136 181 <- triggering;
-#X text 103 200 <- parameters;
-#X text 125 221 <- optional tunings;
-#X text 189 262 <- etc.;
-#X text 25 52 granulesf~ creates granular textures by mixing together
+#X restore 75 331 pd more-messages;
+#X text 36 106 granulesf~ creates granular textures by mixing together
 enveloped grains taken from a soundfile stored in an array.;
-#X msg 60 133 adrenv 0.05 0.1 0.3 1;
-#N canvas 0 22 828 525 skiptimes 0;
-#X msg 282 152 maxskip -1;
-#X msg 209 151 minskip 0;
-#X obj 60 385 outlet;
-#X text 363 153 set to full buffer (default);
-#X obj 209 124 t b b;
-#X obj 209 101 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
--1;
-#X obj 19 31 t b b;
-#X obj 19 8 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1 -1
-;
-#X text 69 15 constrain min & max skiptimes \; in this case each grain
-starts (or ends) at the same time;
-#X msg 263 326 minskip \$1;
-#X msg 357 326 maxskip \$1;
-#X obj 266 224 hsl 128 15 0 20000 0 0 empty empty skiptime -2 -6 0
-8 -81528 -1 -1 0 1;
-#X obj 263 268 t f f;
-#X floatatom 263 247 5 0 0 0 - - -, f 5;
-#X text 403 225 slide it!;
-#X floatatom 357 256 5 0 0 0 - - -, f 5;
-#X obj 357 300 + 0;
-#X text 398 255 optional offset;
-#X msg 19 54 minskip 5000;
-#X msg 120 52 maxskip 5000;
-#X obj 357 274 t b f;
-#X connect 0 0 2 0;
-#X connect 1 0 2 0;
-#X connect 4 0 1 0;
-#X connect 4 1 0 0;
-#X connect 5 0 4 0;
-#X connect 6 0 18 0;
-#X connect 6 1 19 0;
-#X connect 7 0 6 0;
-#X connect 9 0 2 0;
-#X connect 10 0 2 0;
+#X msg 92 187 adrenv 0.05 0.1 0.3 1;
+#X obj 199 537 soundfiler;
+#X obj 199 486 openpanel;
+#X msg 199 462 bang;
+#X msg 199 509 read -resize \$1 gsf_wavetable;
+#X text 132 167 grain envelope;
+#X obj 36 387 lyonpotpourri/granulesf~ gsf_wavetable gsf_window;
+#X obj 36 210 lyonpotpourri/function~ gsf_window;
+#X obj 36 457 lpp-meters;
+#X text 239 461 <= load your sound here - it should be at least 20
+seconds long, f 69;
+#X obj 33 16 lpp-icon granulesf~;
+#X obj 36 239 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 57 238 <= turn on grains;
+#X text 147 266 <= triggering;
+#X text 136 306 <= optional tunings;
+#X text 114 285 <= parameters;
+#X text 195 332 <= etc.;
+#X connect 1 0 16 0;
+#X connect 2 0 15 0;
+#X connect 4 0 15 0;
+#X connect 5 0 1 0;
+#X connect 6 0 15 0;
+#X connect 7 0 15 0;
+#X connect 9 0 16 0;
 #X connect 11 0 13 0;
-#X connect 12 0 9 0;
-#X connect 12 1 16 0;
-#X connect 13 0 12 0;
-#X connect 15 0 20 0;
-#X connect 16 0 10 0;
-#X connect 18 0 2 0;
-#X connect 19 0 2 0;
-#X connect 20 0 16 0;
-#X connect 20 1 16 1;
-#X restore 60 239 pd skiptimes;
-#X text 150 238 <- constrain grain selection;
-#X obj 466 452 soundfiler;
-#X obj 466 401 openpanel;
-#X msg 466 377 bang;
-#X msg 466 424 read -resize \$1 gsf_wavetable;
-#X obj 23 10 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X text 100 113 grain envelope;
-#X connect 0 0 5 0;
-#X connect 0 1 5 1;
-#X connect 3 0 2 0;
-#X connect 4 0 0 0;
-#X connect 5 0 7 0;
-#X connect 5 1 7 1;
-#X connect 6 0 5 2;
-#X connect 10 0 0 0;
-#X connect 11 0 3 0;
-#X connect 12 0 0 0;
-#X connect 13 0 0 0;
-#X connect 19 0 2 0;
-#X connect 20 0 0 0;
-#X connect 23 0 25 0;
-#X connect 24 0 23 0;
-#X connect 25 0 22 0;
+#X connect 12 0 11 0;
+#X connect 13 0 10 0;
+#X connect 15 0 17 0;
+#X connect 15 1 17 1;
+#X connect 20 0 2 0;
