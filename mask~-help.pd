@@ -1,34 +1,172 @@
-#N canvas 168 173 424 386 10;
-#X msg 31 93 tempo \$1;
-#X floatatom 31 68 5 0 0 0 - mask-tempo-in -, f 5;
-#X obj 31 144 mask~ 1 0 0 0 1 0 0 0.5 0 1 0 0 0.2 0.4 0.6 0.8;
-#X obj 31 205 clickhold~;
-#X obj 31 232 osc~ 120;
-#X obj 242 177 adsr~ 5 10 10 200 0.7 0.1;
-#X obj 31 268 *~;
-#X obj 31 303 *~ 0.1;
-#X obj 31 329 dac~;
-#X obj 31 177 mask~ 440 500 370 1000 888;
-#X obj 32 8 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#N canvas 0 22 195 209 initialize 0;
+#N canvas 850 409 663 739 12;
+#X msg 52 189 tempo \$1;
+#X floatatom 52 164 5 0 0 0 - mask-tempo-in -;
+#X obj 52 417 osc~ 120;
+#X obj 52 453 *~;
+#X obj 52 496 lpp-meters;
+#X obj 44 11 lpp-icon mask~;
+#X text 269 43 - click-driven sequencer;
+#X obj 347 360 lyonpotpourri/adsr~ 5 10 10 200 0.7 0.1;
+#X obj 52 390 lyonpotpourri/clickhold~;
+#X obj 52 215 lyonpotpourri/samm~ 60 4;
+#X obj 99 262 send~ mask-digital-clock;
+#N canvas 511 61 1043 297 index-mode 0;
+#X obj 233 51 lyonpotpourri/mask~ 1 2 3 4 5 4 3 2;
+#X obj 233 83 lyonpotpourri/mask~ 100 200 300 400 500;
+#X obj 233 115 lyonpotpourri/click2float~;
+#X floatatom 233 147 5 0 0 0 - - -;
+#X msg 25 62 indexmode 1;
+#X obj 233 19 receive~ mask-digital-clock;
+#X obj 25 29 loadbang;
+#X text 520 84 <= with index mode turned on \, you can access individual
+list members with (non-zero) indices. This is very useful for keeping
+multiple mask~ units in sync.;
+#X obj 22 107 lyonpotpourri/click2float~;
+#X floatatom 188 146 5 0 0 0 - - -;
+#X connect 0 0 1 0;
+#X connect 0 0 8 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 4 0 1 0;
+#X connect 5 0 0 0;
+#X connect 6 0 4 0;
+#X connect 8 0 9 0;
+#X restore 235 460 pd index-mode;
+#N canvas 1488 643 857 674 operation 0;
+#X obj 76 160 s \$0-mask-msgs;
+#X msg 76 127 gate \$1;
+#X obj 76 92 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X text 95 92 with gate turned off \, the mask will continue to advance
+\, but will not send out values. This gate is on by default.;
+#X msg 81 209 gozero;
+#X obj 81 440 s \$0-mask-msgs2;
+#X text 137 207 the mask will return to its first value on the next
+click. This can be used to sync several mask~ units.;
+#X msg 229 295 noloop \$1;
+#X obj 229 263 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 249 267 when turned on \, the mask will mute itself at the
+end of its cycle. Turn mute off to restore normal operation;
+#X msg 241 346 mute \$1;
+#X obj 241 323 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X connect 1 0 0 0;
+#X connect 2 0 1 0;
+#X connect 4 0 5 0;
+#X connect 7 0 5 0;
+#X connect 8 0 7 0;
+#X connect 10 0 5 0;
+#X connect 11 0 10 0;
+#X restore 235 505 pd operation;
+#X obj 302 281 r \$0-mask-msgs;
+#X obj 68 335 r \$0-mask-msgs2;
+#N canvas 0 23 195 209 init 0;
 #X msg 39 74 60;
 #X obj 39 48 loadbang;
 #X obj 39 114 s mask-tempo-in;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
-#X restore 87 305 pd initialize;
-#X text 33 41 mask~ - click-driven sequencer;
-#X obj 31 119 samm~ 60 4;
-#X connect 0 0 13 0;
+#X restore 235 640 pd init;
+#N canvas 1317 744 939 536 patterns 0;
+#X msg 42 159 addmask 1 600 800 100 400 900 910 350;
+#X obj 42 306 s \$0-mask-msgs2;
+#X msg 163 239 recall 1;
+#X msg 162 216 recall 0;
+#X text 24 26 a [mask~] can store up to 1024 patterns \, numbered starting
+from 0 The data provided at instantiation is stored as pattern 0 \,
+so it is recommended to add more patterns starting at location 1 Adding
+a pattern does not affect current playback. Use the "recall" message
+to load the new pattern.;
+#X text 236 218 recall the original pattern;
+#X msg 163 266 recall 2;
+#X msg 61 194 addmask 2 150 1300;
+#X text 234 241 recall new patterns;
+#X msg 185 373 sequence -1;
+#X text 276 373 send -1 as a paramter to turn off sequencing;
+#X text 209 419 recall a pattern (the parameter) and play it once to
+the end \, after which the mask mutes itself. Unmute the mask to restore
+normal operation;
+#X msg 591 248 mute \$1;
+#X msg 591 224 0;
+#X msg 133 418 playonce 1;
+#X msg 514 247 gozero;
+#X obj 606 153 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 674 220 0;
+#X msg 673 248 noloop \$1;
+#X obj 607 177 t b b b;
+#X text 624 153 restore normal operation after "playonce";
+#X msg 177 347 sequence 2 0 1;
+#X text 290 346 sequence a series of stored patterns \, referenced
+by pattern number. The sequence will loop until you stop it.;
+#X text 316 160 add a new pattern at location 1;
+#X text 201 193 add another pattern at location 2;
+#X connect 0 0 1 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 6 0 1 0;
+#X connect 7 0 1 0;
+#X connect 9 0 1 0;
+#X connect 12 0 1 0;
+#X connect 13 0 12 0;
+#X connect 14 0 1 0;
+#X connect 15 0 1 0;
+#X connect 16 0 19 0;
+#X connect 17 0 18 0;
+#X connect 18 0 1 0;
+#X connect 19 0 15 0;
+#X connect 19 1 13 0;
+#X connect 19 2 17 0;
+#X connect 21 0 1 0;
+#X restore 235 550 pd patterns;
+#X obj 52 362 lyonpotpourri/mask~ 440 500 370 1000 888;
+#X obj 52 307 lyonpotpourri/mask~ 1 0 0 0 1 0 0 0.5 0 1 0 0 0.2 0.4
+0.6 0.8, f 61;
+#N canvas 1753 863 698 404 phaselock 0;
+#X obj 200 244 lyonpotpourri/mask~ 10 20 30 40 50 60 70;
+#X obj 200 279 lyonpotpourri/click2float~;
+#X floatatom 200 318 5 0 0 0 - - -;
+#X msg 137 84 phaselock 1;
+#X obj 39 50 loadbang;
+#X msg 39 166 addmask 1 100 200 300 400 500 600 700;
+#X msg 399 207 recall \$1;
+#X obj 399 184 hradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 2;
+#X msg 125 120 addmask 2 1 2 3 4 5 6 7;
+#X obj 39 77 t b b b;
+#X text 393 163 recall patterns. They all stay in sync;
+#X text 134 30 Turning on phaselock mode keeps all stored patterns
+synched to the same location. This requires that all stored patterns
+be the same length of course;
+#X obj 200 198 lyonpotpourri/samm~ 80 1;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 0 0;
+#X connect 4 0 9 0;
+#X connect 5 0 0 0;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 0 0;
+#X connect 9 0 5 0;
+#X connect 9 1 8 0;
+#X connect 9 2 3 0;
+#X connect 12 0 0 0;
+#X restore 235 595 pd phaselock;
+#X text 49 101 [mask~] puts out its next stored value in response to
+a click. Multiple patterns may be stored in a [mask~]. Useful for building
+sample-accurate drum machines and sequencers.;
+#X connect 0 0 9 0;
 #X connect 1 0 0 0;
-#X connect 2 0 5 0;
-#X connect 2 0 9 0;
+#X connect 2 0 3 0;
 #X connect 3 0 4 0;
-#X connect 4 0 6 0;
-#X connect 5 0 6 1;
-#X connect 6 0 7 0;
-#X connect 7 0 8 0;
-#X connect 7 0 8 1;
-#X connect 9 0 3 0;
-#X connect 13 0 2 0;
+#X connect 3 0 4 1;
+#X connect 7 0 3 1;
+#X connect 8 0 2 0;
+#X connect 9 0 10 0;
+#X connect 9 0 18 0;
+#X connect 13 0 18 0;
+#X connect 14 0 17 0;
+#X connect 17 0 8 0;
+#X connect 18 0 7 0;
+#X connect 18 0 17 0;
