@@ -1,6 +1,5 @@
 #N canvas 687 213 716 552 12;
-#X obj 25 218 npan~ 4;
-#X obj 71 192 phasor~ 0.2;
+#X obj 169 162 phasor~ 0.2;
 #X obj 25 162 noise~;
 #X obj 26 359 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
 #N canvas 0 22 450 300 meter 0;
@@ -94,24 +93,25 @@
 #X connect 7 0 1 0;
 #X connect 9 0 3 0;
 #X restore 220 316 pd meter;
-#X text 83 217 arg: number of outlets;
+#X text 197 215 arg: number of outlets;
 #X obj 27 19 lpp-icon npan~;
-#X msg 320 419 \; pd dsp \$1;
-#X obj 320 381 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X msg 329 435 \; pd dsp \$1;
+#X obj 329 397 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X text 340 382 turn on DACs;
+#X text 349 398 turn on DACs;
 #X text 223 61 - perimeter panning for an arbitrary number of channel
 outputs, f 69;
 #X text 27 110 Left inlet is signal to pan. Right inlet (ranging from
 0-1) determines perimeter pan location.;
-#X connect 0 0 4 0;
-#X connect 0 1 6 0;
-#X connect 0 2 8 0;
-#X connect 0 3 10 0;
-#X connect 1 0 0 1;
-#X connect 2 0 0 0;
-#X connect 4 0 3 0;
-#X connect 6 0 5 0;
-#X connect 8 0 7 0;
-#X connect 10 0 9 0;
-#X connect 14 0 13 0;
+#X obj 25 218 lyonpotpourri/npan~ 4;
+#X connect 0 0 17 1;
+#X connect 1 0 17 0;
+#X connect 3 0 2 0;
+#X connect 5 0 4 0;
+#X connect 7 0 6 0;
+#X connect 9 0 8 0;
+#X connect 13 0 12 0;
+#X connect 17 0 3 0;
+#X connect 17 1 5 0;
+#X connect 17 2 7 0;
+#X connect 17 3 9 0;
