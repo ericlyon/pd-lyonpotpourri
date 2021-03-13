@@ -1,48 +1,64 @@
-#N canvas 770 168 473 383 10;
-#X obj 186 212 magfreq_analysis~;
-#X obj 186 262 channel~;
-#X obj 186 178 osc~ 440;
-#X msg 95 223 channel \$1;
-#X floatatom 95 199 5 0 0 0 - - -, f 5;
-#X obj 186 302 snapshot~;
-#X obj 379 182 metro 100;
-#X obj 379 155 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
-1;
-#X floatatom 186 334 5 0 0 0 - - -, f 5;
-#X obj 282 258 channel~;
-#X obj 282 298 snapshot~;
-#X floatatom 282 334 5 0 0 0 - - -, f 5;
-#X floatatom 186 151 5 0 0 0 - - -, f 5;
-#X obj 95 150 loadbang;
-#X msg 95 174 2;
-#X msg 379 130 1;
-#X obj 379 105 loadbang;
-#X msg 252 180 fftinfo;
-#X obj 9 7 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X text 19 198 select bin;
-#X text 8 124 try different frequencies \, then see what bins they
-show up in, f 69;
-#X text 13 39 magfreq_analysis~ - Analyze input as magnitude/frequency
-spectrum. You could use the output to drive an oscillator bank and
-resynthesize the spectrum \, possibly with frequency alterations.,
-f 67;
-#X connect 0 0 1 0;
-#X connect 0 1 9 0;
-#X connect 1 0 5 0;
-#X connect 2 0 0 0;
-#X connect 3 0 1 0;
-#X connect 3 0 9 0;
-#X connect 4 0 3 0;
-#X connect 5 0 8 0;
+#N canvas 770 168 722 618 12;
+#X obj 207 372 channel~;
+#X obj 207 247 osc~ 440;
+#X msg 109 341 channel \$1;
+#X floatatom 109 316 5 0 0 0 - #0-channel -;
+#X obj 207 434 snapshot~;
+#X obj 382 385 metro 100;
+#X obj 382 364 tgl 15 0 empty \$0-metrotog empty 17 7 0 10 -262144
+-1 -1 1 1;
+#X floatatom 207 507 5 0 0 0 - - -;
+#X obj 307 372 channel~;
+#X obj 307 434 snapshot~;
+#X floatatom 307 466 8 0 0 0 - - -;
+#X floatatom 176 209 5 0 0 0 - #0-frequency -;
+#X msg 308 247 fftinfo;
+#X obj 32 14 lpp-icon magfreq_analysis~;
+#X text 369 465 <= estimated frequency for selected bin;
+#X text 252 506 <= amplitude for selected bin;
+#X text 22 314 select bin to inspect, f 10;
+#X obj 207 281 magfreq_analysis~ 8 2;
+#X text 247 49 - estimate of instantaneous amplitude/frequency spectrum
+;
+#X text 372 282 args: overlap factor \, window factor;
+#X text 34 109 Analyze input as amplitude/frequency spectra. Optional
+arguments are overlap factor and window factor \, which must both be
+a factor of 2, f 71;
+#X text 367 249 <= show analysis constants;
+#X text 216 207 <= try different frequencies \, then see what bins
+they show up in, f 86;
+#N canvas 597 899 609 371 init 0;
+#X obj 39 117 symbol \$0-frequency;
+#X obj 187 117 symbol \$0-metrotog;
+#X obj 39 45 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 332 117 symbol \$0-channel;
+#X obj 39 70 t b b b;
+#X msg 39 233 \; \$1 440 \; \$2 1 \; \$3 5;
+#X obj 39 189 pack s s s;
+#X obj 39 9 loadbang;
+#X connect 0 0 6 0;
+#X connect 1 0 6 1;
+#X connect 2 0 4 0;
+#X connect 3 0 6 2;
+#X connect 4 0 0 0;
+#X connect 4 1 1 0;
+#X connect 4 2 3 0;
 #X connect 6 0 5 0;
-#X connect 6 0 10 0;
-#X connect 7 0 6 0;
+#X connect 7 0 2 0;
+#X restore 84 506 pd init;
+#X connect 0 0 4 0;
+#X connect 1 0 17 0;
+#X connect 2 0 0 0;
+#X connect 2 0 8 0;
+#X connect 3 0 2 0;
+#X connect 4 0 7 0;
+#X connect 5 0 4 0;
+#X connect 5 0 9 0;
+#X connect 6 0 5 0;
+#X connect 8 0 9 0;
 #X connect 9 0 10 0;
-#X connect 10 0 11 0;
-#X connect 12 0 2 0;
-#X connect 13 0 14 0;
-#X connect 14 0 4 0;
-#X connect 15 0 7 0;
-#X connect 16 0 15 0;
+#X connect 11 0 1 0;
+#X connect 12 0 17 0;
 #X connect 17 0 0 0;
+#X connect 17 1 8 0;

@@ -1,11 +1,11 @@
 #N canvas 353 108 669 435 12;
-#X obj 101 101 cnv 15 190 40 empty empty LyonPotpourri 8 18 1 28 -261682
+#X obj 101 101 cnv 15 195 40 empty empty LyonPotpourri 8 18 1 28 -261682
 -4160 0;
-#X obj 411 315 cnv 15 200 50 empty empty empty 20 12 0 14 -1 -66577
+#X obj 411 315 cnv 15 105 50 empty empty empty 20 12 0 14 -1 -66577
 0;
 #X text 92 50 A helper abstraction used in the documentation of LyonPotpourri
 , f 29;
-#X obj 101 142 cnv 15 190 38 empty \$0-extern-name empty 8 16 0 18
+#X obj 101 142 cnv 15 195 38 empty \$0-extern-name empty 8 16 0 18
 -262130 -13381 0;
 #X obj 389 203 s \$0-extern-name;
 #X obj 390 93 loadbang;
@@ -14,4 +14,4 @@
 #X connect 5 0 7 0;
 #X connect 6 0 4 0;
 #X connect 7 0 6 0;
-#X coords 0 -1 1 1 192 82 2 100 100;
+#X coords 0 -1 1 1 197 82 2 100 100;
