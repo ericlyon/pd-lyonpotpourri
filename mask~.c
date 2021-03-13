@@ -129,13 +129,13 @@ void mask_showmask(t_mask *x, t_floatarg p) {
   }
   if(found) {
     len = x->masks[location].length;
-    post("pattern length is %d",len);
+    post("mask~: pattern length is %d",len);
     for(i = 0; i < len; i++) {
       post("%d: %f",i,x->masks[location].pat[i]);
     }
 
   } else {
-    error("no pattern stored at location %d",location);
+    pd_error(x, "mask~: no pattern stored at location %d",location);
   }
 }
 
@@ -158,7 +158,7 @@ void mask_recall(t_mask *x, t_floatarg p)
       x->phase = 0;
     }
   } else {
-    error("no pattern stored at location %d",location);
+    pd_error(x, "mask~: no pattern stored at location %d",location);
   }
 }
 
@@ -168,18 +168,18 @@ void mask_sequence(t_mask *x, t_symbol *msg, int argc, t_atom *argv)
   int i;
 
   if(argc > MAXSEQ) {
-    error("%d exceeds possible length for a sequence",argc);
+    pd_error(x, "mask~: %d exceeds possible length for a sequence",argc);
     return;
   }
   if(argc < 1) {
-    error("you must sequence at least 1 mask");
+    pd_error(x, "mask~: you must sequence at least 1 mask");
     return;
   }
   for(i = 0; i < argc; i++) {
     x->sequence.seq[i] = atom_getfloatarg(i,argc,argv);
   }
   if(x->sequence.seq[0] < 0) {
-    post("sequencing turned off");
+    // post("sequencing turned off");
     x->sequence.length = 0;
     return;
   }
@@ -197,16 +197,16 @@ void mask_addmask(t_mask *x, t_symbol *msg, int argc, t_atom *argv)
   int i;
 
   if(argc < 2) {
-    error("must specify location and mask");
+    pd_error(x, "mask~: must specify location and mask");
     return;
   }
   if(argc > MAXLEN) {
-    error("mask is limited to length %d",MAXLEN);
+    pd_error(x, "mask~ is limited to length %d",MAXLEN);
     return;
   }
   location = atom_getintarg(0,argc,argv);
   if(location < 0 || location > MAXMASKS - 1) {
-    error("illegal location");
+    pd_error(x, "mask~: addmask - illegal location");
     return;
   }
   if(x->masks[location].pat == NULL) {

@@ -1,4 +1,4 @@
-#N canvas 850 409 663 739 12;
+#N canvas 954 222 663 739 12;
 #X msg 52 189 tempo \$1;
 #X floatatom 52 164 5 0 0 0 - mask-tempo-in -;
 #X obj 52 417 osc~ 120;
@@ -31,11 +31,11 @@ multiple mask~ units in sync.;
 #X connect 5 0 0 0;
 #X connect 6 0 4 0;
 #X connect 8 0 9 0;
-#X restore 235 460 pd index-mode;
+#X restore 230 508 pd index-mode;
 #N canvas 1488 643 857 674 operation 0;
 #X obj 76 160 s \$0-mask-msgs;
 #X msg 76 127 gate \$1;
-#X obj 76 92 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+#X obj 76 92 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
 ;
 #X text 95 92 with gate turned off \, the mask will continue to advance
 \, but will not send out values. This gate is on by default.;
@@ -58,7 +58,7 @@ end of its cycle. Turn mute off to restore normal operation;
 #X connect 8 0 7 0;
 #X connect 10 0 5 0;
 #X connect 11 0 10 0;
-#X restore 235 505 pd operation;
+#X restore 230 541 pd operation;
 #X obj 302 281 r \$0-mask-msgs;
 #X obj 68 335 r \$0-mask-msgs2;
 #N canvas 0 23 195 209 init 0;
@@ -67,7 +67,7 @@ end of its cycle. Turn mute off to restore normal operation;
 #X obj 39 114 s mask-tempo-in;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
-#X restore 235 640 pd init;
+#X restore 230 631 pd init;
 #N canvas 1317 744 939 536 patterns 0;
 #X msg 42 159 addmask 1 600 800 100 400 900 910 350;
 #X obj 42 306 s \$0-mask-msgs2;
@@ -119,7 +119,7 @@ by pattern number. The sequence will loop until you stop it.;
 #X connect 19 1 13 0;
 #X connect 19 2 17 0;
 #X connect 21 0 1 0;
-#X restore 235 550 pd patterns;
+#X restore 230 571 pd patterns;
 #X obj 52 362 lyonpotpourri/mask~ 440 500 370 1000 888;
 #X obj 52 307 lyonpotpourri/mask~ 1 0 0 0 1 0 0 0.5 0 1 0 0 0.2 0.4
 0.6 0.8, f 61;
@@ -152,7 +152,7 @@ be the same length of course;
 #X connect 9 1 8 0;
 #X connect 9 2 3 0;
 #X connect 12 0 0 0;
-#X restore 235 595 pd phaselock;
+#X restore 230 601 pd phaselock;
 #X text 49 101 [mask~] puts out its next stored value in response to
 a click. Multiple patterns may be stored in a [mask~]. Useful for building
 sample-accurate drum machines and sequencers.;
