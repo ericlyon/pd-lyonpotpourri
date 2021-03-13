@@ -1,13 +1,13 @@
-#N canvas 687 213 522 443 10;
-#X obj -38 157 npan~ 4;
-#X obj 1 124 phasor~ 0.2;
-#X obj -38 98 noise~;
-#X obj -37 298 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
+#N canvas 687 213 716 552 12;
+#X obj 25 218 npan~ 4;
+#X obj 71 192 phasor~ 0.2;
+#X obj 25 162 noise~;
+#X obj 26 359 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
 #N canvas 0 22 450 300 meter 0;
 #X obj 110 164 snapshot~;
 #X obj 126 114 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X floatatom 110 187 5 0 0 0 - - -, f 5;
+#X floatatom 110 187 5 0 0 0 - - -;
 #X obj 110 91 env~ 1024;
 #X obj 126 140 metro 100;
 #X obj 109 211 - 100;
@@ -24,13 +24,13 @@
 #X connect 6 0 7 0;
 #X connect 7 0 1 0;
 #X connect 9 0 3 0;
-#X restore -38 255 pd meter;
-#X obj 24 299 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
+#X restore 25 316 pd meter;
+#X obj 90 359 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
 #N canvas 0 22 450 300 meter 0;
 #X obj 110 164 snapshot~;
 #X obj 126 114 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X floatatom 110 187 5 0 0 0 - - -, f 5;
+#X floatatom 110 187 5 0 0 0 - - -;
 #X obj 110 91 env~ 1024;
 #X obj 126 140 metro 100;
 #X obj 109 211 - 100;
@@ -47,13 +47,13 @@
 #X connect 6 0 7 0;
 #X connect 7 0 1 0;
 #X connect 9 0 3 0;
-#X restore 23 256 pd meter;
-#X obj 87 299 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
+#X restore 89 316 pd meter;
+#X obj 155 359 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
 #N canvas 0 22 450 300 meter 0;
 #X obj 110 164 snapshot~;
 #X obj 126 114 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X floatatom 110 187 5 0 0 0 - - -, f 5;
+#X floatatom 110 187 5 0 0 0 - - -;
 #X obj 110 91 env~ 1024;
 #X obj 126 140 metro 100;
 #X obj 109 211 - 100;
@@ -70,13 +70,13 @@
 #X connect 6 0 7 0;
 #X connect 7 0 1 0;
 #X connect 9 0 3 0;
-#X restore 86 256 pd meter;
-#X obj 148 300 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
-#N canvas 0 22 450 300 meter 0;
+#X restore 154 316 pd meter;
+#X obj 221 359 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
+#N canvas 0 23 450 300 meter 0;
 #X obj 110 164 snapshot~;
 #X obj 126 114 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X floatatom 110 187 5 0 0 0 - - -, f 5;
+#X floatatom 110 187 5 0 0 0 - - -;
 #X obj 110 91 env~ 1024;
 #X obj 126 140 metro 100;
 #X obj 109 211 - 100;
@@ -93,14 +93,17 @@
 #X connect 6 0 7 0;
 #X connect 7 0 1 0;
 #X connect 9 0 3 0;
-#X restore 147 257 pd meter;
-#X obj -44 13 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X text 20 158 arg: number of outlets;
-#X text 80 97 Left inlet is sound to pan. Right inlet (ranging from
+#X restore 220 316 pd meter;
+#X text 83 217 arg: number of outlets;
+#X obj 27 19 lpp-icon npan~;
+#X msg 320 419 \; pd dsp \$1;
+#X obj 320 381 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 340 382 turn on DACs;
+#X text 223 61 - perimeter panning for an arbitrary number of channel
+outputs, f 69;
+#X text 27 110 Left inlet is signal to pan. Right inlet (ranging from
 0-1) determines perimeter pan location.;
-#X text -35 57 npan~ - perimeter panning for an arbitrary number of
-channel outputs, f 69;
 #X connect 0 0 4 0;
 #X connect 0 1 6 0;
 #X connect 0 2 8 0;
@@ -111,3 +114,4 @@ channel outputs, f 69;
 #X connect 6 0 5 0;
 #X connect 8 0 7 0;
 #X connect 10 0 9 0;
+#X connect 14 0 13 0;
