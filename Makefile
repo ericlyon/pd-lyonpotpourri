@@ -97,7 +97,6 @@ unused_shared_sources = \
 	leanconvert.c \
 	leanunconvert.c \
 	unconvert.c \
-	qsortE.c \
 	$(empty)
 
 # extra files
