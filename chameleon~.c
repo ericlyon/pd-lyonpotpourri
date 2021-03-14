@@ -1,7 +1,6 @@
 #import "MSPd.h"
 #include "chameleon_pd.h"
 #include "stdlib.h"
-
 /* Pure Data version of chameleon */
 
 /* maximum number of parameters for each pattern */
@@ -27,6 +26,7 @@ static void chameleon_dsp_free(t_chameleon *x);
 static void chameleon_set_parameters(t_chameleon *x);
 static t_int *chameleon_perform(t_int *w);
 static void chameleon_copy_to_MSP_buffer(t_chameleon *x, int slot);
+static void chameleon_clear_presets(t_chameleon *x);
 
 /*user messages*/
 static void chameleon_info(t_chameleon *x);
@@ -159,6 +159,7 @@ void chameleon_tilde_setup(void)
     class_addmethod(chameleon_class,(t_method)chameleon_minimum_process,gensym("minimum_process"), A_FLOAT, 0);
     class_addmethod(chameleon_class,(t_method)chameleon_print_parameters,gensym("print_parameters"), 0);
     class_addmethod(chameleon_class,(t_method)chameleon_report,gensym("report"), 0);
+    class_addmethod(chameleon_class,(t_method)chameleon_clear_presets,gensym("clear_presets"), 0);
     potpourri_announce(OBJECT_NAME);
 }
 
@@ -171,15 +172,27 @@ void chameleon_print_parameters(t_chameleon *x){
     }
 }
 
+void chameleon_clear_presets(t_chameleon *x){
+    int i;
+    for(i = 0; i < MAX_SLOTS; i++){
+        x->slots[i].pcount = 0;
+    }
+    x->stored_slot_count = 0;
+}
+
 void chameleon_report(t_chameleon *x){
     t_atom *data = x->data;
     t_symbol *loadslot = gensym("loadslot");
     t_symbol *comma = gensym(",");
     t_slot *slots = x->slots;
+    
+  //  t_atom atom_comma;
+    long stored_slot_count = x->stored_slot_count;
+    long slots_printed = 0;
     int data_index = 0;
-    // int pattern_count = 0;
     int i,j;
     
+
     for(i = 0; i < MAX_SLOTS; i++){
         if( slots[i].pcount > 0 ){
             SETSYMBOL(data+data_index, loadslot); data_index++;
@@ -188,12 +201,15 @@ void chameleon_report(t_chameleon *x){
             for(j = 0; j < slots[i].pcount; j++){
                 SETFLOAT(data+data_index, slots[i].params[j]); data_index++;
             }
-            SETSYMBOL(data+data_index, comma); data_index++;
+            if( slots_printed < (stored_slot_count - 1)){
+                (data+data_index)->a_type = A_COMMA;
+                (data+data_index)->a_w.w_index = 0;
+                data_index++;
+            }
+            slots_printed++;
         }
     }
-   //  post("data count %d", data_index);
     outlet_list(x->listo, 0, data_index, data);
-    // post("reported %d chameleon patterns", pattern_count);
 }
 
 void chameleon_maximum_process(t_chameleon *x, t_floatarg n)
@@ -251,7 +267,7 @@ void chameleon_store(t_chameleon *x, t_floatarg fp)
     long slotnum = (long) fp;
     int i;
     if( (slotnum < 0) || (slotnum >= MAX_SLOTS)){
-        pd_error((t_object *)x, "%ld is not a valid slot number", slotnum);
+        pd_error(x, "%ld is not a valid slot number", slotnum);
         return;
     }
     // we're good, store the data
@@ -260,6 +276,7 @@ void chameleon_store(t_chameleon *x, t_floatarg fp)
     for(i = 0; i < x->pcount; i++){
         x->slots[slotnum].params[i] = x->params[i];
     }
+    x->stored_slot_count += 1;
 }
 
 void chameleon_loadslot(t_chameleon *x,t_symbol *msg, short argc, t_atom *argv)
@@ -276,7 +293,7 @@ void chameleon_loadslot(t_chameleon *x,t_symbol *msg, short argc, t_atom *argv)
    // post("args are pcount: %d and slot: %d", pcount, slot);
     post("chameleon~: loaded slot %d", slot);
     if(argc < pcount + 2){
-        pd_error((t_object *)x, "wrong number of arguments to loadslot. Should be %d, got %d", pcount, argc);
+        pd_error(x, "wrong number of arguments to loadslot. Should be %d, got %d", pcount, argc);
     }
     for(i = 0; i < pcount; i++){
        // atom_arg_getfloat( &x->slots[slot].params[i], 2 + i, argc, argv);
@@ -284,6 +301,7 @@ void chameleon_loadslot(t_chameleon *x,t_symbol *msg, short argc, t_atom *argv)
         // post("data %d: %f", i, x->slots[slot].params[i]);
     }
     x->slots[slot].pcount = pcount;
+    x->stored_slot_count += 1;
 }
 
 
@@ -291,7 +309,7 @@ void chameleon_recall(t_chameleon *x, t_floatarg fp)
 {
     long slotnum = (long) fp;
     if( (slotnum < 0) || (slotnum >= MAX_SLOTS)){
-        pd_error((t_object *)x, "%ld is not a valid slot number", slotnum);
+        pd_error(x, "%ld is not a valid slot number", slotnum);
         return;
     }
     // post("preparing to recall slot %d", slotnum);
@@ -366,7 +384,7 @@ void *chameleon_new(t_symbol *msg, short argc, t_atom *argv)
     // post("max dsp units: %d", x->max_dsp_units);
     x->sinelen = 65536;
     x->verbose = 0;
-
+    x->stored_slot_count = 0;
     
     
     x->chan1buf = NULL;
