@@ -1,100 +1,94 @@
-#N canvas 551 163 627 595 10;
-#X obj 36 501 shoehorn~ 8 2, f 32;
-#N canvas 371 171 799 432 splitter 0;
-#X obj 533 297 block~ 128 1;
-#X obj 103 237 outlet~;
-#X obj 151 236 outlet~;
-#X obj 203 243 outlet~;
-#X obj 251 242 outlet~;
-#X obj 325 241 outlet~;
-#X obj 373 240 outlet~;
-#X obj 425 247 outlet~;
-#X obj 133 70 inlet~;
-#X obj 54 234 outlet~;
-#X obj 270 86 unpack f f f f f f f f;
-#X msg 271 53 1 1 1 1 1 1 1 1;
-#X obj 625 244 outlet;
-#X obj 271 18 loadbang;
-#X obj 598 94 inlet;
-#X obj 133 172 splitbank~ 8, f 78;
-#X obj 537 253 outlet~;
-#X obj 453 85 inlet;
-#X obj 15 71 r splitbank-msg;
-#X obj 495 92 inlet;
-#X obj 547 92 inlet;
-#X text 51 269 FFT size is (signal-vector-size * overlap-factor). The
+#N canvas 551 163 679 881 12;
+#N canvas 371 171 1056 561 splitter 0;
+#X obj 543 338 block~ 128 1;
+#X obj 203 269 outlet~;
+#X obj 263 269 outlet~;
+#X obj 324 269 outlet~;
+#X obj 384 269 outlet~;
+#X obj 444 269 outlet~;
+#X obj 505 269 outlet~;
+#X obj 565 269 outlet~;
+#X obj 143 39 inlet~;
+#X obj 143 269 outlet~;
+#X obj 188 154 unpack f f f f f f f f;
+#X msg 188 121 1 1 1 1 1 1 1 1;
+#X obj 686 269 outlet;
+#X obj 188 86 loadbang;
+#X obj 686 39 inlet;
+#X obj 625 269 outlet~;
+#X obj 550 39 inlet;
+#X obj 25 112 r splitbank-msg;
+#X obj 595 39 inlet;
+#X obj 640 39 inlet;
+#X obj 143 213 lyonpotpourri/splitbank~ 8, f 78;
+#X text 708 214 arg: number of sub-spectra (must be a power of 2);
+#X text 65 334 FFT size is (signal-vector-size * overlap-factor). The
 overlap factor is specified internally \, and defaults to 8.0. Overlap-add
-and windowing is performed internally \, so the block~ overlap factor
+and windowing is performed internally \, so the [block~] overlap factor
 must be 1.0. The vector size of 128 used here produces an FFT size
 of 1024 by default., f 41;
-#X connect 8 0 15 0;
-#X connect 10 0 15 1;
-#X connect 10 1 15 2;
-#X connect 10 2 15 3;
-#X connect 10 3 15 4;
-#X connect 10 4 15 5;
-#X connect 10 5 15 6;
-#X connect 10 6 15 7;
-#X connect 10 7 15 8;
+#X connect 8 0 20 0;
+#X connect 10 0 20 1;
+#X connect 10 1 20 2;
+#X connect 10 2 20 3;
+#X connect 10 3 20 4;
+#X connect 10 4 20 5;
+#X connect 10 5 20 6;
+#X connect 10 6 20 7;
+#X connect 10 7 20 8;
 #X connect 11 0 10 0;
 #X connect 13 0 11 0;
-#X connect 14 0 15 12;
-#X connect 15 0 9 0;
-#X connect 15 1 1 0;
-#X connect 15 2 2 0;
-#X connect 15 3 3 0;
-#X connect 15 4 4 0;
-#X connect 15 5 5 0;
-#X connect 15 6 6 0;
-#X connect 15 7 7 0;
-#X connect 15 8 16 0;
-#X connect 15 9 12 0;
-#X connect 17 0 15 9;
-#X connect 18 0 15 0;
-#X connect 19 0 15 10;
-#X connect 20 0 15 11;
-#X restore 36 363 pd splitter;
-#X obj 36 549 dac~;
-#X obj 365 465 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X connect 14 0 20 12;
+#X connect 16 0 20 9;
+#X connect 17 0 20 0;
+#X connect 18 0 20 10;
+#X connect 19 0 20 11;
+#X connect 20 0 9 0;
+#X connect 20 1 1 0;
+#X connect 20 2 2 0;
+#X connect 20 3 3 0;
+#X connect 20 4 4 0;
+#X connect 20 5 5 0;
+#X connect 20 6 6 0;
+#X connect 20 7 7 0;
+#X connect 20 8 15 0;
+#X connect 20 9 12 0;
+#X restore 51 441 pd splitter;
+#X obj 407 541 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X msg 365 523 \; pd dsp \$1;
-#X obj 399 288 hsl 128 15 0 1 0 0 empty empty manual_override -2 -8
+#X msg 407 599 \; pd dsp \$1;
+#X obj 414 366 hsl 128 15 0 1 0 0 empty empty manual_override -2 -8
 0 10 -262144 -1 -1 0 1;
-#X floatatom 252 538 5 0 0 0 sync_signal - -, f 5;
-#X obj 272 169 hsl 128 15 0 0.01 0 0 empty empty synthesis_threshold
+#X floatatom 294 650 5 0 0 1 sync_signal - -;
+#X obj 287 247 hsl 128 15 0 0.01 0 0 empty empty synthesis_threshold
 -2 -8 0 10 -262144 -1 -1 0 1;
-#N canvas 184 87 542 546 soundsource 0;
-#X obj 66 406 outlet~;
-#X obj 62 350 *~ 0.1;
-#X obj 42 198 -~ 0.5;
-#X obj 46 144 phasor~ 440;
-#X floatatom 109 63 5 0 0 0 - - -, f 5;
-#X obj 147 146 phasor~ 440;
-#X obj 150 191 -~ 0.5;
-#X obj 133 96 *~ 1.5;
-#X msg 416 179 100;
-#X obj 416 157 loadbang;
-#X obj 268 26 inlet;
-#X obj 342 300 s splitbank-freq;
-#X obj 138 316 hsl 128 15 0 0.4 0 0 empty empty gain -2 -8 0 10 -262144
--1 -1 4700 1;
+#N canvas 184 87 542 291 soundsource 0;
+#X obj 53 243 outlet~;
+#X obj 53 185 -~ 0.5;
+#X obj 53 155 phasor~ 440;
+#X floatatom 53 81 5 0 0 0 - - -;
+#X obj 161 155 phasor~ 440;
+#X obj 161 185 -~ 0.5;
+#X obj 161 124 *~ 1.5;
+#X msg 329 114 100;
+#X obj 329 92 loadbang;
+#X obj 53 35 inlet;
+#X obj 329 137 s splitbank-freq;
 #X connect 1 0 0 0;
 #X connect 2 0 1 0;
 #X connect 3 0 2 0;
-#X connect 4 0 3 0;
-#X connect 4 0 7 0;
-#X connect 5 0 6 0;
-#X connect 6 0 1 0;
-#X connect 7 0 5 0;
-#X connect 8 0 11 0;
-#X connect 9 0 8 0;
-#X connect 10 0 4 0;
-#X connect 12 0 1 1;
-#X restore 36 231 pd soundsource;
-#X floatatom 36 206 5 0 0 2 frequency splitbank-freq -, f 5;
-#X obj 318 210 hsl 128 15 0 1 0 0 empty empty table_offset -2 -8 0
-10 -262144 -1 -1 0 1;
-#X obj 352 250 hsl 128 15 0 1 0 0 empty empty bin_offset -2 -8 0 10
+#X connect 3 0 6 0;
+#X connect 4 0 5 0;
+#X connect 5 0 0 0;
+#X connect 6 0 4 0;
+#X connect 7 0 10 0;
+#X connect 8 0 7 0;
+#X connect 9 0 3 0;
+#X restore 51 309 pd soundsource;
+#X floatatom 51 284 5 0 0 2 frequency splitbank-freq -;
+#X obj 333 288 hsl 128 15 0 1 0 0 empty empty table_offset -2 -8 0
+10 -262144 -1 -1 6400 1;
+#X obj 367 328 hsl 128 15 0 1 0 0 empty empty bin_offset -2 -8 0 10
 -262144 -1 -1 0 1;
 #N canvas 617 105 817 690 state 0;
 #X obj 49 66 inlet;
@@ -140,32 +134,39 @@ of 1024 by default., f 41;
 \$481 \$482 \$483 \$484 \$485 \$486 \$487 \$488 \$489 \$490 \$491 \$492
 \$493 \$494 \$495 \$496 \$497 \$498 \$499 \$500 \$501 \$502 \$503 \$504
 \$505 \$506 \$507 \$508 \$509 \$510 \$511 \$512 512;
-#X msg 433 93 205 7 49 10 211 58 51 76 121 62 63 212 243 181 157 71
-165 233 140 16 82 20 74 152 238 218 230 214 204 50 26 117 242 179 215
-53 237 79 199 95 91 41 161 208 80 189 67 154 3 252 146 216 65 23 148
-192 200 223 248 36 134 5 106 119 124 130 145 227 133 13 45 235 59 128
-14 166 251 34 113 42 56 164 94 122 93 17 190 37 224 176 174 103 102
-175 84 159 196 101 9 253 184 98 132 4 221 229 66 245 115 191 141 114
-100 185 210 81 110 193 44 137 68 155 116 169 203 127 97 108 2 249 52
-125 167 254 178 39 158 240 247 29 195 234 46 123 202 32 61 239 194
-25 222 118 143 197 180 120 15 188 182 92 172 38 207 153 18 160 156
-31 96 27 30 72 220 236 70 40 231 75 241 11 54 69 250 47 206 33 19 198
-129 6 171 64 150 85 83 24 107 99 225 246 135 226 88 187 0 213 162 60
-147 77 255 131 111 168 244 139 21 105 1 112 22 43 177 35 228 173 138
-170 183 232 209 149 217 163 136 86 57 90 8 142 12 144 78 104 201 55
-48 89 109 87 28 186 219 151 73 126 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 512;
+#X msg 433 93 208 38 275 355 285 390 214 472 338 365 87 218 124 456
+91 335 373 81 189 56 152 397 193 295 14 236 146 103 356 339 58 140
+4 405 296 223 221 380 431 232 228 464 348 136 477 350 511 506 239 43
+400 197 371 10 430 455 167 500 323 334 203 97 90 432 461 453 179 505
+265 100 294 404 142 381 49 475 21 321 28 316 67 436 424 362 8 284 374
+443 376 349 157 209 360 5 117 271 258 109 132 343 54 71 368 66 403
+501 439 419 138 353 474 478 312 204 454 226 42 114 198 476 354 433
+471 358 311 210 196 216 278 361 392 177 288 274 231 440 24 370 162
+89 442 99 169 379 450 364 401 184 41 254 266 50 279 75 272 264 195
+466 447 438 393 130 7 308 15 260 300 502 135 118 409 441 51 484 106
+331 495 345 470 163 104 205 425 30 481 3 276 344 127 246 257 230 336
+82 64 351 217 320 427 188 215 337 185 247 273 325 80 147 164 182 398
+451 206 384 116 238 241 225 307 200 369 363 486 160 35 192 435 122
+2 377 31 202 421 17 172 304 318 286 418 261 509 119 259 483 462 108
+488 229 77 498 391 458 446 57 183 319 352 428 76 315 191 326 480 299
+115 26 389 105 493 12 452 86 346 291 492 170 503 410 330 155 48 174
+224 110 125 251 47 220 385 123 213 227 289 262 120 72 497 243 22 94
+314 171 332 137 79 280 33 0 277 422 253 473 305 113 402 267 347 292
+134 9 156 341 340 429 34 20 175 290 139 6 310 489 411 282 78 154 460
+44 37 23 32 485 148 303 459 69 165 187 406 168 93 357 444 445 313 268
+248 465 372 178 153 293 414 129 25 367 479 328 151 237 329 281 255
+98 324 207 395 415 327 322 95 186 194 19 504 222 102 469 131 18 166
+270 487 212 496 366 180 298 59 244 201 283 386 383 45 449 16 507 29
+145 240 297 55 190 176 412 1 408 52 46 40 387 73 27 53 490 211 219
+482 342 88 508 317 150 68 333 13 85 173 143 84 434 36 65 301 302 158
+499 426 269 463 101 112 39 121 494 417 92 242 388 263 382 399 133 491
+159 63 234 141 457 437 233 467 250 83 309 413 181 111 107 249 378 235
+256 306 60 74 468 359 287 420 423 96 149 126 61 396 416 510 252 128
+62 394 407 375 448 199 144 161 70 245 11 512;
 #X text 434 69 current bin mapping;
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
-#X restore 279 470 pd state;
+#X restore 321 546 pd state;
 #N canvas 0 22 695 522 sig2float 0;
 #X obj 200 68 inlet~;
 #X obj 343 201 outlet;
@@ -178,19 +179,20 @@ of 1024 by default., f 41;
 #X connect 3 0 5 0;
 #X connect 4 0 3 0;
 #X connect 5 0 2 0;
-#X restore 252 501 pd sig2float;
-#N canvas 53 282 535 369 interval-sets 0;
-#X msg -79 52 1 1 1 1 1 1 1 1;
-#X msg -66 76 1 1.1 1.2 1.3 1.4 1.5 1.6 1.7;
-#X msg -56 103 1 1.01 1.02 1.03 1.04 1.05 1.06 1.07;
-#X obj -92 294 s splitbank-msg;
-#X msg -92 21 1 1.25 1.5 2 0.5 1 1.875 2.25;
-#X msg -41 132 1 1.059 1.122 1.189 1.259 1.334 1.414 1.498;
-#X msg -26 160 1 1.122 1.259 1.414 1.587 1.781 1.999 2.244;
-#X msg -12 195 1 1.189 1.414 1.681 1.999 2.378 2.828 3.363;
-#X msg 4 217 1 1.0009 1.002 1.003 1.004 1.005 1.006 1.007;
-#X text 13 250 list unpacks to frequency multipliers for each spectrum
+#X restore 294 577 pd sig2float;
+#N canvas 53 282 753 442 interval-sets 0;
+#X msg 70 67 1 1 1 1 1 1 1 1;
+#X msg 83 91 1 1.1 1.2 1.3 1.4 1.5 1.6 1.7;
+#X msg 93 118 1 1.01 1.02 1.03 1.04 1.05 1.06 1.07;
+#X obj 64 355 s splitbank-msg;
+#X msg 57 36 1 1.25 1.5 2 0.5 1 1.875 2.25;
+#X msg 108 147 1 1.059 1.122 1.189 1.259 1.334 1.414 1.498;
+#X msg 123 175 1 1.122 1.259 1.414 1.587 1.781 1.999 2.244;
+#X msg 137 210 1 1.189 1.414 1.681 1.999 2.378 2.828 3.363;
+#X msg 153 232 1 1.0009 1.002 1.003 1.004 1.005 1.006 1.007;
+#X text 169 311 list unpacks to frequency multipliers for each spectrum
 fragment;
+#X msg 167 263 0.5 0.666666 0.8 1 1.25 1.5 1.875 2;
 #X connect 0 0 3 0;
 #X connect 1 0 3 0;
 #X connect 2 0 3 0;
@@ -199,7 +201,8 @@ fragment;
 #X connect 6 0 3 0;
 #X connect 7 0 3 0;
 #X connect 8 0 3 0;
-#X restore 404 69 pd interval-sets;
+#X connect 10 0 3 0;
+#X restore 239 762 pd interval-sets;
 #N canvas 111 193 455 381 frequency-synthesis-constraints 0;
 #X obj 14 214 s splitbank-msg;
 #X msg 67 86 maxfreq 600;
@@ -219,39 +222,39 @@ the maximum \, no sound is produced.;
 #X connect 4 0 0 0;
 #X connect 5 0 0 0;
 #X connect 6 0 0 0;
-#X restore 404 95 pd frequency-synthesis-constraints;
-#N canvas 367 60 618 567 basic-messages 0;
-#X msg -86 57 manual_override \$1;
-#X msg -1 306 scramble;
-#X msg -9 275 ramptime 5000;
-#X obj -104 418 s splitbank-msg;
-#X msg -49 175 powerfade \$1;
-#X obj -49 148 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X restore 239 788 pd frequency-synthesis-constraints;
+#N canvas 611 297 618 567 basic-messages 0;
+#X msg 58 115 manual_override \$1;
+#X msg 143 364 scramble;
+#X msg 135 333 ramptime 5000;
+#X obj 40 476 s splitbank-msg;
+#X msg 95 233 powerfade \$1;
+#X obj 95 206 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X msg -28 239 mute \$1;
-#X obj -28 202 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X msg 116 297 mute \$1;
+#X obj 116 260 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X msg -102 -7 fftinfo;
-#X msg -114 -41 showstate;
-#X obj -86 26 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
-1;
-#X text 62 307 set new random mapping;
-#X text 29 239 mute all sound and release CPU cycles;
-#X text 40 60 manually move between two settings when this toggle is
-on;
-#X text -44 -6 print FFT size and related information;
-#X text -47 -40 show the current bin mapping;
-#X text 83 268 set transition time (in milliseconds) to move from one
-mapping to the next;
-#X obj -19 34 s splitbank-man-override;
-#X text 144 362 change overlap factor (DACs must be restarted);
-#X msg 79 448 \; pd dsp \$1;
-#X obj 79 395 t b b;
-#X msg 114 418 1;
-#X msg 79 418 0;
-#X obj 123 394 delay 1;
-#X msg 78 361 overlap 4;
-#X text 41 172 select equal-power cross fade \, rather than linear
+#X msg 42 51 fftinfo;
+#X msg 30 17 showstate;
+#X obj 58 84 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X text 206 365 set new random mapping;
+#X text 173 297 mute all sound and release CPU cycles;
+#X text 184 118 manually move between two settings when this toggle
+is on;
+#X text 100 52 print FFT size and related information;
+#X text 97 18 show the current bin mapping;
+#X text 227 326 set transition time (in milliseconds) to move from
+one mapping to the next;
+#X obj 125 92 s splitbank-man-override;
+#X text 288 420 change overlap factor (DACs must be restarted);
+#X msg 223 506 \; pd dsp \$1;
+#X obj 223 453 t b b;
+#X msg 258 476 1;
+#X msg 223 476 0;
+#X obj 267 452 delay 1;
+#X msg 222 419 overlap 4;
+#X text 185 230 select equal-power cross fade \, rather than linear
 (default);
 #X connect 0 0 3 0;
 #X connect 1 0 3 0;
@@ -271,14 +274,8 @@ mapping to the next;
 #X connect 23 0 21 0;
 #X connect 24 0 3 0;
 #X connect 24 0 20 0;
-#X restore 403 43 pd basic-messages;
-#X text 26 39 splitbank~ splits an incoming sound into a number of
-sub-spectra \, each of which is independently tunable. Each sub-spectrum
-emerges from its own outlet \, from where it can be fully spatialized
-\, or collapsed to stereo as shown in this example. The internal design
-of the FFT processing requires that the object be deployed inside a
-block~ subpatcher \, in order to gain control over the FFT size.;
-#X text 121 363 <- main DSP block~ subpatch;
+#X restore 238 736 pd basic-messages;
+#X text 136 441 <- main DSP block~ subpatch;
 #N canvas 131 124 508 327 timing 0;
 #N canvas 95 351 507 328 steadyclock 0;
 #X obj 83 25 inlet;
@@ -326,30 +323,39 @@ does not operate when manual override is selected;
 #X connect 11 0 0 0;
 #X connect 12 0 13 0;
 #X connect 13 0 11 0;
-#X restore 405 123 pd timing;
-#X obj 26 4 cnv 15 155 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X obj 436 508 sel 1;
-#X obj 436 533 s splitbank-startbang;
-#X connect 0 0 2 0;
-#X connect 0 1 2 1;
-#X connect 1 0 0 0;
-#X connect 1 1 0 1;
-#X connect 1 2 0 2;
-#X connect 1 3 0 3;
-#X connect 1 4 0 4;
-#X connect 1 5 0 5;
-#X connect 1 6 0 6;
-#X connect 1 7 0 7;
-#X connect 1 8 13 0;
-#X connect 1 9 12 0;
-#X connect 3 0 4 0;
-#X connect 3 0 21 0;
-#X connect 5 0 1 4;
-#X connect 7 0 1 1;
-#X connect 8 0 1 0;
-#X connect 9 0 8 0;
-#X connect 10 0 1 2;
-#X connect 11 0 1 3;
-#X connect 13 0 6 0;
-#X connect 21 0 22 0;
+#X restore 240 816 pd timing;
+#X obj 496 590 sel 1;
+#X obj 496 615 s splitbank-startbang;
+#X obj 51 578 lyonpotpourri/shoehorn~ 8 2, f 32;
+#X obj 52 673 lpp-meters;
+#X obj 36 15 lpp-icon splitbank~;
+#X text 42 119 [splitbank~] splits an incoming sound into a number
+of sub-spectra \, each of which is independently tunable. Each sub-spectrum
+emerges from its own outlet \, from where it can be fully spatialized
+\, or collapsed to stereo as shown in this example. The internal design
+of the FFT processing requires that the object be deployed inside a
+[block~] subpatcher \, in order to gain control over the FFT size.
+;
+#X text 268 47 - tunable spectrum splitter;
+#X connect 0 0 19 0;
+#X connect 0 1 19 1;
+#X connect 0 2 19 2;
+#X connect 0 3 19 3;
+#X connect 0 4 19 4;
+#X connect 0 5 19 5;
+#X connect 0 6 19 6;
+#X connect 0 7 19 7;
+#X connect 0 8 11 0;
+#X connect 0 9 10 0;
+#X connect 1 0 2 0;
+#X connect 1 0 17 0;
+#X connect 3 0 0 4;
+#X connect 5 0 0 1;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;
+#X connect 8 0 0 2;
+#X connect 9 0 0 3;
+#X connect 11 0 4 0;
+#X connect 17 0 18 0;
+#X connect 19 0 20 0;
+#X connect 19 1 20 1;

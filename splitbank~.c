@@ -1,5 +1,5 @@
 #include "MSPd.h"
-#include "fftease.h"
+// #include "fftease.h"
 #define OSCBANK_TABLE_LENGTH (8192)
 #define OSCBANK_DEFAULT_TOPFREQ (15000.0)
 
@@ -132,23 +132,23 @@ static void fftease_shiftout( t_oscbank *x, float *output );
 static void fftease_obank_topfreq( t_oscbank *x, float topfreq );
 static void fftease_obank_bottomfreq( t_oscbank *x, float bottomfreq );
 
-/*
-void rfft( float *x, int N, int forward );
-void cfft( float *x, int NC, int forward );
-void bitreverse( float *x, int N );
-void fold( float *I, float *W, int Nw, float *O, int N, int n );
-void init_rdft(int n, int *ip, float *w);
-void rdft(int n, int isgn, float *a, int *ip, float *w);
-void bitrv2(int n, int *ip, float *a);
-void cftsub(int n, float *a, float *w);
-void rftsub(int n, float *a, int nc, float *c);
-void makewt(int nw, int *ip, float *w);
-void makect(int nc, int *ip, float *c);
-void makewindows( float *H, float *A, float *S, int Nw, int N, int I );
-void makehamming( float *H, float *A, float *S, int Nw, int N, int I,int odd );
-void makehanning( float *H, float *A, float *S, int Nw, int N, int I,int odd );
-void convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor );
-*/
+
+static void rfft( float *x, int N, int forward );
+static void cfft( float *x, int NC, int forward );
+static void bitreverse( float *x, int N );
+static void fold( float *I, float *W, int Nw, float *O, int N, int n );
+static void init_rdft(int n, int *ip, float *w);
+static void rdft(int n, int isgn, float *a, int *ip, float *w);
+static void bitrv2(int n, int *ip, float *a);
+static void cftsub(int n, float *a, float *w);
+static void rftsub(int n, float *a, int nc, float *c);
+static void makewt(int nw, int *ip, float *w);
+static void makect(int nc, int *ip, float *c);
+static void makewindows( float *H, float *A, float *S, int Nw, int N, int I );
+static void makehamming( float *H, float *A, float *S, int Nw, int N, int I,int odd );
+static void makehanning( float *H, float *A, float *S, int Nw, int N, int I,int odd );
+static void convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor );
+
 //////////
 void splitbank_tilde_setup(void) {
 
@@ -914,8 +914,8 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
     x->input_buffer[i] = x->output_buffer[i] = 0.0;
   }
 
-  lpp_init_rdft( x->N, x->bitshuffle, x->trigland);
-  lpp_makehanning( x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->vector_size, 0);
+  init_rdft( x->N, x->bitshuffle, x->trigland);
+  makehanning( x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->vector_size, 0);
 
 
   x->c_fundamental =  (float) x->R/(float)x->N ;
@@ -993,11 +993,11 @@ void  fftease_obank_bottomfreq( t_oscbank *x, float bottomfreq )
 /**************************************************/
 void  fftease_obank_analyze( t_oscbank *x )
 {
-  lpp_fold( x->input_buffer, x->Wanal, x->Nw, x->complex_spectrum, x->N, x->in_count );
+  fold( x->input_buffer, x->Wanal, x->Nw, x->complex_spectrum, x->N, x->in_count );
 
-  lpp_rdft( x->N, 1, x->complex_spectrum, x->bitshuffle, x->trigland );
+  rdft( x->N, 1, x->complex_spectrum, x->bitshuffle, x->trigland );
 
-  lpp_convert( x->complex_spectrum, x->interleaved_spectrum, x->N2, x->c_lastphase_in,
+  convert( x->complex_spectrum, x->interleaved_spectrum, x->N2, x->c_lastphase_in,
            x->c_fundamental, x->c_factor_in );
 
 }
@@ -1452,5 +1452,68 @@ void convert(float *S, float *C, int N2, float *lastphase, float fundamental, fl
         phasediff += TWOPI;
     }
     C[freq] = phasediff*factor + i*fundamental;
+  }
+}
+void fold( float *I, float *W, int Nw, float *O, int N, int n )
+{
+  int i;
+
+  for ( i = 0; i < N; i++ )
+    O[i] = 0.;
+
+  while ( n < 0 )
+    n += N;
+  n %= N;
+  for ( i = 0; i < Nw; i++ ) {
+    O[n] += I[i]*W[i];
+    if ( ++n == N )
+      n = 0;
+  }
+}
+
+void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
+{
+  int i;
+  float sum ;
+
+
+  if (odd) {
+    for ( i = 0 ; i < Nw ; i++ )
+      H[i] = A[i] = S[i] = sqrt(0.5 * (1. + cos(PI + TWOPI * i / (Nw - 1))));
+  }
+
+  else {
+
+    for ( i = 0 ; i < Nw ; i++ )
+      H[i] = A[i] = S[i] = 0.5 * (1. + cos(PI + TWOPI * i / (Nw - 1)));
+
+  }
+
+  if ( Nw > N ) {
+    float x ;
+
+    x = -(Nw - 1)/2. ;
+    for ( i = 0 ; i < Nw ; i++, x += 1. )
+      if ( x != 0. ) {
+        A[i] *= N*sin( PI*x/N )/(PI*x) ;
+        if ( I )
+          S[i] *= I*sin( PI*x/I )/(PI*x) ;
+      }
+  }
+  for ( sum = i = 0 ; i < Nw ; i++ )
+    sum += A[i] ;
+
+  for ( i = 0 ; i < Nw ; i++ ) {
+    float afac = 2./sum ;
+    float sfac = Nw > N ? 1./afac : afac ;
+    A[i] *= afac ;
+    S[i] *= sfac ;
+  }
+
+  if ( Nw <= N && I ) {
+    for ( sum = i = 0 ; i < Nw ; i += I )
+      sum += S[i]*S[i] ;
+    for ( sum = 1./sum, i = 0 ; i < Nw ; i++ )
+      S[i] *= sum ;
   }
 }
