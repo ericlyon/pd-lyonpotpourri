@@ -1,37 +1,32 @@
-#N canvas 606 234 406 508 10;
-#X obj 31 269 rotapan~ 5;
-#X obj 31 373 shoehorn~ 5 2;
-#X obj 31 414 *~ 0.01;
-#X obj 106 415 *~ 0.01;
-#X obj 31 97 osc~ 400;
-#X obj 65 120 osc~ 500;
-#X obj 120 228 phasor~ 0.08;
-#X obj 31 463 dac~;
-#X obj 110 164 osc~ 430;
-#X obj 129 187 osc~ 479;
-#X obj 95 142 osc~ 300;
-#X text 22 34 rotapan~ rotates an array of channels preserving spatial
+#N canvas 459 372 512 781 12;
+#X obj 37 190 osc~ 400;
+#X obj 70 213 osc~ 500;
+#X obj 202 335 phasor~ 0.08;
+#X obj 136 257 osc~ 430;
+#X obj 169 280 osc~ 479;
+#X obj 103 235 osc~ 300;
+#X obj 37 372 lyonpotpourri/rotapan~ 5;
+#X obj 37 476 lyonpotpourri/shoehorn~ 5 2;
+#X obj 37 559 lpp-meters;
+#X floatatom 202 309 5 0 0 1 panning_speed - -;
+#X text 28 127 [rotapan~] rotates an array of channels preserving spatial
 relations. The rightmost inlet controls the phase of the rotation \,
 in the range (0-1). The argument determines the length of the channel
 array.;
-#X obj 26 4 cnv 15 155 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X obj 148 374 hsl 128 15 0 0.15 0 0 empty empty gain -2 -8 0 10 -232576
--1 -1 0 1;
-#X connect 0 0 1 0;
-#X connect 0 1 1 1;
-#X connect 0 2 1 2;
-#X connect 0 3 1 3;
-#X connect 0 4 1 4;
-#X connect 1 0 2 0;
-#X connect 1 1 3 0;
-#X connect 2 0 7 0;
-#X connect 3 0 7 1;
-#X connect 4 0 0 0;
-#X connect 5 0 0 1;
-#X connect 6 0 0 5;
-#X connect 8 0 0 3;
-#X connect 9 0 0 4;
-#X connect 10 0 0 2;
-#X connect 13 0 3 1;
-#X connect 13 0 2 1;
+#X text 222 375 arg: number of input signals;
+#X text 241 54 - multichannel rotation;
+#X obj 30 23 lpp-icon rotapan~;
+#X connect 0 0 6 0;
+#X connect 1 0 6 1;
+#X connect 2 0 6 5;
+#X connect 3 0 6 3;
+#X connect 4 0 6 4;
+#X connect 5 0 6 2;
+#X connect 6 0 7 0;
+#X connect 6 1 7 1;
+#X connect 6 2 7 2;
+#X connect 6 3 7 3;
+#X connect 6 4 7 4;
+#X connect 7 0 8 0;
+#X connect 7 1 8 1;
+#X connect 9 0 2 0;
