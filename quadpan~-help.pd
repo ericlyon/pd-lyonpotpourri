@@ -1,11 +1,10 @@
-#N canvas 87 151 509 477 10;
-#X obj 7 206 quadpan~, f 29;
-#X obj 8 316 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
+#N canvas 325 251 646 534 12;
+#X obj 51 372 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
 #N canvas 0 22 450 300 meter 0;
 #X obj 110 164 snapshot~;
 #X obj 126 114 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X floatatom 110 187 5 0 0 0 - - -, f 5;
+#X floatatom 110 187 5 0 0 0 - - -;
 #X obj 110 91 env~ 1024;
 #X obj 126 140 metro 100;
 #X obj 109 211 - 100;
@@ -22,13 +21,13 @@
 #X connect 6 0 7 0;
 #X connect 7 0 1 0;
 #X connect 9 0 3 0;
-#X restore 7 273 pd meter;
-#X obj 69 317 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
+#X restore 50 329 pd meter;
+#X obj 117 373 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
 #N canvas 0 22 450 300 meter 0;
 #X obj 110 164 snapshot~;
 #X obj 126 114 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X floatatom 110 187 5 0 0 0 - - -, f 5;
+#X floatatom 110 187 5 0 0 0 - - -;
 #X obj 110 91 env~ 1024;
 #X obj 126 140 metro 100;
 #X obj 109 211 - 100;
@@ -45,13 +44,13 @@
 #X connect 6 0 7 0;
 #X connect 7 0 1 0;
 #X connect 9 0 3 0;
-#X restore 68 274 pd meter;
-#X obj 132 317 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
+#X restore 116 329 pd meter;
+#X obj 184 373 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
 #N canvas 0 22 450 300 meter 0;
 #X obj 110 164 snapshot~;
 #X obj 126 114 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X floatatom 110 187 5 0 0 0 - - -, f 5;
+#X floatatom 110 187 5 0 0 0 - - -;
 #X obj 110 91 env~ 1024;
 #X obj 126 140 metro 100;
 #X obj 109 211 - 100;
@@ -68,13 +67,13 @@
 #X connect 6 0 7 0;
 #X connect 7 0 1 0;
 #X connect 9 0 3 0;
-#X restore 131 274 pd meter;
-#X obj 193 318 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
+#X restore 183 329 pd meter;
+#X obj 251 374 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
 #N canvas 0 22 450 300 meter 0;
 #X obj 110 164 snapshot~;
 #X obj 126 114 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X floatatom 110 187 5 0 0 0 - - -, f 5;
+#X floatatom 110 187 5 0 0 0 - - -;
 #X obj 110 91 env~ 1024;
 #X obj 126 140 metro 100;
 #X obj 109 211 - 100;
@@ -91,30 +90,37 @@
 #X connect 6 0 7 0;
 #X connect 7 0 1 0;
 #X connect 9 0 3 0;
-#X restore 192 275 pd meter;
-#X obj 95 105 hsl 128 15 0 1 0 0 empty empty X-coordinate -2 -8 0 10
--262144 -1 -1 0 1;
-#X obj 107 146 hsl 128 15 0 1 0 0 empty empty Y-coordinate -2 -8 0
-10 -262144 -1 -1 0 1;
-#X text 5 61 quadpan~ takes in X/Y cordinates (as signal or float)
-to position a signal within a quadraphonic plane.;
-#X obj 7 154 osc~ 440;
-#X obj 11 25 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X text 195 169 Spatial positioning of output channels;
-#X text 195 187 is as follows:;
-#X text 360 223 3;
-#X text 292 223 4;
-#X text 362 275 1;
-#X text 291 275 2;
-#X connect 0 0 2 0;
-#X connect 0 1 4 0;
-#X connect 0 2 6 0;
-#X connect 0 3 8 0;
-#X connect 2 0 1 0;
-#X connect 4 0 3 0;
-#X connect 6 0 5 0;
-#X connect 8 0 7 0;
-#X connect 9 0 0 1;
-#X connect 10 0 0 2;
-#X connect 12 0 0 0;
+#X restore 250 329 pd meter;
+#X obj 153 185 hsl 128 15 0 1 0 0 empty empty X-coordinate -2 -8 0
+10 -262144 -1 -1 3700 1;
+#X obj 253 227 hsl 128 15 0 1 0 0 empty empty Y-coordinate -2 -8 0
+10 -262144 -1 -1 7200 1;
+#X obj 50 210 osc~ 440;
+#X text 339 263 Spatial positioning of output channels;
+#X text 339 281 is as follows:;
+#X text 504 317 3;
+#X text 436 317 4;
+#X text 506 369 1;
+#X text 435 369 2;
+#X obj 50 262 lyonpotpourri/quadpan~, f 29;
+#X obj 28 19 lpp-icon quadpan~;
+#X msg 365 471 \; pd dsp \$1;
+#X obj 365 435 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X text 385 439 turn DACs on;
+#X text 244 60 - X/Y panning within a plane for joystick-style control
+;
+#X text 48 117 [quadpan~] takes in X/Y cordinates (as signal or float)
+to position an input signal within a quadraphonic plane.;
+#X connect 1 0 0 0;
+#X connect 3 0 2 0;
+#X connect 5 0 4 0;
+#X connect 7 0 6 0;
+#X connect 8 0 17 1;
+#X connect 9 0 17 2;
+#X connect 10 0 17 0;
+#X connect 17 0 1 0;
+#X connect 17 1 3 0;
+#X connect 17 2 5 0;
+#X connect 17 3 7 0;
+#X connect 20 0 19 0;
