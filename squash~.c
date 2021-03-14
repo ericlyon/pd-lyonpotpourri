@@ -48,11 +48,12 @@ static void squash_mute(t_squash *x, t_floatarg f);
 static void squash_free(t_squash *x);
 static void squash_dsp(t_squash *x, t_signal **sp);
 
+
+static void overlapadd( float *I, int N, float *W, float *O, int Nw, int n );
+static void fold( float *I, float *W, int Nw, float *O, int N, int n );
 /*
-void overlapadd( float *I, int N, float *W, float *O, int Nw, int n );
 void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd );
 void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd );
-void fold( float *I, float *W, int Nw, float *O, int N, int n );
 void makewindows( float *H, float *A, float *S, int Nw, int N, int I );
 */
 
@@ -246,10 +247,27 @@ void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
   }
 }
 
+
+
+
+*/
+
+void overlapadd( float *I, int N, float *W, float *O, int Nw, int n )
+{
+  int i ;
+  while ( n < 0 )
+    n += N ;
+  n %= N ;
+  for ( i = 0 ; i < Nw ; i++ ) {
+    O[i] += I[n]*W[i] ;
+    if ( ++n == N )
+      n = 0 ;
+  }
+}
+
 void fold( float *I, float *W, int Nw, float *O, int N, int n )
 
 {
-
   int i;
 
   for ( i = 0; i < N; i++ )
@@ -264,21 +282,6 @@ void fold( float *I, float *W, int Nw, float *O, int N, int n )
       n = 0;
   }
 }
-
-void overlapadd( float *I, int N, float *W, float *O, int Nw, int n )
-
-{
-  int i ;
-  while ( n < 0 )
-    n += N ;
-  n %= N ;
-  for ( i = 0 ; i < Nw ; i++ ) {
-    O[i] += I[n]*W[i] ;
-    if ( ++n == N )
-      n = 0 ;
-  }
-}
-*/
 
 void squash_mute(t_squash *x, t_floatarg f) {
   x->mute = (short)f;
@@ -334,9 +337,9 @@ t_int *squash_perform(t_int *w)
   for ( j = Nw-D; j < Nw; j++ ) {
     input[j] = *in++;
   }
-  lpp_fold( input, Wanal, Nw, buffer, N, x->incnt );
+  fold( input, Wanal, Nw, buffer, N, x->incnt );
   squash_squat( buffer, thresh, ratio, nt, nmult, Nw );
-  lpp_overlapadd( buffer, N, Wsyn, output, Nw, x->incnt );
+  overlapadd( buffer, N, Wsyn, output, Nw, x->incnt );
 
   for ( j = 0; j < D; j++ )
     *out++ = output[j];

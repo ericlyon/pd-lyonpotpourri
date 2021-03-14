@@ -1,7 +1,4 @@
-#N canvas 670 336 409 359 10;
-#X obj 20 229 squash~;
-#X obj 14 14 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
+#N canvas 1027 502 562 609 12;
 #N canvas 565 63 450 300 taps 0;
 #X obj 43 111 noise~;
 #X obj 118 79 metro 1000;
@@ -33,33 +30,56 @@
 #X connect 12 0 9 0;
 #X connect 12 0 13 0;
 #X connect 13 0 10 0;
-#X restore 20 170 pd taps;
-#X obj 20 273 *~ 0.1;
-#X obj 20 308 dac~;
-#X floatatom 59 253 5 0 0 0 - squash-gain -, f 5;
-#X obj 66 308 hsl 128 15 0 0.1 0 0 squash-gain empty gain -2 -8 0 10
--261682 -1 -1 4400 1;
-#X obj 49 196 r squash.messages;
-#N canvas 741 67 448 403 squash-controls 0;
-#X obj 31 130 s squash.messages;
-#X msg 31 106 ratio \$1;
-#X obj 34 62 hsl 128 15 0.5 1 0 0 empty empty ratio -2 -8 0 10 -204786
--1 -1 0 1;
-#X floatatom 31 86 5 0 0 0 - - -, f 5;
-#X obj 29 234 s squash.messages;
-#X obj 32 166 hsl 128 15 0 0.001 0 0 empty empty noise_threshold -2
+#X restore 28 253 pd taps;
+#X obj 57 279 r squash.messages;
+#X obj 28 312 lyonpotpourri/squash~;
+#X obj 28 369 lpp-meters;
+#X obj 22 24 lpp-icon squash~;
+#X text 24 132 [squash~] is based on a compression algorithm by Christopher
+Penrose. It can be useful for extreme effects \, and is notable for
+employing the overlap-add system found in FFTease externals \, though
+all processing is done in the time domain here. This processor is capable
+of generating extreme amplitude ranges. Use with caution \, with a
+low playback gain \, and do not use this external in performance until
+you are very familiar with its operation., f 77;
+#N canvas 515 836 450 300 init 0;
+#X obj 54 114 symbol \$0-ratio;
+#X msg 54 172 \; \$1 0.75 \; \$2 0.4;
+#X obj 166 114 symbol \$0-threshold;
+#X obj 54 143 pack s s;
+#X obj 54 85 t b b;
+#X obj 54 27 loadbang;
+#X obj 54 56 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X connect 0 0 3 0;
+#X connect 2 0 3 1;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X connect 4 1 2 0;
+#X connect 5 0 6 0;
+#X connect 6 0 4 0;
+#X restore 210 504 pd init;
+#N canvas 741 67 528 412 controls 0;
+#X obj 31 139 s squash.messages;
+#X msg 31 115 ratio \$1;
+#X obj 34 71 hsl 128 15 0.5 1 0 0 empty \$0-ratio ratio -2 -8 0 10
+-204786 -1 -1 6350 1;
+#X floatatom 31 95 5 0.5 1.5 0 - - -;
+#X obj 29 243 s squash.messages;
+#X obj 32 175 hsl 128 15 0 0.001 0 0 empty empty noise_threshold -2
 -8 0 10 -204786 -1 -1 0 1;
-#X floatatom 29 190 7 0 0 0 - - -, f 7;
-#X msg 29 210 nt \$1;
-#X text 171 165 set noise floor;
-#X obj 28 347 s squash.messages;
-#X obj 31 279 hsl 128 15 0 1 0 0 empty empty compression_threshold
--2 -8 0 10 -204786 -1 -1 1000 1;
-#X floatatom 28 303 7 0 0 0 - - -, f 7;
-#X msg 28 323 thresh \$1;
-#X text 170 278 set compression threshold;
+#X floatatom 29 199 7 0 0 0 - - -;
+#X msg 29 219 nt \$1;
+#X text 171 174 set noise floor;
+#X obj 28 356 s squash.messages;
+#X obj 31 288 hsl 128 15 0 1 0 0 empty \$0-threshold compression_threshold
+-2 -8 0 10 -204786 -1 -1 5080 1;
+#X floatatom 28 312 7 0 0 0 - - -;
+#X msg 28 332 thresh \$1;
+#X text 170 287 set compression threshold;
 #X text 29 18 lower ratio values give higher compression \, values
-greater than 1 result in expansion.;
+greater than 1 result in expansion. (warning - low values can make
+output VERY loud., f 71;
 #X connect 1 0 0 0;
 #X connect 2 0 3 0;
 #X connect 3 0 1 0;
@@ -69,17 +89,9 @@ greater than 1 result in expansion.;
 #X connect 10 0 11 0;
 #X connect 11 0 12 0;
 #X connect 12 0 9 0;
-#X restore 111 243 pd squash-controls;
-#X text 16 50 squash~ is based on a compression algorithm by Christopher
-Penrose. It can be useful for extreme effects \, and is notable for
-employing the overlap-add system found in FFTease externals \, though
-all processing is done in the time domain here. This processor is capable
-of generating extreme amplitude ranges. Use with caution \, with a
-low playback gain \, and do not use this external in performance until
-you are very familiar with its operation.;
-#X connect 0 0 3 0;
-#X connect 2 0 0 0;
-#X connect 3 0 4 0;
-#X connect 3 0 4 1;
-#X connect 5 0 3 1;
-#X connect 7 0 0 0;
+#X restore 210 474 pd controls;
+#X text 233 55 - an extreme compressor;
+#X connect 0 0 2 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 0 3 1;
