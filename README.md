@@ -15,6 +15,7 @@ LyonPotpourri is Copyright Eric Lyon, 1999-2021, and is covered under the MIT li
 - buffet~ provides operations on a stored buffer
 - bvplay~ selective playback from a stored buffer with enveloping and increment control
 - cartopol~ convert a spectral frame from cartesian to polar form
+- chameleon~ an oracular sound processor
 - channel~ access to a precise address in the signal vector
 - chopper~ munging loop playback from a buffer
 - clean_selector~ like selector~ but crossfades when switching channels
