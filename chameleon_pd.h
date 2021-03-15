@@ -239,6 +239,7 @@ typedef struct _chameleon {
     int recall_parameters_flag;
     t_slot *slots;
     long recall_slot; // slot to be recalled
+    long stored_slot_count; // number of presets currently stored
     /* stuff for chameleon DSP */
     double *sinewave;
     int sinelen;
