@@ -4438,6 +4438,7 @@ seconds long, f 69;
 #X text 136 306 <= optional tunings;
 #X text 114 285 <= parameters;
 #X text 195 332 <= etc.;
+#X text 264 45 - sound file granulator;
 #X connect 1 0 16 0;
 #X connect 2 0 15 0;
 #X connect 4 0 15 0;
