@@ -28,7 +28,7 @@ static void function_adenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 static void function_normalize(t_function *x, t_floatarg f);
 static void function_adrenv(t_function *x, t_symbol *msg, int argc, t_atom *argv);
 static void function_rcos(t_function *x);
-static void function_gaussian(t_function *x);static
+static void function_gaussian(t_function *x);
 static void function_print(t_function *x);
 
 void function_tilde_setup(void)
