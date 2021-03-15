@@ -167,7 +167,7 @@ vdb-fixed-delaytime 200 \; vdb-tempo 60;
 #X obj 31 173 catch~ vdb-input-sound;
 #X text 34 100 [vdb~] treats an array as a delayline with internal
 feedback (thus no lower limit on delaytime by vector size).;
-#X text 231 36 - a delay line with feedback \, exposed in an array
+#X text 251 35 - a delay line with feedback \, exposed in an array
 ;
 #X connect 1 0 9 0;
 #X connect 4 0 9 2;

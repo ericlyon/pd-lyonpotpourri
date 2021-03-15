@@ -15,7 +15,7 @@
 #X obj 36 352 lyonpotpourri/dynss~;
 #X obj 36 405 lpp-meters;
 #X obj 22 19 lpp-icon dynss~;
-#X text 230 55 - dynamic stochastic synthesis (after Xenakis);
+#X text 247 45 - dynamic stochastic synthesis (after Xenakis);
 #N canvas 0 23 643 365 learn 0;
 #X obj 54 201 pdcontrol;
 #X msg 54 139 browse https://www.gold.ac.uk/media/documents-by-section/departments/music/09.2-Sergio-Luque.pdf

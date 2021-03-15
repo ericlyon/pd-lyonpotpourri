@@ -1,4 +1,4 @@
-#N canvas 490 23 554 764 12;
+#N canvas 490 23 554 761 12;
 #X obj 118 309 lyonpotpourri/sfplay~;
 #X obj 43 481 clip~ -1 1;
 #X obj 200 481 clip~ -1 1;
@@ -120,7 +120,7 @@ processor class, f 34;
 #X connect 0 0 2 0;
 #X connect 2 0 1 0;
 #X restore 214 622 pd init;
-#X text 237 51 - Oracular sound processor;
+#X text 262 48 - Oracular sound processor;
 #X obj 33 17 lpp-icon chameleon~;
 #X text 29 112 [chameleon~] is an oracular sound processor. It randomly
 assembles DSP processing from an internal bank of DSP units. This is

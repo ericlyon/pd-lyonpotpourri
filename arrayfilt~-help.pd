@@ -1,4 +1,4 @@
-#N canvas 600 60 547 459 12;
+#N canvas 600 60 582 459 12;
 #X obj 26 157 noise~;
 #N canvas 227 201 1229 589 array-fft-block 0;
 #X obj 65 55 inlet~;
@@ -131,7 +131,7 @@ external that operates on bin magnitudes;
 #X obj 27 16 lpp-icon arrayfilt~;
 #X text 27 112 [arrayfilt~] filters a sound with the contents of an
 array \, so that filters can be drawn by hand;
-#X text 229 52 - use an array as a magnitude spectrum filter;
+#X text 246 52 - use an array as a magnitude spectrum filter;
 #X connect 0 0 1 0;
 #X connect 1 0 3 0;
 #X connect 1 0 3 1;

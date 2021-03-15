@@ -4253,7 +4253,7 @@
 9.19178e-007 7.44534e-007 5.88274e-007 4.50397e-007 3.30904e-007 2.29795e-007
 1.47069e-007 8.27261e-008 3.67671e-008 9.19178e-009;
 #X coords 0 1 32767 -1 200 140 1;
-#X restore 442 83 graph;
+#X restore 483 82 graph;
 #X msg 36 187 rcos;
 #N canvas 92 488 581 367 sprayclouds 0;
 #X obj 9 231 outlet;
@@ -4317,7 +4317,7 @@
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array gsf_wavetable 6.43566e+006 float 2;
 #X coords 0 1 6.43566e+006 -1 200 140 1;
-#X restore 442 223 graph;
+#X restore 483 222 graph;
 #N canvas 181 44 551 550 grist 0;
 #X obj 87 481 outlet;
 #X msg 86 91 grist 25 1000 0.25 3 0.1 0.9 0.1 0.9 50 200;

@@ -90,7 +90,7 @@ first order Markov chains.;
 #X text 218 184 is there a pdq external?;
 #X obj 159 333 lpp-meters;
 #X obj 9 5 lpp-icon markov~;
-#X text 220 43 - 1st order Markov chains for basic melodic coherence
+#X text 228 30 - 1st order Markov chains for basic melodic coherence
 , f 67;
 #X text 376 222 see phase of each individual note (useful for post
 processing), f 35;

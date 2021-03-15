@@ -5,7 +5,7 @@
 #X obj 45 172 lyonpotpourri/clickhold~;
 #X obj 45 247 lpp-meters;
 #X obj 41 16 lpp-icon clickhold~;
-#X text 245 57 - convert a click to sustained signal;
+#X text 269 44 - convert a click to sustained signal;
 #X text 229 128 sample-accurate clock at 120 BPM;
 #X text 297 148 loop through sequence;
 #X text 220 175 sustain clicks for continuous control of oscillator

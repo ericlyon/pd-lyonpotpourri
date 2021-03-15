@@ -1322,7 +1322,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X connect 35 0 10 0;
 #X restore 52 319 pd playback____________________;
 #X obj 47 24 lpp-icon dmach~;
-#X text 259 59 - freeform drum pattern programming;
+#X text 271 52 - freeform drum pattern programming;
 #X text 48 121 [dmach~] coordinates click triggers and increment signals
 for pattern-based sequencing., f 91;
 #X text 412 352 <= look here first;

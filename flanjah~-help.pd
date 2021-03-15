@@ -21,7 +21,7 @@
 #X obj 48 243 -~ 0.5;
 #X obj 146 417 lpp-meters;
 #X obj 41 14 lpp-icon flanjah~;
-#X text 248 51 - A simple flanger;
+#X text 266 42 - A simple flanger;
 #X text 43 113 flanger with two recirculating delays;
 #N canvas 339 464 462 269 init 0;
 #X msg 172 66 0.33;

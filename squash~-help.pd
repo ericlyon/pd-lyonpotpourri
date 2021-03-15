@@ -1,4 +1,4 @@
-#N canvas 600 60 562 609 12;
+#N canvas 600 60 585 609 12;
 #N canvas 565 63 450 300 taps 0;
 #X obj 43 111 noise~;
 #X obj 118 79 metro 1000;
@@ -90,7 +90,7 @@ output VERY loud., f 71;
 #X connect 11 0 12 0;
 #X connect 12 0 9 0;
 #X restore 210 474 pd controls;
-#X text 233 55 - an extreme compressor;
+#X text 247 48 - an extreme compressor;
 #X connect 0 0 2 0;
 #X connect 1 0 2 0;
 #X connect 2 0 3 0;

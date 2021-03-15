@@ -11,7 +11,7 @@
 #X obj 128 281 lyonpotpourri/killdc~;
 #X obj 39 477 lpp-meters;
 #X obj 22 17 lpp-icon epluribus~;
-#X text 236 54 - waveform combiner;
+#X text 253 44 - waveform combiner;
 #X text 236 389 arg: number of input signals to combine;
 #X floatatom 39 151 5 0 0 0 - #0-f1 -;
 #X floatatom 128 233 5 0 0 0 - #0-f2 -;

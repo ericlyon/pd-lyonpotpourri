@@ -55,7 +55,7 @@
 #X obj 38 416 lpp-meters;
 #X obj 56 365 lyonpotpourri/adsr~;
 #X text 266 252 softer envelope;
-#X text 223 40 - ADSR envelope triggered by signal clicks or bangs
+#X text 247 40 - ADSR envelope triggered by signal clicks or bangs
 ;
 #N canvas 600 60 893 602 click-trigger 0;
 #X text 236 120 slow click metronome;

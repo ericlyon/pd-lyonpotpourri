@@ -15,11 +15,11 @@
 #X obj 151 336 tabwrite~ dc-gone;
 #X obj 45 144 osc~ 100;
 #X text 136 278 <- see DC cut in action;
-#X obj 25 375 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 25 375 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text 45 380 DACs need to be on;
 #X obj 22 12 lpp-icon killdc~;
-#X text 233 51 - DC blocker;
+#X text 252 39 - DC blocker;
 #X text 24 116 [killdc~] removes DC from input signal;
 #X msg 25 398 \; pd dsp \$1;
 #X connect 0 0 7 0;

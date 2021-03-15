@@ -1,4 +1,4 @@
-#N canvas 600 60 541 447 12;
+#N canvas 600 60 592 447 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array click-array 8 float 2;
 #X coords 0 1 8 -1 140 70 1;
@@ -17,11 +17,11 @@ is 1 but the click can be set to any value except zero.;
 #X text 75 209 set click value;
 #X obj 78 259 lyonpotpourri/click~;
 #X msg 77 381 \; pd dsp \$1;
-#X obj 77 353 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 77 353 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text 101 352 DACs must be on for this to work;
 #X obj 34 12 lpp-icon click~;
-#X text 239 46 - bang to single-sample click converter;
+#X text 262 42 - bang to single-sample click converter;
 #X connect 2 0 1 0;
 #X connect 2 0 10 0;
 #X connect 3 0 1 0;

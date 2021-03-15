@@ -42,7 +42,7 @@
 #X obj 52 123 osc~ 440;
 #X obj 52 184 lpp-meters;
 #X obj 43 24 lpp-icon poltocar~;
-#X text 281 20 - converts from polar form to rfft~ complex format;
+#X text 272 47 - converts from polar form to rfft~ complex format;
 #X connect 0 0 2 0;
 #X connect 0 0 2 1;
 #X connect 1 0 0 0;

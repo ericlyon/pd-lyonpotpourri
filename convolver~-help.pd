@@ -1,15 +1,15 @@
-#N canvas 555 371 802 827 12;
+#N canvas 455 62 802 761 12;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array cdemo_impulse 240000 float 2;
-#X coords 0 1 240000 -1 200 100 1 0 0;
+#X array cdemo_impulse 220500 float 2;
+#X coords 0 1 220500 -1 200 100 1 0 0;
 #X restore 32 134 graph;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array cdemo_source 62079 float 2;
 #X coords 0 1 62079 -1 200 100 1 0 0;
 #X restore 32 253 graph;
 #N canvas 0 22 450 300 (subpatch) 0;
-#X array cdemo_dest 720000 float 2;
-#X coords 0 1 720000 -1 200 100 1 0 0;
+#X array cdemo_dest 661500 float 2;
+#X coords 0 1 661500 -1 200 100 1 0 0;
 #X restore 32 372 graph;
 #X obj 280 342 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;

@@ -74,7 +74,7 @@
 #X text 212 223 indicate start of sequence;
 #X text 27 110 a simple sample-accurate sequencer with a synchronized
 adsr envelope., f 69;
-#X text 234 55 - sample-accurate number sequencer;
+#X text 247 45 - sample-accurate number sequencer;
 #X connect 1 0 5 0;
 #X connect 1 0 5 1;
 #X connect 2 0 1 0;

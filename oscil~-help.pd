@@ -71,7 +71,7 @@ sawtooth;
 #X connect 0 0 1 0;
 #X connect 1 0 2 0;
 #X restore 222 418 pd init;
-#X text 246 54 - custom oscillator with interpolation between waveforms
+#X text 257 42 - custom oscillator with interpolation between waveforms
 ;
 #X obj 209 201 r \$0-oscil-msgs;
 #N canvas 308 135 823 472 interpolation 0;

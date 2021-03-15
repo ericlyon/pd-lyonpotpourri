@@ -144,7 +144,7 @@ with a click \, thus a sample-accurate event.;
 #X text 214 690 normalize track;
 #X text 449 260 select noise input;
 #X text 450 277 select pad input;
-#X text 266 61 - sample-accurate recording;
+#X text 270 48 - sample-accurate recording;
 #X text 409 393 input signal =>;
 #X text 416 574 select region of track to record on;
 #X floatatom 626 289 5 0 0 0 - - -;
