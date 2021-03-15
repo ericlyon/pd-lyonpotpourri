@@ -1,4 +1,4 @@
-#N canvas 417 22 664 741 12;
+#N canvas 417 23 664 741 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array sf4player 155944 float 2;
 #X coords 0 1 155944 -1 100 70 1 0 0;
@@ -107,7 +107,7 @@
 #X restore 237 643 pd initialize;
 #X msg 46 262 1;
 #X text 67 287 set this for fixed increments (and polyphony);
-#X text 268 439 args: channel count \, overlap count, f 38;
+#X text 309 439 args: channel count \, overlap count, f 38;
 #X obj 46 441 lyonpotpourri/player~ sf4player 1 8;
 #X obj 192 385 lyonpotpourri/clean_selector~ 2;
 #X obj 46 493 lpp-meters;
