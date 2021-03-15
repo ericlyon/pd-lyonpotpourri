@@ -6,7 +6,19 @@
 #include <string.h>
 
 
-#define LYONPOTPOURRI_MSG "-<LyonPotpourri 3.0>-"
+#ifndef LPP_VERSION
+# define LPP_VERSION "3.0"
+#endif
+#ifndef LPP_COMPILE_DATE
+# define LPP_COMPILE_DATE __DATE__
+#endif
+#define LPP_ANNOUNCEMENT "-< LyonPotpourri "LPP_VERSION " >-   |  "
+#define LPP_VERSION4PD "LyonPotpourri " LPP_VERSION " for Pd"
+
+
+#define lpp_version(objectname) post("%s: version %s compiled %s",objectname,LPP_VERSION4PDLPP_COMPILE_DATE);
+
+// #define LYONPOTPOURRI_MSG "-<LyonPotpourri 3.0>-"
 
 #define NO_FREE_FUNCTION 0
 
@@ -39,4 +51,5 @@ void atom_arg_getsym(t_symbol **c, long idx, long ac, t_atom *av);
 
 // #define potpourri_announce(objname)  post("( %s )\t%s",objname,LYONPOTPOURRI_MSG)
 
-#define potpourri_announce(objname)  post("%s (  %s  )",LYONPOTPOURRI_MSG,objname)
+// #define potpourri_announce(objname)  post("%s (  %s  )",LYONPOTPOURRI_MSG,objname)
+#define potpourri_announce(objname)  post("%s ( %s )",LPP_ANNOUNCEMENT,objname)
