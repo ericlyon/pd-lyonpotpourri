@@ -1,4 +1,4 @@
-#N canvas 551 163 679 881 12;
+#N canvas 471 14 679 761 12;
 #N canvas 371 171 1056 561 splitter 0;
 #X obj 543 338 block~ 128 1;
 #X obj 203 269 outlet~;
@@ -54,7 +54,7 @@ of 1024 by default., f 41;
 #X connect 20 8 15 0;
 #X connect 20 9 12 0;
 #X restore 51 441 pd splitter;
-#X obj 407 541 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 407 541 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X msg 407 599 \; pd dsp \$1;
 #X obj 414 366 hsl 128 15 0 1 0 0 empty empty manual_override -2 -8
@@ -87,7 +87,7 @@ of 1024 by default., f 41;
 #X restore 51 309 pd soundsource;
 #X floatatom 51 284 5 0 0 2 frequency splitbank-freq -;
 #X obj 333 288 hsl 128 15 0 1 0 0 empty empty table_offset -2 -8 0
-10 -262144 -1 -1 6400 1;
+10 -262144 -1 -1 0 1;
 #X obj 367 328 hsl 128 15 0 1 0 0 empty empty bin_offset -2 -8 0 10
 -262144 -1 -1 0 1;
 #N canvas 617 105 817 690 state 0;

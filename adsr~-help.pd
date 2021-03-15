@@ -1,11 +1,11 @@
-#N canvas 85 702 623 641 12;
+#N canvas 600 60 623 641 12;
 #X msg 56 204 bang;
 #X obj 38 165 osc~ 400;
 #X obj 38 390 *~;
 #X msg 153 228 10 50 50 50;
 #X msg 160 253 100 50 100 500;
 #X obj 153 206 loadbang;
-#N canvas 0 23 673 325 individual-adsr-elements 1;
+#N canvas 600 60 673 325 individual-adsr-elements 0;
 #X obj 62 244 outlet;
 #X msg 62 158 set_a \$1;
 #X msg 135 159 set_d \$1;
@@ -57,7 +57,7 @@
 #X text 266 252 softer envelope;
 #X text 223 40 - ADSR envelope triggered by signal clicks or bangs
 ;
-#N canvas 603 147 893 602 click-trigger 1;
+#N canvas 600 60 893 602 click-trigger 0;
 #X text 236 120 slow click metronome;
 #X obj 56 126 lyonpotpourri/samm~ 40 1;
 #X obj 56 184 *~;

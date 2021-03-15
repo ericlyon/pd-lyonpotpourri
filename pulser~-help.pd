@@ -1,4 +1,4 @@
-#N canvas 196 132 560 674 12;
+#N canvas 444 42 560 674 12;
 #X msg 77 328 harmonics \$1;
 #X floatatom 77 304 5 0 0 2 number_of_harmonics pulser-harmonic-count
 -;
@@ -9,7 +9,7 @@
 #X floatatom 232 241 5 0 0 0 - pulser-pw-speed -;
 #X text 301 306 <- pulsewidth;
 #X obj 226 478 hsl 128 15 0 1 0 0 pulser-pw-speed pulser-pw-speed-in
-pulsewidth-modulation-speed -2 -8 0 10 -83269 -1 -1 3370 1;
+pulsewidth-modulation-speed -2 -8 0 10 -83269 -1 -1 1270 1;
 #X text 251 395 args: initial frequency \, # of harmonics;
 #X obj 46 442 lpp-meters;
 #X obj 46 401 lyonpotpourri/pulser~ 74 12;

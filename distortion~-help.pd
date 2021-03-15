@@ -1,4 +1,4 @@
-#N canvas 178 231 649 602 12;
+#N canvas 600 60 649 602 12;
 #X floatatom 135 247 5 0 0 2 knee knee -;
 #X floatatom 221 247 5 0 0 2 cut cut -;
 #X obj 49 239 osc~ 270;

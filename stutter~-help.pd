@@ -1,9 +1,9 @@
-#N canvas 437 579 545 456 12;
+#N canvas 510 90 545 456 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array sound1 62079 float 2;
 #X coords 0 1 62079 -1 100 70 1;
 #X restore 205 266 graph;
-#N canvas 1642 1031 502 352 messages 0;
+#N canvas 600 60 502 352 messages 0;
 #X obj 22 122 s stutter.messages;
 #X text 20 15 extrema for echo count;
 #X text 23 148 extrema for loop duration;
@@ -89,7 +89,7 @@
 #X connect 22 0 0 0;
 #X restore 201 396 pd messages;
 #X text 198 369 use a fairly long and varied sound here;
-#N canvas 9 465 466 316 load-soundfile 0;
+#N canvas 600 60 466 316 load-soundfile 0;
 #X obj 31 177 soundfiler;
 #X msg 30 103 bang;
 #X obj 30 129 openpanel;

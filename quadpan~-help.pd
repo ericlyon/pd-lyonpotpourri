@@ -1,4 +1,4 @@
-#N canvas 325 251 646 534 12;
+#N canvas 600 60 646 534 12;
 #X obj 51 372 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
 #N canvas 0 22 450 300 meter 0;
 #X obj 110 164 snapshot~;

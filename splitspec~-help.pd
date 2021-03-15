@@ -285,7 +285,7 @@ only);
 #X connect 7 0 5 0;
 #X connect 8 0 5 0;
 #X restore 293 473 pd storage;
-#N canvas 1085 563 737 752 current-bin-configuration 0;
+#N canvas 600 60 737 752 current-bin-configuration 0;
 #X obj 123 50 inlet;
 #X msg 123 105 119 71 363 150 306 13 72 392 318 56 224 446 259 305
 60 77 460 136 334 273 245 177 276 216 415 59 10 196 341 252 380 499

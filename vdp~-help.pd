@@ -1,5 +1,5 @@
-#N canvas 652 424 634 555 12;
-#N canvas 627 438 458 308 input-sound 0;
+#N canvas 600 60 634 555 12;
+#N canvas 600 60 458 308 input-sound 0;
 #X obj 130 125 phasor~ 96;
 #X obj 130 158 -~ 0.5;
 #X obj 130 190 outlet~;
@@ -7,7 +7,7 @@
 #X connect 1 0 2 0;
 #X restore 126 143 pd input-sound;
 #X floatatom 343 200 5 0 0 0 - - -;
-#N canvas 643 483 454 304 delaytime 0;
+#N canvas 600 60 454 304 delaytime 0;
 #X obj 177 107 osc~ 0.1;
 #X obj 177 140 *~ 9.9;
 #X obj 177 169 +~ 10;
@@ -21,14 +21,14 @@
 #X obj 35 143 r vdp-msgs;
 #X obj 157 299 lpp-meters;
 #X obj 157 228 lyonpotpourri/vdp~ 20 0 0.5;
-#N canvas 195 743 450 300 init 0;
+#N canvas 600 60 450 300 init 0;
 #X obj 38 72 s \$0-feedback;
 #X msg 38 44 -0.74;
 #X obj 38 17 loadbang;
 #X connect 1 0 0 0;
 #X connect 2 0 1 0;
 #X restore 328 392 pd init;
-#N canvas 1187 347 774 403 capture-to-array 0;
+#N canvas 467 74 774 403 capture-to-array 0;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array vdp-catch 882 float 2;
 #X coords 0 1 882 -1 200 140 1;

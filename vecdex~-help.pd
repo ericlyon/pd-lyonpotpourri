@@ -1,6 +1,6 @@
-#N canvas 678 331 641 539 12;
+#N canvas 600 60 641 539 12;
 #X obj 43 199 noise~;
-#N canvas 532 235 601 529 fft-hipass 0;
+#N canvas 600 60 601 529 fft-hipass 0;
 #X obj 86 50 inlet~;
 #X obj 225 472 outlet~;
 #X obj 225 136 rfft~, f 6;

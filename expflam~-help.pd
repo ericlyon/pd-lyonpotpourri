@@ -1,5 +1,5 @@
-#N canvas 861 310 683 796 12;
-#N canvas 1291 889 522 372 load-samples 0;
+#N canvas 512 30 683 761 12;
+#N canvas 600 60 522 372 load-samples 0;
 #X obj 41 107 soundfiler;
 #X msg 41 39 bang;
 #X obj 41 65 openpanel;
@@ -30,7 +30,7 @@
 #X floatatom 231 185 5 0 0 0 - - -;
 #X floatatom 271 186 5 0 0 0 - - -;
 #X floatatom 312 186 5 0 0 0 - - -;
-#N canvas 701 481 454 304 pak 0;
+#N canvas 600 60 454 304 pak 0;
 #X obj 63 60 inlet;
 #X obj 65 150 pack f f f f f;
 #X obj 112 59 inlet;
@@ -95,7 +95,7 @@
 #X obj 241 430 sig~ 1;
 #X floatatom 242 411 5 0 0 0 - - -;
 #X obj 245 393 hsl 64 12 0.5 2.5 0 0 empty empty increment -2 -8 0
-10 -244920 -1 -1 1600 1;
+10 -244920 -1 -1 0 1;
 #X text 198 259 flam gate signal - flams only occur where a 1 in gate
 aligns with the attack pattern below;
 #X text 242 332 attack pattern;
@@ -108,7 +108,7 @@ aligns with the attack pattern below;
 #X obj 76 520 lpp-meters;
 #X obj 18 28 lpp-icon expflam~;
 #X obj 190 228 lyonpotpourri/samm~ 98 4;
-#N canvas 1219 785 987 380 init 0;
+#N canvas 186 165 987 380 init 0;
 #X obj 19 163 symbol \$0-start-delay;
 #X obj 19 30 loadbang;
 #X obj 19 63 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1

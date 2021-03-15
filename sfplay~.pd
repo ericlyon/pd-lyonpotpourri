@@ -1,4 +1,4 @@
-#N canvas 869 385 456 434 12;
+#N canvas 600 60 456 434 12;
 #X obj 49 22 inlet;
 #X obj 103 123 bng 16 250 50 0 \$0-bang \$0-dummy empty 17 7 0 10 -228856
 -1 -1;

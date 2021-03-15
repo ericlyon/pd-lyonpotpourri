@@ -1,4 +1,4 @@
-#N canvas 506 441 697 441 12;
+#N canvas 600 60 697 441 12;
 #N canvas 91 32 719 454 basic-fft 0;
 #X obj 225 66 inlet~;
 #X obj 225 341 outlet~;

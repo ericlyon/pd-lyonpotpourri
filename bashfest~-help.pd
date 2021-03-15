@@ -1,9 +1,9 @@
-#N canvas 251 494 767 631 12;
+#N canvas 600 60 767 631 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array bashdrum 16884 float 2;
 #X coords 0 1 16884 -1 60 20 1;
 #X restore 63 500 graph;
-#N canvas 696 403 518 368 load-samples 0;
+#N canvas 600 60 518 368 load-samples 0;
 #X obj 41 107 soundfiler;
 #X msg 41 39 bang;
 #X obj 41 65 openpanel;

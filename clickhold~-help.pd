@@ -1,4 +1,4 @@
-#N canvas 643 117 625 490 12;
+#N canvas 600 60 625 490 12;
 #X obj 45 195 osc~;
 #X obj 45 126 lyonpotpourri/samm~ 120 1;
 #X obj 45 149 lyonpotpourri/mask~ 440 550 660 880;

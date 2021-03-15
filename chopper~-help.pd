@@ -1,4 +1,4 @@
-#N canvas 318 372 826 590 12;
+#N canvas 600 60 826 590 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array sound1 62079 float 2;
 #X coords 0 1 62079 -1 100 70 1;
@@ -157,7 +157,7 @@
 #X connect 1 0 3 0;
 #X connect 2 0 3 0;
 #X restore 221 366 pd system;
-#N canvas 466 769 748 448 store_loops 0;
+#N canvas 600 60 748 448 store_loops 0;
 #X msg 200 211 show_loop;
 #X msg 208 294 set_loop 1000 25000 1.62;
 #X obj 39 338 s chopper.demo.msgs;

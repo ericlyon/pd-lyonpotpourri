@@ -1,4 +1,4 @@
-#N canvas 719 335 473 363 12;
+#N canvas 600 60 473 363 12;
 #X floatatom 25 246 5 0 0 0 - - -;
 #X obj 25 212 lyonpotpourri/click2float~;
 #X obj 25 146 lyonpotpourri/samm~ 120 1;

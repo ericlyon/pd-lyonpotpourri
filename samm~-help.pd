@@ -1,4 +1,4 @@
-#N canvas 727 369 835 861 12;
+#N canvas 406 20 835 761 12;
 #X obj 513 565 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
 #X obj 52 251 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
@@ -135,7 +135,7 @@
 #X obj 618 423 lyonpotpourri/click2bang~;
 #X obj 90 354 lyonpotpourri/samm~ 20 5 7 11 13 19 1;
 #X obj 52 274 lyonpotpourri/click~;
-#N canvas 639 436 544 322 tempo-specs 0;
+#N canvas 600 60 544 322 tempo-specs 0;
 #X obj 48 283 s samm-msgs;
 #X msg 90 71 divbeats 1 19 13 11 7 5;
 #X msg 102 116 msbeats 250 450 333 1600 777 630;

@@ -1,4 +1,4 @@
-#N canvas 698 193 492 674 12;
+#N canvas 618 59 492 674 12;
 #X obj 48 218 phasor~ 350;
 #X obj 146 180 tgl 15 0 empty \$0-protect empty 0 -6 0 8 -262144 -1
 -1 1 1;

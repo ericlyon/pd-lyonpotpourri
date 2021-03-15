@@ -1,4 +1,4 @@
-#N canvas 770 168 722 618 12;
+#N canvas 511 74 722 618 12;
 #X obj 207 372 channel~;
 #X obj 207 247 osc~ 440;
 #X msg 109 341 channel \$1;
@@ -27,7 +27,7 @@ a factor of 2, f 71;
 #X text 367 249 <= show analysis constants;
 #X text 216 207 <= try different frequencies \, then see what bins
 they show up in, f 86;
-#N canvas 597 899 609 371 init 0;
+#N canvas 600 60 609 371 init 0;
 #X obj 39 117 symbol \$0-frequency;
 #X obj 187 117 symbol \$0-metrotog;
 #X obj 39 45 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1

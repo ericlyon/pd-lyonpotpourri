@@ -1,4 +1,4 @@
-#N canvas 1027 502 562 609 12;
+#N canvas 600 60 562 609 12;
 #N canvas 565 63 450 300 taps 0;
 #X obj 43 111 noise~;
 #X obj 118 79 metro 1000;
@@ -42,7 +42,7 @@ all processing is done in the time domain here. This processor is capable
 of generating extreme amplitude ranges. Use with caution \, with a
 low playback gain \, and do not use this external in performance until
 you are very familiar with its operation., f 77;
-#N canvas 515 836 450 300 init 0;
+#N canvas 600 60 450 300 init 0;
 #X obj 54 114 symbol \$0-ratio;
 #X msg 54 172 \; \$1 0.75 \; \$2 0.4;
 #X obj 166 114 symbol \$0-threshold;

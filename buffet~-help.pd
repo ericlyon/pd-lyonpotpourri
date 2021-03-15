@@ -1,9 +1,9 @@
-#N canvas 522 52 701 535 12;
+#N canvas 600 60 701 535 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array dopey 62079 float 2;
 #X coords 0 1 62079 -1 100 70 1 0 0;
 #X restore 29 300 graph;
-#N canvas 742 412 538 388 load-samples 0;
+#N canvas 600 60 538 388 load-samples 0;
 #X obj 36 151 soundfiler;
 #X msg 36 83 bang;
 #X obj 36 109 openpanel;
@@ -81,7 +81,7 @@
 #X restore 31 175 pd copying;
 #X text 175 398 operation completion indicator;
 #X text 346 379 rms report;
-#N canvas 323 755 470 320 analysis 0;
+#N canvas 339 361 470 320 analysis 0;
 #X obj 65 188 s buffet-msgs;
 #X text 67 48 get rms reading from a specified segment of buffer;
 #X msg 120 145 pevents 50 0.05;

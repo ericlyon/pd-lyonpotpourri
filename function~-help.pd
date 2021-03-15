@@ -1,13 +1,13 @@
-#N canvas 130 966 515 401 12;
+#N canvas 600 60 515 401 12;
 #X obj 54 171 function~ putty;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array putty 8192 float 2;
 #X coords 0 1 8191 -1 200 140 1 0 0;
 #X restore 51 225 graph;
-#N canvas 603 425 305 177 messages 0;
+#N canvas 600 60 305 177 messages 0;
 #X obj 108 126 outlet;
 #X msg 219 110 clear;
-#N canvas 516 517 705 388 addsyn 0;
+#N canvas 600 60 705 388 addsyn 0;
 #X obj 39 47 tgl 40 0 empty empty empty 0 -6 0 8 -188364 -1 -1 0 1
 ;
 #X msg 39 93 normalize \$1;
@@ -39,7 +39,7 @@
 #X connect 14 0 8 0;
 #X connect 16 0 8 0;
 #X restore 108 16 pd addsyn;
-#N canvas 713 435 486 336 envelopes 0;
+#N canvas 600 60 486 336 envelopes 0;
 #X obj 12 295 outlet;
 #X msg 78 121 aenv 0.5;
 #X msg 70 103 aenv 0.025;
@@ -66,7 +66,7 @@
 #X connect 12 0 0 0;
 #X connect 13 0 11 0;
 #X restore 14 64 pd envelopes;
-#N canvas 752 285 474 324 graphic-harm 0;
+#N canvas 600 60 474 324 graphic-harm 0;
 #X obj 134 270 outlet;
 #X obj 134 11 vsl 15 64 0.0001 1 0 0 empty empty empty 0 -8 0 8 -101888
 -1 -1 0 1;
