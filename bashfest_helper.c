@@ -456,7 +456,7 @@ float lpp_mapp(float in,float imin,float imax,float omin,float omax)
     return( omin+((omax-omin)*((in-imin)/(imax-imin))) );
 }
 
-float oscil(float amp,float si,float *farray,int len,float *phs)
+float lpp_oscil(float amp,float si,float *farray,int len,float *phs)
 {
     register int i =  *phs;
     *phs += si;
