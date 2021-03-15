@@ -1,4 +1,4 @@
-#N canvas 512 271 673 608 12;
+#N canvas 600 60 673 608 12;
 #N canvas 348 477 724 547 load-a-sound 0;
 #X obj 49 245 soundfiler;
 #X obj 49 119 openpanel;

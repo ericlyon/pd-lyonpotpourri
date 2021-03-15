@@ -1,7 +1,7 @@
-#N canvas 909 478 624 568 12;
+#N canvas 600 60 624 568 12;
 #X floatatom 32 157 10 0 0 0 - rtrig-odds -;
 #X msg 32 182 odds \$1;
-#N canvas 343 688 466 316 initialize-odds 0;
+#N canvas 600 60 466 316 initialize-odds 0;
 #X msg 84 148 48000;
 #X floatatom 64 205 5 0 0 0 - - -;
 #X obj 84 181 t b f;
@@ -1197,7 +1197,7 @@
 -0.000533582 -0.000675686 -0.000454552 3.5334e-05;
 #X coords 0 1 7999 -1 100 70 1;
 #X restore 197 339 graph;
-#N canvas 512 387 470 473 makeglitch 0;
+#N canvas 600 60 470 473 makeglitch 0;
 #X obj 78 145 noise~;
 #X obj 201 198 line~;
 #X msg 201 145 1;

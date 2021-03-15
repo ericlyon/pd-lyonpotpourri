@@ -1,4 +1,4 @@
-#N canvas 954 222 663 739 12;
+#N canvas 600 60 663 739 12;
 #X msg 52 189 tempo \$1;
 #X floatatom 52 164 5 0 0 0 - mask-tempo-in -;
 #X obj 52 417 osc~ 120;
@@ -32,7 +32,7 @@ multiple mask~ units in sync.;
 #X connect 6 0 4 0;
 #X connect 8 0 9 0;
 #X restore 230 508 pd index-mode;
-#N canvas 1488 643 857 674 operation 0;
+#N canvas 600 60 857 674 operation 0;
 #X obj 76 160 s \$0-mask-msgs;
 #X msg 76 127 gate \$1;
 #X obj 76 92 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
@@ -68,7 +68,7 @@ end of its cycle. Turn mute off to restore normal operation;
 #X connect 0 0 2 0;
 #X connect 1 0 0 0;
 #X restore 230 631 pd init;
-#N canvas 1317 744 939 536 patterns 0;
+#N canvas 600 60 939 536 patterns 0;
 #X msg 42 159 addmask 1 600 800 100 400 900 910 350;
 #X obj 42 306 s \$0-mask-msgs2;
 #X msg 163 239 recall 1;
@@ -123,7 +123,7 @@ by pattern number. The sequence will loop until you stop it.;
 #X obj 52 362 lyonpotpourri/mask~ 440 500 370 1000 888;
 #X obj 52 307 lyonpotpourri/mask~ 1 0 0 0 1 0 0 0.5 0 1 0 0 0.2 0.4
 0.6 0.8, f 61;
-#N canvas 1753 863 698 404 phaselock 0;
+#N canvas 600 60 698 404 phaselock 0;
 #X obj 200 244 lyonpotpourri/mask~ 10 20 30 40 50 60 70;
 #X obj 200 279 lyonpotpourri/click2float~;
 #X floatatom 200 318 5 0 0 0 - - -;

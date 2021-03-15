@@ -1,6 +1,6 @@
-#N canvas 617 472 486 409 12;
+#N canvas 600 60 486 409 12;
 #X floatatom 38 244 5 0 0 0 - - -;
-#N canvas 1109 700 450 300 messages 0;
+#N canvas 600 60 450 300 messages 0;
 #X obj 86 215 s counter.msgs;
 #X msg 87 118 minmax 20 30;
 #X msg 217 120 direction \$1;

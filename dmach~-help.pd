@@ -1,4 +1,4 @@
-#N canvas 103 332 691 625 12;
+#N canvas 373 75 691 625 12;
 #X obj 281 255 click2bang~;
 #X obj 281 278 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
@@ -17,7 +17,7 @@
 #X text 137 67 now play it;
 #X text 78 18 show sequence data;
 #X msg 105 257 instant_recall \$1;
-#X obj 105 233 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 105 233 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text 125 206 by default patterns are recalled in rhythm at the end
 of the last pattern. Setting instant_recall to 1 means you can instantly
@@ -34,7 +34,7 @@ loop or play a sequence.;
 #X restore 321 407 pd operation;
 #X obj 203 545 s bassgain;
 #X obj 313 231 s raw-dmach-data;
-#N canvas 569 435 746 410 saved-patterns 0;
+#N canvas 600 60 746 410 saved-patterns 0;
 #X obj 130 229 r raw-dmach-data;
 #X msg 130 105 listraw;
 #X obj 130 141 s dmach-msgs;
@@ -54,7 +54,7 @@ loop or play a sequence.;
 35 13 48 42 69 26 12 37 39 17 0;
 #X obj 403 397 list prepend set;
 #X obj 403 421 list trim;
-#N canvas 1345 758 920 579 capture-pattern-for-reuse 0;
+#N canvas 600 60 920 579 capture-pattern-for-reuse 0;
 #X msg 30 131 readraw 5 4 1 6 1 0.8333 0 1 1 0.999975 0.7 0.8333 1.49996
 1 1.25 2.49998 1 1 2.99997 0.7 1.11 3.49996 2 10 1 1.1 0 0.7 0.8 0.399999
 0.7 0.8 0.799999 0.7 0.8 1.2 0.7 0.8 1.6 1 1 2 0.7 0.8 2.4 0.7 0.8
@@ -84,7 +84,7 @@ loop or play a sequence.;
 #X connect 11 0 10 1;
 #X restore 321 461 pd saved-patterns;
 #X obj 206 520 hsl 64 12 0 2 0 0 empty s_bassgain empty -2 -8 0 10
--261756 -1 -1 3400 1;
+-261756 -1 -1 3150 1;
 #N canvas 515 23 653 793 pattern-tutorial 0;
 #X text 31 19 You can build up patterns 1 line at a time. Here's how.
 ;
@@ -160,7 +160,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X connect 41 0 28 0;
 #X restore 321 489 pd pattern-tutorial;
 #X text 304 276 pattern downbeat;
-#N canvas 878 276 677 330 playback 0;
+#N canvas 600 60 677 330 playback 0;
 #X obj 10 285 s dmach-msgs;
 #X msg 218 97 recall \$1;
 #X msg 218 41 0;
@@ -202,8 +202,8 @@ the bar \, read my paper for instructions on how to do that.;
 #X connect 20 0 15 0;
 #X connect 21 0 15 0;
 #X restore 321 353 pd playback;
-#N canvas 846 755 500 279 stored-patterns 0;
-#N canvas 914 572 1033 649 pat0 0;
+#N canvas 600 60 500 279 stored-patterns 0;
+#N canvas 600 60 1033 649 pat0 0;
 #X obj 92 588 s dmach-msgs;
 #X msg 210 111 store 0 4;
 #X msg 15 188 slotamps 0 0 8 1 0 0 1 1 0 0 1;
@@ -505,7 +505,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X connect 20 0 19 0;
 #X restore 20 180 pd pat6;
 #X msg 219 134 printraw 5;
-#N canvas 657 793 628 384 pat5 0;
+#N canvas 600 60 628 384 pat5 0;
 #X obj 16 249 s dmach-msgs;
 #X obj 16 49 loadbang;
 #X msg 16 89 readraw 5 4 1 6 1 0.8333 0 1 1 0.999975 0.7 0.8333 1.49996
@@ -529,13 +529,13 @@ the bar \, read my paper for instructions on how to do that.;
 #N canvas 252 329 436 361 playback-adjustments 0;
 #X obj 291 272 s dmach-msgs;
 #X obj 67 201 vsl 10 55 0 127 0 0 empty empty empty 0 -9 0 10 -93493
--1 -1 2700 1;
+-1 -1 0 1;
 #X obj 91 201 vsl 10 55 0 127 0 0 empty empty empty 0 -9 0 10 -93493
--1 -1 2700 1;
+-1 -1 0 1;
 #X obj 115 201 vsl 10 55 0 127 0 0 empty empty empty 0 -9 0 10 -93493
--1 -1 3500 1;
+-1 -1 0 1;
 #X obj 139 201 vsl 10 55 0 127 0 0 empty empty empty 0 -9 0 10 -93493
--1 -1 1700 1;
+-1 -1 0 1;
 #X obj 162 201 vsl 10 55 0 127 0 0 empty empty empty 0 -9 0 10 -93493
 -1 -1 0 1;
 #X obj 43 40 vsl 10 55 0 127 0 0 empty empty empty 0 -9 0 10 -215152
@@ -704,7 +704,7 @@ the bar \, read my paper for instructions on how to do that.;
 -1 -1 0 1;
 #N canvas 0 156 1248 402 transposers_________________ 0;
 #X obj 49 49 inlet;
-#N canvas 1157 45 458 308 zmap 0;
+#N canvas 600 60 458 308 zmap 0;
 #X obj 56 34 inlet;
 #X obj 56 60 / 127;
 #X msg 139 43 0.5;
@@ -735,7 +735,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X msg 48 134 transpose 0 \$1;
 #X obj 47 180 outlet;
 #X obj 168 48 inlet;
-#N canvas 1157 45 454 304 zmap 0;
+#N canvas 600 60 454 304 zmap 0;
 #X obj 56 34 inlet;
 #X obj 56 60 / 127;
 #X msg 139 43 0.5;
@@ -764,7 +764,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X restore 168 79 pd zmap;
 #X floatatom 167 105 5 0 0 0 - - -;
 #X obj 284 46 inlet;
-#N canvas 1157 45 454 304 zmap 0;
+#N canvas 600 60 454 304 zmap 0;
 #X obj 56 34 inlet;
 #X obj 56 60 / 127;
 #X msg 139 43 0.5;
@@ -793,7 +793,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X restore 284 77 pd zmap;
 #X floatatom 283 103 5 0 0 0 - - -;
 #X obj 394 48 inlet;
-#N canvas 1157 45 454 304 zmap 0;
+#N canvas 600 60 454 304 zmap 0;
 #X obj 56 34 inlet;
 #X obj 56 60 / 127;
 #X msg 139 43 0.5;
@@ -822,7 +822,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X restore 394 79 pd zmap;
 #X floatatom 393 105 5 0 0 0 - - -;
 #X obj 509 49 inlet;
-#N canvas 1157 45 454 304 zmap 0;
+#N canvas 600 60 454 304 zmap 0;
 #X obj 56 34 inlet;
 #X obj 56 60 / 127;
 #X msg 139 43 0.5;
@@ -856,7 +856,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X msg 509 134 transpose 4 \$1;
 #X obj 3 47 inlet;
 #X obj 622 48 inlet;
-#N canvas 1157 45 454 304 zmap 0;
+#N canvas 600 60 454 304 zmap 0;
 #X obj 56 34 inlet;
 #X obj 56 60 / 127;
 #X msg 139 43 0.5;
@@ -886,7 +886,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X floatatom 622 105 5 0 0 0 - - -;
 #X msg 622 134 transpose 5 \$1;
 #X obj 732 48 inlet;
-#N canvas 1157 45 454 304 zmap 0;
+#N canvas 600 60 454 304 zmap 0;
 #X obj 56 34 inlet;
 #X obj 56 60 / 127;
 #X msg 139 43 0.5;
@@ -915,7 +915,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X restore 732 79 pd zmap;
 #X floatatom 732 105 5 0 0 0 - - -;
 #X obj 846 54 inlet;
-#N canvas 1157 45 454 304 zmap 0;
+#N canvas 600 60 454 304 zmap 0;
 #X obj 56 34 inlet;
 #X obj 56 60 / 127;
 #X msg 139 43 0.5;
@@ -944,7 +944,7 @@ the bar \, read my paper for instructions on how to do that.;
 #X restore 846 85 pd zmap;
 #X floatatom 846 111 5 0 0 0 - - -;
 #X obj 967 52 inlet;
-#N canvas 1157 45 454 304 zmap 0;
+#N canvas 600 60 454 304 zmap 0;
 #X obj 56 34 inlet;
 #X obj 56 60 / 127;
 #X msg 139 43 0.5;

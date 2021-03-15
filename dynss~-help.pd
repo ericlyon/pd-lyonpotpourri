@@ -1,15 +1,15 @@
-#N canvas 245 551 595 639 12;
+#N canvas 600 60 595 639 12;
 #X msg 96 288 devx \$1;
 #X obj 273 321 hsl 70 12 0 1 0 0 dynss-devx dynss-devx-in devx -2 -8
 0 10 -261682 -1 -1 0 1;
 #X floatatom 96 264 5 0 0 0 - dynss-devx -;
 #X obj 273 346 hsl 70 12 0 1 0 0 dynss-devy dynss-devy-in devy -2 -8
-0 10 -261682 -1 -1 2900 1;
+0 10 -261682 -1 -1 0 1;
 #X floatatom 157 263 5 0 0 0 - dynss-devy -;
 #X msg 157 287 devy \$1;
 #X msg 37 287 freq \$1;
 #X obj 273 296 hsl 70 12 50 600 0 0 dynss-freq dynss-freq-in frequency
--2 -8 0 10 -261682 -1 -1 300 1;
+-2 -8 0 10 -261682 -1 -1 0 1;
 #X floatatom 37 264 5 0 0 0 - dynss-freq -;
 #X obj 123 325 r dynss.messages;
 #X obj 36 352 lyonpotpourri/dynss~;
@@ -37,7 +37,7 @@ model \, the frequency stays constant \, but the timbre varies constantly
 #X text 207 483 <= learn more about dynamic stochastic synthesis here
 ;
 #X text 340 448 <= more info here;
-#N canvas 1651 733 686 335 waveform-settings 1;
+#N canvas 444 109 686 335 waveform-settings 0;
 #X msg 135 112 new_wave;
 #X msg 162 149 new_amps;
 #X msg 239 183 printwave;

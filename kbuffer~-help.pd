@@ -1,6 +1,6 @@
-#N canvas 782 573 637 711 12;
+#N canvas 600 60 637 711 12;
 #X text 302 301 args: ksampling rate \, storage time (in ms.);
-#N canvas 799 382 466 316 more-messages 0;
+#N canvas 600 60 466 316 more-messages 0;
 #X msg 238 89 size 4000;
 #X obj 173 154 outlet;
 #X msg 275 124 info;

@@ -1,4 +1,4 @@
-#N canvas 601 262 662 626 12;
+#N canvas 600 60 662 626 12;
 #X msg 141 230 channel \$1;
 #X floatatom 141 200 5 0 0 0 - - -;
 #X obj 156 266 osc~ 440;

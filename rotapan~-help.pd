@@ -1,4 +1,4 @@
-#N canvas 459 372 512 781 12;
+#N canvas 600 60 512 781 12;
 #X obj 37 190 osc~ 400;
 #X obj 70 213 osc~ 500;
 #X obj 202 335 phasor~ 0.08;

@@ -1,4 +1,4 @@
-#N canvas 780 485 541 447 12;
+#N canvas 600 60 541 447 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array click-array 8 float 2;
 #X coords 0 1 8 -1 140 70 1;

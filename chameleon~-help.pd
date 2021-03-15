@@ -1,4 +1,4 @@
-#N canvas 474 552 706 849 12;
+#N canvas 490 12 706 761 12;
 #X obj 118 309 lyonpotpourri/sfplay~;
 #X obj 43 481 clip~ -1 1;
 #X obj 200 481 clip~ -1 1;
@@ -9,7 +9,7 @@
 #X obj 43 422 lyonpotpourri/chameleon~ 5;
 #X obj 43 585 lpp-meters;
 #X obj 222 449 s chameleon_list_output;
-#N canvas 104 842 702 552 parameters 0;
+#N canvas 472 87 702 552 parameters 0;
 #X msg 29 52 memory;
 #X obj 29 322 s chameleon-msgs;
 #X obj 75 163 loadbang;
@@ -34,7 +34,7 @@ a lot of tweakage \, 0 would do nothing.;
 #X restore 214 694 pd parameters;
 #X text 151 226 build a new preset;
 #X obj 118 370 *~ 0.2;
-#N canvas 886 152 952 1035 presets 0;
+#N canvas 600 60 952 1035 presets 0;
 #X obj 43 292 s chameleon-msgs;
 #X msg 83 429 report;
 #X msg 518 353 recall \$1;
