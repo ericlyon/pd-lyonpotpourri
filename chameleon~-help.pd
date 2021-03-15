@@ -1,4 +1,4 @@
-#N canvas 490 12 706 761 12;
+#N canvas 490 23 554 764 12;
 #X obj 118 309 lyonpotpourri/sfplay~;
 #X obj 43 481 clip~ -1 1;
 #X obj 200 481 clip~ -1 1;
@@ -7,7 +7,7 @@
 #X obj 200 508 lyonpotpourri/killdc~;
 #X obj 72 272 r chameleon-msgs;
 #X obj 43 422 lyonpotpourri/chameleon~ 5;
-#X obj 43 585 lpp-meters;
+#X obj 43 541 lpp-meters;
 #X obj 222 449 s chameleon_list_output;
 #N canvas 472 87 702 552 parameters 0;
 #X msg 29 52 memory;
@@ -31,7 +31,7 @@ a lot of tweakage \, 0 would do nothing.;
 #X connect 7 0 1 0;
 #X connect 8 0 1 0;
 #X connect 9 0 1 0;
-#X restore 214 694 pd parameters;
+#X restore 214 650 pd parameters;
 #X text 151 226 build a new preset;
 #X obj 118 370 *~ 0.2;
 #N canvas 600 60 952 1035 presets 0;
@@ -88,7 +88,7 @@ this help file at startup);
 #X connect 13 0 17 0;
 #X connect 17 0 18 0;
 #X connect 23 0 22 0;
-#X restore 214 720 pd presets;
+#X restore 214 676 pd presets;
 #X text 172 370 give chameleon~ some headroom;
 #X text 239 415 arg: maximum number of available DSP units for each
 processor class, f 34;
@@ -119,7 +119,7 @@ processor class, f 34;
 0.0088003;
 #X connect 0 0 2 0;
 #X connect 2 0 1 0;
-#X restore 214 666 pd init;
+#X restore 214 622 pd init;
 #X text 237 51 - Oracular sound processor;
 #X obj 33 17 lpp-icon chameleon~;
 #X text 29 112 [chameleon~] is an oracular sound processor. It randomly
