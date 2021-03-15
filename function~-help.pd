@@ -1,5 +1,4 @@
 #N canvas 600 60 515 401 12;
-#X obj 54 171 function~ putty;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array putty 8192 float 2;
 #X coords 0 1 8191 -1 200 140 1 0 0;
@@ -39,7 +38,7 @@
 #X connect 14 0 8 0;
 #X connect 16 0 8 0;
 #X restore 108 16 pd addsyn;
-#N canvas 600 60 486 336 envelopes 0;
+#N canvas 1012 336 486 336 envelopes 0;
 #X obj 12 295 outlet;
 #X msg 78 121 aenv 0.5;
 #X msg 70 103 aenv 0.025;
@@ -109,4 +108,5 @@
 into an array.;
 #X text 137 143 <= click here for details;
 #X text 230 43 - function generation for arrays;
-#X connect 2 0 0 0;
+#X obj 54 171 lyonpotpourri/function~ putty;
+#X connect 1 0 6 0;
