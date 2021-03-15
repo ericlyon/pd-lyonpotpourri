@@ -1,5 +1,4 @@
 #N canvas 600 60 617 549 12;
-#X obj 159 231 markov~ 10;
 #X obj 159 265 phasor~;
 #X obj 159 295 lop~ 3000;
 #N canvas 447 119 831 684 bach 0;
@@ -70,11 +69,11 @@ first order Markov chains.;
 #X restore 27 132 pd tempo-control;
 #X obj 132 162 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
 -1;
-#X obj 259 263 snapshot~;
-#X floatatom 259 284 5 0 0 0 - - -;
-#X obj 259 219 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+#X obj 344 278 snapshot~;
+#X floatatom 344 299 5 0 0 0 - - -;
+#X obj 344 234 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
 1;
-#X obj 259 240 metro 50;
+#X obj 344 255 metro 50;
 #N canvas 0 23 646 348 override 0;
 #X obj 36 125 outlet;
 #X msg 36 74 manual_override \$1;
@@ -93,18 +92,19 @@ first order Markov chains.;
 #X obj 9 5 lpp-icon markov~;
 #X text 220 43 - 1st order Markov chains for basic melodic coherence
 , f 67;
-#X text 291 207 see phase of each individual note (useful for post
+#X text 376 222 see phase of each individual note (useful for post
 processing), f 35;
+#X obj 159 231 lyonpotpourri/markov~ 10;
 #X connect 0 0 1 0;
-#X connect 0 1 7 0;
-#X connect 1 0 2 0;
-#X connect 2 0 13 0;
-#X connect 2 0 13 1;
-#X connect 3 0 0 0;
-#X connect 4 0 3 0;
-#X connect 5 0 0 0;
-#X connect 6 0 3 0;
-#X connect 7 0 8 0;
-#X connect 9 0 10 0;
-#X connect 10 0 7 0;
-#X connect 11 0 0 0;
+#X connect 1 0 12 0;
+#X connect 1 0 12 1;
+#X connect 2 0 16 0;
+#X connect 3 0 2 0;
+#X connect 4 0 16 0;
+#X connect 5 0 2 0;
+#X connect 6 0 7 0;
+#X connect 8 0 9 0;
+#X connect 9 0 6 0;
+#X connect 10 0 16 0;
+#X connect 16 0 0 0;
+#X connect 16 1 6 0;
