@@ -1,36 +1,35 @@
-#N canvas 482 57 462 373 10;
-#X obj 27 239 waveshape~;
-#X obj 27 303 *~ 0.1;
-#X obj 27 330 dac~;
-#X msg 123 164 0 0 0 1 1;
-#X msg 125 190 0 0.5 0 0 1 0.3 1;
-#X msg 125 217 0 0.2 0 0.2 0 0.2 0 0 1 0 0 0 0 0 0.5;
-#X text 122 146 select a weighted summation of Chebychev polynomials
+#N canvas 806 597 571 762 12;
+#X msg 127 369 0 0 0 1 1;
+#X msg 129 395 0 0.5 0 0 1 0.3 1;
+#X msg 129 422 0 0.2 0 0.2 0 0.2 0 0 1 0 0 0 0 0 0.5;
+#X text 126 351 select a weighted summation of Chebychev polynomials
 ;
-#X floatatom 80 304 5 0 0 0 - - -, f 5;
-#X floatatom 27 91 5 0 0 0 - - -, f 5;
-#X obj 256 192 loadbang;
-#X obj 27 109 osc~ 200;
-#X obj 27 275 killdc~;
-#X obj 28 16 cnv 15 160 25 empty empty LyonPotpourri 20 12 1 18 -260097
--204786 0;
-#X obj 98 84 osc~ 0.1;
-#X obj 98 105 *~ 0.49;
-#X obj 98 128 +~ 0.51;
-#X obj 27 159 *~;
-#X text 24 55 waveshape~ basic waveshaping unit;
-#X connect 0 0 11 0;
-#X connect 1 0 2 0;
-#X connect 1 0 2 1;
-#X connect 3 0 0 0;
-#X connect 4 0 0 0;
-#X connect 5 0 0 0;
-#X connect 7 0 1 1;
-#X connect 8 0 10 0;
-#X connect 9 0 5 0;
-#X connect 10 0 16 0;
-#X connect 11 0 1 0;
-#X connect 13 0 14 0;
-#X connect 14 0 15 0;
-#X connect 15 0 16 1;
-#X connect 16 0 0 0;
+#X obj 398 396 loadbang;
+#X obj 31 195 osc~ 200;
+#X obj 102 241 osc~ 0.1;
+#X obj 102 262 *~ 0.49;
+#X obj 102 285 +~ 0.51;
+#X obj 31 316 *~;
+#X obj 31 444 lyonpotpourri/waveshape~;
+#X obj 31 480 lyonpotpourri/killdc~;
+#X obj 31 522 lpp-meters;
+#X obj 19 15 lpp-icon waveshape~;
+#X text 27 109 [waveshape~] stores a user-specified sum of Chebychev
+polynomials in a table which is then used as a transfer function. Waveshaping
+is a non-linear process - higher amplitude of input will generally
+increase the amount of harmonic distortion.;
+#X text 95 193 <= sinewave input;
+#X text 166 287 <= time-varying gain also varies output spectrum;
+#X text 229 49 - waveshaper;
+#X connect 0 0 10 0;
+#X connect 1 0 10 0;
+#X connect 2 0 10 0;
+#X connect 4 0 2 0;
+#X connect 5 0 9 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 1;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 11 0 12 1;
