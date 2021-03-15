@@ -31,7 +31,6 @@ typedef struct _dynss
   t_double devscale_y;
 } t_dynss;
 
-static void dynss_tilde_setup(void);
 static void *dynss_new(void);
 static t_int *dynss_perform(t_int *w);
 static void dynss_dsp(t_dynss *x, t_signal **sp);
