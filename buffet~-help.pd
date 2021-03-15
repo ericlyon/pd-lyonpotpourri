@@ -1,4 +1,4 @@
-#N canvas 600 60 701 535 12;
+#N canvas 600 60 776 545 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array dopey 62079 float 2;
 #X coords 0 1 62079 -1 100 70 1 0 0;
@@ -18,10 +18,9 @@
 #X connect 5 0 6 0;
 #X connect 6 0 0 0;
 #X restore 153 289 pd load-samples;
-#X obj 156 350 buffet~ dopey 100 300;
 #X obj 156 397 bng 15 100 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X floatatom 300 379 5 0 0 0 - - -;
+#X floatatom 398 376 5 0 0 0 rms_report - -;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array soapy 22050 float 2;
 #X coords 0 1 22050 -1 100 70 1;
@@ -80,7 +79,6 @@
 #X connect 6 0 1 0;
 #X restore 31 175 pd copying;
 #X text 175 398 operation completion indicator;
-#X text 346 379 rms report;
 #N canvas 339 361 470 320 analysis 0;
 #X obj 65 188 s buffet-msgs;
 #X text 67 48 get rms reading from a specified segment of buffer;
@@ -90,8 +88,7 @@
 #X connect 2 0 0 0;
 #X connect 4 0 0 0;
 #X restore 30 254 pd analysis;
-#X obj 228 453 print;
-#X obj 495 191 player~ dopey 1;
+#X obj 277 448 print;
 #X msg 153 257 bang;
 #N canvas 34 269 705 565 scrambler 0;
 #X obj 57 356 s buffet-msgs;
@@ -156,7 +153,7 @@ the array;
 #X connect 22 0 23 0;
 #X connect 23 0 8 0;
 #X restore 30 228 pd scrambler;
-#N canvas 0 23 470 320 playback-controls 0;
+#N canvas 0 23 532 325 playback-controls 0;
 #X msg 18 31 bang;
 #X text 56 31 retrigger;
 #X msg 178 141 pause;
@@ -179,21 +176,23 @@ the array;
 #X restore 495 147 pd playback-controls;
 #X obj 495 237 lpp-meters;
 #X obj 25 14 lpp-icon buffet~;
-#X text 194 251 reload original sample after scrambling \, if desired
+#X text 126 231 reload original sample after scrambling \, if desired
 ;
-#X text 268 454 list of estimated onsets in array's sample (time in
+#X text 327 448 list of estimated onsets in array's sample (time in
 ms.);
 #X text 228 45 - Perform operations on the contents of a Pd arra;
 #X text 28 114 [buffet~] provides a variety of irreversible transformations
 to the contents of an array \, along with some useful analysis of its
 contents.;
-#X connect 2 0 3 0;
-#X connect 2 1 12 0;
-#X connect 2 2 4 0;
-#X connect 7 0 2 0;
-#X connect 13 0 17 0;
-#X connect 13 0 17 1;
-#X connect 14 0 1 0;
-#X connect 16 0 13 0;
-#X connect 16 0 13 1;
-#X connect 16 1 13 0;
+#X obj 156 350 lyonpotpourri/buffet~ dopey 100 300;
+#X obj 495 191 lyonpotpourri/player~ dopey 1;
+#X connect 6 0 20 0;
+#X connect 11 0 1 0;
+#X connect 13 0 21 0;
+#X connect 13 0 21 1;
+#X connect 13 1 21 0;
+#X connect 20 0 2 0;
+#X connect 20 1 10 0;
+#X connect 20 2 3 0;
+#X connect 21 0 14 0;
+#X connect 21 0 14 1;
