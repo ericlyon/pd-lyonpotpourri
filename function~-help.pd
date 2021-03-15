@@ -53,7 +53,7 @@
 #X msg 238 169 adrenv 0.15 0.05 0.55 0.5;
 #X msg 223 218 rcos;
 #X msg 223 238 gaussian;
-#X obj 233 89 loadbang;
+#X obj 286 205 loadbang;
 #X connect 1 0 0 0;
 #X connect 2 0 0 0;
 #X connect 3 0 0 0;
@@ -64,22 +64,22 @@
 #X connect 10 0 0 0;
 #X connect 11 0 0 0;
 #X connect 12 0 0 0;
-#X connect 13 0 7 0;
+#X connect 13 0 11 0;
 #X restore 14 64 pd envelopes;
 #N canvas 752 285 474 324 graphic-harm 0;
 #X obj 134 270 outlet;
 #X obj 134 11 vsl 15 64 0.0001 1 0 0 empty empty empty 0 -8 0 8 -101888
--1 -1 300 1;
+-1 -1 0 1;
 #X msg 134 127 0;
 #X obj 134 84 t b f;
 #X obj 176 11 vsl 15 64 0 1 0 0 empty empty empty 0 -8 0 8 -101888
--1 -1 2400 1;
+-1 -1 0 1;
 #X obj 176 84 t b f;
 #X obj 220 11 vsl 15 64 0 1 0 0 empty empty empty 0 -8 0 8 -101888
 -1 -1 0 1;
 #X obj 220 84 t b f;
 #X obj 264 11 vsl 15 64 0 1 0 0 empty empty empty 0 -8 0 8 -101888
--1 -1 4800 1;
+-1 -1 0 1;
 #X obj 264 84 t b f;
 #X obj 134 188 pack f f f f f;
 #X msg 134 227 addsyn \$1 \$2 \$3 \$4 \$5;

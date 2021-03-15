@@ -1,5 +1,5 @@
 #N canvas 472 143 549 554 12;
-#X floatatom 32 211 5 20 20000 2 freq frequency -;
+#X floatatom 32 211 5 20 20000 2 freq phasemod-freq-in -;
 #N canvas 204 659 454 304 scope 0;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array phasemod-scope 441 float 3;
@@ -82,7 +82,7 @@
 #X obj 190 204 +~ 15;
 #N canvas 1177 558 421 227 init 0;
 #X obj 45 50 loadbang;
-#X msg 45 80 \; phasemod-freq-in 100 \; phasemod-scope-tog 1;
+#X msg 45 79 \; phasemod-freq-in 100 \; phasemod-scope-tog 1;
 #X connect 0 0 1 0;
 #X restore 200 484 pd init;
 #X text 243 49 - a phase-modulated sinusoid;

@@ -105,6 +105,7 @@ datafiles = \
 	CHANGELOG.txt \
 	LICENSE.txt \
 	README.txt \
+	sfplay~.pd \
 	lyonpotpourri-meta.pd \
 	$(empty)
 # extra dirs
