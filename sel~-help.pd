@@ -1,4 +1,4 @@
-#N canvas 192 248 694 490 12;
+#N canvas 497 372 694 490 12;
 #X obj 65 186 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 65 367 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
@@ -7,23 +7,23 @@
 -1 -1;
 #X obj 251 415 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X obj 209 186 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 218 186 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
-#X obj 357 186 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 376 187 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X text 39 101 impulses are numerically matched by sending a click
 (impulse with value 1.0) to the appropriate outlet, f 56;
-#X msg 403 181 set 5.5;
-#X obj 403 152 loadbang;
+#X msg 422 182 set 5.5;
+#X obj 422 153 loadbang;
 #X obj 65 283 lyonpotpourri/sel~ 1 2 5.5, f 27;
-#X obj 209 211 lyonpotpourri/click~;
+#X obj 218 211 lyonpotpourri/click~;
 #X obj 65 211 lyonpotpourri/click~;
-#X obj 357 211 lyonpotpourri/click~;
+#X obj 376 211 lyonpotpourri/click~;
 #X obj 251 374 lyonpotpourri/click2bang~;
 #X obj 158 349 lyonpotpourri/click2bang~;
 #X obj 65 325 lyonpotpourri/click2bang~;
-#X obj 247 152 loadbang;
-#X msg 247 181 set 2;
+#X obj 256 152 loadbang;
+#X msg 256 181 set 2;
 #X obj 35 7 lpp-icon sel~;
 #X msg 487 377 \; pd dsp \$1;
 #X obj 487 348 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
