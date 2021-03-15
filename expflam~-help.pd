@@ -137,7 +137,7 @@ aligns with the attack pattern below;
 #X connect 10 4 6 0;
 #X connect 10 5 7 0;
 #X restore 241 681 pd init;
-#X text 223 64 - insert non-linear click attacks into a click attack
+#X text 238 55 - insert non-linear click attacks into a click attack
 stream;
 #X text 20 133 [expflam~] replaces a click trigger with a sequence
 of triggers to create a flam., f 83;

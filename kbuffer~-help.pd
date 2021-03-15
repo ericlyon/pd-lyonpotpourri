@@ -19,7 +19,7 @@
 #X floatatom 288 356 5 0 0 0 - - -;
 #X floatatom 56 230 5 0 0 2 kb-input kb-input -;
 #X obj 205 447 hsl 128 15 300 1000 0 0 kb-input empty empty -2 -6 0
-8 -261119 -1 -1 12700 1;
+8 -261119 -1 -1 0 1;
 #X floatatom 216 219 5 0 0 0 - - -;
 #X msg 216 196 1;
 #X obj 216 175 loadbang;
@@ -48,7 +48,7 @@ rate than the audio rate., f 68;
 #X obj 74 402 lyonpotpourri/killdc~;
 #X obj 74 304 lyonpotpourri/kbuffer~ 512 8000;
 #X obj 41 37 lpp-icon kbuffer~;
-#X text 244 72 - control-rate sampling of gestural input;
+#X text 262 61 - control-rate sampling of gestural input;
 #X connect 1 0 21 0;
 #X connect 2 0 21 0;
 #X connect 3 0 21 0;

@@ -40,7 +40,7 @@
 #X connect 2 0 1 0;
 #X restore 328 419 pd capture-to-array;
 #X obj 29 20 lpp-icon vdp~;
-#X text 241 52 - a simple \, self-contained delay unit with feedback
+#X text 249 52 - a simple \, self-contained delay unit with feedback
 ;
 #X connect 0 0 6 0;
 #X connect 1 0 6 2;

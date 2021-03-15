@@ -47,7 +47,7 @@
 form. This help file demonstrates the structure of Max pfft~-style
 FFT processing for Pd.;
 #X obj 38 272 lpp-meters;
-#X text 249 53 - Cartesian to polar conversion;
+#X text 262 53 - Cartesian to polar conversion;
 #X connect 0 0 6 0;
 #X connect 0 0 6 1;
 #X connect 1 0 0 0;

@@ -1,4 +1,4 @@
-#N canvas 600 60 512 781 12;
+#N canvas 600 60 512 761 12;
 #X obj 37 190 osc~ 400;
 #X obj 70 213 osc~ 500;
 #X obj 202 335 phasor~ 0.08;
@@ -14,7 +14,7 @@ relations. The rightmost inlet controls the phase of the rotation \,
 in the range (0-1). The argument determines the length of the channel
 array.;
 #X text 222 375 arg: number of input signals;
-#X text 241 54 - multichannel rotation;
+#X text 251 50 - multichannel rotation;
 #X obj 30 23 lpp-icon rotapan~;
 #X connect 0 0 6 0;
 #X connect 1 0 6 1;

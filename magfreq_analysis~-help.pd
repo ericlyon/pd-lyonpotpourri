@@ -15,7 +15,7 @@
 #X text 465 540 <= estimated frequency for selected bin;
 #X text 173 540 <= amplitude for selected bin;
 #X text 21 292 select bin to inspect, f 10;
-#X text 247 49 - estimate of instantaneous amplitude/frequency spectrum
+#X text 255 42 - estimate of instantaneous amplitude/frequency spectrum
 ;
 #X text 465 280 args: overlap factor \, window factor;
 #X text 34 109 Analyze input as amplitude/frequency spectra. Optional

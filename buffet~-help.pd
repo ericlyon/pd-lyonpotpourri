@@ -180,19 +180,19 @@ the array;
 ;
 #X text 327 448 list of estimated onsets in array's sample (time in
 ms.);
-#X text 228 45 - Perform operations on the contents of a Pd arra;
 #X text 28 114 [buffet~] provides a variety of irreversible transformations
 to the contents of an array \, along with some useful analysis of its
 contents.;
 #X obj 156 350 lyonpotpourri/buffet~ dopey 100 300;
 #X obj 495 191 lyonpotpourri/player~ dopey 1;
-#X connect 6 0 20 0;
+#X text 250 45 - Perform operations on the contents of a Pd array;
+#X connect 6 0 19 0;
 #X connect 11 0 1 0;
-#X connect 13 0 21 0;
-#X connect 13 0 21 1;
-#X connect 13 1 21 0;
-#X connect 20 0 2 0;
-#X connect 20 1 10 0;
-#X connect 20 2 3 0;
-#X connect 21 0 14 0;
-#X connect 21 0 14 1;
+#X connect 13 0 20 0;
+#X connect 13 0 20 1;
+#X connect 13 1 20 0;
+#X connect 19 0 2 0;
+#X connect 19 1 10 0;
+#X connect 19 2 3 0;
+#X connect 20 0 14 0;
+#X connect 20 0 14 1;

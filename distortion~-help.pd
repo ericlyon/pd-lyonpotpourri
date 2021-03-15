@@ -4,14 +4,14 @@
 #X obj 49 239 osc~ 270;
 #X floatatom 49 217 5 50 10000 0 - - -;
 #X obj 228 385 hsl 128 15 0.001 0.4 0 0 knee knee-input knee -2 -6
-0 8 -259157 -1 -1 760 1;
+0 8 -259157 -1 -1 1560 1;
 #X obj 227 417 hsl 128 15 0.01 1 0 0 cut cut-input cut -2 -6 0 8 -259157
--1 -1 1896 1;
+-1 -1 1796 1;
 #X obj 49 318 lop~ 8000;
 #X obj 49 281 lyonpotpourri/distortion~;
 #X obj 49 378 lpp-meters;
 #X obj 46 26 lpp-icon distortion~;
-#X text 253 62 - linear transfer function distortion;
+#X text 274 53 - linear transfer function distortion;
 #N canvas 0 23 180 162 init 0;
 #X obj 2 23 loadbang;
 #X msg 58 64 0.15;

@@ -45,7 +45,7 @@ vector. Useful for the the windowing portion of an overlap-add process.
 , f 66;
 #X obj 32 197 lpp-meters;
 #X obj 27 9 lpp-icon windowvec~;
-#X text 239 49 - signal vector windowing;
+#X text 253 39 - signal vector windowing;
 #X obj 201 341 pdcontrol;
 #X msg 201 277 browse https://www.areditions.com/lyon-designing-audio-objects-for-max-msp-and-pd-das025.html
 ;

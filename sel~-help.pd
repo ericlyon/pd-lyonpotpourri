@@ -1,4 +1,4 @@
-#N canvas 497 372 694 490 12;
+#N canvas 489 119 694 490 12;
 #X obj 65 186 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 65 367 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
@@ -26,7 +26,7 @@
 #X msg 256 181 set 2;
 #X obj 35 7 lpp-icon sel~;
 #X msg 487 377 \; pd dsp \$1;
-#X obj 487 348 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 487 348 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text 508 347 turn on DACs;
 #X text 255 33 - sample-accurate implementation of the sel algorithm

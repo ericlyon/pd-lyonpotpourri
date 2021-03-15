@@ -1,4 +1,4 @@
-#N canvas 600 60 716 552 12;
+#N canvas 472 54 747 552 12;
 #X obj 169 162 phasor~ 0.2;
 #X obj 25 162 noise~;
 #X obj 26 359 vu 15 120 empty empty -1 -8 0 10 -66577 -1 1 0;
@@ -99,7 +99,7 @@
 #X obj 329 397 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text 349 398 turn on DACs;
-#X text 223 61 - perimeter panning for an arbitrary number of channel
+#X text 252 44 - perimeter panning for an arbitrary number of channel
 outputs, f 69;
 #X text 27 110 Left inlet is signal to pan. Right inlet (ranging from
 0-1) determines perimeter pan location.;

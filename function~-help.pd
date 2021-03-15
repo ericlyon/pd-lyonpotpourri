@@ -107,6 +107,6 @@
 #X text 13 95 [function~] provides different tools for writing functions
 into an array.;
 #X text 137 143 <= click here for details;
-#X text 230 43 - function generation for arrays;
+#X text 241 36 - function generation for arrays;
 #X obj 54 171 lyonpotpourri/function~ putty;
 #X connect 1 0 6 0;

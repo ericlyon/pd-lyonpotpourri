@@ -9,7 +9,7 @@
 #X obj 31 6 lpp-icon latch~;
 #X text 32 100 [latch~] is a sample-accurate latch generator. An incoming
 click is held for a given amount of time.;
-#X text 245 44 - sample-accurate latch generator;
+#X text 257 32 - sample-accurate latch generator;
 #X obj 136 277 lyonpotpourri/latch~ 250;
 #X obj 136 176 lyonpotpourri/samm~ 60 1;
 #X text 360 246 <= uses [osc~] to gradually change duration of latch

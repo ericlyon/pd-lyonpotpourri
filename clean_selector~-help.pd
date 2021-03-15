@@ -17,7 +17,7 @@
 #X obj 141 308 lyonpotpourri/clean_selector~ 4 250;
 #X obj 108 384 lpp-meters;
 #X obj 37 24 lpp-icon clean_selector~;
-#X text 236 61 - Cross fade between multiple sources;
+#X text 267 55 - Cross fade between multiple sources;
 #X text 405 308 args: inputs \, fadetime;
 #X connect 0 0 15 0;
 #X connect 1 0 0 0;

@@ -1,4 +1,4 @@
-#N canvas 600 60 571 762 12;
+#N canvas 600 60 571 761 12;
 #X msg 127 369 0 0 0 1 1;
 #X msg 129 395 0 0.5 0 0 1 0.3 1;
 #X msg 129 422 0 0.2 0 0.2 0 0.2 0 0 1 0 0 0 0 0 0.5;
@@ -20,7 +20,7 @@ is a non-linear process - higher amplitude of input will generally
 increase the amount of harmonic distortion.;
 #X text 95 193 <= sinewave input;
 #X text 166 287 <= time-varying gain also varies output spectrum;
-#X text 229 49 - waveshaper;
+#X text 243 49 - waveshaper;
 #X connect 0 0 10 0;
 #X connect 1 0 10 0;
 #X connect 2 0 10 0;

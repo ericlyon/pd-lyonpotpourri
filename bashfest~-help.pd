@@ -293,7 +293,7 @@ by clicks in its inlet.;
 #X obj 371 523 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X text 392 526 read a paper about my sample-accurate externals;
-#X text 234 51 - a click triggered soundfile player with random DSP.
+#X text 251 50 - a click triggered soundfile player with random DSP.
 , f 74;
 #X connect 4 0 10 0;
 #X connect 5 0 9 0;

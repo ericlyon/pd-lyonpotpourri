@@ -21,11 +21,11 @@
 #X obj 273 169 r chopper.demo.msgs;
 #X obj 45 229 lpp-meters;
 #X obj 40 17 lpp-icon chopper~;
-#X text 251 49 - an algorithmic array chopper;
+#X text 264 49 - an algorithmic array chopper;
 #N canvas 633 279 754 935 basic_controls 0;
 #X msg 49 106 force_new;
 #X msg 198 132 lockme \$1;
-#X obj 198 94 tgl 30 0 empty empty empty 0 -6 0 8 -257985 -1 -1 1 1
+#X obj 198 94 tgl 30 0 empty empty empty 0 -6 0 8 -257985 -1 -1 0 1
 ;
 #X floatatom 200 173 5 0 0 0 - minincr -;
 #X floatatom 316 171 5 0 0 0 - maxincr -;
@@ -115,7 +115,7 @@
 #X floatatom 180 220 5 0 0 0 - jitter -;
 #X msg 180 244 jitter \$1;
 #X obj 49 166 hsl 128 15 0 1 0 0 jitter jitter-init jitter -2 -6 0
-8 -252672 -1 -1 12700 1;
+8 -252672 -1 -1 0 1;
 #X obj 48 297 s chopper.demo.msgs;
 #X text 43 51 Parametric controls to deviate a locked loop;
 #X text 189 101 factor to vary loop duration;

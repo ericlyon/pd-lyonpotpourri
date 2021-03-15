@@ -1,9 +1,9 @@
-#N canvas 514 317 470 303 12;
+#N canvas 606 166 470 303 12;
 #X obj 26 203 bng 40 100 50 0 empty empty empty 17 7 0 10 -216994 -1
 -1;
 #X obj 26 165 lyonpotpourri/click2bang~;
 #X obj 26 131 lyonpotpourri/samm~ 60 1;
-#X text 225 50 - Convert click to a bang;
+#X text 247 49 - Convert click to a bang;
 #X obj 24 20 lpp-icon click2bang~;
 #X text 206 133 send out 1 click per second;
 #X msg 121 248 \; pd dsp \$1;

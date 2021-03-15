@@ -58,7 +58,7 @@ than right operand of the [expr~] comparison;
 #X obj 43 318 lpp-meters;
 #X text 149 237 <= open to see workings of this hipass filter;
 #X obj 31 13 lpp-icon vecdex~;
-#X text 240 46 - ramp through indices of a signal vector;
+#X text 255 41 - ramp through indices of a signal vector;
 #X text 35 103 outputs the current index within a signal vector. It
 can be useful for spectral processing \, as demonstrated here., f
 64;
