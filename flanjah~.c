@@ -259,11 +259,11 @@ void flanjah_init(t_flanjah *x,short initialized)
   int i;
   if( x->maxdel < .0001 ) {
     x->maxdel = .0001;
-    error("below minimum of 0.01 ms");
+    pd_error(0, "below minimum of 0.01 ms");
   }
   if( x->maxdel > 360000. ) {
     x->maxdel = 360000.;
-    error("above maximum of 360 seconds");
+    pd_error(0, "above maximum of 360 seconds");
   }
 
   x->si_factor = (float)F_LEN / x->sr;
@@ -302,7 +302,7 @@ void *flanjah_new(t_symbol *s, int argc, t_atom *argv)
 
   x->sr = sys_getsr();
   if(!x->sr) {
-    error("zero sampling rate - set to 44100");
+    pd_error(0, "zero sampling rate - set to 44100");
     x->sr = 44100;
   }
 

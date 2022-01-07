@@ -50,7 +50,7 @@ void *epluribus_new(t_symbol *msg, int argc, t_atom *argv)
   outlet_new(&x->x_obj, gensym("signal"));
   outlet_new(&x->x_obj, gensym("signal"));
   if(x->incount < 2 || x->incount > 256 ) {
-    error("%s: there must be between 2 and 256 input vectors", OBJECT_NAME);
+    pd_error(0, "%s: there must be between 2 and 256 input vectors", OBJECT_NAME);
     return (NULL);
   }
   x->inverse = 0; // by default don't do inverse behaviour

@@ -37,7 +37,7 @@ void *npan_new(t_symbol *s, int argc, t_atom *argv)
   x->outcount = (int) atom_getfloatarg(0, argc, argv);
   if( x->outcount < 2 || x->outcount > SPEAKERMAX ) {
 
-    error("npan~: output count %d exceeded range limits of 2 to %d",x->outcount, SPEAKERMAX);
+    pd_error(0, "npan~: output count %d exceeded range limits of 2 to %d",x->outcount, SPEAKERMAX);
     x->outcount = SPEAKERMAX;
   }
   inlet_new(&x->x_obj, &x->x_obj.ob_pd, gensym("signal"),gensym("signal")); // create 2nd inlet

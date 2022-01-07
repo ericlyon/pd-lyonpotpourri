@@ -119,7 +119,7 @@ void *expflam_new(void)
 void expflam_setflam(t_expflam *x, t_symbol *msg, int argc, t_atom *argv)
 {
   if( argc != 5 ) {
-    error("%s: setflam format: startdelay enddelay attacks slope gainatten",OBJECT_NAME);
+    pd_error(0, "%s: setflam format: startdelay enddelay attacks slope gainatten",OBJECT_NAME);
     return;
   }
   x->start_delay = atom_getfloatarg(0,argc,argv) * 0.001;

@@ -114,19 +114,19 @@ void convolver_static_memory(t_convolver *x, t_floatarg toggle)
         post("%s: memory is now static - do not reload your impulse buffer",OBJECT_NAME);
         
         if ((sbuf = (float *) calloc(N+2, sizeof(float))) == NULL)
-            error("%s: insufficient memory", OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory", OBJECT_NAME);
         memcount += (N+2) * sizeof(float);
         if ((tbuf = (float *) calloc(N2, sizeof(float))) == NULL)
-            error("%s: insufficient memory",OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         memcount += (N2) * sizeof(float);
         if ((filt = (float *) calloc(N+2, sizeof(float))) == NULL)
-            error("%s: insufficient memory",OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         memcount += (N+2) * sizeof(float);
         if( (bitshuffle = (int *) calloc(N * 2, sizeof(int))) == NULL)
-            error("%s: insufficient memory",OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         memcount += (N2) * sizeof(float);
         if( (trigland = (float *) calloc(N * 2, sizeof(float))) == NULL)
-            error("%s: insufficient memory",OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         memcount += (N2) * sizeof(float);
         post("%s: allocated %f Megabytes for %s", OBJECT_NAME, (float)memcount / 1000000.0, impulse->myname->s_name);
     }
@@ -211,19 +211,19 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     dest_chan = atom_getfloatarg(2,argc,argv);
     // post("chans %d %d %d", source_chan, impulse_chan, dest_chan);
     if( source_chan <= 0 || impulse_chan <= 0 || dest_chan <= 0) {
-        error("%s: channels are counted starting from 1",OBJECT_NAME);
+        pd_error(0, "%s: channels are counted starting from 1",OBJECT_NAME);
         return;
     }
     if( source_chan > source->b_nchans ) {
-        error("%s: source channel %ld out of range", OBJECT_NAME, source_chan);
+        pd_error(0, "%s: source channel %ld out of range", OBJECT_NAME, source_chan);
         return;
     }
     if( impulse_chan > impulse->b_nchans ) {
-        error("%s: impulse channel %ld out of range", OBJECT_NAME, impulse_chan);
+        pd_error(0, "%s: impulse channel %ld out of range", OBJECT_NAME, impulse_chan);
         return;
     }
     if( dest_chan > dest->b_nchans ) {
-        error("%s: dest channel %ld out of range", OBJECT_NAME, dest_chan);
+        pd_error(0, "%s: dest channel %ld out of range", OBJECT_NAME, dest_chan);
         return;
     }
     --source_chan;
@@ -243,15 +243,15 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     // post("size of N for convolution is %d", N);
     if(! x->static_memory ) {
         if ((sbuf = (float *) calloc(N+2, sizeof(float))) == NULL)
-            error("%s: insufficient memory", OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory", OBJECT_NAME);
         if ((tbuf = (float *) calloc(N2, sizeof(float))) == NULL)
-            error("%s: insufficient memory",OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         if ((filt = (float *) calloc(N+2, sizeof(float))) == NULL)
-            error("%s: insufficient memory",OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         if( (bitshuffle = (int *) calloc(N * 2, sizeof(int))) == NULL)
-            error("%s: insufficient memory",OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         if( (trigland = (float *) calloc(N * 2, sizeof(float))) == NULL)
-            error("%s: insufficient memory",OBJECT_NAME);
+            pd_error(0, "%s: insufficient memory",OBJECT_NAME);
     }
     
     x->mult = 1. / (float) N;
@@ -279,7 +279,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
         max = gain/(sqrt(max));
     }
     else {
-        error("%s: impulse response is all zeros",OBJECT_NAME);
+        pd_error(0, "%s: impulse response is all zeros",OBJECT_NAME);
         return;
     }
     // make normalization optional
@@ -426,7 +426,7 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
     b_samples = x->impulse->b_samples;
     // chan test
     if( sr == 0. ) {
-        error("zero sample rate");
+        pd_error(0, "zero sample rate");
         return;
     }
     // zero out buffer
@@ -480,7 +480,7 @@ void convolver_spikeimp(t_convolver *x, t_floatarg density)
     b_samples = x->impulse->b_samples;
     // chan test
     if( sr == 0. ) {
-        error("zero sample rate");
+        pd_error(0, "zero sample rate");
         return;
     }
     // zero out buffer
@@ -503,7 +503,7 @@ void convolver_spikeimp(t_convolver *x, t_floatarg density)
             }
             position = (int) (dur * guess * guess * sr) * b_nchans + j;
             if( position >= b_frames * b_nchans ) {
-                error("%d exceeds %ld",position, b_frames * b_nchans);
+                pd_error(0, "%d exceeds %ld",position, b_frames * b_nchans);
             } else{
                 b_samples[ position ].w_float = gain;
             }
@@ -561,10 +561,10 @@ void convolver_setbuf(t_buffy *trybuf)
     int b_frames;
     /* load up sample array */
     if (!(a = (t_garray *)pd_findbyclass(trybuf->myname, garray_class))) {
-        if (*trybuf->myname->s_name) error("%s: %s: no such array", OBJECT_NAME, trybuf->myname->s_name);
+        if (*trybuf->myname->s_name) pd_error(0, "%s: %s: no such array", OBJECT_NAME, trybuf->myname->s_name);
     }
     else if (!garray_getfloatwords(a, &b_frames, &trybuf->b_samples)) { // possible crash worry?
-        error("%s: bad template for %s", trybuf->myname->s_name,OBJECT_NAME);
+        pd_error(0, "%s: bad template for %s", trybuf->myname->s_name,OBJECT_NAME);
         trybuf->b_valid = 0;
     }
     else  {

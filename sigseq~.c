@@ -225,7 +225,7 @@ void *sigseq_new(t_symbol *s, int argc, t_atom *argv)
   x->sr = sys_getsr();
   if(!x->sr) {
     x->sr = 44100;
-    error("zero sampling rate - set to 44100");
+    pd_error(0, "zero sampling rate - set to 44100");
   }
   sigseq_init(x,0);
 
@@ -313,7 +313,7 @@ void sigseq_adsr (t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
   //  short i;
 
   if( argc != 4 ) {
-    error("sigseq~: bad arguments for adsr");
+    pd_error(0, "sigseq~: bad arguments for adsr");
     return;
   }
   x->a = atom_getfloatarg(0,argc,argv) * .001;

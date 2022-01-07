@@ -118,7 +118,7 @@ void magfreq_analysis_overlap(t_magfreq_analysis *x, t_floatarg f)
 {
     int i = (int) f;
     if(!power_of_two(i)) {
-        error("%f is not a power of two",f);
+        pd_error(0, "%f is not a power of two",f);
         return;
     }
     x->overlap = i;
@@ -130,7 +130,7 @@ void magfreq_analysis_winfac(t_magfreq_analysis *x, t_floatarg f)
     int i = (int)f;
     
     if(!power_of_two(i)) {
-        error("%f is not a power of two",f);
+        pd_error(0, "%f is not a power of two",f);
         return;
     }
     x->winfac = i;
@@ -171,7 +171,7 @@ void magfreq_analysis_highfreq(t_magfreq_analysis *x, t_floatarg f)
     float curfreq;
     
     if(f < x->lofreq) {
-        error("current minimum is %f",x->lofreq);
+        pd_error(0, "current minimum is %f",x->lofreq);
         return;
     }
     if(f > x->R/2 ) {
@@ -191,7 +191,7 @@ void magfreq_analysis_lowfreq(t_magfreq_analysis *x, t_floatarg f)
     float curfreq;
     
     if(f > x->hifreq) {
-        error("current maximum is %f",x->lofreq);
+        pd_error(0, "current maximum is %f",x->lofreq);
         return;
     }
     if(f < 0 ) {

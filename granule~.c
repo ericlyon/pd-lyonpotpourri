@@ -135,7 +135,7 @@ void granule_highblock(t_granule *x, t_floatarg f)
 void granule_pitchdev(t_granule *x, t_floatarg d)
 {
   if(d < 0 ) {
-    error("pitch deviation must be positive");
+    pd_error(0, "pitch deviation must be positive");
     return;
   }
   x->pitch_deviation = d;
@@ -164,7 +164,7 @@ void granule_events(t_granule *x, t_floatarg e)
 void granule_transpose(t_granule *x, t_floatarg t)
 {
   if( t <= 0 ) {
-    error("transpose factor must be greater than zero!");
+    pd_error(0, "transpose factor must be greater than zero!");
     return;
   }
   x->transpose = t;
@@ -175,11 +175,11 @@ void *granule_setscale(t_granule *x, t_symbol *msg, int argc, t_atom *argv)
   int i;
   float *pitchscale = x->pitchscale;
   if( argc >= MAXSCALE ) {
-    error("%d is the maximum size scale", MAXSCALE);
+    pd_error(0, "%d is the maximum size scale", MAXSCALE);
     return 0;
   }
   if( argc < 2 ) {
-    error("there must be at least 2 members in scale");
+    pd_error(0, "there must be at least 2 members in scale");
     return 0;
   }
   for(i=0; i < argc; i++) {
@@ -251,7 +251,7 @@ void granule_pitchspray(t_granule *x)
 
 
   if( steps < 2 ) {
-    error("scale is undefined");
+    pd_error(0, "scale is undefined");
     return;
   }
   if( pitch_deviation ) {
@@ -305,7 +305,7 @@ void granule_pitchspray(t_granule *x)
       }
     }
     if(!inserted) {
-      error("could not insert grain");
+      pd_error(0, "could not insert grain");
       return;
     }
   nextgrain: ;
@@ -357,7 +357,7 @@ void granule_spray(t_granule *x)
       }
     }
     if(! inserted) {
-      error("could not insert grain");
+      pd_error(0, "could not insert grain");
       return;
     }
   nextgrain: ;
@@ -380,7 +380,7 @@ void *granule_grain(t_granule *x, t_symbol *msg, int argc, t_atom *argv)
   sr = x->sr;
 
   if(argc < 4) {
-    error("grain takes 4 arguments, not %d",argc);
+    pd_error(0, "grain takes 4 arguments, not %d",argc);
     post("duration frequency amplitude pan");
     return 0;
   }
@@ -389,15 +389,15 @@ void *granule_grain(t_granule *x, t_symbol *msg, int argc, t_atom *argv)
   amplitude = atom_getfloatarg(2,argc,argv);
   pan = atom_getfloatarg(3,argc,argv);
   if(duration <= 0.0) {
-    error("illegal duration:%f",duration);
+    pd_error(0, "illegal duration:%f",duration);
     return 0;
   }
   if(frequency <= 0.0) {
-    error("illegal frequency:%f",frequency);
+    pd_error(0, "illegal frequency:%f",frequency);
     return 0;
   }
   if(pan < 0.0 || pan > 1.0) {
-    error("illegal pan:%f",pan);
+    pd_error(0, "illegal pan:%f",pan);
     return 0;
   }
   inserted = 0;
@@ -416,7 +416,7 @@ void *granule_grain(t_granule *x, t_symbol *msg, int argc, t_atom *argv)
     }
   }
 
-  error("could not insert grain");
+  pd_error(0, "could not insert grain");
   return 0;
 
 }
@@ -516,7 +516,7 @@ void granule_info(t_granule *x)
 void *granule_grist(t_granule *x, t_symbol *msg, int argc, t_atom *argv)
 {
   if(argc < 10 ) {
-    error("grist takes 10 arguments:");
+    pd_error(0, "grist takes 10 arguments:");
     post("events horizon minfreq maxfreq minpan maxpan minamp maxamp mindur maxdur");
     return 0;
   }

@@ -77,7 +77,7 @@ void markov_values(t_markov *x, t_symbol *msg, int argc, t_atom *argv)
   int i;
 
   if( argc != x->event_count ) {
-    error("there must be %d values in this list", x->event_count);
+    pd_error(0, "there must be %d values in this list", x->event_count);
     return;
   }
   for( i = 0; i < x->event_count ; i++) {
@@ -94,12 +94,12 @@ void markov_event_odds(t_markov *x, t_symbol *msg, int argc, t_atom *argv)
   float **event_weights = x->event_weights;
 
   if( argc != x->event_count + 1) {
-    error("there must be %d values in this list", x->event_count + 1);
+    pd_error(0, "there must be %d values in this list", x->event_count + 1);
     return;
   }
   event = atom_getfloatarg(0, argc, argv);
   if( event < 0 || event > x->event_count - 1 ) {
-    error("attempt to set event outside range of 0 to %d",x->event_count - 1);
+    pd_error(0, "attempt to set event outside range of 0 to %d",x->event_count - 1);
     return;
   }
   for( i = 0; i < x->event_count; i++) {
@@ -107,7 +107,7 @@ void markov_event_odds(t_markov *x, t_symbol *msg, int argc, t_atom *argv)
     sum += event_weights[event][i];
   }
   if( sum == 0.0 ) {
-    error("zero sum for odds - this is a very bad thing");
+    pd_error(0, "zero sum for odds - this is a very bad thing");
     return;
   } else if( sum != 1.0 ) {
     // post("sum was %f, rescaling to 1.0", sum);
@@ -120,7 +120,7 @@ void markov_event_odds(t_markov *x, t_symbol *msg, int argc, t_atom *argv)
 void markov_set_length(t_markov *x, t_floatarg length)
 {
   if( length < 1 || length > x->maximum_length ) {
-    error("%d is an illegal length", (int) length);
+    pd_error(0, "%d is an illegal length", (int) length);
     return;
   }
   x->event_count = length;
@@ -151,7 +151,7 @@ void *markov_new(t_floatarg event_count)
   outlet_new(&x->x_obj, gensym("signal"));
   // event_count is MAXIMUM event_count
   if( event_count < 2 || event_count > 256 ) {
-    error("maximum event length limited to 256, set to 16 here");
+    pd_error(0, "maximum event length limited to 256, set to 16 here");
     event_count = 16 ;
   }
   x->maximum_length = event_count;
@@ -192,7 +192,7 @@ void *markov_new(t_floatarg event_count)
   x->tempo = 60.0;
   x->sr = sys_getsr();
   if( ! x->sr ) {
-    error("zero sampling rate - set to 44100");
+    pd_error(0, "zero sampling rate - set to 44100");
     x->sr = 44100;
   }
   x->subdiv = 1;

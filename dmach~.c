@@ -150,7 +150,7 @@ void dmach_muteslot(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 
 
   if(slot < 0 || slot > drum_count - 1) {
-    error("muteslot: illegal slot index: %d",slot);
+    pd_error(0, "muteslot: illegal slot index: %d",slot);
     return;
   }
   x->muted[slot] = mutestate;
@@ -168,14 +168,14 @@ void dmach_playsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   int pnum;
 
   if(argc < 1) {
-    error("%s: zero length sequence",OBJECT_NAME);
+    pd_error(0, "%s: zero length sequence",OBJECT_NAME);
     return;
   }
   /* need safety check here */
   for(i = 0; i < argc; i++) {
     pnum = (int) atom_getfloatarg(i,argc,argv);
     if(! x->stored_patterns[pnum]) {
-      error("%d is not currently stored",pnum);
+      pd_error(0, "%d is not currently stored",pnum);
       return;
     }
   }
@@ -206,14 +206,14 @@ void dmach_loopsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   int pnum;
 
   if(argc < 1) {
-    error("%s: zero length sequence",OBJECT_NAME);
+    pd_error(0, "%s: zero length sequence",OBJECT_NAME);
     return;
   }
 
   for(i = 0; i < argc; i++) {
     pnum = (int) atom_getfloatarg(i,argc,argv);
     if(! x->stored_patterns[pnum]) {
-      error("%d is not currently stored",pnum);
+      pd_error(0, "%d is not currently stored",pnum);
       return;
     }
   }
@@ -248,11 +248,11 @@ void dmach_gain(t_dmach *x, t_floatarg slotf, t_floatarg new_gain_factor)
   //  int i,j,k;
 
   if(slot < 0 || slot > drum_count - 1) {
-    error("illegal slot index: %d",slot);
+    pd_error(0, "illegal slot index: %d",slot);
     return;
   }
   /* if(new_gain_factor <= 0) {
-     error("illegal gain factor %f", new_gain_factor);
+     pd_error(0, "illegal gain factor %f", new_gain_factor);
      return;
      } */
   //  gain_factor = gains[slot];
@@ -267,11 +267,11 @@ void dmach_transpose(t_dmach *x, t_floatarg slotf, t_floatarg new_transpose_fact
   int drum_count = x->drum_count;
 
   if(slot < 0 || slot > drum_count - 1) {
-    error("%s: transpose given illegal slot index: %d",OBJECT_NAME, slot);
+    pd_error(0, "%s: transpose given illegal slot index: %d",OBJECT_NAME, slot);
     return;
   }
   if(new_transpose_factor == 0) {
-    error("illegal transpose factor %f", new_transpose_factor);
+    pd_error(0, "illegal transpose factor %f", new_transpose_factor);
     return;
   }
   gtranspose[slot] = new_transpose_factor;
@@ -286,15 +286,15 @@ void dmach_recall(t_dmach *x, t_floatarg pnf)
   /* post("requested recall of %d, ignored",pnum);
      return;*/
   if(pnum < 0) {
-    error("requested index is less than zero");
+    pd_error(0, "requested index is less than zero");
     return;
   }
   if(pnum >= MAX_PATTERNS) {
-    error("requested index is greater than the maximum of %d",MAX_PATTERNS-1);
+    pd_error(0, "requested index is greater than the maximum of %d",MAX_PATTERNS-1);
     return;
   }
   if(! x->stored_patterns[pnum]) {
-    error("%d is not currently stored",pnum);
+    pd_error(0, "%d is not currently stored",pnum);
     return;
   }
   //  x->this_pattern = x->next_pattern = pnum;
@@ -309,15 +309,15 @@ void dmach_arm(t_dmach *x, t_floatarg pnf)
   t_pattern *p = x->patterns;
 
   if(pnum < 0) {
-    error("requested index is less than zero");
+    pd_error(0, "requested index is less than zero");
     return;
   }
   if(pnum > MAX_PATTERNS) {
-    error("%s: requested index is greater than the maximum of %d",OBJECT_NAME,MAX_PATTERNS-1);
+    pd_error(0, "%s: requested index is greater than the maximum of %d",OBJECT_NAME,MAX_PATTERNS-1);
     return;
   }
   if(! x->stored_patterns[pnum]) {
-    error("%s: %d is not currently stored",OBJECT_NAME,pnum);
+    pd_error(0, "%s: %d is not currently stored",OBJECT_NAME,pnum);
     return;
   }
   x->mute = 1;
@@ -339,7 +339,7 @@ void dmach_tempo(t_dmach *x, t_floatarg new_tempo)
   float sr = x->sr;
   float tempo_factor = x->tempo_factor;
   if(new_tempo <= 0.0) {
-    error("tempo must be greater than zero, but was %f",new_tempo);
+    pd_error(0, "tempo must be greater than zero, but was %f",new_tempo);
     return;
   }
   ratio = x->tempo / new_tempo;
@@ -370,12 +370,12 @@ void dmach_show(t_dmach *x, t_floatarg fn)
   int drum_count = x->drum_count;
 
   if(pnum < 0 || pnum > MAX_PATTERNS-1) {
-    error("illegal pattern number: %d",pnum);
+    pd_error(0, "illegal pattern number: %d",pnum);
     return;
   }
 
   if(! x->stored_patterns[pnum]) {
-    error("%d is not currently stored",pnum);
+    pd_error(0, "%d is not currently stored",pnum);
     return;
   }
   post("showing pattern %d",pnum);
@@ -407,16 +407,16 @@ void dmach_printraw(t_dmach *x, t_floatarg fn)
   float sr = x->sr;
 
   if(pnum < 0 || pnum > MAX_PATTERNS-1) {
-    error("illegal pattern number: %d",pnum);
+    pd_error(0, "illegal pattern number: %d",pnum);
     return;
   }
 
   if(! x->stored_patterns[pnum]) {
-    error("%d is not currently stored",pnum);
+    pd_error(0, "%d is not currently stored",pnum);
     return;
   }
   if(!tempo_factor) {
-    error("tempo factor is zero!");
+    pd_error(0, "tempo factor is zero!");
     return;
   }
 
@@ -456,16 +456,16 @@ void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
     pnum = (int) atom_getfloatarg(0,argc,argv);
   }
   if(pnum < 0 || pnum > MAX_PATTERNS-1) {
-    error("illegal pattern number: %d",pnum);
+    pd_error(0, "illegal pattern number: %d",pnum);
     return;
   }
 
   if(! x->stored_patterns[pnum]) {
-    error("%d is not currently stored",pnum);
+    pd_error(0, "%d is not currently stored",pnum);
     return;
   }
   if(!tempo_factor) {
-    error("tempo factor is zero!");
+    pd_error(0, "tempo factor is zero!");
     return;
   }
 
@@ -506,19 +506,19 @@ void dmach_copypattern(t_dmach *x, t_floatarg pn1, t_floatarg pn2)
   int drum_count = x->drum_count;
 
   if(pnum_from < 0 || pnum_from > MAX_PATTERNS-1) {
-    error("illegal source pattern number: %d",pnum_from);
+    pd_error(0, "illegal source pattern number: %d",pnum_from);
     return;
   }
   if(pnum_to < 0 || pnum_to > MAX_PATTERNS-1) {
-    error("illegal dest pattern number: %d",pnum_to);
+    pd_error(0, "illegal dest pattern number: %d",pnum_to);
     return;
   }
   if(pnum_from == pnum_to) {
-    error("source and dest patterns are the same");
+    pd_error(0, "source and dest patterns are the same");
     return;
   }
   if(! x->stored_patterns[pnum_from]) {
-    error("%d is not currently stored",pnum_from);
+    pd_error(0, "%d is not currently stored",pnum_from);
     return;
   }
   dmach_init_pattern(x,pnum_to);
@@ -564,7 +564,7 @@ void dmach_readraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 
 
   if(pnum < 0 || pnum > MAX_PATTERNS-1) {
-    error("%s: illegal pattern number: %d",OBJECT_NAME,pnum);
+    pd_error(0, "%s: illegal pattern number: %d",OBJECT_NAME,pnum);
     return;
   }
 
@@ -627,12 +627,12 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
     return;*/
 
   if(pnum < 0 || pnum > MAX_PATTERNS - 1) {
-    error("%s: invalid pattern number: %d",OBJECT_NAME,pnum);
+    pd_error(0, "%s: invalid pattern number: %d",OBJECT_NAME,pnum);
     return;
   }
 
   if(!x->stored_patterns[pnum]) {
-    error("%s: no pattern found at location : %d",OBJECT_NAME,pnum);
+    pd_error(0, "%s: no pattern found at location : %d",OBJECT_NAME,pnum);
     return;
   }
 
@@ -644,7 +644,7 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   //  post("filling slotamps %d for %d",slot, pnum);
   if(tempo <= 0) {
     tempo = 60;
-    error("zero tempo found");
+    pd_error(0, "zero tempo found");
   }
   tempo_factor = (60.0/tempo);
 
@@ -717,12 +717,12 @@ void dmach_slotampsfull(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   pnum = atom_getfloatarg(pdex++,argc,argv);
 
   if(pnum < 0 || pnum > MAX_PATTERNS - 1) {
-    error("%s: invalid pattern number: %d",OBJECT_NAME,pnum);
+    pd_error(0, "%s: invalid pattern number: %d",OBJECT_NAME,pnum);
     return;
   }
 
   if(!x->stored_patterns[pnum]) {
-    error("%s: no pattern found at location : %d",OBJECT_NAME,pnum);
+    pd_error(0, "%s: no pattern found at location : %d",OBJECT_NAME,pnum);
     return;
   }
 
@@ -791,12 +791,12 @@ void dmach_slotincrs(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 
 
   if(pnum < 0 || pnum >= MAX_PATTERNS) {
-    error("%s: slotincrs sent invalid pattern number: %d",OBJECT_NAME,pnum);
+    pd_error(0, "%s: slotincrs sent invalid pattern number: %d",OBJECT_NAME,pnum);
     return;
   }
 
   if(!x->stored_patterns[pnum]) {
-    error("%s: slotincrs: no pattern found at location : %d",OBJECT_NAME,pnum);
+    pd_error(0, "%s: slotincrs: no pattern found at location : %d",OBJECT_NAME,pnum);
     return;
   }
 
@@ -838,7 +838,7 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 
   pnum = atom_getfloatarg(0,argc,argv);
   if(pnum < 0 || pnum > MAX_PATTERNS - 1) {
-    error("invalid pattern number: %d",pnum);
+    pd_error(0, "invalid pattern number: %d",pnum);
     return;
   }
   //  post("%d arguments to \"store\" at pattern %d",argc,pnum);
@@ -851,7 +851,7 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
     p[pnum].beats = 4;
   }
   if(tempo <= 0) {
-    error("zero tempo in store msg");
+    pd_error(0, "zero tempo in store msg");
     tempo = 60;
   }
   tempo_factor = (60.0/tempo);
@@ -911,7 +911,7 @@ void dmach_init_pattern(t_dmach *x, int pnum)
   int drum_count = x->drum_count;
   t_pattern *p = x->patterns;
   if(pnum < 0 || pnum >= MAX_PATTERNS) {
-    error("invalid pattern number: %d",pnum);
+    pd_error(0, "invalid pattern number: %d",pnum);
     return;
   }
 

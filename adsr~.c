@@ -210,7 +210,7 @@ static void *adsr_new(t_symbol *s, int argc, t_atom *argv)
 
   x->srate = sys_getsr();
   if(!x->srate) {
-    error("zero sampling rate, setting to 44100");
+    pd_error(0, "zero sampling rate, setting to 44100");
     x->srate = 44100;
   }
 

@@ -215,7 +215,7 @@ void chameleon_report(t_chameleon *x){
 void chameleon_maximum_process(t_chameleon *x, t_floatarg n)
 {
     if(n < 0){
-        error("chameleon~: illegal val to maximum_process");
+        pd_error(0, "chameleon~: illegal val to maximum_process");
         return;
     }
     x->max_process_per_note = (int)n;
@@ -224,7 +224,7 @@ void chameleon_maximum_process(t_chameleon *x, t_floatarg n)
 void chameleon_minimum_process(t_chameleon *x, t_floatarg n)
 {
     if(n < 0){
-        error("chameleon~: illegal val to minimum_process");
+        pd_error(0, "chameleon~: illegal val to minimum_process");
         return;
     }
     x->min_process_per_note = (int)n;
@@ -235,7 +235,7 @@ void chameleon_setodds(t_chameleon *x,t_symbol *msg, short argc, t_atom *argv)
     int i;
     
     if(argc > PROCESS_COUNT){
-        error("chameleon~: there are only %d processes",PROCESS_COUNT);
+        pd_error(0, "chameleon~: there are only %d processes",PROCESS_COUNT);
         return;
     }
     for(i=0;i<PROCESS_COUNT;i++){
@@ -252,7 +252,7 @@ void chameleon_soloproc(t_chameleon *x, t_floatarg fp)
     int i;
     int p = (int) fp;
     if(p < 0 || p >= PROCESS_COUNT){
-        error("chameleon~: bad %d",p);
+        pd_error(0, "chameleon~: bad %d",p);
     }
     for(i=0;i<PROCESS_COUNT;i++){
         x->odds[i] = 0.0;
@@ -322,7 +322,7 @@ void chameleon_killproc(t_chameleon *x, t_floatarg fp)
     int i;
     int p = (int) fp;
     if(p < 0 || p >= PROCESS_COUNT){
-        error("chameleon~: bad %d",p);
+        pd_error(0, "chameleon~: bad %d",p);
     }
     for(i=0;i<PROCESS_COUNT;i++){
         x->odds[i] = 1.0;
@@ -1010,7 +1010,7 @@ t_int *chameleon_perform(t_int *w)
             stv(x, &curarg, chan1, chan2);
         }
         else {
-            error("chameleon~: programming error - deploy missing branch for %ld", curarg);
+            pd_error(0, "chameleon~: programming error - deploy missing branch for %ld", curarg);
             goto panic;
         }
     }
@@ -1273,7 +1273,7 @@ void chameleon_tweak_parameters(t_chameleon *x, t_floatarg tdev){
             params[pcount++] = x->ellipseme_units[ellipseme_count].filtercode = rparams[rpcount++];
             
             if( x->ellipseme_units[ellipseme_count].filtercode >= ELLIPSE_FILTER_COUNT ){
-                error("chameleon~: there is no %d ellipse data",x->ellipseme_units[ellipseme_count].filtercode);
+                pd_error(0, "chameleon~: there is no %d ellipse data",x->ellipseme_units[ellipseme_count].filtercode);
                 return;
             };
         }
@@ -1472,7 +1472,7 @@ void chameleon_tweak_parameters(t_chameleon *x, t_floatarg tdev){
             delset2(x->stv_units[stv_count].delayline2, x->stv_units[stv_count].dv2, maxdelay, x->sr);
         }
         else {
-            error("el.chameleon~: could not find a process for %d",j);
+            pd_error(0, "el.chameleon~: could not find a process for %d",j);
         }
     }
     x->pcount = pcount;
@@ -1677,7 +1677,7 @@ void chameleon_recall_parameters_exec(t_chameleon *x)
             params[pcount++] = x->ellipseme_units[ellipseme_count].filtercode = rparams[rpcount++];
             
             if( x->ellipseme_units[ellipseme_count].filtercode >= ELLIPSE_FILTER_COUNT ){
-                error("there is no %d ellipse data",x->ellipseme_units[ellipseme_count].filtercode);
+                pd_error(0, "there is no %d ellipse data",x->ellipseme_units[ellipseme_count].filtercode);
                 return;
             };
             fltdata = x->ellipse_data [x->ellipseme_units[ellipseme_count].filtercode];
@@ -1837,7 +1837,7 @@ void chameleon_recall_parameters_exec(t_chameleon *x)
             // stv_count = (stv_count + 1) % max_dsp_units;
         }
         else {
-            error("el.chameleon~: could not find a process for %d",j);
+            pd_error(0, "el.chameleon~: could not find a process for %d",j);
         }
     }
     
@@ -2062,7 +2062,7 @@ void chameleon_set_parameters_exec(t_chameleon *x)
             params[pcount++] = x->ellipseme_units[ellipseme_count].filtercode = rand() % ELLIPSE_FILTER_COUNT;
             
             if( x->ellipseme_units[ellipseme_count].filtercode >= ELLIPSE_FILTER_COUNT ){
-                error("there is no %d ellipse data",x->ellipseme_units[ellipseme_count].filtercode);
+                pd_error(0, "there is no %d ellipse data",x->ellipseme_units[ellipseme_count].filtercode);
                 return;
             };
             fltdata = x->ellipse_data [x->ellipseme_units[ellipseme_count].filtercode];
@@ -2219,7 +2219,7 @@ void chameleon_set_parameters_exec(t_chameleon *x)
             stv_count = (stv_count + 1) % max_dsp_units;
         }
         else {
-            error("el.chameleon~: could not find a process for %d",j);
+            pd_error(0, "el.chameleon~: could not find a process for %d",j);
         }
     }
     x->pcount = pcount;
@@ -2287,7 +2287,7 @@ void ellipset(double *list, LSTRUCT *eel, int  *nsects, double *xnorm)
   int m,i;
   *nsects = (int)list[0];
   if(*nsects > MAXSECTS) {
-    error("sorry, only configured for %d sections",MAXSECTS);
+    pd_error(0, "sorry, only configured for %d sections",MAXSECTS);
     return;
   }
   i=1;
@@ -2564,7 +2564,7 @@ void setweights(float *a, int len)
     for(i=0;i<len;i++)
         sum += a[i];
     if(sum == 0.0){
-        error("zero odds sum");
+        pd_error(0, "zero odds sum");
     }
     for(i=0;i<len;i++)
         a[i] /= sum;
@@ -3132,7 +3132,7 @@ void flange(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     phase = x->flange_units[flange_count].phase;
     
     if( minres <= 0. || maxres <= 0. ){
-        error("flange: got zero frequency resonances as input");
+        pd_error(0, "flange: got zero frequency resonances as input");
         return;
     }
     mindel = 1.0/maxres;
@@ -3140,7 +3140,7 @@ void flange(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     // added safety
     if( maxdel > max_delay * 0.99 ){
         maxdel = max_delay * 0.99;
-        error("flange: excessive delay time shortened");
+        pd_error(0, "flange: excessive delay time shortened");
     }
     
     si = ((double)sinelen/srate) * speed;
@@ -3597,7 +3597,7 @@ void reverb1(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     eel2 = x->reverb1_units[reverb1_count].eel2;
     
     if( revtime >= 1. ){
-        error("reverb1 does not like feedback values over 1.");
+        pd_error(0, "reverb1 does not like feedback values over 1.");
         revtime = .99 ;
     }
 
@@ -3698,7 +3698,7 @@ void feed1me(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     duration = x->feed1_units[feed1_count].duration;
     
     if( maxdelay > MAX_MINI_DELAY ){
-        error("feed1: too high max delay, adjusted");
+        pd_error(0, "feed1: too high max delay, adjusted");
         maxdelay = MAX_MINI_DELAY;
     }
     
