@@ -89,7 +89,7 @@ void bvplay_notelist(t_bvplay *x, t_symbol *msg, int argc, t_atom *argv)
 
   if( x->active ) {
     if( x->verbose )
-      error("object still playing - cannot add note!");
+      pd_error(0, "object still playing - cannot add note!");
     return;
   }
   bvplay_set(x, x->sfname);
@@ -246,7 +246,7 @@ void *bvplay_new(t_symbol *s, t_floatarg taperdur)
   x->sfname = s;
   x->R = sys_getsr();
   if(! x->R) {
-    error("zero sampling rate - set to 44100");
+    pd_error(0, "zero sampling rate - set to 44100");
     x->R = 44100;
   }
   x->notedata = (float *) calloc(4, sizeof(float));

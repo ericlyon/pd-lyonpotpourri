@@ -23,7 +23,7 @@ void lpp_ellipset(float *list, LSTRUCT *eel, int  *nsects, float *xnorm)
   int m,i;
   *nsects = (int)list[0];
   if(*nsects > MAXSECTS) {
-    error("sorry, only configured for %d sections",MAXSECTS);
+    pd_error(0, "sorry, only configured for %d sections",MAXSECTS);
     return;
   }
   i=1;

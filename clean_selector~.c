@@ -61,7 +61,7 @@ void *clean_selector_new(t_symbol *s, int argc, t_atom *argv)
   if(argc >= 1) {
     x->inlet_count = (int)atom_getfloatarg(0,argc,argv);
     if(x->inlet_count < 2 || x->inlet_count > MAX_CHANS) {
-      error("%s: %d is illegal number of inlets",OBJECT_NAME,x->inlet_count);
+      pd_error(0, "%s: %d is illegal number of inlets",OBJECT_NAME,x->inlet_count);
       return (void *) NULL;
     }
 
@@ -81,7 +81,7 @@ void *clean_selector_new(t_symbol *s, int argc, t_atom *argv)
   x->sr = sys_getsr();
   if(!x->sr) {
     x->sr = 44100.0;
-    error("zero sampling rate - set to 44100");
+    pd_error(0, "zero sampling rate - set to 44100");
   }
   x->fadetype = CS_POWER;
   x->pi_over_two = 1.57079632679;
@@ -113,7 +113,7 @@ void clean_selector_fadetime(t_clean_selector *x, t_floatarg f)
   float fades = (float)f / 1000.0;
 
   if( fades < .0001 || fades > 1000.0 ) {
-    error("fade time is constrained to 0.1 - 1000000, but you wanted %f",f );
+    pd_error(0, "fade time is constrained to 0.1 - 1000000, but you wanted %f",f );
     return;
   }
   x->fadetime = fades;

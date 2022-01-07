@@ -157,7 +157,7 @@ void splitspec_squantize(t_splitspec *x, t_floatarg bb)
   blockbins = splitspec_closestPowerOfTwo( blockbins );
   maxblock = N2 / channel_count;
   if( blockbins < 1 || blockbins > maxblock ) {
-    error("%d is out of bounds - must be between 1 and %d", blockbins, maxblock);
+    pd_error(0, "%d is out of bounds - must be between 1 and %d", blockbins, maxblock);
     return;
   }
 
@@ -183,7 +183,7 @@ void splitspec_squantize(t_splitspec *x, t_floatarg bb)
             current_binsplit[i + j + k * blockbins] = bincount++;
             // post("assigning %d to position %d", bincount-1, i+j+k*blockbins);
           } else {
-            // error("%d out of range", i + j + k * blockbins);
+            // pd_error(0, "%d out of range", i + j + k * blockbins);
           }
         }
       }
@@ -284,7 +284,7 @@ void splitspec_store( t_splitspec *x, t_floatarg floc)
   int i;
 
   if( location < 0 || location > MAXSTORE - 1 ) {
-    error("location must be between 0 and %d, but was %d", MAXSTORE, location);
+    pd_error(0, "location must be between 0 and %d, but was %d", MAXSTORE, location);
     return;
   }
   for(i = 0; i < x->N2; i++ ) {
@@ -304,11 +304,11 @@ void splitspec_recall( t_splitspec *x, t_floatarg floc)
   int i;
   int location = (int)floc;
   if( location < 0 || location > MAXSTORE - 1 ) {
-    error("location must be between 0 and %d, but was %d", MAXSTORE, location);
+    pd_error(0, "location must be between 0 and %d, but was %d", MAXSTORE, location);
     return;
   }
   if( ! stored_slots[location] ) {
-    error("nothing stored at location %d", location);
+    pd_error(0, "nothing stored at location %d", location);
     return;
   }
 
@@ -573,7 +573,7 @@ void splitspec_setstate (t_splitspec *x, t_symbol *msg, int argc, t_atom *argv) 
   short i;
 
   if( argc != x->N2 ) {
-    error("list must be of length %d, but actually was %d", x->N2, argc);
+    pd_error(0, "list must be of length %d, but actually was %d", x->N2, argc);
     return;
   }
   for( i = 0; i < x->N2; i++ ) {
@@ -653,7 +653,7 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
   // post("vector size %d, sys vector size: %d",vector_size, sys_getblksize() );
   // post("splitspec: samples per vector: %d, sys blocksize %d", sp[0]->s_n, sys_getblksize());
   if( ! sp[0]->s_sr ) {
-    error("splitspec~: zero sample rate!");
+    pd_error(0, "splitspec~: zero sample rate!");
     return;
   }
 

@@ -290,7 +290,7 @@ void *vdp_new(t_symbol *s, int argc, t_atom *argv)
   outlet_new(&x->x_obj, gensym("signal") );
   x->sr = sys_getsr();
   if(!x->sr) {
-    error("zero sampling rate - set to 44100");
+    pd_error(0, "zero sampling rate - set to 44100");
     x->sr = 44100;
   }
   // DSP CONFIG
@@ -341,7 +341,7 @@ void vdp_init(t_vdp *x,short initialized)
       x->maxdel = .00001;
     }
     if( x->maxdel > MAX_DELAY_TIME ) {
-      error("%s: %f is too long, delay time set to max of %f",OBJECT_NAME,x->maxdel, MAX_DELAY_TIME);
+      pd_error(0, "%s: %f is too long, delay time set to max of %f",OBJECT_NAME,x->maxdel, MAX_DELAY_TIME);
       x->maxdel = MAX_DELAY_TIME;
     }
     x->len = x->maxdel * .001 * x->sr;
@@ -416,7 +416,7 @@ void vdp_copy_to_buffer(t_vdp *x, t_symbol *msg, int argc, t_atom *argv)
 
 
   if(b_nchans != 1) {
-    error("%s: buffer must be mono",OBJECT_NAME);
+    pd_error(0, "%s: buffer must be mono",OBJECT_NAME);
     return;
   }
   if(b_dest_frames < b_frames ) {

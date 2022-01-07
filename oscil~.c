@@ -140,11 +140,11 @@ void oscil_amph(t_oscil *x, t_symbol *msg, int argc, t_atom *argv)
 void oscil_fadetime (t_oscil *x, t_floatarg fade_ms)
 {
   if(x->fade_countdown) {
-    error("oscil: crossfade in progress, cannot update fade time");
+    pd_error(0, "oscil: crossfade in progress, cannot update fade time");
     return;
   }
   if( fade_ms < 0.0 || fade_ms > 60000.0 ) {
-    error("%s: %f is not a good fade time",OBJECT_NAME, fade_ms);
+    pd_error(0, "%s: %f is not a good fade time",OBJECT_NAME, fade_ms);
     fade_ms = 50.;
   }
   x->fade_ms = fade_ms;
@@ -155,7 +155,7 @@ void oscil_fadetype(t_oscil *x, t_floatarg ftype)
 {
 
   if( ftype < 0 || ftype > 2 ) {
-    error("%s: unknown type of fade, selecting no fade",OBJECT_NAME);
+    pd_error(0, "%s: unknown type of fade, selecting no fade",OBJECT_NAME);
     ftype = 0;
   }
   x->fadetype = ftype;
@@ -165,7 +165,7 @@ void oscil_harmcount(t_oscil *x, t_floatarg fharms)
 {
   int harms = (int)fharms;
   if( harms < 1 || harms > OSCIL_MAXIMUM_HARMONICS-1) {
-    error("%d is out of range and must be between 1 to %d", harms,OSCIL_MAXIMUM_HARMONICS-1 );
+    pd_error(0, "%d is out of range and must be between 1 to %d", harms,OSCIL_MAXIMUM_HARMONICS-1 );
     return;
   }
   x->bl_harms = harms + 1;
@@ -208,7 +208,7 @@ void *oscil_new(t_symbol *s, int argc, t_atom *argv)
   if( argc > 0 ) {
     init_freq = atom_getfloatarg(0, argc, argv);
     if( ! init_freq ) {
-      error("%s: zero initial frequency, resetting to 440",OBJECT_NAME);
+      pd_error(0, "%s: zero initial frequency, resetting to 440",OBJECT_NAME);
       init_freq = 440 ;
     }
 
@@ -227,7 +227,7 @@ void *oscil_new(t_symbol *s, int argc, t_atom *argv)
   if( argc > 3 ) {
     x->bl_harms = atom_getfloatarg(3, argc, argv);
     if( x->bl_harms > 1024 ) {
-      error("%s: too many harmonics - limit is 1024",OBJECT_NAME);
+      pd_error(0, "%s: too many harmonics - limit is 1024",OBJECT_NAME);
       x->bl_harms = 1024;
     }
   }
@@ -240,10 +240,10 @@ void *oscil_new(t_symbol *s, int argc, t_atom *argv)
   }
   if( x->table_length > OSCIL_MAX_FLEN ) {
     x->table_length = OSCIL_MAX_FLEN;
-    error("%s: Exceeded maximum - setting function length to %d",OBJECT_NAME,OSCIL_MAX_FLEN);
+    pd_error(0, "%s: Exceeded maximum - setting function length to %d",OBJECT_NAME,OSCIL_MAX_FLEN);
   } if( x->bl_harms < 1 || x->bl_harms > OSCIL_MAXIMUM_HARMONICS ) {
     x->bl_harms = OSCIL_DEFAULT_HARMONICS ;
-    error("%s: Bad parameters. Bandlimited waveforms will have %d partials.",
+    pd_error(0, "%s: Bad parameters. Bandlimited waveforms will have %d partials.",
           OBJECT_NAME,OSCIL_DEFAULT_HARMONICS);
   }
 
@@ -266,7 +266,7 @@ void *oscil_new(t_symbol *s, int argc, t_atom *argv)
   x->sr = sys_getsr();
   if( ! x->sr ) {
     x->sr = 44100;
-    error("zero sampling rate - set to 44100");
+    pd_error(0, "zero sampling rate - set to 44100");
   }
   x->si_factor = (float) x->table_length / x->sr;
   x->si = init_freq * x->si_factor ;
@@ -312,14 +312,14 @@ void build_amph_waveform( t_oscil *x )
   float addphase;
 
   if( x->fade_in_progress ) {
-    // error("Crossfade in progress. Cannot generate waveform");
+    // pd_error(0, "Crossfade in progress. Cannot generate waveform");
     // do not use because this will happen too often
     return;
   }
 
 
   if( harmonic_count < 1 ) {
-    error("%s: no harmonics specified, waveform not created.",OBJECT_NAME);
+    pd_error(0, "%s: no harmonics specified, waveform not created.",OBJECT_NAME);
     return;
   }
 
@@ -363,7 +363,7 @@ void build_amph_waveform( t_oscil *x )
     for( j = 0; j < table_length; j++ ) {
       wavetable[j] = old_wavetable[j];
     }
-    error("all zero function ignored");
+    pd_error(0, "all zero function ignored");
     x->dirty = 0;
     return;
   }
@@ -389,14 +389,14 @@ void build_waveform( t_oscil *x ) {
   //  float testsum = 0.0;
 
   if( x->fade_in_progress ) {
-    // error("Crossfade in progress. Cannot generate waveform");
+    // pd_error(0, "Crossfade in progress. Cannot generate waveform");
     // do not use because this will happen too often
     return;
   }
 
 
   if( harmonic_count < 1 ) {
-    error("no harmonics specified, waveform not created.");
+    pd_error(0, "no harmonics specified, waveform not created.");
     return;
   }
 
@@ -437,7 +437,7 @@ void build_waveform( t_oscil *x ) {
     for( j = 0; j < table_length; j++ ){  // could use memcpy here
       wavetable[j] = old_wavetable[j];
     }
-    error("all zero function ignored");
+    pd_error(0, "all zero function ignored");
     x->dirty = 0;
     return;
   }
@@ -768,7 +768,7 @@ void oscil_dsp(t_oscil *x, t_signal **sp)
   }
   if( x->sr != sp[0]->s_sr ) {
     if(! sp[0]->s_sr) {
-      error("oscil~: Zero sampling rate reported!");
+      pd_error(0, "oscil~: Zero sampling rate reported!");
       return;
     }
     x->si *= sp[0]->s_sr / x->sr ;

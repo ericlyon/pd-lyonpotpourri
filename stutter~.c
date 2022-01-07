@@ -301,7 +301,7 @@ void stutter_recall_loop(t_stutter *x, t_floatarg loop_b_index)
   int i = loop_b_index;
 
   if(!x->stored_samps[i]) {
-    error("no loop stored at position %d!", i);
+    pd_error(0, "no loop stored at position %d!", i);
     return;
   }
   x->loop_start = x->stored_starts[ i ];
@@ -395,7 +395,7 @@ void *stutter_new(t_symbol *msg, int argc, t_atom *argv)
   srand(time(0));
 
   if(argc<1) {
-    error("stutter~ requires a buffer name");
+    pd_error(0, "stutter~ requires a buffer name");
     return NULL;
   }
   x->bufchans = 1;
@@ -438,7 +438,7 @@ void stutter_min_echo(t_stutter *x,  t_floatarg f)
   if(ec>0 && ec < x->max_echo) {
     x->min_echo = ec;
   } else {
-    error("min echo must be less than max echo, and greater than zero");
+    pd_error(0, "min echo must be less than max echo, and greater than zero");
   }
 }
 void stutter_max_echo(t_stutter *x,  t_floatarg f)
@@ -448,7 +448,7 @@ void stutter_max_echo(t_stutter *x,  t_floatarg f)
   if(ec > x->min_echo) {
     x->max_echo = ec;
   } else {
-    error("max echo must be greater than min echo");
+    pd_error(0, "max echo must be greater than min echo");
   }
 }
 
@@ -462,7 +462,7 @@ void stutter_minmax_echo(t_stutter *x,  t_floatarg minf, t_floatarg maxf)
     x->max_echo = maxec;
   }
   else {
-    error("bad inputs to minmax_echo");
+    pd_error(0, "bad inputs to minmax_echo");
   }
 }
 

@@ -109,7 +109,7 @@ void vdb_maxdelay(t_vdb *x, t_floatarg delay)
     x->maxdelay = 50.0;
     newlen = delay * .001 * x->sr;
     if(newlen > x->len) {
-        error("%s: requested a max delay that exceeds buffer size",OBJECT_NAME);
+        pd_error(0, "%s: requested a max delay that exceeds buffer size",OBJECT_NAME);
         return;
     }
     x->maxdelay_len = newlen;
@@ -268,7 +268,7 @@ t_int *vdb_perform(t_int *w)
             idelay = floor(fdelay);
             
             if(phs < 0 || phs >= maxdelay_len) {
-                error("%s: bad phase %d",OBJECT_NAME,phs);
+                pd_error(0, "%s: bad phase %d",OBJECT_NAME,phs);
                 phs = 0;
             }
             
@@ -303,7 +303,7 @@ t_int *vdb_perform(t_int *w)
                     dphs += maxdelay_len;
                 }
                 if(dphs < 0 || dphs >= maxdelay_len) {
-                    error("bad dphase %d",dphs);
+                    pd_error(0, "bad dphase %d",dphs);
                     dphs = 0;
                 }
                 outsamp = delay_line[dphs * b_nchans + i].w_float;
@@ -354,12 +354,12 @@ void *vdb_new(t_symbol *s, int argc, t_atom *argv)
     
     x->sr = sys_getsr();
     if(argc < 2) {
-        error("%s: you must provide a valid buffer name and channel count",OBJECT_NAME);
+        pd_error(0, "%s: you must provide a valid buffer name and channel count",OBJECT_NAME);
         return (void *)NULL;
     }
     
     if(!x->sr) {
-        error("zero sampling rate - set to 44100");
+        pd_error(0, "zero sampling rate - set to 44100");
         x->sr = 44100;
     }
     // DSP CONFIG

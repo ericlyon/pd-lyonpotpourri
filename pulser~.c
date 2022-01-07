@@ -53,7 +53,7 @@ void pulser_mute(t_pulser *x, t_floatarg toggle)
 void pulser_harmonics(t_pulser *x, t_floatarg c)
 {
   if(c < 2 || c > MAX_COMPONENTS) {
-    error("harmonic count out of bounds");
+    pd_error(0, "harmonic count out of bounds");
     return;
   }
   x->components = c;
@@ -76,7 +76,7 @@ void *pulser_new(t_symbol *s, int argc, t_atom *argv)
   outlet_new(&x->x_obj, gensym("signal"));
   x->sr = sys_getsr();
   if(!x->sr) {
-    error("zero sampling rate, setting to 44100");
+    pd_error(0, "zero sampling rate, setting to 44100");
     x->sr = 44100;
   }
 
@@ -93,7 +93,7 @@ void *pulser_new(t_symbol *s, int argc, t_atom *argv)
   x->si_fac = ((float)FUNC_LEN/x->sr) ;
 
   if(x->components <= 0 || x->components > MAX_COMPONENTS) {
-    error("%d is an illegal number of components, setting to 8",x->components );
+    pd_error(0, "%d is an illegal number of components, setting to 8",x->components );
     x->components = 8;
   }
   x->global_gain = 1.0 / (float) x->components ;
@@ -192,7 +192,7 @@ void pulser_dsp(t_pulser *x, t_signal **sp)
   long i;
 
   if(!sp[0]->s_sr) {
-    error("zero sampling rate");
+    pd_error(0, "zero sampling rate");
     return;
   }
 

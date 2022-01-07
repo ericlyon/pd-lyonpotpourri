@@ -194,7 +194,7 @@ void lpp_comber(t_bashfest *x, int slot, int *pcount)
     outbuf = x->events[slot].workbuffer + out_start;
     
     if( delay <= 0.0 ) {
-        error("comber got bad delay value\n");
+        pd_error(0, "comber got bad delay value\n");
         return;
     }
     if( delay > max_delay ) {
@@ -295,7 +295,7 @@ void lpp_flange(t_bashfest *x, int slot, int *pcount)
     
     
     if( minres <= 0. || maxres <= 0. ) {
-        error("flange: got zero frequency resonances as input");
+        pd_error(0, "flange: got zero frequency resonances as input");
         return;
     }
     mindel = 1.0/maxres;
@@ -303,7 +303,7 @@ void lpp_flange(t_bashfest *x, int slot, int *pcount)
     
     if( maxdel > max_delay ) {
         maxdel = max_delay;
-        error("flange: too large delay time shortened");
+        pd_error(0, "flange: too large delay time shortened");
     }
     
     lpp_delset2(delayline1, dv1, maxdel,srate);
@@ -316,7 +316,7 @@ void lpp_flange(t_bashfest *x, int slot, int *pcount)
     
     if( phase > 1.0 ) {
         phase = 0;
-        error("flange: given > 1 initial phase");
+        pd_error(0, "flange: given > 1 initial phase");
     }
     delsamp1 = delsamp2 = 0;
     phase *= sinelen;
@@ -403,7 +403,7 @@ void lpp_butterme(t_bashfest *x, int slot, int *pcount)
         bw = params[(*pcount)++];
         lpp_butterBandpass(inbuf, outbuf, cf, bw, frames, channels, srate);
     } else {
-        error("%d not a valid Butterworth filter",ftype);
+        pd_error(0, "%d not a valid Butterworth filter",ftype);
         return;
     }
     x->events[slot].out_start = in_start;
@@ -438,7 +438,7 @@ void lpp_truncateme(t_bashfest *x, int slot, int *pcount)
     fade_frames = fadeout * srate ;
     out_frames = shortdur * srate ;
     if( out_frames >= in_frames ) {
-        // error("truncation requesting >= original duration, no truncation");
+        // pd_error(0, "truncation requesting >= original duration, no truncation");
         return;
     }
     
@@ -449,12 +449,12 @@ void lpp_truncateme(t_bashfest *x, int slot, int *pcount)
     
     
     if( fade_frames <= 0 ) {
-        error("truncation with 0 length fade!");
+        pd_error(0, "truncation with 0 length fade!");
         return;
     }
     
     if( fade_frames > out_frames ) {
-        error("truncation requested fadeout > new duration, adjusting...");
+        pd_error(0, "truncation requested fadeout > new duration, adjusting...");
         fade_frames = out_frames;
     }
     
@@ -516,7 +516,7 @@ void lpp_sweepreson(t_bashfest *x, int slot, int *pcount)
     
     if( phase > 1.0 ) {
         phase = 0;
-        error("sweepreson: given > 1 initial phase");
+        pd_error(0, "sweepreson: given > 1 initial phase");
     }
     
     phase *= sinelen;
@@ -684,7 +684,7 @@ void lpp_reverb1(t_bashfest *x, int slot, int *pcount)
     ++(*pcount);
     revtime = params[(*pcount)++];
     if( revtime >= 1. ) {
-        error("reverb1 does not like feedback values over 1.");
+        pd_error(0, "reverb1 does not like feedback values over 1.");
         revtime = .99 ;
     }
     overhang = params[(*pcount)++];
@@ -739,7 +739,7 @@ void lpp_ellipseme(t_bashfest *x, int slot, int *pcount)
     filtercode = params[(*pcount)++];
     
     if( filtercode >= ELLIPSE_FILTER_COUNT ) {
-        error("there is no %d ellipse data",filtercode);
+        pd_error(0, "there is no %d ellipse data",filtercode);
         return;
     };
     fltdata = flts[ filtercode ];
@@ -801,7 +801,7 @@ void lpp_feed1me(t_bashfest *x, int slot, int *pcount)
     overhang = params[ (*pcount)++ ];
     
     if( maxdelay > my_max_delay ) {
-        error("feed1: too high max delay, adjusted");
+        pd_error(0, "feed1: too high max delay, adjusted");
         maxdelay = my_max_delay ;
     }
     dur = in_frames / srate ;
@@ -878,7 +878,7 @@ void lpp_flam1(t_bashfest *x, int slot, int *pcount)
     
     
     if( attacks <= 1 ) {
-        error("flam1: too few attacks: %d",attacks);
+        pd_error(0, "flam1: too few attacks: %d",attacks);
         return;
     }
     
@@ -899,7 +899,7 @@ void lpp_flam1(t_bashfest *x, int slot, int *pcount)
     
     for(i = 0; i < attacks; i++ ) {
         if(in_frames + delay_frames * i >= out_frames) {
-            // error("breaking at attack %d",i);
+            // pd_error(0, "breaking at attack %d",i);
             break;
         }
         for(j = 0; j < in_frames * channels; j += channels ) {
@@ -962,7 +962,7 @@ void lpp_flam2(t_bashfest *x, int slot, int *pcount)
     delay2 = params[(*pcount)++];
     
     if( attacks <= 1 ) {
-        error("flam2: received too few attacks: %d",attacks);
+        pd_error(0, "flam2: received too few attacks: %d",attacks);
         return;
     }
     out_start = (in_start + halfbuffer) % buflen ;
@@ -994,7 +994,7 @@ void lpp_flam2(t_bashfest *x, int slot, int *pcount)
         delay_frames = srate * curdelay + 0.5;
         delaysamps = delay_frames * channels;
         if(f_endpoint >= out_frames) {
-            // error("flam2: breaking at attack %d",i);
+            // pd_error(0, "flam2: breaking at attack %d",i);
             break;
         }
         for(j = 0; j < in_frames * channels; j += channels ) {
@@ -1058,7 +1058,7 @@ void lpp_expflam(t_bashfest *x, int slot, int *pcount)
     slope = params[(*pcount)++];
     
     if( attacks <= 1 ) {
-        error("expflam: received too few attacks: %d",attacks);
+        pd_error(0, "expflam: received too few attacks: %d",attacks);
         return;
     }
     out_start = (in_start + halfbuffer) % buflen ;
@@ -1087,7 +1087,7 @@ void lpp_expflam(t_bashfest *x, int slot, int *pcount)
         delay_frames = srate * curdelay + 0.5;
         delaysamps = delay_frames * channels;
         if(f_endpoint >= out_frames) {
-            // error("expflam: breaking at attack %d",i);
+            // pd_error(0, "expflam: breaking at attack %d",i);
             break;
         }
         for(j = 0; j < in_frames * channels; j += channels ) {
@@ -1147,11 +1147,11 @@ void lpp_comb4(t_bashfest *x, int slot, int *pcount)
     for( j = 0; j < 4; j++ ) {
         rez = params[(*pcount)++] ;
         if( rez == 0.0) {
-            error("comb4: 0 resonance frequency not allowed");
+            pd_error(0, "comb4: 0 resonance frequency not allowed");
             return;
         }
         if( 1./rez > maxloop ) {
-            error("comb4: %f is too long loop",1./rez);
+            pd_error(0, "comb4: %f is too long loop",1./rez);
             return;
         }
         combies[j].lpt = 1. / rez ;
@@ -1298,13 +1298,13 @@ void lpp_ringfeed(t_bashfest *x, int slot, int *pcount)
     rez = params[(*pcount)++] ;
     if( rez > 0 )
         combies[0].lpt = 1. / rez ;
-    else error("zero comb resonance is bad luck");
+    else pd_error(0, "zero comb resonance is bad luck");
     if(combies[0].lpt > maxloop)
-        error("ringfeed does not appreciate looptimes as large as %f",combies[0].lpt);
+        pd_error(0, "ringfeed does not appreciate looptimes as large as %f",combies[0].lpt);
     
     combies[0].rvbt = params[(*pcount)++] ;
     if(combies[0].rvbt >= 1.0) {
-        error("ringfeed dislikes feedback values >= 1");
+        pd_error(0, "ringfeed dislikes feedback values >= 1");
         combies[0].rvbt = .99 ;
     }
     resies[0].cf = params[(*pcount)++];

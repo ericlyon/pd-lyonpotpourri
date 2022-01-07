@@ -54,7 +54,7 @@ void lpp_setweights(float *a, int len)
     for(i=0;i<len;i++)
     sum += a[i];
     if(sum == 0.0) {
-        error("zero odds sum");
+        pd_error(0, "zero odds sum");
     }
     for(i=0;i<len;i++)
     a[i] /= sum;

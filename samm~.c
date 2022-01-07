@@ -109,14 +109,14 @@ void samm_beats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
   double beatdur;
 
   if(argc != x->metro_count) {
-    error("%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
+    pd_error(0, "%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
     return;
   }
 
   for(i = 0; i < argc; i++) {
     beatdur = (double)atom_getfloatarg(i,argc,argv);
     if(!beatdur) {
-      error("%s: zero divisor given for beat stream %d",OBJECT_NAME,i+1);
+      pd_error(0, "%s: zero divisor given for beat stream %d",OBJECT_NAME,i+1);
       beatdur = 1.0;
     }
 
@@ -132,14 +132,14 @@ void samm_divbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
   double divisor;
 
   if(argc != x->metro_count) {
-    error("%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
+    pd_error(0, "%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
     return;
   }
 
   for(i = 0; i < argc; i++) {
     divisor = (double)atom_getfloatarg(i,argc,argv);
     if(!divisor) {
-      error("%s: zero divisor given for beat stream %d",OBJECT_NAME,i+1);
+      pd_error(0, "%s: zero divisor given for beat stream %d",OBJECT_NAME,i+1);
       divisor = 1.0;
     }
 
@@ -154,13 +154,13 @@ void samm_msbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
   int i;
   double msecs;
   if(argc != x->metro_count) {
-    error("%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
+    pd_error(0, "%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
     return;
   }
   for(i = 0; i < argc; i++) {
     msecs = (double)atom_getfloatarg(i,argc,argv);
     if(msecs <= 0) {
-      error("%s: illegal duration for beat stream %d",OBJECT_NAME,i+1);
+      pd_error(0, "%s: illegal duration for beat stream %d",OBJECT_NAME,i+1);
       msecs = 1000.0;
     }
     x->metro_samps[i] = x->sr * .001 * msecs;
@@ -175,13 +175,13 @@ void samm_sampbeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
   int i;
   double samples;
   if(argc != x->metro_count) {
-    error("%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
+    pd_error(0, "%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
     return;
   }
   for(i = 0; i < argc; i++) {
     samples = (double)atom_getfloatarg(i,argc,argv);
     if(samples <= 0) {
-      error("%s: illegal duration for beat stream %d",OBJECT_NAME,i+1);
+      pd_error(0, "%s: illegal duration for beat stream %d",OBJECT_NAME,i+1);
       samples = x->sr;
     }
     x->metro_samps[i] = samples;
@@ -196,7 +196,7 @@ void samm_ratiobeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
   double num,denom;
 
   if(argc != x->metro_count * 2) {
-    error("%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
+    pd_error(0, "%s: arguments did not match metro count %d",OBJECT_NAME,x->metro_count);
     return;
   }
 
@@ -204,7 +204,7 @@ void samm_ratiobeats(t_samm *x, t_symbol *msg, int argc, t_atom *argv)
     num = (double)atom_getfloatarg(i,argc,argv);
     denom = (double)atom_getfloatarg(i+1,argc,argv);
     if(!denom) {
-      error("%s: zero divisor given for beat stream %d",OBJECT_NAME,(i/2)+1);
+      pd_error(0, "%s: zero divisor given for beat stream %d",OBJECT_NAME,(i/2)+1);
       denom = 1.0;
     }
 
@@ -222,7 +222,7 @@ void samm_tempo(t_samm *x, t_floatarg f)
   double tempo_fac;
 
   if( f <= 0.0) {
-    error("illegal tempo: %f", f);
+    pd_error(0, "illegal tempo: %f", f);
     return;
   }
   last_tempo = x->tempo;
@@ -243,12 +243,12 @@ void *samm_new(t_symbol *msg, int argc, t_atom *argv)
   t_samm *x;
 
   if(argc < 2) {
-    error("%s: there must be at least 1 beat stream",OBJECT_NAME);
+    pd_error(0, "%s: there must be at least 1 beat stream",OBJECT_NAME);
     return (void *)NULL;
   }
   if(argc > MAXBEATS + 1)
   {
-    error("%s: exceeded maximum of %d beat values",OBJECT_NAME, MAXBEATS);
+    pd_error(0, "%s: exceeded maximum of %d beat values",OBJECT_NAME, MAXBEATS);
     return (void *)NULL;
   }
 
@@ -289,7 +289,7 @@ void *samm_new(t_symbol *msg, int argc, t_atom *argv)
   for(i = 1,j = 0; i < argc; i++, j++) {
     divisor = (double)atom_getfloatarg(i,argc,argv);
     if(!divisor) {
-      error("%s: zero divisor given for beat stream %d",OBJECT_NAME,i);
+      pd_error(0, "%s: zero divisor given for beat stream %d",OBJECT_NAME,i);
       divisor = 1.0;
     }
 

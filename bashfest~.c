@@ -109,7 +109,7 @@ void bashfest_block_dsp(t_bashfest *x, t_floatarg t)
 void bashfest_maximum_process(t_bashfest *x, t_floatarg n)
 {
     if(n < 0) {
-        error("illegal val to maximum_process");
+        pd_error(0, "illegal val to maximum_process");
         return;
     }
     x->max_process_per_note = (int)n;
@@ -118,7 +118,7 @@ void bashfest_maximum_process(t_bashfest *x, t_floatarg n)
 void bashfest_minimum_process(t_bashfest *x, t_floatarg n)
 {
     if(n < 0) {
-        error("illegal val to minimum_process");
+        pd_error(0, "illegal val to minimum_process");
         return;
     }
     x->min_process_per_note = (int)n;
@@ -131,7 +131,7 @@ void bashfest_verbose(t_bashfest *x, long t)
 void bashfest_latency(t_bashfest *x, long n)
 {
     if(n < x->vs) {
-        error("latency cannot be less than %d",x->vs);
+        pd_error(0, "latency cannot be less than %d",x->vs);
         return;
     }
     /*  if(n > x->latency_samples) {
@@ -170,10 +170,10 @@ void bashfest_tcycle(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv)
     float data=1.0;
     
     if(argc < 1) {
-        error("no data for tcycle!");
+        pd_error(0, "no data for tcycle!");
         return;
     } else if(argc > CYCLE_MAX) {
-        error("%d is the maximum size tcycle",CYCLE_MAX);
+        pd_error(0, "%d is the maximum size tcycle",CYCLE_MAX);
         return;
     }
     x->tcycle.len = argc;
@@ -181,7 +181,7 @@ void bashfest_tcycle(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv)
     for(i=0;i<argc;i++) {
         atom_arg_getfloat(&data,i,argc,argv);
         if(data <= 0.0) {
-            error("bad data for tcycle:%f",data);
+            pd_error(0, "bad data for tcycle:%f",data);
         } else {
             tcycle.data[i] = data;
         }
@@ -198,7 +198,7 @@ void bashfest_setodds(t_bashfest *x,t_symbol *msg, int argc, t_atom *argv)
     int i;
     
     if(argc > PROCESS_COUNT) {
-        error("there are only %d processes",PROCESS_COUNT);
+        pd_error(0, "there are only %d processes",PROCESS_COUNT);
         return;
     }
     for(i=0;i<PROCESS_COUNT;i++) {
@@ -217,7 +217,7 @@ void bashfest_soloproc(t_bashfest *x, long p)
 {
     int i;
     if(p < 0 || p >= PROCESS_COUNT) {
-        error("bad %ld",p);
+        pd_error(0, "bad %ld",p);
     }
     for(i=0;i<PROCESS_COUNT;i++) {
         x->odds[i] = 0.0;
@@ -230,7 +230,7 @@ void bashfest_killproc(t_bashfest *x, long p)
 {
     int i;
     if(p < 0 || p >= PROCESS_COUNT) {
-        error("bad %ld",p);
+        pd_error(0, "bad %ld",p);
     }
     for(i=0;i<PROCESS_COUNT;i++) {
         x->odds[i] = 1.0;
@@ -297,7 +297,7 @@ void *bashfest_new(t_symbol *msg, int argc, t_atom *argv)
      x->tb_inpt = 0;
      if(x->latency_samples < x->vs) {
      x->latency_samples = x->vs;//might need x->vs * 2 here
-     error("latency forced to %d samples",x->vs);
+     pd_error(0, "latency forced to %d samples",x->vs);
      }
      x->tb_outpt = x->latency_samples - x->vs;
      */
@@ -696,7 +696,7 @@ t_int *bashfest_perform(t_int *w)
                             iphase = events[new_insert].phasef;
                             frac = events[new_insert].phasef - iphase;
                             if(iphase < 0 || iphase >= b_frames) {
-                                error("aborting on phase %f",events[new_insert].phasef);
+                                pd_error(0, "aborting on phase %f",events[new_insert].phasef);
                                 break;
                             }
                             if(increment > 0) {
@@ -926,7 +926,7 @@ void bashfest_copy_to_MSP_buffer(t_bashfest *x, int slot)
              b_samples[i+1] = processed_drum[i+1];
              }*/
         }else{
-            error("bashfest copy: channel mismatch");
+            pd_error(0, "bashfest copy: channel mismatch");
             //fixable but first let's try these
         }
     }
@@ -952,12 +952,12 @@ void bashfest_deploy_dsp(t_bashfest *x)
     events[slot].completed = 1;// for testing only
     
     if(b_nchans <1 || b_nchans > 2) {
-        error("illegal channels in buffer:%ld",b_nchans);
+        pd_error(0, "illegal channels in buffer:%ld",b_nchans);
         return;
         x->hosed = 1;
     }
     if(b_frames > x->buf_frames / 2) {
-        error("sample in buffer %s is to large for work buffer",x->sound_name);
+        pd_error(0, "sample in buffer %s is to large for work buffer",x->sound_name);
         return;
         x->hosed = 1;
     }
@@ -1049,7 +1049,7 @@ void bashfest_deploy_dsp(t_bashfest *x)
             lpp_stv(x, slot, &curarg);
         }
         else {
-            error("deploy missing branch");
+            pd_error(0, "deploy missing branch");
         }
     }
     
@@ -1070,11 +1070,11 @@ void bashfest_deploy_dsp(t_bashfest *x)
     }
     else{
         if(x->verbose)
-            error("zero maxamp detected");
+            pd_error(0, "zero maxamp detected");
     }
     
     if(events[slot].countdown <= 0)
-        error("deploy_dsp: failed to conclude in time; need more latency");
+        pd_error(0, "deploy_dsp: failed to conclude in time; need more latency");
 }
 
 int bashfest_set_parameters(t_bashfest *x,float *params)
@@ -1259,7 +1259,7 @@ int bashfest_set_parameters(t_bashfest *x,float *params)
             params[pcount++] = lpp_boundrand(.001,.01);
         }
         else {
-            error("could not find a process for %d",j);
+            pd_error(0, "could not find a process for %d",j);
             return 0;
         }
     }
@@ -1311,7 +1311,7 @@ void bashfest_dsp(t_bashfest *x, t_signal **sp)
     bashfest_setbuf(x, x->wavename);
     
     if( x->hosed ) {
-        error("bashfest~ needs a valid buffer");
+        pd_error(0, "bashfest~ needs a valid buffer");
     }
     /* if vector size changes, we also need to deal, thanks to
      the trigger buffer inter-delay

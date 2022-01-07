@@ -131,7 +131,7 @@ void *player_new(t_symbol *msg, int argc, t_atom *argv)
     x->b_nchans = 1;
     if(argc < 1) {
         x->wavename = &s_;
-        error("%s: must specify buffer name",OBJECT_NAME);
+        pd_error(0, "%s: must specify buffer name",OBJECT_NAME);
     }
     x->overlap_max = atom_getfloatarg(2,argc,argv);
     if(x->overlap_max <= 0 || x->overlap_max > 128) {

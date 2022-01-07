@@ -263,7 +263,7 @@ void *kbuffer_new(t_symbol *s, int argc, t_atom *argv)
 
   x->srate = sys_getsr();
   if( x->srate == 0 ) {
-    error("zero sampling rate - set to 44100");
+    pd_error(0, "zero sampling rate - set to 44100");
     x->srate = 44100;
   }
   x->ksrate = atom_getfloatarg(0,argc,argv);

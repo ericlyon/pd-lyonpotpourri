@@ -156,7 +156,7 @@ void phasemod_dsp(t_phasemod *x, t_signal **sp)
 
   if(x->sr != sp[0]->s_sr) {
     if(!sp[0]->s_sr) {
-      error("zero sampling rate");
+      pd_error(0, "zero sampling rate");
       return;
     }
     x->sr = sp[0]->s_sr;

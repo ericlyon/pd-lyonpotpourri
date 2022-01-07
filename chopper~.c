@@ -276,12 +276,12 @@ void chopper_recall_loop(t_chopper *x, t_floatarg f)
   int loop_bindex = (int) f;
 
   if( loop_bindex < 0 || loop_bindex >= MAXSTORE ) {
-    error("bindex %d out of range", loop_bindex);
+    pd_error(0, "bindex %d out of range", loop_bindex);
     return;
   }
 
   if( ! x->stored_samps[ loop_bindex ] ) {
-    error("no loop stored at position %d!", loop_bindex);
+    pd_error(0, "no loop stored at position %d!", loop_bindex);
     return;
   }
 
@@ -303,7 +303,7 @@ void chopper_recall_loop(t_chopper *x, t_floatarg f)
 void chopper_set_loop(t_chopper *x, t_symbol *msg, int argc, t_atom *argv)
 {
   if( argc < 3 ) {
-    error("format: start samples increment");
+    pd_error(0, "format: start samples increment");
     return;
   }
   x->loop_start = atom_getintarg(0,argc,argv);
@@ -347,7 +347,7 @@ void chopper_init(t_chopper *x, short initialized)
     srand(time(0));
 
     if(!x->R) {
-      error("zero sampling rate - set to 44100");
+      pd_error(0, "zero sampling rate - set to 44100");
       x->R = 44100;
     }
     x->minseg = 0.1;
@@ -409,12 +409,12 @@ void chopper_jitterme(t_chopper *x)
   new_start = (1.0 + chopper_boundrand(-jitter_factor, jitter_factor) ) * (float) x->loop_start ;
 
   if( new_start < 0 ) {
-//    error("jitter loop %d out of range", new_start);
+//    pd_error(0, "jitter loop %d out of range", new_start);
     new_start = 0;
 
   }
   else if( new_start + x->transp_loop_samps >= x->framesize ) {
-//    error("jitter loop %d out of range", new_start);
+//    pd_error(0, "jitter loop %d out of range", new_start);
     new_start = x->framesize - x->transp_loop_samps ;
   }
   if( new_start >= 0 )
@@ -522,7 +522,7 @@ void chopper_randloop( t_chopper *x )
       loop_start = framesize - loop_samps;
       if( loop_start < 0 ) {
         loop_start = 0;
-        error("negative starttime");
+        pd_error(0, "negative starttime");
       }
     }
   }
@@ -685,7 +685,7 @@ t_int *chopper_pd_perform(t_int *w)
       else {
 
         if( bindex < 0 || bindex >= b_frames ) {
-          // error("lock_loop: bindex %d is out of range", bindex);
+          // pd_error(0, "lock_loop: bindex %d is out of range", bindex);
           x->fbindex = bindex = b_frames / 2;
         }
         bindex = floor( (double) x->fbindex );
@@ -757,7 +757,7 @@ t_int *chopper_pd_perform(t_int *w)
         fade_level = 1.0; /* default level */
 
         if( bindex < 0 || bindex >= b_frames ) {
-          // error("force loop: bindex %d is out of range", bindex);
+          // pd_error(0, "force loop: bindex %d is out of range", bindex);
           /* post("frames:%d start:%d, samps2go:%d, tloopsamps:%d, increment:%f",
                x->framesize, bindex, x->samps_to_go, x->transp_loop_samps, x->increment);*/
           chopper_randloop(x);

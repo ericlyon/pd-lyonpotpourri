@@ -80,11 +80,11 @@ void granola_size(t_granola *x, t_floatarg newsize) {
   int newsamps, i;
   newsamps = newsize * 0.001 * sys_getsr();
   if( newsamps >= x->maxgrainsamps ) {
-    error("granola~: specified size over preset maximum, no action taken");
+    pd_error(0, "granola~: specified size over preset maximum, no action taken");
     return;
   }
   if( newsamps < 8 ) {
-    error("granola~: grainsize too small");
+    pd_error(0, "granola~: grainsize too small");
     return;
   }
   x->grainsamps = newsamps; // will use for shrinkage

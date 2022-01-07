@@ -146,12 +146,12 @@ void buffet_info(t_buffet *x)
     buffet_setbuf(x, x->wavename);
     
     if( x->hosed ) {
-        error("buffet~ needs a valid buffer");
+        pd_error(0, "buffet~ needs a valid buffer");
         return;
     }
     
     if( ! x->sr) {
-        error("zero sample rate!");
+        pd_error(0, "zero sample rate!");
         return;
     }
     totalframes = x->wavebuf->b_frames;
@@ -162,7 +162,7 @@ void buffet_info(t_buffet *x)
 void buffet_overlap(t_buffet *x, t_floatarg f)
 {
     if( f < 0.01 ) {
-        error("minimum fade time is 0.01 milliseconds");
+        pd_error(0, "minimum fade time is 0.01 milliseconds");
         return;
     }
     x->fade = f * .001 * x->sr;
@@ -218,7 +218,7 @@ void buffet_events(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     //  post("actual window size: %f",tadv);
     aframes = (long) ( (float) b_frames / (float)bufsamps ) - 1;
     if(aframes < 2) {
-        error("%s: this buffer is too short to analyze",OBJECT_NAME);
+        pd_error(0, "%s: this buffer is too short to analyze",OBJECT_NAME);
         return;
     }
     //  post("analyzing %d frames",aframes);
@@ -239,7 +239,7 @@ void buffet_events(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
             //      post("event %d starts at %f",event_count+1, realtime);
             
             if(event_count >= MAX_EVENTS) {
-                error("%s: exceeded maximum of %d events",OBJECT_NAME, MAX_EVENTS);
+                pd_error(0, "%s: exceeded maximum of %d events",OBJECT_NAME, MAX_EVENTS);
                 break;
             }
             SETFLOAT(listdata+(event_count*2), realtime * 1000.0);
@@ -315,7 +315,7 @@ void buffet_pevents(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     
     aframes = (long) ( (float) b_frames / (float)bufsamps );
     if(aframes < 2) {
-        error("%s: this buffer is too short to analyze",OBJECT_NAME);
+        pd_error(0, "%s: this buffer is too short to analyze",OBJECT_NAME);
         return;
     }
     if(aframes > MAX_RMS_FRAMES) {
@@ -389,7 +389,7 @@ void buffet_internal_fadeout(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     long endframe;
     
     if( ! x->sr) {
-        error("zero sample rate!");
+        pd_error(0, "zero sample rate!");
         return;
     }
     
@@ -410,7 +410,7 @@ void buffet_internal_fadeout(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     endframe = .001 * x->sr * atom_getfloatarg(1,argc,argv);
     
     if(startframe < 0 || endframe > totalframes || endframe <= startframe) {
-        error("%s: bad frame boundaries to internal_fadeout: %ld and %ld",OBJECT_NAME,startframe, endframe);
+        pd_error(0, "%s: bad frame boundaries to internal_fadeout: %ld and %ld",OBJECT_NAME,startframe, endframe);
         return;
     }
     fadeframes = endframe - startframe;
@@ -436,7 +436,7 @@ void buffet_internal_fadein(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     long endframe;
     
     if( ! x->sr) {
-        error("zero sample rate!");
+        pd_error(0, "zero sample rate!");
         return;
     }
     
@@ -457,7 +457,7 @@ void buffet_internal_fadein(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     endframe = .001 * x->sr * atom_getfloatarg(1,argc,argv);
     
     if(startframe < 0 || endframe > totalframes || endframe <= startframe) {
-        error("%s: bad frame boundaries to internal_fadein: %ld and %ld",OBJECT_NAME,startframe, endframe);
+        pd_error(0, "%s: bad frame boundaries to internal_fadein: %ld and %ld",OBJECT_NAME,startframe, endframe);
         return;
     }
     fadeframes = endframe - startframe;
@@ -578,7 +578,7 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
         return;
     }
     if(b_nchans != b_dest_nchans) {
-        error("%s: channel mismatch with buffer %s",OBJECT_NAME, destname->s_name);
+        pd_error(0, "%s: channel mismatch with buffer %s",OBJECT_NAME, destname->s_name);
         return;
     }
     if(b_dest_frames < chunkframes ) {
@@ -586,7 +586,7 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
         chunkframes = b_dest_frames;
     }
     if(startframe < 0 || endframe >= b_frames) {
-        error("%s: bad frame range for source buffer: %ld %ld",OBJECT_NAME, startframe,endframe);
+        pd_error(0, "%s: bad frame range for source buffer: %ld %ld",OBJECT_NAME, startframe,endframe);
         return;
     }
     /* first clean out destination */
@@ -612,7 +612,7 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
             fadeframes = fadein * .001 * x->sr;
             
             if( fadeframes > b_dest_frames) {
-                error("%s: fadein is too long",OBJECT_NAME);
+                pd_error(0, "%s: fadein is too long",OBJECT_NAME);
                 return;
             }
             
@@ -635,7 +635,7 @@ void buffet_copy_to_buffer(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
             //    endframe = .001 * x->sr * atom_getfloatarg(1,argc,argv); // stays the same
             
             if(startframe < 0) {
-                error("%s: bad frame boundaries to internal_fadeout: %ld and %ld",
+                pd_error(0, "%s: bad frame boundaries to internal_fadeout: %ld and %ld",
                       OBJECT_NAME,startframe, endframe);
                 return;
             }
@@ -707,11 +707,11 @@ void buffet_rmschunk(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     startframe = .001 * x->sr * atom_getfloatarg(0,argc,argv);
     endframe = .001 * x->sr * atom_getfloatarg(1,argc,argv);
     if(startframe < 0 || startframe >= b_frames - 1) {
-        error("%s: naughty start frame: %ld",OBJECT_NAME,startframe);
+        pd_error(0, "%s: naughty start frame: %ld",OBJECT_NAME,startframe);
         return;
     }
     if(endframe < 2 || endframe >= b_frames) {
-        error("%s: naughty start frame: %ld",OBJECT_NAME,startframe);
+        pd_error(0, "%s: naughty start frame: %ld",OBJECT_NAME,startframe);
         return;
     }
     
@@ -757,7 +757,7 @@ void buffet_autoredraw(t_buffet *x, t_floatarg f)
 void buffet_minswap(t_buffet *x, t_floatarg f)
 {
     if(f < 2.0 * 1000.0 * x->fade  / x->sr) {
-        error("minimum must be at least twice fade time which is %f", 1000. * x->fade / x->sr);
+        pd_error(0, "minimum must be at least twice fade time which is %f", 1000. * x->fade / x->sr);
         return;
     }
     x->minframes = f * .001 * x->sr;
@@ -772,7 +772,7 @@ void buffet_maxswap(t_buffet *x, t_floatarg f)
     
     newframes = f * .001 * x->sr;
     if(newframes <= x->minframes) {
-        error("max blocksize must exceed minimum blocksize, which is %f", 1000. * x->minframes/ x->sr);
+        pd_error(0, "max blocksize must exceed minimum blocksize, which is %f", 1000. * x->minframes/ x->sr);
     }
     if(newframes > x->storage_maxframes ) {
         //  post("extending memory");
@@ -818,11 +818,11 @@ void buffet_erase(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
         endframe = b_frames - 1;
     }
     if(startframe >= b_frames - 1) {
-        error("%s: naughty start frame: %ld",OBJECT_NAME,startframe);
+        pd_error(0, "%s: naughty start frame: %ld",OBJECT_NAME,startframe);
         return;
     }
     if(endframe < 2 || endframe <= startframe) {
-        error("%s: naughty end frame: %ld",OBJECT_NAME,endframe);
+        pd_error(0, "%s: naughty end frame: %ld",OBJECT_NAME,endframe);
         return;
     }
     
@@ -857,7 +857,7 @@ void buffet_rotatetozero(t_buffet *x, t_floatarg f)
     
     
     if(shiftframes <= 0 || shiftframes >= b_frames) {
-        error("%s: shift target %f is out of range",OBJECT_NAME,target);
+        pd_error(0, "%s: shift target %f is out of range",OBJECT_NAME,target);
         return;
     }
     
@@ -904,7 +904,7 @@ void buffet_normalize(t_buffet *x, t_floatarg f)
     float rescale;
     
     if(target <= 0.0) {
-        error("%s: normalize target %f is too low",OBJECT_NAME,target);
+        pd_error(0, "%s: normalize target %f is too low",OBJECT_NAME,target);
         return;
     }
     buffet_setbuf(x, x->wavename);
@@ -948,7 +948,7 @@ void buffet_fadein(t_buffet *x, t_floatarg f)
     
     
     if( ! x->sr) {
-        error("zero sample rate!");
+        pd_error(0, "zero sample rate!");
         return;
     }
     fadeframes = f * .001 * x->sr;
@@ -964,7 +964,7 @@ void buffet_fadein(t_buffet *x, t_floatarg f)
     
     
     if( fadeframes > totalframes) {
-        error("fadein is too long");
+        pd_error(0, "fadein is too long");
         return;
     }
     for(i = 0, k = 0;i < fadeframes * b_nchans; i += b_nchans, k++ ) {
@@ -987,7 +987,7 @@ void buffet_fadeout(t_buffet *x, t_floatarg f)
     
     
     if( ! x->sr) {
-        error("zero sample rate!");
+        pd_error(0, "zero sample rate!");
         return;
     }
     fadeframes = f * .001 * x->sr;
@@ -1002,7 +1002,7 @@ void buffet_fadeout(t_buffet *x, t_floatarg f)
     
     
     if( fadeframes > totalframes) {
-        error("%s: fadein is too long",OBJECT_NAME);
+        pd_error(0, "%s: fadein is too long",OBJECT_NAME);
         return;
     }
     for(i = (totalframes-1) * b_nchans , k = 0; k < fadeframes ; i -= b_nchans, k++ ) {
@@ -1038,7 +1038,7 @@ void buffet_killdc(t_buffet *x)
     totalframes = x->wavebuf->b_frames;
     
     if(b_nchans > MAX_CHANNELS) {
-        error("buffer has too many channels");
+        pd_error(0, "buffer has too many channels");
         return;
     }
     for(j = 0; j < b_nchans; j++) {
@@ -1072,7 +1072,7 @@ void *buffet_new(t_symbol *msg, int argc, t_atom *argv)
     x->minframes = 0;
     x->maxframes = 0;
     if(argc < 1) {
-        error("%s: you must provide a valid buffer name",OBJECT_NAME);
+        pd_error(0, "%s: you must provide a valid buffer name",OBJECT_NAME);
         x->wavename = &s_;
     }
     atom_arg_getsym(&x->wavename,0,argc,argv);
@@ -1157,11 +1157,11 @@ void buffet_nosync_setswap(t_buffet *x)
     r2endframe = r2startframe + swapframes;
     
     if(r2startframe < 0 || r1startframe < 0) {
-        error("start frame less than zero!");
+        pd_error(0, "start frame less than zero!");
         return;
     }
     if(r2endframe >= totalframes || r1endframe >= totalframes) {
-        error("end frame reads beyond buffer!");
+        pd_error(0, "end frame reads beyond buffer!");
         return;
     }
     x->swapframes = swapframes;
@@ -1197,11 +1197,11 @@ void buffet_swap(t_buffet *x)
     totalframes = x->wavebuf->b_frames;
     
     if(totalframes < maxframes * 2 + 1) {
-        error("buffer must contain at least twice as many samples as the maximum swap size");
+        pd_error(0, "buffer must contain at least twice as many samples as the maximum swap size");
         return;
     }
     if(b_nchans > 2) {
-        error("buffet~ only accepts mono or stereo buffers");
+        pd_error(0, "buffet~ only accepts mono or stereo buffers");
         return;
     }
     
@@ -1311,11 +1311,11 @@ void buffet_specswap(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     totalframes = x->wavebuf->b_frames;
     
     if(totalframes < maxframes * 2 + 1) {
-        error("buffer must contain at least twice as many samples as the maximum swap size");
+        pd_error(0, "buffer must contain at least twice as many samples as the maximum swap size");
         return;
     }
     if(b_nchans > 2) {
-        error("buffet~ only accepts mono or stereo buffers");
+        pd_error(0, "buffet~ only accepts mono or stereo buffers");
         return;
     }
     
@@ -1323,11 +1323,11 @@ void buffet_specswap(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     r2startframe = x->sr * .001 * atom_getfloatarg(1,argc,argv);
     swapframes = x->sr * .001 * atom_getfloatarg(2,argc,argv);
     if( r1startframe < 0 || r1startframe >= totalframes) {
-        error("bad first skip time");
+        pd_error(0, "bad first skip time");
         return;
     }
     if( r2startframe < 0 || r2startframe >= totalframes) {
-        error("bad second skip time");
+        pd_error(0, "bad second skip time");
         return;
     }
     //  post("start1 %d start2 %d swaps %d",r1startframe,r2startframe,swapframes );
@@ -1341,15 +1341,15 @@ void buffet_specswap(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
      post("r1st %d, r1end %d, region1 %d, region2 %d",r1startframe, r1endframe, region1, region2);
      */
     if(swapframes > x->storage_maxframes) {
-        error("swapsize %ld is larger than %ld; reset maximum swap.", swapframes,x->storage_maxframes );
+        pd_error(0, "swapsize %ld is larger than %ld; reset maximum swap.", swapframes,x->storage_maxframes );
         return;
     }
     if(r1endframe >= totalframes) {
-        error("block 1 reads beyond buffer!");
+        pd_error(0, "block 1 reads beyond buffer!");
         return;
     }
     if(r2endframe >= totalframes) {
-        error("block 2 reads beyond buffer!");
+        pd_error(0, "block 2 reads beyond buffer!");
         return;
     }
     
@@ -1453,11 +1453,11 @@ void buffet_retroblock(t_buffet *x)
     totalframes = x->wavebuf->b_frames;
     
     if(totalframes < maxframes * b_nchans + 1) {
-        error("buffer must contain at least twice as many samples as the maximum swap size");
+        pd_error(0, "buffer must contain at least twice as many samples as the maximum swap size");
         return;
     }
     if(b_nchans > 2) {
-        error("buffet~ only accepts mono or stereo buffers");
+        pd_error(0, "buffet~ only accepts mono or stereo buffers");
         return;
     }
     syncframe = x->sync * totalframes;
@@ -1475,7 +1475,7 @@ void buffet_retroblock(t_buffet *x)
         block2size = ub2 - lb2;
         
         if(block1size < maxframes && block2size < maxframes ) {
-            error("could not reverse block");
+            pd_error(0, "could not reverse block");
             return;
         }
         if(block1size >= maxframes && block2size >= maxframes) {
@@ -1494,7 +1494,7 @@ void buffet_retroblock(t_buffet *x)
     
     
     if(r1endframe >= totalframes) {
-        error("%s: retro beyond bounds",OBJECT_NAME);
+        pd_error(0, "%s: retro beyond bounds",OBJECT_NAME);
         return;
     }
     
@@ -1565,11 +1565,11 @@ void buffet_nakedswap(t_buffet *x)
     totalframes = x->wavebuf->b_frames;
     
     if(totalframes < maxframes * 2 + 1) {
-        error("buffer must contain at least twice as many samples as the maximum swap size");
+        pd_error(0, "buffer must contain at least twice as many samples as the maximum swap size");
         return;
     }
     if(b_nchans != 2) {
-        error("buffet~ only accepts stereo buffers");
+        pd_error(0, "buffet~ only accepts stereo buffers");
         return;
     }
     swapframes = buffet_boundrand((float)minframes, (float)maxframes);
@@ -1591,11 +1591,11 @@ void buffet_nakedswap(t_buffet *x)
     }
     r2endframe = r2startframe + swapframes;
     if(r2startframe < 0 || r1startframe < 0) {
-        error("start frame less than zero!");
+        pd_error(0, "start frame less than zero!");
         return;
     }
     if(r2endframe >= totalframes || r1endframe >= totalframes) {
-        error("end frame reads beyond buffer!");
+        pd_error(0, "end frame reads beyond buffer!");
         return;
     }
     // Now swap the samples. For now no cross fade
@@ -1726,7 +1726,7 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     
     buffet_setbuf(x, x->wavename);
     if( x->hosed ) {
-        error("buffet~ needs a valid buffer");
+        pd_error(0, "buffet~ needs a valid buffer");
         return;
     }
     if(argc < 4) {
@@ -1788,7 +1788,7 @@ void buffet_detect_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     for(i = 0; i < fft_frames; i++) {
         loveboat[i] = (float *) getbytes((N+2) * sizeof(float));
         if(loveboat[i] == NULL) {
-            error("memory error");
+            pd_error(0, "memory error");
             return;
         }
         // memset((char *)loveboat[i],0,(N+2)*sizeof(float));
@@ -1960,7 +1960,7 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *
     
     buffet_setbuf(x, x->wavename);
     if( x->hosed ) {
-        error("buffet~ needs a valid buffer");
+        pd_error(0, "buffet~ needs a valid buffer");
         return;
     }
     if(argc < 4) {
@@ -2024,7 +2024,7 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *
     for(i = 0; i < fft_frames; i++) {
         loveboat[i] = (float *) getbytes((N+2) * sizeof(float));
         if(loveboat[i] == NULL) {
-            error("memory error");
+            pd_error(0, "memory error");
             return;
         }
         // memset((char *)loveboat[i],0,(N+2)*sizeof(float));
@@ -2133,7 +2133,7 @@ void buffet_dsp(t_buffet *x, t_signal **sp)
     buffet_setbuf(x, x->wavename);
     
     if( x->hosed ) {
-        error("buffet~ needs a valid buffer");
+        pd_error(0, "buffet~ needs a valid buffer");
         return;
     }
     if( x->sr != sp[0]->s_sr) {

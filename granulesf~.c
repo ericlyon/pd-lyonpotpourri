@@ -147,7 +147,7 @@ void granulesf_seed(t_granulesf *x, t_floatarg seed)
 void granulesf_retro_odds(t_granulesf *x, t_floatarg o)
 {
   if(o < 0 || o > 1) {
-    error("retro odds must be within [0.0 - 1.0]");
+    pd_error(0, "retro odds must be within [0.0 - 1.0]");
     return;
   }
   x->retro_odds = 0;
@@ -185,7 +185,7 @@ void granulesf_highblock(t_granulesf *x, t_floatarg f)
 void granulesf_pitchdev(t_granulesf *x, t_floatarg d)
 {
   if(d < 0 ) {
-    error("pitch deviation must be positive");
+    pd_error(0, "pitch deviation must be positive");
     return;
   }
   x->pitch_deviation = d;
@@ -213,7 +213,7 @@ void granulesf_events(t_granulesf *x, t_floatarg e)
 void granulesf_transpose(t_granulesf *x, t_floatarg t)
 {
   if( t <= 0 ) {
-    error("transpose factor must be greater than zero!");
+    pd_error(0, "transpose factor must be greater than zero!");
     return;
   }
   x->transpose = t;
@@ -224,11 +224,11 @@ void *granulesf_setscale(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
   int i;
   float *pitchscale = x->pitchscale;
   if( argc >= MAXSCALE ) {
-    error("%d is the maximum size scale", MAXSCALE);
+    pd_error(0, "%d is the maximum size scale", MAXSCALE);
     return 0;
   }
   if( argc < 2 ) {
-    error("there must be at least 2 members in scale");
+    pd_error(0, "there must be at least 2 members in scale");
     return 0;
   }
   for(i=0; i < argc; i++) {
@@ -301,7 +301,7 @@ void granulesf_pitchspray(t_granulesf *x)
   float tmp;
 
   if( steps < 2 ) {
-    error("scale is undefined");
+    pd_error(0, "scale is undefined");
     return;
   }
   if( pitch_deviation ) {
@@ -361,12 +361,12 @@ void granulesf_pitchspray(t_granulesf *x)
         }
         /* set skip time into sample */
         if(grainframes >= b_frames ) {
-          error("grain size %.0ld is too long for buffer which is %ld",grainframes, b_frames);
+          pd_error(0, "grain size %.0ld is too long for buffer which is %ld",grainframes, b_frames);
           grains[j].active = 0;
           goto nextgrain;
         }
         if(minskip > b_frames - grainframes){//bad minskip
-          error("minskip time is illegal");
+          pd_error(0, "minskip time is illegal");
           grains[j].phase = 0.0;
           grains[j].endframe = grainframes - 1;
         } else {
@@ -395,7 +395,7 @@ void granulesf_pitchspray(t_granulesf *x)
       }
     }
     if(!inserted) {
-      error("could not insert grain with increment %f",grains[j].si);
+      pd_error(0, "could not insert grain with increment %f",grains[j].si);
       return;
     }
   nextgrain: ;
@@ -452,12 +452,12 @@ void granulesf_spray(t_granulesf *x)
         // grains[j].esi =  (float) eframes / (float) grainframes;
         grains[j].esi =  (float) eframes / (float) grains[j].duration;
         if(grainframes >= b_frames ) {
-          error("grain size %.0ld is too long for buffer which is %ld",grainframes, b_frames);
+          pd_error(0, "grain size %.0ld is too long for buffer which is %ld",grainframes, b_frames);
           grains[j].active = 0;
           goto nextgrain;
         }
         if(minskip > b_frames - grainframes){//bad minskip
-          error("minskip time is illegal");
+          pd_error(0, "minskip time is illegal");
           grains[j].phase = 0.0;
           grains[j].endframe = grainframes - 1;
         } else {
@@ -485,7 +485,7 @@ void granulesf_spray(t_granulesf *x)
       }
     }
     if(! inserted) {
-      error("granulesf~: could not insert grain");
+      pd_error(0, "granulesf~: could not insert grain");
       return;
     }
   nextgrain: ;
@@ -509,7 +509,7 @@ void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
   sr = x->sr;
 
   if(argc < 5) {
-    error("grain takes 5 arguments, not %d",argc);
+    pd_error(0, "grain takes 5 arguments, not %d",argc);
     post("duration increment amplitude pan skip(in ms)");
     return 0;
   }
@@ -519,23 +519,23 @@ void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
   pan = atom_getfloatarg(3,argc,argv);
   skip = atom_getfloatarg(4,argc,argv) * .001 * sr;
   if(skip < 0) {
-    error("negative skip is illegal");
+    pd_error(0, "negative skip is illegal");
     return 0;
   }
   if(skip >= frames) {
-    error("skip exceeds length of buffer");
+    pd_error(0, "skip exceeds length of buffer");
     return 0;
   }
   if(incr == 0.0) {
-    error("zero increment prohibited");
+    pd_error(0, "zero increment prohibited");
     return 0;
   }
   if(duration <= 0.0) {
-    error("illegal duration:%f",duration);
+    pd_error(0, "illegal duration:%f",duration);
     return 0;
   }
   if(pan < 0.0 || pan > 1.0) {
-    error("illegal pan:%f",pan);
+    pd_error(0, "illegal pan:%f",pan);
     return 0;
   }
   inserted = 0;
@@ -555,7 +555,7 @@ void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
     }
   }
 
-  error("could not insert grain");
+  pd_error(0, "could not insert grain");
   return 0;
 
 }
@@ -658,7 +658,7 @@ void granulesf_info(t_granulesf *x)
 void *granulesf_grist(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
 {
   if(argc < 10 ) {
-    error("grist takes 10 arguments:");
+    pd_error(0, "grist takes 10 arguments:");
     post("events horizon min_incr max_incr minpan maxpan minamp maxamp mindur maxdur");
     return 0;
   }
@@ -836,7 +836,7 @@ t_int *granulesf_perform_no_interpolation(t_int *w)
           }
         } else if(b_nchans == 2) {
           if(phase < 0 || phase >= b_frames) {
-            error("phase %f is out of bounds",phase);
+            pd_error(0, "phase %f is out of bounds",phase);
             goto nextgrain;
           }
           current_index = (long)(phase * 2.0);
@@ -858,7 +858,7 @@ t_int *granulesf_perform_no_interpolation(t_int *w)
 
         phase += si;
         if(phase < 0 || phase >= b_frames) {
-          error("phase %f out of bounds",phase);
+          pd_error(0, "phase %f out of bounds",phase);
           grains[j].active = 0;
           goto nextgrain;
         }
@@ -961,7 +961,7 @@ t_int *granulesf_perform(t_int *w)
         }
         if(b_nchans == 1) {
           if(phase < 0 || phase >= b_frames) {
-            error("phase %f is out of bounds",phase);
+            pd_error(0, "phase %f is out of bounds",phase);
             goto nextgrain;
           }
           current_index = floor((double)phase);
@@ -985,7 +985,7 @@ t_int *granulesf_perform(t_int *w)
           }
         } else if(b_nchans == 2) {
           if(phase < 0 || phase >= b_frames) {
-            error("phase %f is out of bounds",phase);
+            pd_error(0, "phase %f is out of bounds",phase);
             goto nextgrain;
           }
           current_index = floor((double)phase);
@@ -1017,7 +1017,7 @@ t_int *granulesf_perform(t_int *w)
 
         phase += si;
         if(phase < 0 || phase >= b_frames) {
-          error("phase %f out of bounds",phase);
+          pd_error(0, "phase %f out of bounds",phase);
           grains[j].active = 0;
           goto nextgrain;
         }
