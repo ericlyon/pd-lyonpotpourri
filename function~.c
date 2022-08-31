@@ -29,6 +29,8 @@ static void function_normalize(t_function *x, t_floatarg f);
 static void function_adrenv(t_function *x, t_symbol *msg, int argc, t_atom *argv);
 static void function_rcos(t_function *x);
 static void function_tanh(t_function *x, t_symbol *msg, int argc, t_atom *argv);
+static void function_arctan(t_function *x, t_symbol *msg, int argc, t_atom *argv);
+static void function_abs(t_function *x, t_symbol *msg, int argc, t_atom *argv);
 static void function_chebyshev(t_function *x, t_symbol *msg, int argc, t_atom *argv);
 static void function_gaussian(t_function *x);
 static void function_print(t_function *x);
@@ -44,6 +46,8 @@ void function_tilde_setup(void)
     class_addmethod(function_class,(t_method)function_adenv,gensym("adenv"),A_GIMME,0);
     class_addmethod(function_class,(t_method)function_adrenv,gensym("adrenv"),A_GIMME,0);
     class_addmethod(function_class,(t_method)function_tanh,gensym("tanh"),A_GIMME,0);
+    class_addmethod(function_class,(t_method)function_arctan,gensym("arctan"),A_GIMME,0);
+    class_addmethod(function_class,(t_method)function_abs,gensym("abs"),A_GIMME,0);
     class_addmethod(function_class,(t_method)function_chebyshev,gensym("chebyshev"),A_GIMME,0);
     class_addmethod(function_class,(t_method)function_clear,gensym("clear"),0);
     class_addmethod(function_class,(t_method)function_normalize,gensym("normalize"),A_FLOAT,0);
@@ -189,6 +193,55 @@ void function_tanh(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     for(i = 0; i < b_frames; i++){
         exp = ((i - half_frames) / (t_float)b_frames) * factor;
         val = (pow(e, exp * 2.0) - 1) / (pow(e, exp * 2.0) + 1);
+        b_samples[i].w_float = val;
+    }
+    function_redraw(x);
+}
+
+void function_arctan(t_function *x, t_symbol *msg, int argc, t_atom *argv)
+{
+    int i;
+    long b_frames = x->b_frames;
+    long half_frames = b_frames / 2;
+    t_word *b_samples = x->b_samples;
+    t_float factor, look, val, peak, rescale;
+    
+    function_setbuf(x, x->wavename);
+    factor = (t_float)atom_getfloatarg(0,argc,argv);
+    for(i = 0; i < b_frames; i++){
+        look = ((i - half_frames) / (t_float)b_frames) * factor;
+        val = atan(look);
+        b_samples[i].w_float = val;
+    }
+    // normalize
+    peak = 0.0;
+    for(i = 0; i < b_frames; i++){
+        if(peak < fabsf(b_samples[i].w_float)){
+            peak = fabsf(b_samples[i].w_float);
+        }
+    }
+    if(peak > 0.0){
+        rescale = 1.0/peak;
+        for(i = 0; i < b_frames; i++){
+            b_samples[i].w_float *= rescale;
+        }
+    }
+    function_redraw(x);
+}
+
+void function_abs(t_function *x, t_symbol *msg, int argc, t_atom *argv)
+{
+    int i;
+    long b_frames = x->b_frames;
+    long half_frames = b_frames / 2;
+    t_word *b_samples = x->b_samples;
+    t_float factor, look, val;
+    
+    function_setbuf(x, x->wavename);
+    factor = (t_float)atom_getfloatarg(0,argc,argv);
+    for(i = 0; i < b_frames; i++){
+        look = ((i - half_frames) / (t_float)b_frames) * factor;
+        val = look/(fabsf(look) + 1);
         b_samples[i].w_float = val;
     }
     function_redraw(x);
@@ -355,7 +408,6 @@ void *function_new(t_symbol *msg, int argc, t_atom *argv)
     outlet_new(&x->x_obj, gensym("signal"));
     x->wavename = atom_getsymbolarg(0,argc,argv);
     x->normalize = 1;
-//    function_redraw(x);
     return x;
 }
 
@@ -375,7 +427,6 @@ void function_setbuf(t_function *x, t_symbol *wavename)
     else  {
         x->b_frames = frames;
         garray_usedindsp(a);
-        // post("%d frames in buffer", x->b_frames);
     }
 }
 
