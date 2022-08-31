@@ -29,6 +29,7 @@ static void function_normalize(t_function *x, t_floatarg f);
 static void function_adrenv(t_function *x, t_symbol *msg, int argc, t_atom *argv);
 static void function_rcos(t_function *x);
 static void function_tanh(t_function *x, t_symbol *msg, int argc, t_atom *argv);
+static void function_chebyshev(t_function *x, t_symbol *msg, int argc, t_atom *argv);
 static void function_gaussian(t_function *x);
 static void function_print(t_function *x);
 
@@ -43,6 +44,7 @@ void function_tilde_setup(void)
     class_addmethod(function_class,(t_method)function_adenv,gensym("adenv"),A_GIMME,0);
     class_addmethod(function_class,(t_method)function_adrenv,gensym("adrenv"),A_GIMME,0);
     class_addmethod(function_class,(t_method)function_tanh,gensym("tanh"),A_GIMME,0);
+    class_addmethod(function_class,(t_method)function_chebyshev,gensym("chebyshev"),A_GIMME,0);
     class_addmethod(function_class,(t_method)function_clear,gensym("clear"),0);
     class_addmethod(function_class,(t_method)function_normalize,gensym("normalize"),A_FLOAT,0);
     class_addmethod(function_class,(t_method)function_rcos,gensym("rcos"),0);
@@ -66,9 +68,6 @@ void function_rcos(t_function *x)
         b_samples[i].w_float = (t_float) (0.5 - 0.5 * cos(TWOPI * (t_float)i/(t_float)b_frames));
     }
     function_redraw(x);
-    /* for(i=0;i<b_frames;i++) {
-     post("%f", b_samples[i].w_float);
-     } */
 }
 
 void function_print(t_function *x)
@@ -180,7 +179,6 @@ void function_tanh(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     long b_frames = x->b_frames;
     long half_frames = b_frames / 2;
     t_word *b_samples = x->b_samples;
-  //  t_float downgain = 0.33;
     t_float factor;
     t_float e = 2.718281828459;
     t_float exp, val;
@@ -195,6 +193,53 @@ void function_tanh(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     }
     function_redraw(x);
 }
+
+void function_chebyshev(t_function *x, t_symbol *msg, int argc, t_atom *argv)
+{
+    int i,j;
+    long b_frames = x->b_frames;
+    long half_frames = b_frames / 2;
+    long hcount = 0;
+    t_word *b_samples = x->b_samples;
+    t_float mult, point, min, max;
+    t_float factor;
+    t_float e = 2.718281828459;
+    t_float exp, val;
+    
+    function_setbuf(x, x->wavename);
+    factor = (t_float)atom_getfloatarg(0,argc,argv);
+
+    
+    // zero out function
+    
+    for(i = 0; i < b_frames; i++){
+        b_samples[i].w_float = 0.0;
+    }
+ // build function
+    for (i = 0; i < argc; i++) {
+        mult = (t_float)atom_getfloatarg(i,argc,argv);
+        if( mult > 0.0){
+            for(j = 0; j < b_frames; j++){
+                point = -1.0 + (2.0 * ((t_float) j / (t_float) b_frames));
+                b_samples[j].w_float += mult * cos((t_float)i * acos(point));
+            }
+        }
+    }
+    min = 10000; max = -10000;
+    for(j = 0; j < b_frames; j++) {
+        if(min > b_samples[j].w_float){
+            min = b_samples[j].w_float;
+        }
+        if(max < b_samples[j].w_float){
+            max = b_samples[j].w_float;
+        }
+    }
+    for(j = 0; j < b_frames; j++) {
+        b_samples[j].w_float = -1.0 + ((b_samples[j].w_float - min)/(max - min)) * 2.0;
+    }
+    function_redraw(x);
+}
+
 
 void function_adenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 {
@@ -263,10 +308,6 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     t_float maxamp, rescale;
     t_float theSample;
     
-    /* for(i = 0; i < argc; i++) {
-     post("argument %d: %f",i, atom_getfloatarg(i,argc,argv));
-     }*/
-    
     function_setbuf(x, x->wavename);
     b_samples = x->b_samples;
     b_frames = x->b_frames;
@@ -303,11 +344,6 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
         }
     }
     
-    /*
-     for(i=0;i<b_frames;i++) {
-     post("%f", x->b_samples[i].w_float);
-     }
-     */
     function_redraw(x);
 }
 
@@ -319,8 +355,7 @@ void *function_new(t_symbol *msg, int argc, t_atom *argv)
     outlet_new(&x->x_obj, gensym("signal"));
     x->wavename = atom_getsymbolarg(0,argc,argv);
     x->normalize = 1;
-    //    post("float size: %d, t_float size: %d, t_word size %d", sizeof(float), sizeof(t_float), sizeof(t_word));
-    //    post("latest version");
+//    function_redraw(x);
     return x;
 }
 
