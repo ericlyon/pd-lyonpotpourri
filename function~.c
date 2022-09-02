@@ -180,14 +180,17 @@ void function_adrenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 void function_tanh(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 {
     int i;
-    long b_frames = x->b_frames;
-    long half_frames = b_frames / 2;
-    t_word *b_samples = x->b_samples;
+    long b_frames;
+    long half_frames;
+    t_word *b_samples;
     t_float factor;
     t_float e = 2.718281828459;
     t_float exp, val;
     
     function_setbuf(x, x->wavename);
+    b_samples = x->b_samples;
+    b_frames = x->b_frames;
+    half_frames = b_frames / 2;
     factor = (t_float)atom_getfloatarg(0,argc,argv);
 
     for(i = 0; i < b_frames; i++){
@@ -201,12 +204,15 @@ void function_tanh(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 void function_arctan(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 {
     int i;
-    long b_frames = x->b_frames;
-    long half_frames = b_frames / 2;
-    t_word *b_samples = x->b_samples;
+    long b_frames;
+    long half_frames;
+    t_word *b_samples;
     t_float factor, look, val, peak, rescale;
     
     function_setbuf(x, x->wavename);
+    b_samples = x->b_samples;
+    b_frames = x->b_frames;
+    half_frames = b_frames / 2;
     factor = (t_float)atom_getfloatarg(0,argc,argv);
     for(i = 0; i < b_frames; i++){
         look = ((i - half_frames) / (t_float)b_frames) * factor;
@@ -232,12 +238,15 @@ void function_arctan(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 void function_abs(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 {
     int i;
-    long b_frames = x->b_frames;
-    long half_frames = b_frames / 2;
-    t_word *b_samples = x->b_samples;
+    long b_frames;
+    long half_frames;
+    t_word *b_samples;
     t_float factor, look, val;
     
     function_setbuf(x, x->wavename);
+    b_samples = x->b_samples;
+    b_frames = x->b_frames;
+    half_frames = b_frames / 2;
     factor = (t_float)atom_getfloatarg(0,argc,argv);
     for(i = 0; i < b_frames; i++){
         look = ((i - half_frames) / (t_float)b_frames) * factor;
@@ -250,16 +259,19 @@ void function_abs(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 void function_chebyshev(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 {
     int i,j;
-    long b_frames = x->b_frames;
-    long half_frames = b_frames / 2;
+    long b_frames;
+//    long half_frames;
     long hcount = 0;
-    t_word *b_samples = x->b_samples;
+    t_word *b_samples;
     t_float mult, point, min, max;
     t_float factor;
     t_float e = 2.718281828459;
     t_float exp, val;
     
     function_setbuf(x, x->wavename);
+    b_samples = x->b_samples;
+    b_frames = x->b_frames;
+//    half_frames = b_frames / 2;
     factor = (t_float)atom_getfloatarg(0,argc,argv);
 
     
@@ -298,11 +310,13 @@ void function_adenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 {
     int i,j;
     int al, dl, rl;
-    long b_frames = x->b_frames;
-    t_word *b_samples = x->b_samples;
+    long b_frames;
+    t_word *b_samples;
     t_float downgain = 0.33;
     
     function_setbuf(x, x->wavename);
+    b_samples = x->b_samples;
+    b_frames = x->b_frames;
     al = (t_float) b_frames * atom_getfloatarg(0,argc,argv);
     dl = (t_float) b_frames * atom_getfloatarg(1,argc,argv);
     downgain = atom_getfloatarg(2,argc,argv);
@@ -330,12 +344,14 @@ void function_aenv(t_function *x, t_symbol *msg, int argc, t_atom *argv)
 {
     int i,j;
     int al, dl;
-    long b_frames = x->b_frames;
-    t_word *b_samples = x->b_samples;
+    long b_frames;
+    t_word *b_samples;
     t_float frac;
     frac = atom_getfloatarg(0,argc,argv);
     
     function_setbuf(x, x->wavename);
+    b_samples = x->b_samples;
+    b_frames = x->b_frames;
     if(frac <= 0 || frac >= 1) {
         post("* attack time must range from 0.0 - 1.0, rather than %f",frac);
     }
