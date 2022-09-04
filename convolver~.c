@@ -1,13 +1,12 @@
 #include "m_pd.h"
-//#include "lpp.h"
 #include "fftease.h"
 #include "MSPd.h"
 
 #define OBJECT_NAME "convolver~"
 #define DENORM_WANT_FIX   1
 
-#define COMPILE_DATE "1.7.08"
-#define OBJECT_VERSION "2.02"
+#define COMPILE_DATE "9.4.22"
+#define OBJECT_VERSION "2.03"
 
 #define FIX_DENORM_FLOAT(v) (v=(fabs(v) < 0.000001 ? 0.f : (v)))
 static t_class *convolver_class;
@@ -55,16 +54,16 @@ static void convolver_setbuf(t_buffy *trybuf);
 static void *convolver_new(t_symbol *msg, int argc, t_atom *argv);
 static t_int *convolver_perform(t_int *w);
 
-static void convolver_mute(t_convolver *x, t_floatarg toggle);
-static void convolver_assist (t_convolver *x, void *b, long msg, long arg, char *dst);
+//static void convolver_mute(t_convolver *x, t_floatarg toggle);
+//static void convolver_assist (t_convolver *x, void *b, long msg, long arg, char *dst);
 static void convolver_dsp_free(t_convolver *x);
-static void convolver_seed(t_convolver *x, t_floatarg seed);
+//static void convolver_seed(t_convolver *x, t_floatarg seed);
 // void convolver_dsp(t_convolver *x, t_signal **sp, short *count);
 static void convolver_attach_buffers(t_convolver *x) ;
 static void convolver_spikeimp(t_convolver *x, t_floatarg density);
 static void convolver_convolve(t_convolver *x);
 static void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *argv);
-static void convolver_version(t_convolver *x);
+//static void convolver_version(t_convolver *x);
 static void convolver_noiseimp(t_convolver *x, t_floatarg curve);
 
 static void rfft( float *x, int N, int forward );
@@ -133,12 +132,13 @@ void convolver_static_memory(t_convolver *x, t_floatarg toggle)
 }
 
 
-
+/*
 void convolver_seed(t_convolver *x, t_floatarg seed)
 {
     (void)x;
     srand((long)seed);
 }
+*/
 
 void convolver_convolve(t_convolver *x)
 {
@@ -242,23 +242,21 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     
     // post("size of N for convolution is %d", N);
     if(! x->static_memory ) {
-        if ((sbuf = (float *) calloc(N+2, sizeof(float))) == NULL)
+        if ((sbuf = (float *) getbytes((N+2) * sizeof(float))) == NULL)
             pd_error(0, "%s: insufficient memory", OBJECT_NAME);
-        if ((tbuf = (float *) calloc(N2, sizeof(float))) == NULL)
+        if ((tbuf = (float *) getbytes(N2 * sizeof(float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
-        if ((filt = (float *) calloc(N+2, sizeof(float))) == NULL)
+        if ((filt = (float *) getbytes((N+2) * sizeof(float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
-        if( (bitshuffle = (int *) calloc(N * 2, sizeof(int))) == NULL)
+        if( (bitshuffle = (int *) getbytes((N*2) * sizeof(int))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
-        if( (trigland = (float *) calloc(N * 2, sizeof(float))) == NULL)
+        if( (trigland = (float *) getbytes((N*2) * sizeof(float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
     }
     
     x->mult = 1. / (float) N;
     x->last_N = N;
-    init_rdft( N, bitshuffle, trigland);
-    
-    
+    init_rdft(N, bitshuffle, trigland);
     
     for(i = 0, j = 0; i < impulse->b_frames; i+= impulse->b_nchans, j++) {
         filt[j] = impulse->b_samples[i + impulse_chan].w_float;
@@ -393,15 +391,18 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     //  return;
     
     if(! x->static_memory ) {
-        free(sbuf);
-        free(tbuf);
-        free(filt);
-        free(bitshuffle);
-        free(trigland);
-        
+        freebytes(sbuf,(N+2) * sizeof(float));
+        freebytes(tbuf,N2 * sizeof(float));
+        freebytes(filt,(N+2) * sizeof(float));
+        freebytes(bitshuffle,(N*2) * sizeof(int));
+        freebytes(trigland,(N*2) * sizeof(float));
+    } else {
+        x->N = N;
+        x->N2 =  N2;
     }
     outlet_bang(x->bang);
     garray_redraw(x->dest->b);
+
 }
 
 void convolver_noiseimp(t_convolver *x, t_floatarg curve)
@@ -526,9 +527,9 @@ void *convolver_new(t_symbol *msg, int argc, t_atom *argv)
     (void)msg;
     x->bang = outlet_new(&x->x_obj, gensym("bang"));
     srand(time(0)); //need "seed" message
-    x->impulse = (t_buffy *)malloc(sizeof(t_buffy));
-    x->source = (t_buffy *)malloc(sizeof(t_buffy));
-    x->dest = (t_buffy *)malloc(sizeof(t_buffy));
+    x->impulse = (t_buffy *)getbytes(sizeof(t_buffy));
+    x->source = (t_buffy *)getbytes(sizeof(t_buffy));
+    x->dest = (t_buffy *)getbytes(sizeof(t_buffy));
     x->static_memory = 0;
     
     // default names
@@ -543,7 +544,7 @@ void *convolver_new(t_symbol *msg, int argc, t_atom *argv)
     x->dest->myname = atom_getsymbolarg(2,argc,argv);
     
     x->sr = sys_getsr();
-    return (x);
+    return x;
 }
 
 
@@ -575,21 +576,27 @@ void convolver_setbuf(t_buffy *trybuf)
     }
 }
 
-
+/*
 t_int *convolver_perform(t_int *w)
 {
     return w + 4; // maybe we don't need this guy at all
 }
+*/
 
 void convolver_dsp_free(t_convolver *x)
 {
+    int N = x->N;
+    int N2 = x->N2;
+    freebytes(x->impulse, sizeof(t_buffy));
+    freebytes(x->source, sizeof(t_buffy));
+    freebytes(x->dest, sizeof(t_buffy));
     if( x->static_memory ) {
-        free(x->sbuf);
-        free(x->tbuf);
-        free(x->filt);
-        free(x->bitshuffle);
-        free(x->trigland);
-        outlet_bang(x->bang);
+        freebytes(x->sbuf, (N+2) * sizeof(float));
+        freebytes(x->tbuf, N2 * sizeof(float));
+        freebytes(x->filt, (N+2) * sizeof(float));
+        freebytes(x->bitshuffle, (N*2) * sizeof(int));
+        freebytes(x->trigland, (N*2) * sizeof(float));
+       //  outlet_bang(x->bang);
     }
 }
 
