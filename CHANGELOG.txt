@@ -1,3 +1,12 @@
+Version 3.0.2
+
+Updated function~ with some methods that could be helpful for amp simulation algorithms: tanh, arctan, and abs which implements the formula y = x / (abs(x) + 1). Also added a chebyshev method for classic waveshaping.
+
+Updated waveshape~ to use Pd memory functions.
+ 
+Version 3.0.1
+
+Various cosmetic changes. 
 
 Version 3.0
 
