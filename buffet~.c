@@ -284,7 +284,7 @@ void buffet_pevents(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     //short activated = 0;
     float realtime = 0.0;
     int event_count = 0;
-    float buffer_duration;
+//    float buffer_duration;
     float mindiff, maxdiff, absdiff,rmsdiff;
     float *analbuf = x->analbuf;
     float *onset = x->onset;
@@ -296,7 +296,7 @@ void buffet_pevents(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     b_frames = x->wavebuf->b_frames;
     
     // duration in ms.
-    buffer_duration = 1000.0 * (float)b_frames / x->sr;
+//    buffer_duration = 1000.0 * (float)b_frames / x->sr;
     
     bufsize = .001 * atom_getfloatarg(0,argc,argv);
     if(bufsize > MAX_RMS_BUFFER) {
@@ -691,7 +691,7 @@ void buffet_rmschunk(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     float rmsval;
     long bindex;
     
-    float buffer_duration;
+//    float buffer_duration;
     long startframe;
     long endframe;
     
@@ -701,7 +701,7 @@ void buffet_rmschunk(t_buffet *x, t_symbol *msg, int argc, t_atom *argv)
     b_frames = x->wavebuf->b_frames;
     
     // duration in ms.
-    buffer_duration = 1000.0 * (float)b_frames / x->sr;
+//    buffer_duration = 1000.0 * (float)b_frames / x->sr;
     
     
     startframe = .001 * x->sr * atom_getfloatarg(0,argc,argv);
@@ -861,33 +861,25 @@ void buffet_rotatetozero(t_buffet *x, t_floatarg f)
         return;
     }
     
-    tmpmem = (float *) malloc(shiftframes * b_nchans * sizeof(float));
+    tmpmem = (float *) getbytes(shiftframes * b_nchans * sizeof(float));
     
     /* copy shift block to tmp */
     for(i = 0; i < shiftframes; i++) {
         tmpmem[i] = b_samples[i].w_float;
     }
-    // memcpy(tmpmem, b_samples, shiftframes * b_nchans * sizeof(float));
-    
     
     /* now shift the rest to the top */
     for(i = 0; i < b_frames - shiftframes; i++) {
         b_samples[i].w_float =b_samples[i+shiftframes].w_float;
     }
-    /*
-     memmove(b_samples, b_samples + (shiftframes * b_nchans),
-     (b_frames - shiftframes) * b_nchans * sizeof(float));
-     */
-    
+
     /* finally copy tmp to the tail */
     
     for(i = 0; i < shiftframes; i++) {
         b_samples[(b_frames - shiftframes)+i].w_float = tmpmem[i];
     }
-    /* memcpy(b_samples + (b_frames - shiftframes) * b_nchans,tmpmem,
-     shiftframes * b_nchans * sizeof(float ));
-     */
-    free(tmpmem);
+
+    freebytes(tmpmem, shiftframes * b_nchans * sizeof(float));
     buffet_update(x);
 }
 
@@ -1929,11 +1921,11 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *
     float *input;
     float *Hwin;
     float *buffer;
-    float *channel;
+ //   float *channel;
     float *output;
     float *input_vec;
-    float *specdiff;
-    float *freqdiff;
+ //   float *specdiff;
+ //   float *freqdiff;
     float *hfc;
     float *freqs, *amps;
     
@@ -2006,7 +1998,7 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *
     input = (float *) getbytes(Nw * sizeof(float) );
     output = (float *) getbytes(Nw * sizeof(float) );
     buffer = (float *) getbytes(N * sizeof(float));
-    channel = (float *) getbytes((N+2) * sizeof(float) );
+//    channel = (float *) getbytes((N+2) * sizeof(float) );
     bitshuffle = (int *) getbytes(N * 2 * sizeof(int));
     trigland = (float *) getbytes(N * 2 * sizeof(float));
     c_lastphase_in = (float *) getbytes((N2+1) * sizeof(float));
@@ -2014,8 +2006,8 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *
     
     input_vec = (float *) getbytes(D * sizeof(float));
     onsets = (float *) getbytes(MAX_ONSETS * sizeof(float));
-    specdiff = (float *) getbytes(fft_frames * sizeof(float));
-    freqdiff = (float *) getbytes(fft_frames * sizeof(float));
+//    specdiff = (float *) getbytes(fft_frames * sizeof(float));
+//    freqdiff = (float *) getbytes(fft_frames * sizeof(float));
     hfc = (float *) getbytes(fft_frames * sizeof(float));
     loveboat = (float **) getbytes(fft_frames * sizeof(float *));
     
@@ -2029,14 +2021,14 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *
         }
         // memset((char *)loveboat[i],0,(N+2)*sizeof(float));
     }
-    
+    /*
     memset((char *)trigland,0, N * 2 * sizeof(float));
     memset((char *)input,0,Nw * sizeof(float));
     memset((char *)output,0,Nw * sizeof(float));
     memset((char *)c_lastphase_in,0,(N2+1) * sizeof(float));
     memset((char *)c_lastphase_out,0,(N2+1) * sizeof(float));
     memset((char *)bitshuffle,0, 2 * N * sizeof(int));
-    
+    */
     
     lpp_makewindows(Hwin, Wanal, Wsyn, Nw, N, D);
     
@@ -2114,7 +2106,6 @@ void buffet_detect_subband_onsets(t_buffet *x, t_symbol *msg, int argc, t_atom *
 }
 
 
-/* should really be using malloc/free instead of annoying MSPd routines */
 void buffet_dsp_free(t_buffet *x)
 {
     

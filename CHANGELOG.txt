@@ -9,6 +9,8 @@ Updated expflam~ with Pd memory functions.
 Updated shoehorn~ with Pd memory functions.
 
 Updated convolver~ with Pd memory functions.
+
+Updated buffet~ with Pd memory functions.
  
 Version 3.0
 
