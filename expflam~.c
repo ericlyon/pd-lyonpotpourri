@@ -51,7 +51,7 @@ static t_int *expflam_perform(t_int *w);
 static void expflam_dsp(t_expflam *x, t_signal **sp);
 static void expflam_setflam(t_expflam *x, t_symbol *msg, int argc, t_atom *argv);
 static void expflam_free(t_expflam *x);
-static void expflam_assist(t_expflam *x, void *b, long msg, long arg, char *dst);
+// static void expflam_assist(t_expflam *x, void *b, long msg, long arg, char *dst);
 static void expflam_flamall(t_expflam *x, t_floatarg tog);
 static void expflam_bypass(t_expflam *x, t_floatarg tog);
 
@@ -78,6 +78,7 @@ void expflam_bypass(t_expflam *x, t_floatarg tog)
   x->bypass = (short) tog;
 }
 
+/*
 void expflam_assist(t_expflam *x, void *b, long msg, long arg, char *dst)
 {
   if (msg==1) {
@@ -89,6 +90,7 @@ void expflam_assist(t_expflam *x, void *b, long msg, long arg, char *dst)
     sprintf(dst,"(signal) Flam Clicks");
   }
 }
+*/
 
 void *expflam_new(void)
 {
@@ -96,14 +98,14 @@ void *expflam_new(void)
   t_expflam *x = (t_expflam *)pd_new(expflam_class);
   inlet_new(&x->x_obj, &x->x_obj.ob_pd,gensym("signal"), gensym("signal"));
   outlet_new(&x->x_obj, gensym("signal"));
-  x->flams = (t_flam *) calloc(MAXFLAMS, sizeof(t_flam));
+  x->flams = (t_flam *) getbytes(MAXFLAMS * sizeof(t_flam));
   for(i = 0; i < MAXFLAMS; i++) {
-    x->flams[i].attack_times = (float *) calloc(MAXATTACKS, sizeof(float));
-    x->flams[i].attack_points = (int *) calloc(MAXATTACKS, sizeof(int));
+    x->flams[i].attack_times = (float *) getbytes(MAXATTACKS * sizeof(float));
+    x->flams[i].attack_points = (int *) getbytes(MAXATTACKS * sizeof(int));
   }
 
-  x->trigvec = malloc(8192 * sizeof(float)); // maximum vector size
-  x->bypvec = malloc(8192 * sizeof(float)); // maximum vector size
+  x->trigvec = (float *) getbytes(8192 * sizeof(float)); // maximum vector size
+  x->bypvec = (float *) getbytes(8192 * sizeof(float)); // maximum vector size
   x->sr = sys_getsr();
   x->start_delay = .025;
   x->end_delay = 0.1;
@@ -145,13 +147,13 @@ void expflam_free(t_expflam *x)
 {
   int i;
 
-  free(x->trigvec);
-  free(x->bypvec);
+  freebytes(x->trigvec, 8192 * sizeof(float));
+  freebytes(x->bypvec, 8192 * sizeof(float));
   for(i = 0; i < MAXFLAMS; i++) {
-    free(x->flams[i].attack_times);
-    free(x->flams[i].attack_points);
+    freebytes(x->flams[i].attack_times, MAXATTACKS * sizeof(float));
+    freebytes(x->flams[i].attack_points, MAXATTACKS * sizeof(int));
   }
-  free(x->flams);
+  freebytes(x->flams, MAXFLAMS * sizeof(t_flam));
 
 }
 
