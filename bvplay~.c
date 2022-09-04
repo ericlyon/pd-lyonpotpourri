@@ -249,8 +249,8 @@ void *bvplay_new(t_symbol *s, t_floatarg taperdur)
     pd_error(0, "zero sampling rate - set to 44100");
     x->R = 44100;
   }
-  x->notedata = (float *) calloc(4, sizeof(float));
-  x->wavebuf = (t_guffer *) calloc(1, sizeof(t_guffer));
+  x->notedata = (float *) getbytes(4 * sizeof(float));
+  x->wavebuf = (t_guffer *) getbytes(1 * sizeof(t_guffer));
   x->taper_dur = taperdur;
   x->taper_frames = x->R * x->taper_dur;
   x->buffer_duration = 0.0 ;
@@ -266,8 +266,8 @@ void *bvplay_new(t_symbol *s, t_floatarg taperdur)
 
 void bvplay_dsp_free(t_bvplay *x)
 {
-  free(x->notedata);
-  free(x->wavebuf);
+  freebytes(x->notedata, 4 * sizeof(float));
+  freebytes(x->wavebuf, 1 * sizeof(t_guffer));
 }
 
 void bvplay_dsp(t_bvplay *x, t_signal **sp)
