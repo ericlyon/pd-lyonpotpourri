@@ -139,7 +139,7 @@ void convolver_convolve(t_convolver *x)
     t_symbol *mymsg;
     short myargc = 3;
     t_atom data[3];
-    mymsg = (t_symbol *) calloc(1, sizeof(t_symbol));
+    mymsg = (t_symbol *) getbytes(1 * sizeof(t_symbol));
     convolver_attach_buffers( x );
     if(x->source->b_nchans == x->impulse->b_nchans && x->impulse->b_nchans == x->dest->b_nchans) {
         //post("case 1");
