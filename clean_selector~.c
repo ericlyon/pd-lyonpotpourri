@@ -32,7 +32,7 @@ typedef struct _clean_selector
 static void *clean_selector_new(t_symbol *s, int argc, t_atom *argv);
 static t_int *clean_selector_perform(t_int *w);
 static void clean_selector_dsp(t_clean_selector *x, t_signal **sp);
-static void clean_selector_float(t_clean_selector *x, t_float f);
+// static void clean_selector_float(t_clean_selector *x, t_float f);
 static void clean_selector_fadetime(t_clean_selector *x, t_floatarg f);
 static void clean_selector_channel(t_clean_selector *x, t_floatarg i);
 static void clean_selector_dsp_free(t_clean_selector *x);
@@ -180,9 +180,9 @@ void clean_selector_dsp(t_clean_selector *x, t_signal **sp)
   int pointer_count;
 
   pointer_count = x->inlet_count + 3; // all inlets, 1 outlet, object pointer and vec-samps
-  sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
+  sigvec  = (t_int **) getbytes(pointer_count * sizeof(t_int *));
   for(i = 0; i < pointer_count; i++) {
-    sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+    sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
 
@@ -200,7 +200,7 @@ void clean_selector_dsp(t_clean_selector *x, t_signal **sp)
 
 
   dsp_addv(clean_selector_perform, pointer_count, (t_int *) sigvec);
-  free(sigvec);
+  freebytes(sigvec, pointer_count * sizeof(t_int *));
 
   for (i = 0; i < MAX_CHANS; i++) {
     x->connected_list[i] = 1;

@@ -47,32 +47,23 @@ typedef struct _convolver
     short static_memory; // flag to avoid dynamic memory manipulation
 } t_convolver;
 
-// maybe no dsp method
+
 static float boundrand(float min, float max);
 static void convolver_setbuf(t_buffy *trybuf);
-
 static void *convolver_new(t_symbol *msg, int argc, t_atom *argv);
 static t_int *convolver_perform(t_int *w);
-
-//static void convolver_mute(t_convolver *x, t_floatarg toggle);
-//static void convolver_assist (t_convolver *x, void *b, long msg, long arg, char *dst);
 static void convolver_dsp_free(t_convolver *x);
-//static void convolver_seed(t_convolver *x, t_floatarg seed);
-// void convolver_dsp(t_convolver *x, t_signal **sp, short *count);
 static void convolver_attach_buffers(t_convolver *x) ;
 static void convolver_spikeimp(t_convolver *x, t_floatarg density);
 static void convolver_convolve(t_convolver *x);
 static void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *argv);
-//static void convolver_version(t_convolver *x);
 static void convolver_noiseimp(t_convolver *x, t_floatarg curve);
-
 static void rfft( float *x, int N, int forward );
 static void cfft( float *x, int NC, int forward );
 static void rdft(int n, int isgn, float *a, int *ip, float *w);
 static void bitreverse( float *x, int N );
 static void init_rdft(int n, int *ip, float *w);
 static void convolver_static_memory(t_convolver *x, t_floatarg toggle);
-
 
 void convolver_tilde_setup(void) {
     convolver_class = class_new(gensym("convolver~"), (t_newmethod)convolver_new,
@@ -112,22 +103,24 @@ void convolver_static_memory(t_convolver *x, t_floatarg toggle)
         
         post("%s: memory is now static - do not reload your impulse buffer",OBJECT_NAME);
         
-        if ((sbuf = (float *) calloc(N+2, sizeof(float))) == NULL)
+        if ((sbuf = (float *) getbytes((N+2) * sizeof(float))) == NULL)
             pd_error(0, "%s: insufficient memory", OBJECT_NAME);
         memcount += (N+2) * sizeof(float);
-        if ((tbuf = (float *) calloc(N2, sizeof(float))) == NULL)
+        if ((tbuf = (float *) getbytes(N2 * sizeof(float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         memcount += (N2) * sizeof(float);
-        if ((filt = (float *) calloc(N+2, sizeof(float))) == NULL)
+        if ((filt = (float *) getbytes((N+2) * sizeof(float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         memcount += (N+2) * sizeof(float);
-        if( (bitshuffle = (int *) calloc(N * 2, sizeof(int))) == NULL)
+        if( (bitshuffle = (int *) getbytes((N*2) * sizeof(int))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         memcount += (N2) * sizeof(float);
-        if( (trigland = (float *) calloc(N * 2, sizeof(float))) == NULL)
+        if( (trigland = (float *) getbytes((N*2) * sizeof(float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         memcount += (N2) * sizeof(float);
         post("%s: allocated %f Megabytes for %s", OBJECT_NAME, (float)memcount / 1000000.0, impulse->myname->s_name);
+        x->N = N;
+        x->N2 = N2;
     }
 }
 

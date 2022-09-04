@@ -383,10 +383,9 @@ void chopper_init(t_chopper *x, short initialized)
     x->retro_odds = 0.5;
     x->fade_level = 1.0;
     x->lock_terminated = 0;
-
-    x->stored_starts = calloc(MAXSTORE, sizeof(int));
-    x->stored_samps = calloc(MAXSTORE, sizeof(int));
-    x->stored_increments = calloc(MAXSTORE, sizeof(int));
+    x->stored_starts = getbytes(MAXSTORE * sizeof(int));
+    x->stored_samps = getbytes(MAXSTORE * sizeof(int));
+    x->stored_increments = getbytes(MAXSTORE * sizeof(int));
 
   } else {
     x->taper_samps = x->R * x->taper_duration;
@@ -397,9 +396,9 @@ void chopper_init(t_chopper *x, short initialized)
 
 void chopper_free(t_chopper *x)
 {
-  free(x->stored_increments);
-  free(x->stored_samps);
-  free(x->stored_starts);
+  freebytes(x->stored_increments, MAXSTORE * sizeof(int));
+  freebytes(x->stored_samps, MAXSTORE * sizeof(int));
+  freebytes(x->stored_starts, MAXSTORE * sizeof(int));
 }
 
 void chopper_jitterme(t_chopper *x)
@@ -543,7 +542,7 @@ void chopper_randloop( t_chopper *x )
 
 t_int *chopper_pd_perform(t_int *w)
 {
-  int bindex, bindex2;
+  int bindex;
   float sample1, m1, m2;
   t_chopper *x = (t_chopper *)(w[1]);
   t_float *out1 = (t_float *)(w[2]);
@@ -659,7 +658,7 @@ t_int *chopper_pd_perform(t_int *w)
 
           force_new_loop = 0;
           bindex = x->fbindex ;
-          bindex2 = bindex << 1;
+ //         bindex2 = bindex << 1;
           x->fbindex += x->increment;
 
           --(x->samps_to_go);
@@ -819,7 +818,7 @@ void chopper_set_minincr(t_chopper *x, t_floatarg n)
   if( n < .005 ) {
     n = .005;
   }
-  //x->minincr = n ;
+  x->minincr = n ;
 }
 
 // set deviation factor
