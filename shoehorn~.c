@@ -16,7 +16,7 @@ typedef struct _shoehorn
   double pio2;
   t_float *inarr;
   t_float **loc_invecs;
-  t_float *outs;
+  t_float **outs;
   double advFrac;
   double *pangains1;
   double *pangains2;
@@ -56,16 +56,16 @@ void *shoehorn_new(t_symbol *s, int argc, t_atom *argv)
   }
   x->pio2 = PI / 2.0;
 
-  x->inarr = (t_float *) malloc(x->inChans * sizeof(t_float));
-  x->loc_invecs = (t_float **) malloc(x->inChans * sizeof(t_float *));
+  x->inarr = (t_float *) getbytes(x->inChans * sizeof(t_float));
+  x->loc_invecs = (t_float **) getbytes(x->inChans * sizeof(t_float *));
   for(i = 0; i < x->inChans; i++) {
-    x->loc_invecs[i] = (t_float *) malloc(8192 * sizeof(t_float));
+    x->loc_invecs[i] = (t_float *) getbytes(8192 * sizeof(t_float));
   }
-  x->pangains1 = (double *) malloc(x->inChans * sizeof(double));
-  x->pangains2 = (double *) malloc(x->inChans * sizeof(double));
-  x->indexList = (long *) malloc(x->inChans * sizeof(long));
+  x->pangains1 = (double *) getbytes(x->inChans * sizeof(double));
+  x->pangains2 = (double *) getbytes(x->inChans * sizeof(double));
+  x->indexList = (long *) getbytes(x->inChans * sizeof(long));
   x->advFrac = (double)(x->outChans - 1)/(double)(x->inChans - 1);
-  x->outs = (t_float **) malloc(x->outChans * sizeof(t_float *)); // temporary holding for output vectors
+  x->outs = (t_float **) getbytes(x->outChans * sizeof(t_float *)); // temporary holding for output vectors
 
   for(i = 1; i < x->inChans - 1; i++) {
     fullFrac = i * x->advFrac;
@@ -82,15 +82,15 @@ void *shoehorn_new(t_symbol *s, int argc, t_atom *argv)
 void shoehorn_free(t_shoehorn *x)
 {
   int i;
-  free(x->inarr);
-  free(x->pangains1);
-  free(x->pangains2);
-  free(x->indexList);
+  freebytes(x->inarr, x->inChans * sizeof(t_float));
+  freebytes(x->pangains1, x->inChans * sizeof(double));
+  freebytes(x->pangains2, x->inChans * sizeof(double));
+  freebytes(x->indexList, x->inChans * sizeof(long));
   for(i = 0; i < x->inChans; i++) {
-    free(x->loc_invecs[i]);
+    freebytes(x->loc_invecs[i], 8192 * sizeof(t_float));
   }
-  free(x->loc_invecs);
-  free(x->outs);
+  freebytes(x->loc_invecs, x->inChans * sizeof(t_float *));
+  freebytes(x->outs, x->outChans * sizeof(t_float *));
 }
 
 
