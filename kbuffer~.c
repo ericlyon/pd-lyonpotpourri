@@ -45,8 +45,8 @@ static void kbuffer_info(t_kbuffer *x);
 static void kbuffer_speed(t_kbuffer *x, t_floatarg speed);
 static void kbuffer_size(t_kbuffer *x, t_floatarg ms);
 static void kbuffer_ksrate(t_kbuffer *x, t_floatarg ksrate);
-static void kbuffer_float(t_kbuffer *x, double f);
-static void kbuffer_int(t_kbuffer *x, int i);
+//static void kbuffer_float(t_kbuffer *x, double f);
+//static void kbuffer_int(t_kbuffer *x, int i);
 static void kbuffer_init(t_kbuffer *x,short initialized);
 
 void kbuffer_tilde_setup(void) {
@@ -154,7 +154,7 @@ void kbuffer_loop(t_kbuffer *x) {
 }
 
 void kbuffer_dsp_free(t_kbuffer *x) {
-  free(x->data);
+  freebytes(x->data, x->memsize * sizeof(float));
 }
 
 t_int *kbuffer_perform(t_int *w)
@@ -288,7 +288,7 @@ void kbuffer_init(t_kbuffer *x,short initialized)
     x->speed = 1.0 ;
     x->memsize = x->ksrate * x->duration * sizeof(float);
     x->length = x->duration * x->ksrate;
-    x->data = (float *) calloc(x->memsize, sizeof(float));
+    x->data = (float *) getbytes(x->memsize * sizeof(float));
   }
   x->si = x->ksrate / x->srate;
 }

@@ -44,11 +44,12 @@ static void dynss_printwave(t_dynss *x);
 static void dynss_new_wave(t_dynss *x);
 static void dynss_pointcount(t_dynss *x, t_floatarg f);
 static void dynss_new_amps(t_dynss *x);
+static void dynss_dsp_free(t_dynss *x);
 
 void dynss_tilde_setup(void)
 {
   t_class *c;
-  c = class_new(gensym("dynss~"), (t_newmethod)dynss_new, 0, sizeof(t_dynss), 0,0);
+  c = class_new(gensym("dynss~"), (t_newmethod)dynss_new, (t_method)dynss_dsp_free, sizeof(t_dynss), 0,0);
   CLASS_MAINSIGNALIN(c,t_dynss,x_f);
   class_addmethod(c,(t_method)dynss_dsp, gensym("dsp"), A_CANT, 0);
 
@@ -64,6 +65,13 @@ void dynss_tilde_setup(void)
   dynss_class = c;
 }
 
+static void dynss_dsp_free(t_dynss *x){
+    freebytes(x->values,(MAXPOINTS + 2) * sizeof(t_double));
+    freebytes(x->point_breaks,(MAXPOINTS + 2) * sizeof(long));
+    freebytes(x->norm_breaks,(MAXPOINTS + 2) * sizeof(t_double));
+    freebytes(x->xdevs,(MAXPOINTS + 2) * sizeof(t_double));
+    freebytes(x->ydevs,(MAXPOINTS + 2) * sizeof(t_double));
+}
 
 void dynss_pointcount(t_dynss *x, t_floatarg f)
 {
@@ -122,11 +130,11 @@ void *dynss_new(void)
   x->srate = sys_getsr();
   x->point_count = 6; // including fixed start and endpoint, so just 4 dynamic points
 
-  x->values = (t_double *) calloc(MAXPOINTS + 2, sizeof(t_double));
-  x->point_breaks = (long *) calloc(MAXPOINTS + 2, sizeof(long));
-  x->norm_breaks = (t_double *) calloc(MAXPOINTS + 2, sizeof(t_double));
-  x->xdevs = (t_double *) calloc(MAXPOINTS + 2, sizeof(t_double));
-  x->ydevs = (t_double *) calloc(MAXPOINTS + 2, sizeof(t_double));
+  x->values = (t_double *) getbytes((MAXPOINTS + 2) * sizeof(t_double));
+  x->point_breaks = (long *) getbytes((MAXPOINTS + 2) * sizeof(long));
+  x->norm_breaks = (t_double *) getbytes((MAXPOINTS + 2) * sizeof(t_double));
+  x->xdevs = (t_double *) getbytes((MAXPOINTS + 2) * sizeof(t_double));
+  x->ydevs = (t_double *) getbytes((MAXPOINTS + 2) * sizeof(t_double));
 
   if(! x->srate ) {
     x->srate = 44100;

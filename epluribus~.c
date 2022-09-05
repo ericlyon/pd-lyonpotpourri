@@ -126,9 +126,9 @@ void epluribus_dsp(t_epluribus *x, t_signal **sp)
   }
   pointer_count = x->incount + 4; // all metros, plus 2 outlets, plus the object pointer, plus N
 
-  sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
+  sigvec  = (t_int **) getbytes(pointer_count * sizeof(t_int *));
   for(i = 0; i < pointer_count; i++) {
-    sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+    sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
 
@@ -139,6 +139,6 @@ void epluribus_dsp(t_epluribus *x, t_signal **sp)
   }
 
   dsp_addv(epluribus_perform, pointer_count, (t_int *) sigvec);
-  free(sigvec);
+  freebytes(sigvec, pointer_count * sizeof(t_int *));
 
 }

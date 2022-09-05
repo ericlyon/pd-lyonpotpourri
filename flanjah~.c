@@ -85,9 +85,9 @@ void flanjah_report( t_flanjah *x ) {
 }
 
 void flanjah_dsp_free( t_flanjah *x ) {
-  free(x->sinetab);
-  free(x->ddl1);
-  free(x->ddl2);
+  freebytes(x->sinetab, F_LEN * sizeof(float));
+  freebytes(x->ddl1, (x->ddl1_len + 2) * sizeof(float));
+  freebytes(x->ddl2, (x->ddl2_len + 2) * sizeof(float));
 }
 
 
@@ -278,9 +278,9 @@ void flanjah_init(t_flanjah *x,short initialized)
 
   x->tap1 = x->tap2 = 0;
   if(!initialized) {
-    x->ddl1 = (float *) calloc(x->ddl1_len + 2, sizeof(float));
-    x->ddl2 = (float *) calloc(x->ddl2_len + 2, sizeof(float));
-    x->sinetab = (float *) calloc(F_LEN,sizeof(float));
+    x->ddl1 = (float *) getbytes((x->ddl1_len + 2) * sizeof(float));
+    x->ddl2 = (float *) getbytes((x->ddl2_len + 2) * sizeof(float));
+    x->sinetab = (float *) getbytes(F_LEN * sizeof(float));
     for( i = 0; i < F_LEN ; i++ ) {
       x->sinetab[i] = 0.51 - 0.47 * cos( TWOPI * (float) i / (float) F_LEN);
     }

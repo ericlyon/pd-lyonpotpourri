@@ -922,13 +922,12 @@ void dmach_init_pattern(t_dmach *x, int pnum)
   }
 
   if(p[pnum].drumlines == NULL) {
-    // post("initializing drumline memory at location %d",pnum);
-    p[pnum].drumlines = (t_drumline *)malloc(drum_count * sizeof(t_drumline));
+    p[pnum].drumlines = (t_drumline *)getbytes(drum_count * sizeof(t_drumline));
   }
 
-
+// possible memory leak
   for(i = 0; i < drum_count; i++) {
-    p[pnum].drumlines[i].attacks = (t_attack *)calloc(MAX_ATTACKS, sizeof(t_attack));
+    p[pnum].drumlines[i].attacks = (t_attack *)getbytes(MAX_ATTACKS * sizeof(t_attack));
     p[pnum].drumlines[i].adex = 0;
     p[pnum].drumlines[i].active = 0;
     p[pnum].drumlines[i].attack_count = 0;
@@ -939,17 +938,20 @@ void dmach_init_pattern(t_dmach *x, int pnum)
 
 void dmach_dsp_free( t_dmach *x )
 {
+    /*
+     p[pnum].drumlines = (t_drumline *)getbytes(drum_count * sizeof(t_drumline));
+     */
   /* need some freeing action here! */
-  free(x->patterns);
-  free(x->stored_patterns);
-  free(x->current_increment);
-  free(x->gtranspose);
-  free(x->gains);
-  free(x->sequence);
-  free(x->listdata);
-  free(x->connected);
-  free(x->tmpatks);
-  free(x->muted);
+  freebytes(x->patterns,MAX_PATTERNS * sizeof(t_pattern));
+  freebytes(x->stored_patterns,MAX_PATTERNS * sizeof(short));
+  freebytes(x->current_increment,x->drum_count * sizeof(float));
+  freebytes(x->gtranspose,x->drum_count * sizeof(float));
+  freebytes(x->gains,x->drum_count * sizeof(float));
+  freebytes(x->sequence,1024 * sizeof(int));
+  freebytes(x->listdata,1024 * sizeof(t_atom));
+  freebytes(x->connected,1024 * sizeof(short));
+  freebytes(x->tmpatks,MAX_ATTACKS * sizeof(t_attack));
+  freebytes(x->muted,x->drum_count * sizeof(short));
 }
 
 void dmach_mute(t_dmach *x, t_floatarg toggle)
@@ -990,16 +992,16 @@ void *dmach_new(t_symbol *s, int argc, t_atom *argv)
     outlet_new(&x->x_obj, gensym("signal"));
   }
   x->listraw_outlet = outlet_new(&x->x_obj, gensym("list"));
-  x->patterns = (t_pattern *) malloc(MAX_PATTERNS * sizeof(t_pattern));
-  x->stored_patterns = (short *) malloc(MAX_PATTERNS * sizeof(short));
-  x->current_increment = (float *) malloc(x->drum_count * sizeof(float)); // for sample + hold of increment
-  x->gtranspose = (float *) malloc(x->drum_count * sizeof(float));
-  x->gains = (float *) malloc(x->drum_count * sizeof(float));
-  x->sequence = (int *) malloc(1024 * sizeof(int));
-  x->listdata = (t_atom *) malloc(1024 * sizeof(t_atom));
-  x->connected = (short *) malloc(1024 * sizeof(short));
-  x->tmpatks = (t_attack *)calloc(MAX_ATTACKS, sizeof(t_attack));
-  x->muted = (short *)calloc(x->drum_count, sizeof(short)); // by default mute is off on each slot
+  x->patterns = (t_pattern *) getbytes(MAX_PATTERNS * sizeof(t_pattern));
+  x->stored_patterns = (short *) getbytes(MAX_PATTERNS * sizeof(short));
+  x->current_increment = (float *) getbytes(x->drum_count * sizeof(float)); // for sample + hold of increment
+  x->gtranspose = (float *) getbytes(x->drum_count * sizeof(float));
+  x->gains = (float *) getbytes(x->drum_count * sizeof(float));
+  x->sequence = (int *) getbytes(1024 * sizeof(int));
+  x->listdata = (t_atom *) getbytes(1024 * sizeof(t_atom));
+  x->connected = (short *) getbytes(1024 * sizeof(short));
+  x->tmpatks = (t_attack *)getbytes(MAX_ATTACKS * sizeof(t_attack));
+  x->muted = (short *)getbytes(x->drum_count * sizeof(short)); // by default mute is off on each slot
 
   x->seqptr = 0;
   x->sequence_length = 0;
@@ -1207,9 +1209,9 @@ void dmach_dsp(t_dmach *x, t_signal **sp)
   }
 
 
-  sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
+  sigvec  = (t_int **) getbytes(pointer_count * sizeof(t_int *));
   for(i = 0; i < pointer_count; i++) {
-    sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+    sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
 
@@ -1220,5 +1222,5 @@ void dmach_dsp(t_dmach *x, t_signal **sp)
   }
 
   dsp_addv(dmach_perform, pointer_count, (t_int *) sigvec);
-  free(sigvec);
+  freebytes(sigvec,pointer_count * sizeof(t_int *));
 }
