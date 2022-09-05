@@ -4,7 +4,8 @@ Updated function~ with some methods that could be helpful for amp simulation alg
 
 Updated the following externals to use Pd memory functions:
 
-expflam~, shoehorn~, convolver~, buffet~ ,byplay~~, clean_selector~,chopper~~, byplay~~, clean_selector~, convolver~, dmach~, dynss~, epluribus~, flanjah~, granola~, kbuffer~, npan~, phasemod~, player~, pulser~, rotapan~, samm~, sarec~, sel~, shoehorn~, splitbank~, splitspec~, squash~, vdb~, vdp~ 
+expflam~, shoehorn~, convolver~, buffet~ ,byplay~~, clean_selector~,chopper~~, byplay~~, clean_selector~, convolver~, dmach~, dynss~, epluribus~, flanjah~, granola~, kbuffer~, npan~, phasemod~, player~, pulser~, rotapan~, samm~, sarec~, sel~, shoehorn~, splitbank~, splitspec~, squash~, vdb~, vdp~, granulesf~, granule~, markov~, mask~, quadpan~
+
 
 Version 3.0
 

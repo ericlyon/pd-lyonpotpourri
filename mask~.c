@@ -210,7 +210,7 @@ void mask_addmask(t_mask *x, t_symbol *msg, int argc, t_atom *argv)
     return;
   }
   if(x->masks[location].pat == NULL) {
-    x->masks[location].pat = (float *) malloc(MAXLEN * sizeof(float));
+    x->masks[location].pat = (float *) getbytes(MAXLEN * sizeof(float));
     x->stored_masks[x->pattern_count++] = location;
   } else {
     //    post("replacing pattern stored at location %d", location);
@@ -225,13 +225,14 @@ void mask_addmask(t_mask *x, t_symbol *msg, int argc, t_atom *argv)
 
 void mask_free(t_mask *x)
 {
-  int i;
-  for(i=0;i<x->pattern_count;i++)
-    free(x->masks[i].pat);
-  free(x->masks);
-  free(x->stored_masks);
-  free(x->sequence.seq);
-  free(x->in_vec);
+    int i;
+    for(i=0;i<x->pattern_count;i++){
+        freebytes(x->masks[i].pat, MAXLEN * sizeof(float));
+    }
+    freebytes(x->masks,MAXMASKS * sizeof(t_maskpat));
+    freebytes(x->stored_masks, MAXMASKS * sizeof(int));
+    freebytes(x->sequence.seq, MAXSEQ * sizeof(int));
+    freebytes(x->in_vec, 8192 * sizeof(t_float));
 }
 
 void *mask_new(t_symbol *msg, int argc, t_atom *argv)
@@ -240,14 +241,13 @@ void *mask_new(t_symbol *msg, int argc, t_atom *argv)
   t_mask *x = (t_mask *)pd_new(mask_class);
   outlet_new(&x->x_obj, gensym("signal"));
 
-  x->masks = (t_maskpat *) malloc(MAXMASKS * sizeof(t_maskpat));
-  x->stored_masks = (int *) malloc(MAXMASKS * sizeof(int));
-
-  x->sequence.seq = (int *) malloc(MAXSEQ * sizeof(int));
+  x->masks = (t_maskpat *) getbytes(MAXMASKS * sizeof(t_maskpat));
+  x->stored_masks = (int *) getbytes(MAXMASKS * sizeof(int));
+  x->sequence.seq = (int *) getbytes(MAXSEQ * sizeof(int));
 
 
   /* this should be vector size, and possibly realloced in dsp routine if size changes */
-  x->in_vec = (float *) malloc(8192 * sizeof(float));
+  x->in_vec = (t_float *) getbytes(8192 * sizeof(t_float));
 
   x->sequence.length = 0; // no sequence by default
   x->sequence.phase = 0; //
@@ -261,7 +261,7 @@ void *mask_new(t_symbol *msg, int argc, t_atom *argv)
   }
   if(argc > 0) {
     //  post("reading initial mask from argument list, with %d members",argc);
-    x->masks[0].pat = (float *) malloc(MAXLEN * sizeof(float));
+    x->masks[0].pat = (float *) getbytes(MAXLEN * sizeof(float));
     //    post("allocated %d bytes for this pattern", MAXLEN * sizeof(float));
     x->masks[0].length = argc;
     for(i=0; i<argc; i++) {

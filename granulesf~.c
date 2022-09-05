@@ -572,13 +572,11 @@ void *granulesf_new(t_symbol *msg, int argc, t_atom *argv)
   t_granulesf *x = (t_granulesf *)pd_new(granulesf_class);
   outlet_new(&x->x_obj, gensym("signal"));
   outlet_new(&x->x_obj, gensym("signal"));
-  x->wavebuf = (t_pdbuffer*)malloc(sizeof(t_pdbuffer));
-  x->windowbuf = (t_pdbuffer*)malloc(sizeof(t_pdbuffer));
+  x->wavebuf = (t_pdbuffer*)getbytes(sizeof(t_pdbuffer));
+  x->windowbuf = (t_pdbuffer*)getbytes(sizeof(t_pdbuffer));
   srand(time(0)); //need "seed" message
-
-  x->pitchscale = (float *) t_getbytes(MAXSCALE * sizeof(float));
-  x->grains = (t_grain *) t_getbytes(MAXGRAINS * sizeof(t_grain));
-
+  x->pitchscale = (float *) getbytes(MAXSCALE * sizeof(float));
+  x->grains = (t_grain *) getbytes(MAXGRAINS * sizeof(t_grain));
 
   // default names
   x->wavename = gensym("waveform");
@@ -1042,8 +1040,8 @@ t_int *granulesf_perform(t_int *w)
 
 void granulesf_dsp_free(t_granulesf *x)
 {
-  t_freebytes(x->grains, MAXGRAINS * sizeof(t_grain));
-  t_freebytes(x->pitchscale, MAXSCALE * sizeof(float));
+  freebytes(x->grains, MAXGRAINS * sizeof(t_grain));
+  freebytes(x->pitchscale, MAXSCALE * sizeof(float));
 }
 
 void granulesf_dsp(t_granulesf *x, t_signal **sp)

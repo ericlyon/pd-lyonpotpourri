@@ -433,12 +433,12 @@ void *granule_new(t_symbol *msg, int argc, t_atom *argv)
   t_granule *x = (t_granule *)pd_new(granule_class);
   outlet_new(&x->x_obj, gensym("signal"));
   outlet_new(&x->x_obj, gensym("signal"));
-  x->wavebuf = (t_pdbuffer*)malloc(sizeof(t_pdbuffer));
-  x->windowbuf = (t_pdbuffer*)malloc(sizeof(t_pdbuffer));
+  x->wavebuf = (t_pdbuffer*)getbytes(sizeof(t_pdbuffer));
+  x->windowbuf = (t_pdbuffer*)getbytes(sizeof(t_pdbuffer));
   srand(time(0));
 
-  x->pitchscale = (float *) t_getbytes(MAXSCALE * sizeof(float));
-  x->grains = (t_grain *) t_getbytes(MAXGRAINS * sizeof(t_grain));
+  x->pitchscale = (float *) getbytes(MAXSCALE * sizeof(float));
+  x->grains = (t_grain *) getbytes(MAXGRAINS * sizeof(t_grain));
 
 
   // default names
@@ -703,8 +703,8 @@ t_int *granule_perform(t_int *w)
 void granule_dsp_free(t_granule *x)
 {
 
-  t_freebytes(x->grains, MAXGRAINS * sizeof(t_grain));
-  t_freebytes(x->pitchscale, MAXSCALE * sizeof(float));
+  freebytes(x->grains, MAXGRAINS * sizeof(t_grain));
+  freebytes(x->pitchscale, MAXSCALE * sizeof(float));
 }
 
 void granule_dsp(t_granule *x, t_signal **sp)

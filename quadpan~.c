@@ -21,9 +21,9 @@ typedef struct _quadpan
 {
   t_object x_obj;
   t_float x_f;
-  float *in;
-  float *Xin;
-  float *Yin;
+  t_float *in;
+  t_float *Xin;
+  t_float *Yin;
 } t_quadpan;
 
 static  void *quadpan_new(t_symbol *s, int argc, t_atom *argv);
@@ -54,9 +54,9 @@ void *quadpan_new(t_symbol *s, int argc, t_atom *argv)
   for(i = 0; i < 4; i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
-  x->in = (float *) malloc(8192 * sizeof(float));
-  x->Xin = (float *) malloc(8192 * sizeof(float));
-  x->Yin = (float *) malloc(8192 * sizeof(float));
+  x->in = (t_float *) getbytes(8192 * sizeof(t_float));
+  x->Xin = (t_float *) getbytes(8192 * sizeof(t_float));
+  x->Yin = (t_float *) getbytes(8192 * sizeof(t_float));
 //    x->pi_over_two = 1.5707963267948965;
 //    x->twopi = 6.283185307179586;
 
@@ -64,9 +64,9 @@ void *quadpan_new(t_symbol *s, int argc, t_atom *argv)
 }
 void quadpan_free(t_quadpan *x)
 {
-  free(x->in);
-  free(x->Xin);
-  free(x->Yin);
+  freebytes(x->in,8192 * sizeof(t_float));
+  freebytes(x->Xin,8192 * sizeof(t_float));
+  freebytes(x->Yin,8192 * sizeof(t_float));
 }
 
 t_int *quadpan_perform(t_int *w)
