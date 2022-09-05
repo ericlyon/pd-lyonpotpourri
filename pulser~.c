@@ -63,8 +63,12 @@ void pulser_harmonics(t_pulser *x, t_floatarg c)
 
 void pulser_free(t_pulser *x)
 {
-  free(x->phases);
-  free(x->wavetab);
+    /*
+     x->phases = (float *) getbytes(MAX_COMPONENTS * sizeof(float));
+     x->wavetab = (float *) getbytes(FUNC_LEN * sizeof(float));
+     */
+  freebytes(x->phases,MAX_COMPONENTS * sizeof(float));
+  freebytes(x->wavetab,FUNC_LEN * sizeof(float));
 }
 
 void *pulser_new(t_symbol *s, int argc, t_atom *argv)
@@ -97,8 +101,8 @@ void *pulser_new(t_symbol *s, int argc, t_atom *argv)
     x->components = 8;
   }
   x->global_gain = 1.0 / (float) x->components ;
-  x->phases = (float *) calloc(MAX_COMPONENTS, sizeof(float) );
-  x->wavetab = (float *) calloc(FUNC_LEN, sizeof(float) );
+  x->phases = (float *) getbytes(MAX_COMPONENTS * sizeof(float));
+  x->wavetab = (float *) getbytes(FUNC_LEN * sizeof(float));
 
   for(i = 0 ; i < FUNC_LEN; i++) {
     x->wavetab[i] = sin(TWOPI * ((float)i/(float) FUNC_LEN)) ;

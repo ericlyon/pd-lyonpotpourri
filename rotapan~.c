@@ -21,8 +21,8 @@ typedef struct _rotapan
 
 static void *rotapan_new(t_symbol *s, int argc, t_atom *argv);
 static void rotapan_free(t_rotapan *x);
-static void rotapan_assist(t_rotapan *x, void *b, long msg, long arg, char *dst);
-static void rotapan_version(t_rotapan *x);
+//static void rotapan_assist(t_rotapan *x, void *b, long msg, long arg, char *dst);
+//static void rotapan_version(t_rotapan *x);
 static void rotapan_dsp(t_rotapan *x, t_signal **sp);
 static t_int *rotapan_perform(t_int *w);
 
@@ -51,12 +51,12 @@ void *rotapan_new(t_symbol *s, int argc, t_atom *argv)
         outlet_new(&x->x_obj, gensym("signal"));
     }
     x->pio2 = PI / 2.0;
-    x->inarr = (t_float *) malloc((x->rchans + 1) * sizeof(t_float));
+    x->inarr = (t_float *) getbytes((x->rchans + 1) * sizeof(t_float));
     // for better compatibility with Max 6
-    x->ins = (t_float **) malloc((x->rchans + 1) * sizeof(t_float *));
-    x->outs = (t_float **) malloc(x->rchans * sizeof(t_float *));
+    x->ins = (t_float **) getbytes((x->rchans + 1) * sizeof(t_float *));
+    x->outs = (t_float **) getbytes(x->rchans * sizeof(t_float *));
     for(i = 0; i < x->rchans + 1; i++) {
-        x->ins[i] = (t_float *) malloc(8192 * sizeof(t_float));
+        x->ins[i] = (t_float *) getbytes(8192 * sizeof(t_float));
     }
     return x;
 }
@@ -65,11 +65,11 @@ void rotapan_free(t_rotapan *x)
 {
   int i;
   for(i = 0; i < x->rchans + 1; i++) {
-    free(x->ins[i]);
+    freebytes(x->ins[i],8192 * sizeof(t_float));
   }
-  free(x->ins);
-  free(x->outs);
-  free(x->inarr);
+  freebytes(x->ins,(x->rchans + 1) * sizeof(t_float *));
+  freebytes(x->outs,x->rchans * sizeof(t_float *));
+  freebytes(x->inarr, (x->rchans + 1) * sizeof(t_float));
 }
 
 // try copying all vectors first!!!
@@ -132,9 +132,9 @@ void rotapan_dsp(t_rotapan *x, t_signal **sp)
   long i;
   t_int **sigvec;
   int pointer_count = (x->rchans * 2) + 3; // input/output chans + object + panner + vectorsize
-  sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
+  sigvec  = (t_int **) getbytes(pointer_count * sizeof(t_int *));
   for(i = 0; i < pointer_count; i++) {
-    sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+    sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
   sigvec[pointer_count - 1] = (t_int *)sp[0]->s_n; // last pointer is to vector size (N)
@@ -142,5 +142,5 @@ void rotapan_dsp(t_rotapan *x, t_signal **sp)
     sigvec[i] = (t_int *)sp[i-1]->s_vec;
   }
   dsp_addv(rotapan_perform, pointer_count, (t_int *)sigvec);
-  free(sigvec);
+  freebytes(sigvec,sizeof(t_int) * 1);
 }
