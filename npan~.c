@@ -44,8 +44,8 @@ void *npan_new(t_symbol *s, int argc, t_atom *argv)
   for(i = 0; i < x->outcount; i++) {
     outlet_new(&x->x_obj, gensym("signal"));
   }
-  x->input_locvec = (t_float *) calloc(8192, 1);
-  x->panner_locvec = (t_float *) calloc(8192, 1);
+  x->input_locvec = (t_float *) getbytes(8192 * sizeof(t_float));
+  x->panner_locvec = (t_float *) getbytes(8192 * sizeof(t_float));
   x->pi_over_two = 1.5707963267948965;
   x->twopi = 6.283185307179586;
   return x;
@@ -53,8 +53,8 @@ void *npan_new(t_symbol *s, int argc, t_atom *argv)
 
 void npan_free(t_npan *x)
 {
-  free(x->panner_locvec);
-  free(x->input_locvec);
+  freebytes(x->panner_locvec, 8192 * sizeof(t_float));
+  freebytes(x->input_locvec, 8192 * sizeof(t_float));
 }
 
 t_int *npan_perform(t_int *w)
@@ -114,9 +114,9 @@ void npan_dsp(t_npan *x, t_signal **sp)
   long i;
   t_int **sigvec;
   int pointer_count = x->outcount + 4;
-  sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
+  sigvec  = (t_int **) getbytes(pointer_count * sizeof(t_int *));
   for(i = 0; i < pointer_count; i++) {
-    sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+    sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
   sigvec[pointer_count - 1] = (t_int *)sp[0]->s_n; // last pointer is to vector size (N)
@@ -124,5 +124,5 @@ void npan_dsp(t_npan *x, t_signal **sp)
     sigvec[i] = (t_int *)sp[i-1]->s_vec;
   }
   dsp_addv(npan_perform, pointer_count, (t_int *) sigvec);
-  free(sigvec);
+  freebytes(sigvec,sizeof(t_int) * 1);
 }

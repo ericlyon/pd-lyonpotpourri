@@ -25,10 +25,7 @@ typedef struct _phasemod
 } t_phasemod;
 
 static void *phasemod_new(t_symbol *s, int argc, t_atom *argv);
-//static t_int *offset_perform(t_int *w);
 static t_int *phasemod_perform(t_int *w);
-//static void phasemod_float(t_phasemod *x, double f);
-//static void phasemod_int(t_phasemod *x, long n);
 static void phasemod_mute(t_phasemod *x, t_floatarg toggle);
 static void phasemod_dsp(t_phasemod *x, t_signal **sp);
 static void phasemod_dsp_free(t_phasemod *x);
@@ -44,7 +41,7 @@ void phasemod_tilde_setup(void) {
 
 void phasemod_dsp_free( t_phasemod *x )
 {
-  free(x->wavetab);
+  freebytes(x->wavetab, FUNC_LEN * sizeof(t_float));
 }
 
 void phasemod_mute(t_phasemod *x, t_floatarg toggle)
@@ -77,9 +74,9 @@ void *phasemod_new(t_symbol *s, int argc, t_atom *argv)
   x->mute = 0;
   x->frequency = 440.0;
 
-  x->wavetab = (float *) calloc(FUNC_LEN, sizeof(float) );
+  x->wavetab = (t_float *) getbytes(FUNC_LEN * sizeof(t_float));
   for( i = 0 ; i < FUNC_LEN; i++ ) {
-    x->wavetab[i] = sin( TWOPI * ((float)i/(float) FUNC_LEN)) ;
+    x->wavetab[i] = sin( TWOPI * ((t_float)i/(t_float) FUNC_LEN)) ;
   }
   x->bendphs = 0;
   x->sr = sys_getsr();

@@ -25,12 +25,10 @@ typedef struct
   float gain; // gain for this note
   short status;// status of this event slot
   float increment;// first increment noted (only if using static increments)
-
 } t_event;
 
 typedef struct _player
 {
-
   t_object x_obj;
   float x_f;
   t_symbol *wavename; // name of waveform buffer
@@ -51,8 +49,8 @@ typedef struct _player
   short static_increment; // flag to use static increment (off by default)
   // variables only for Pd
   int vs; // signal vector size
-  float *trigger_vec; // copy of input vector (Pd only)
-  float *increment_vec; // copy of input vector (Pd only)
+  t_float *trigger_vec; // copy of input vector (Pd only)
+  t_float *increment_vec; // copy of input vector (Pd only)
   t_word *b_samples; // pointer to array data
   long b_valid; // state of array
   long b_frames; // number of frames (in Pd frames are mono)
@@ -60,24 +58,24 @@ typedef struct _player
 
 static void player_setbuf(t_player *x, t_symbol *wavename);
 static void *player_new(t_symbol *msg, int argc, t_atom *argv);
-static t_int *player_perform_mono(t_int *w);
+// static t_int *player_perform_mono(t_int *w);
 static t_int *player_perform_mono_interpol(t_int *w);
-static t_int *player_perform_stereo(t_int *w);
-static t_int *player_perform_stereo_interpol(t_int *w);
-static t_int *player_perform_stereo_interpol_nocopy(t_int *w);
+// static t_int *player_perform_stereo(t_int *w);
+// static t_int *player_perform_stereo_interpol(t_int *w);
+// static t_int *player_perform_stereo_interpol_nocopy(t_int *w);
 static t_int *player_perform_hosed1(t_int *w);
-static t_int *player_perform_hosed2(t_int *w);
-static t_int *pd_player(t_int *w);
+// static t_int *player_perform_hosed2(t_int *w);
+// static t_int *pd_player(t_int *w);
 
 static void player_dsp(t_player *x, t_signal **sp);
-static float player_boundrand(float min, float max);
+// static float player_boundrand(float min, float max);
 static void player_dsp_free(t_player *x);
-static void player_float(t_player *x, double f);
-static void player_interpolation(t_player *x, t_float f);
+//static void player_float(t_player *x, double f);
+// static void player_interpolation(t_player *x, t_float f);
 static void player_mute(t_player *x, t_floatarg f);
 static void player_static_increment(t_player *x, t_floatarg f);
 static void player_stop(t_player *x);
-static void player_info(t_player *x);
+// static void player_info(t_player *x);
 static void player_init(t_player *x,short initialized);
 
 void player_tilde_setup(void)
@@ -159,7 +157,7 @@ void player_init(t_player *x,short initialized)
     x->increment = 1.0;
     x->direction = FORWARD;
 
-    x->events = (t_event *) calloc(x->overlap_max, sizeof(t_event));
+    x->events = (t_event *) getbytes(x->overlap_max * sizeof(t_event));
     x->mute = 0;
     x->interpolation_tog = 1; // interpolation by default
     x->static_increment = 0; // by default increment is adjustable through note
@@ -170,14 +168,14 @@ void player_init(t_player *x,short initialized)
       x->events[i].gain = 0.0;
     }
     //    post("using local vectors");
-    x->increment_vec = malloc(MAXIMUM_VECTOR * sizeof(float));
-    x->trigger_vec = malloc(MAXIMUM_VECTOR * sizeof(float));
+    x->increment_vec = getbytes(MAXIMUM_VECTOR * sizeof(t_float));
+    x->trigger_vec = getbytes(MAXIMUM_VECTOR * sizeof(t_float));
   } else {
     for(i = 0; i < x->overlap_max; i++) {
       x->events[i].status = INACTIVE;
     }
-    x->increment_vec = realloc(x->increment_vec, x->vs * sizeof(float));
-    x->trigger_vec = realloc(x->trigger_vec, x->vs * sizeof(float));
+    // x->increment_vec = realloc(x->increment_vec, x->vs * sizeof(float));
+    // x->trigger_vec = realloc(x->trigger_vec, x->vs * sizeof(float));
   }
 
 }
@@ -246,9 +244,9 @@ t_int *player_perform_hosed2(t_int *w)
 t_int *player_perform_mono_interpol(t_int *w)
 {
   t_player *x = (t_player *) (w[1]);
-  float *t_vec = (t_float *)(w[2]);
-  float *i_vec = (t_float *)(w[3]);
-  float *outchan = (t_float *)(w[4]);
+  t_float *t_vec = (t_float *)(w[2]);
+  t_float *i_vec = (t_float *)(w[3]);
+  t_float *outchan = (t_float *)(w[4]);
   int n = (int) w[5];
   t_word *b_samples;
   long b_nchans;
@@ -262,8 +260,8 @@ t_int *player_perform_mono_interpol(t_int *w)
   short insert_success;
   int new_insert;
   int i,j,k;
-  float *trigger_vec = x->trigger_vec;
-  float *increment_vec = x->increment_vec;
+  t_float *trigger_vec = x->trigger_vec;
+  t_float *increment_vec = x->increment_vec;
   short bail;
   short static_increment = x->static_increment;
   float maxphase;
@@ -288,7 +286,6 @@ t_int *player_perform_mono_interpol(t_int *w)
     memset((void *)outchan,0,sizeof(float) * n);
     return(w+6);
   }
-  // DO THIS BETTER
 
   for(i = 0; i < n; i++) {
     trigger_vec[i] = t_vec[i];
@@ -478,11 +475,9 @@ float player_boundrand(float min, float max)
 
 void player_dsp_free(t_player *x)
 {
-
-  free(x->events);
-  free(x->increment_vec);
-  free(x->trigger_vec);
-
+  freebytes(x->events, x->overlap_max * sizeof(t_event));
+  freebytes(x->increment_vec, MAXIMUM_VECTOR * sizeof(t_float));
+  freebytes(x->trigger_vec, MAXIMUM_VECTOR * sizeof(t_float));
 }
 
 void player_dsp(t_player *x, t_signal **sp)

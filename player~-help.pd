@@ -1,4 +1,4 @@
-#N canvas 417 23 664 741 12;
+#N canvas 417 25 664 741 12;
 #N canvas 0 22 450 300 (subpatch) 0;
 #X array sf4player 155944 float 2;
 #X coords 0 1 155944 -1 100 70 1 0 0;
@@ -9,8 +9,8 @@
 #X msg 377 104 read -resize \$1 sf4player;
 #X msg 70 48 read -resize sound/bell.aiff sf4player;
 #X obj 70 14 loadbang;
-#X obj 377 43 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
+#X obj 377 43 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
 #X text 460 72 do this before turning on DACs;
 #X text 444 54 <- first load in a short sound (recommend 1-5 secs.)
 ;
@@ -20,18 +20,18 @@
 #X connect 4 0 3 0;
 #X connect 5 0 1 0;
 #X restore 237 579 pd load-a-sound;
-#X floatatom 370 310 5 0 0 0 - increment -;
+#X floatatom 370 310 5 0 0 0 - increment - 0;
 #X obj 240 550 hsl 128 15 -2 2 0 0 increment \$0-increment increment
--2 -6 0 10 -143299 -1 -1 9525 1;
+-2 -6 0 10 #88fc08 #000000 #000000 0 1;
 #N canvas 600 60 795 628 triggers 0;
 #X msg 93 79 mute \$1;
-#X obj 93 46 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0 1
-;
+#X obj 93 46 tgl 15 0 empty empty empty 0 -6 0 8 #fcfcfc #000000 #000000
+0 1;
 #X obj 71 461 outlet~;
 #X msg 205 72 tempo \$1;
-#X floatatom 205 52 5 0 0 0 - - -;
-#X obj 208 25 hsl 128 15 20 200 0 0 empty empty empty -2 -6 0 8 -262144
--1 -1 0 1;
+#X floatatom 205 52 5 0 0 0 - - - 0;
+#X obj 208 25 hsl 128 15 20 200 0 0 empty empty empty -2 -6 0 8 #fcfcfc
+#000000 #000000 0 1;
 #X obj 391 461 outlet~;
 #X obj 75 297 lyonpotpourri/mask~ 1 0.7 0.5 0.3 0.1;
 #X obj 391 342 lyonpotpourri/mask~ 1 3 2 4;
@@ -67,9 +67,9 @@
 #X connect 22 0 2 0;
 #X restore 80 331 pd triggers;
 #X msg 46 311 static_increment \$1;
-#X obj 46 284 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
-;
-#N canvas 184 101 652 543 Learn-About-Me 0;
+#X obj 46 284 tgl 15 0 empty empty empty 0 -6 0 8 #fcfcfc #000000 #000000
+0 1;
+#N canvas 184 101 652 543 Learn-About-Me 1;
 #X text 30 61 (up to 8 simultaneous plays) so that;
 #X text 30 83 if you retrigger before the last play;
 #X text 33 104 is done \, the tail of the sound does;
@@ -90,13 +90,13 @@
 #X text 46 461 be controlled with a sample-accurate metronome;
 #X text 48 482 such as samm~. This can make for a much more steady
 ;
-#X text 46 504 rhythm then using metro.;
 #X text 44 351 whatever increment is set at the onset of each note
 ;
+#X text 46 504 rhythm than using metro.;
 #X restore 237 611 pd Learn-About-Me;
 #X obj 46 241 loadbang;
-#X obj 192 332 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
-1;
+#X obj 192 332 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000 0 1;
 #X msg 192 355 channel \$1;
 #N canvas 600 60 253 221 initialize 0;
 #X obj 30 51 loadbang;
