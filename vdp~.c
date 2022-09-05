@@ -319,7 +319,7 @@ void *vdp_new(t_symbol *s, int argc, t_atom *argv)
 
 void vdp_free(t_vdp *x)
 {
-  free(x->delay_line);
+  freebytes(x->delay_line, (x->len + 2) *  sizeof(t_float));
 }
 
 void vdp_clear(t_vdp *x)
@@ -347,8 +347,8 @@ void vdp_init(t_vdp *x,short initialized)
     x->len = x->maxdel * .001 * x->sr;
     x->lpf.coef = 0.5;
     x->lpf.x1 = 0.0;
-    x->delay_line = (t_float *) calloc((x->len + 2), sizeof(t_float));
-    x->destbuf = (t_guffer *) calloc(1,sizeof(t_guffer));
+    x->delay_line = (t_float *) getbytes((x->len + 2) *  sizeof(t_float));
+    x->destbuf = (t_guffer *) getbytes(1 * sizeof(t_guffer));
     x->phs = 0;
     x->mute = 0;
     x->tap = 0;

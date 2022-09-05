@@ -97,7 +97,7 @@ void *sarec_new(t_symbol *bufname)
     x->b_valid = 0;
     x->bufname = bufname;
     x->channel_count = chans;
-    x->armed_chans = (int *) malloc(x->channel_count * sizeof(int));
+    x->armed_chans = (int *) getbytes(x->channel_count * sizeof(int));
     x->display_counter = 0;
     x->start_frame = 0;
     x->end_frame = 0;
@@ -377,9 +377,9 @@ void sarec_dsp(t_sarec *x, t_signal **sp)
         x->start_frame = 0;
         x->end_frame = x->b_frames;
     }
-    sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
+    sigvec  = (t_int **) getbytes(pointer_count * sizeof(t_int *));
     for(i = 0; i < pointer_count; i++) {
-        sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+        sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
     }
     sigvec[0] = (t_int *)x; // first pointer is to the object
     
@@ -391,5 +391,5 @@ void sarec_dsp(t_sarec *x, t_signal **sp)
     x->sr = sp[0]->s_sr;
     
     dsp_addv(sarec_perform, pointer_count, (t_int *) sigvec);
-    free(sigvec);
+    freebytes(sigvec, pointer_count * sizeof(t_int *));
 }

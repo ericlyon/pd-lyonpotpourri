@@ -403,8 +403,7 @@ void *vdb_new(t_symbol *s, int argc, t_atom *argv)
 
 void vdb_free(t_vdb *x)
 {
-    
-    free(x->connections);
+    freebytes(x->connections, 128 * sizeof(short));
 }
 
 
@@ -422,7 +421,7 @@ void vdb_init(t_vdb *x,short initialized)
         x->phs = 0;
         x->mute = 0;
         x->always_update = 0;
-        x->connections = (short *) calloc(128, sizeof(short));
+        x->connections = (short *) getbytes(128 * sizeof(short));
     }
     
 }
@@ -501,9 +500,9 @@ void vdb_dsp(t_vdb *x, t_signal **sp)
     
     vdb_attach_buffer(x);
     
-    sigvec  = (t_int **) calloc(vector_count, sizeof(t_int *));
+    sigvec  = (t_int **) getbytes(vector_count * sizeof(t_int *));
     for(i = 0; i < vector_count; i++)
-    sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+    sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
     
     sigvec[0] = (t_int *)x;
     
@@ -515,5 +514,5 @@ void vdb_dsp(t_vdb *x, t_signal **sp)
     
     dsp_addv(vdb_perform, vector_count, (t_int *)sigvec);
     
-    free(sigvec);
+    freebytes(sigvec, vector_count * sizeof(t_int *));
 }

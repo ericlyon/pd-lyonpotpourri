@@ -200,30 +200,34 @@ void splitbank_manual_override( t_splitbank *x, t_floatarg toggle )
 
 void splitbank_free( t_splitbank *x )
 {
-  int i;
-  if(x->initialize == 0) {
-    free(x->list_data) ;
-    free(x->current_binsplit);
-    free(x->last_binsplit);
-    free(x->current_mag);
-    free(x->last_mag);
-    free(x->bin_tmp);
-    free(x->stored_slots);
-    free(x->in_amps);
-    for( i = 0; i < MAXSTORE; i++ ) {
-      free(x->stored_binsplits[i]);
+    /*
+
+     */
+    int i;
+    if(x->initialize == 0) {
+        freebytes(x->list_data, (x->N + 2) * sizeof(t_atom)) ;
+        freebytes(x->current_binsplit, x->N2 * sizeof(int));
+        freebytes(x->last_binsplit, x->N2 * sizeof(int));
+        freebytes(x->current_mag, x->N2 * sizeof(float));
+        freebytes(x->last_mag, x->N2 * sizeof(float));
+        freebytes(x->bin_tmp, x->N2 * sizeof(int));
+        freebytes(x->stored_slots, x->N2 * sizeof(short));
+        freebytes(x->in_amps, (x->N +2) * sizeof(float));
+        for( i = 0; i < MAXSTORE; i++ ) {
+            freebytes(x->stored_binsplits[i], x->N2 * sizeof(int));
+        }
+        freebytes(x->stored_binsplits, MAXSTORE * sizeof(int *));
+        
+        for(i = 0; i < x->channel_count + 5; i++) {
+            freebytes(x->ins[i], 8192 * sizeof(t_float));
+        }
+        freebytes(x->ins, sizeof(t_float *) * (x->channel_count + 5));
+        freebytes(x->outs, sizeof(t_float *) * (x->channel_count + 1));
+        for(i = 0; i < x->channel_count; i++) {
+            fftease_obank_destroy(x->obanks[i]);
+        }
+        freebytes(x->obanks, x->channel_count * sizeof(t_oscbank *));
     }
-    free(x->stored_binsplits);
-    for(i = 0; i < x->channel_count + 5; i++) {
-      free(x->ins[i]);
-    }
-    free(x->ins);
-    free(x->outs);
-    for(i = 0; i < x->channel_count; i++) {
-      fftease_obank_destroy(x->obanks[i]);
-    }
-    free(x->obanks);
-  }
 }
 
 void splitbank_maxfreq( t_splitbank *x, t_floatarg freq )
@@ -322,16 +326,16 @@ void *splitbank_new(t_symbol *s, int argc, t_atom *argv)
     outlet_new(&x->x_obj, gensym("signal"));
   }
 
-  x->ins = (t_float **) malloc(sizeof(t_float *) * (x->channel_count + 5));
-  x->outs = (t_float **) malloc(sizeof(t_float *) * (x->channel_count + 1));
+  x->ins = (t_float **) getbytes(sizeof(t_float *) * (x->channel_count + 5));
+  x->outs = (t_float **) getbytes(sizeof(t_float *) * (x->channel_count + 1));
   for(i = 0; i < x->channel_count + 5; i++) {
-    x->ins[i] = (t_float *) malloc(8192 * sizeof(t_float));
+    x->ins[i] = (t_float *) getbytes(8192 * sizeof(t_float));
   }
   x->list_outlet = (t_outlet *) outlet_new(&x->x_obj, gensym("list"));
 
-  x->obanks = (t_oscbank **) malloc(x->channel_count * sizeof(t_oscbank *));
+  x->obanks = (t_oscbank **) getbytes(x->channel_count * sizeof(t_oscbank *));
   for(i = 0; i < x->channel_count; i++) {
-    x->obanks[i] = (t_oscbank *) malloc(sizeof(t_oscbank));
+    x->obanks[i] = (t_oscbank *) getbytes(sizeof(t_oscbank));
   }
 
   x->mute = 0;
@@ -779,9 +783,9 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
   t_oscbank **obanks = x->obanks;
 
   pointer_count = (channel_count * 2) + 8;
-  sigvec = (t_int **) malloc(sizeof(t_int *) * pointer_count);
+  sigvec = (t_int **) getbytes(sizeof(t_int *) * pointer_count);
   for(i = 0; i < pointer_count; i++) {
-    sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+    sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
   sigvec[pointer_count - 1] = (t_int *)sp[0]->s_n; // last pointer is to vector size (N)
@@ -811,16 +815,16 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
     R = (int) x->R;
     x->N = fftsize;
     x->N2 = fftsize / 2;
-    x->list_data = malloc((x->N + 2) * sizeof(t_atom));
-    x->last_binsplit = malloc(x->N2 * sizeof(int));
-    x->current_binsplit = malloc(x->N2 * sizeof(int));
-    x->bin_tmp = malloc(x->N2 * sizeof(int));
-    x->last_mag = malloc(x->N2 * sizeof(float));
-    x->current_mag = malloc(x->N2 * sizeof(float));
-    x->stored_slots = malloc(x->N2 * sizeof(short));
-    x->stored_binsplits = malloc(MAXSTORE * sizeof(int *));
+    x->list_data = getbytes((x->N + 2) * sizeof(t_atom));
+    x->last_binsplit = getbytes(x->N2 * sizeof(int));
+    x->current_binsplit = getbytes(x->N2 * sizeof(int));
+    x->bin_tmp = getbytes(x->N2 * sizeof(int));
+    x->last_mag = getbytes(x->N2 * sizeof(float));
+    x->current_mag = getbytes(x->N2 * sizeof(float));
+    x->stored_slots = getbytes(x->N2 * sizeof(short));
+    x->stored_binsplits = getbytes(MAXSTORE * sizeof(int *));
     for( i = 0; i < MAXSTORE; i++ ) {
-      x->stored_binsplits[i] = malloc(x->N2 * sizeof(int));
+      x->stored_binsplits[i] = getbytes(x->N2 * sizeof(int));
     }
     splitbank_scramble( x );
 
@@ -831,32 +835,33 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
       fftease_obank_initialize(obanks[i], lo_freq, hi_freq, overlap, R, vector_size,x->N);
     }
 
-    x->in_amps = malloc((x->N +2) * sizeof(float));
+    x->in_amps = getbytes((x->N +2) * sizeof(float));
     x->initialize = 0;
   }
   x->hopsamps = x->N / x->overlap;
   dsp_addv(splitbank_perform, pointer_count, (t_int *) sigvec);
-  free(sigvec);
+  freebytes(sigvec, sizeof(t_int *) * pointer_count);
 }
 
 ////////////////////////////////////////
 /**************************************************/
 void fftease_obank_destroy( t_oscbank *x )
 {
-  free(x->Wanal);
-  free(x->Wsyn);
-  free(x->Hwin);
-  free(x->complex_spectrum);
-  free(x->interleaved_spectrum);
-  free(x->input_buffer);
-  free(x->output_buffer);
-  free(x->c_lastphase_in);
-  free(x->lastamp);
-  free(x->lastfreq);
-  free(x->index);
-  free(x->table);
-  free(x->bitshuffle);
-  free(x->trigland);
+  freebytes(x->Wanal, x->Nw * sizeof(float));
+    freebytes(x->Wsyn, x->Nw * sizeof(float));
+    freebytes(x->Hwin, x->Nw * sizeof(float));
+    freebytes(x->complex_spectrum, x->N * sizeof(float));
+    freebytes(x->interleaved_spectrum, (x->N + 2) * sizeof(float));
+    freebytes(x->input_buffer, x->Nw * sizeof(float));
+    freebytes(x->output_buffer, x->Nw * sizeof(float));
+    freebytes(x->c_lastphase_in, (x->N2+1) * sizeof(float));
+    freebytes(x->c_lastphase_out, (x->N2+1) * sizeof(float));
+    freebytes(x->lastamp, (x->N+1) * sizeof(float));
+    freebytes(x->lastfreq, (x->N+1) * sizeof(float));
+    freebytes(x->index, (x->N+1) * sizeof(float));
+    freebytes(x->table, x->table_length * sizeof(float));
+    freebytes(x->bitshuffle, (x->N * 2) * sizeof(int));
+    freebytes(x->trigland, (x->N * 2) * sizeof(float));
   free(x);
 }
 /**************************************************/
@@ -884,21 +889,21 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
 
   x->synthesis_threshold = .000001;
   x->table_si = (float) x->table_length/ (float) x->R;
-  x->Wanal = (float *) malloc( x->Nw * sizeof(float) );
-  x->Wsyn = (float *) malloc( x->Nw * sizeof(float) );
-  x->Hwin = (float *) malloc( x->Nw * sizeof(float) );
-  x->complex_spectrum = (float *) malloc( x->N * sizeof(float) );
-  x->interleaved_spectrum = (float *) malloc( (x->N + 2) * sizeof(float) );
-  x->input_buffer = (float *) malloc( x->Nw * sizeof(float) );
-  x->output_buffer = (float *) malloc( x->Nw * sizeof(float) );
-  x->c_lastphase_in = (float *) malloc( (x->N2+1) * sizeof(float) );
-  x->c_lastphase_out = (float *) malloc( (x->N2+1) * sizeof(float) );
-  x->lastamp = (float *) malloc( (x->N+1) * sizeof(float) );
-  x->lastfreq = (float *) malloc( (x->N+1) * sizeof(float) );
-  x->index = (float *) malloc( (x->N+1) * sizeof(float) );
-  x->table = (float *) malloc( x->table_length * sizeof(float) );
-  x->bitshuffle = (int *) malloc( (x->N * 2) * sizeof( int ) );
-  x->trigland = (float *) malloc( (x->N * 2) * sizeof( float ) );
+  x->Wanal = (float *) getbytes(x->Nw * sizeof(float));
+  x->Wsyn = (float *) getbytes(x->Nw * sizeof(float));
+  x->Hwin = (float *) getbytes(x->Nw * sizeof(float));
+  x->complex_spectrum = (float *) getbytes(x->N * sizeof(float));
+  x->interleaved_spectrum = (float *) getbytes((x->N + 2) * sizeof(float));
+  x->input_buffer = (float *) getbytes(x->Nw * sizeof(float));
+  x->output_buffer = (float *) getbytes(x->Nw * sizeof(float));
+  x->c_lastphase_in = (float *) getbytes((x->N2+1) * sizeof(float));
+  x->c_lastphase_out = (float *) getbytes((x->N2+1) * sizeof(float));
+  x->lastamp = (float *) getbytes((x->N+1) * sizeof(float));
+  x->lastfreq = (float *) getbytes((x->N+1) * sizeof(float));
+  x->index = (float *) getbytes((x->N+1) * sizeof(float) );
+  x->table = (float *) getbytes(x->table_length * sizeof(float));
+  x->bitshuffle = (int *) getbytes((x->N * 2) * sizeof(int));
+  x->trigland = (float *) getbytes((x->N * 2) * sizeof(float));
 
   x->mult = 1. / (float) x->N;
 

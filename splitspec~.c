@@ -11,8 +11,8 @@ typedef struct _splitspec
 {
   t_object x_obj;
   t_float x_f;
-  int N;
-  int N2;
+  int N, N_old;
+  int N2, N2_old;
   void *list_outlet;
   void *phase_outlet;
   t_atom *list_data;
@@ -360,13 +360,13 @@ void *splitspec_new(t_symbol *s, int argc, t_atom *argv)
   x->initialize = 1;
   x->manual_override = 0;
 
-  x->inmag_loc = (t_float *) calloc(8192,sizeof(t_float));
-  x->inphase_loc = (t_float *) calloc(8192,sizeof(t_float));
-  x->t_offset_loc = (t_float *) calloc(8192,sizeof(t_float));
-  x->b_offset_loc = (t_float *) calloc(8192,sizeof(t_float));
-  x->manual_control_loc = (t_float *) calloc(8192,sizeof(t_float));
-  x->magvecs = (t_float **) malloc(x->channel_count * sizeof(t_float *));
-  x->phasevecs = (t_float **) malloc(x->channel_count * sizeof(t_float *));
+  x->inmag_loc = (t_float *) getbytes(8192 * sizeof(t_float));
+  x->inphase_loc = (t_float *) getbytes(8192 * sizeof(t_float));
+  x->t_offset_loc = (t_float *) getbytes(8192 * sizeof(t_float));
+  x->b_offset_loc = (t_float *) getbytes(8192 * sizeof(t_float));
+  x->manual_control_loc = (t_float *) getbytes(8192 * sizeof(t_float));
+  x->magvecs = (t_float **) getbytes(x->channel_count * sizeof(t_float *));
+  x->phasevecs = (t_float **) getbytes(x->channel_count * sizeof(t_float *));
   return x;
 }
 
@@ -632,9 +632,9 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
   vector_size = sys_getblksize();
 
   pointer_count = (x->channel_count * 2) + 7;
-  sigvec = (t_int **) malloc(sizeof(t_int *) * pointer_count);
+  sigvec = (t_int **) getbytes(sizeof(t_int *) * pointer_count);
   for(i = 0; i < pointer_count; i++) {
-    sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+    sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
   sigvec[pointer_count - 1] = (t_int *)sp[0]->s_n; // last pointer is to vector size (N)
@@ -669,25 +669,27 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
     //funda = R / (2. * (float) x->N) ;
 
     if(x->initialize) {
-      x->list_data = (t_atom *) calloc((x->N + 2),sizeof(t_atom));
-      x->last_binsplit = (int *) calloc( x->N2,sizeof(int));
-      x->current_binsplit = (int *) calloc( x->N2,sizeof(int));
-      x->last_mag = (float *) calloc(x->N2,sizeof(float)) ;
-      x->current_mag = (float *) calloc(x->N2,sizeof(float)) ;
-      x->stored_slots = (short *) calloc(x->N2,sizeof(short));
-      x->stored_binsplits = (int **) calloc(MAXSTORE,sizeof(int *));
+      x->list_data = (t_atom *) getbytes((x->N + 2) * sizeof(t_atom));
+      x->last_binsplit = (int *) getbytes( x->N2 * sizeof(int));
+      x->current_binsplit = (int *) getbytes( x->N2 * sizeof(int));
+      x->last_mag = (float *) getbytes(x->N2 * sizeof(float)) ;
+      x->current_mag = (float *) getbytes(x->N2 * sizeof(float)) ;
+      x->stored_slots = (short *) getbytes(x->N2 * sizeof(short));
+      x->stored_binsplits = (int **) getbytes(MAXSTORE * sizeof(int *));
       for( i = 0; i < MAXSTORE; i++ ) {
-        x->stored_binsplits[i] = (int *)calloc(x->N2,sizeof(int));
+        x->stored_binsplits[i] = (int *)getbytes(x->N2 * sizeof(int));
       }
+        x->N_old = x->N;
+        x->N2_old = x->N2;
     } else {
-      x->list_data = (t_atom *) realloc((void *)x->list_data,(x->N + 2) * sizeof(t_atom));
-      x->last_binsplit = (int *) realloc((void *)x->last_binsplit,x->N2 * sizeof(int));
-      x->current_binsplit = (int *) realloc((void *)x->current_binsplit,x->N2 * sizeof(int));
-      x->last_mag = (float *) realloc((void *)x->last_mag,x->N2 * sizeof(float));
-      x->current_mag = (float *) realloc((void *)x->current_mag,x->N2 * sizeof(float));
-      x->stored_slots = (short *) realloc((void *)x->stored_slots,x->N2 * sizeof(short));
+      x->list_data = (t_atom *) resizebytes((void *)x->list_data,(x->N_old + 2) * sizeof(t_atom), (x->N + 2) * sizeof(t_atom));
+      x->last_binsplit = (int *) resizebytes((void *)x->last_binsplit,x->N2_old * sizeof(int), x->N2 * sizeof(int));
+      x->current_binsplit = (int *) resizebytes((void *)x->current_binsplit,x->N2_old * sizeof(int), x->N2 * sizeof(int));
+      x->last_mag = (float *) resizebytes((void *)x->last_mag,x->N2_old * sizeof(float), x->N2 * sizeof(float));
+      x->current_mag = (float *) resizebytes((void *)x->current_mag,x->N2_old * sizeof(float), x->N2 * sizeof(float));
+      x->stored_slots = (short *) resizebytes((void *)x->stored_slots,x->N2_old * sizeof(short), x->N2 * sizeof(short));
       for( i = 0; i < MAXSTORE; i++ ) {
-        x->stored_binsplits[i] = (int *) realloc((void *)x->stored_binsplits[i],x->N2 * sizeof(int));
+        x->stored_binsplits[i] = (int *) resizebytes((void *)x->stored_binsplits[i],x->N2_old * sizeof(int), x->N2 * sizeof(int));
       }
       for(i = 0; i < x->N2; i++) {
         x->last_mag[i] = 0.0;
@@ -716,5 +718,5 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
 //        post("hop samps: %d, overlap: %d", x->hopsamps, x->overlap_factor);
   }
   dsp_addv(splitspec_perform, pointer_count, (t_int *) sigvec);
-  free(sigvec);
+  freebytes(sigvec, sizeof(t_int *) * pointer_count);
 }

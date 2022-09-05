@@ -81,12 +81,12 @@ void *squash_new(t_symbol *msg, int argc, t_atom *argv)
   x->Nw = x->N;
   x->N2 = x->N / 2;
   x->incnt = - x->Nw;
-  x->Wanal = (float *) calloc(x->Nw,sizeof(float));
-  x->Wsyn = (float *) calloc(x->Nw, sizeof(float));
-  x->Hwin = (float *) calloc(x->Nw, sizeof(float));
-  x->input = (float *) calloc(x->Nw, sizeof(float));
-  x->output = (float *) calloc(x->Nw, sizeof(float));
-  x->buffer = (float *) calloc(x->N, sizeof(float));
+  x->Wanal = (float *) getbytes(x->Nw * sizeof(float));
+  x->Wsyn = (float *) getbytes(x->Nw *  sizeof(float));
+  x->Hwin = (float *) getbytes(x->Nw * sizeof(float));
+  x->input = (float *) getbytes(x->Nw * sizeof(float));
+  x->output = (float *) getbytes(x->Nw * sizeof(float));
+  x->buffer = (float *) getbytes(x->N * sizeof(float));
   lpp_makehanning(x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->D, 0);
   x->thresh = 0.1;
   x->ratio = 1.;
@@ -99,12 +99,12 @@ void *squash_new(t_symbol *msg, int argc, t_atom *argv)
 
 void squash_free(t_squash *x)
 {
-  free(x->Wanal);
-  free(x->Wsyn);
-  free(x->Hwin);
-  free(x->input);
-  free(x->output);
-  free(x->buffer);
+    freebytes(x->Wanal, x->Nw * sizeof(float));
+    freebytes(x->Wsyn, x->Nw *  sizeof(float));
+    freebytes(x->Hwin, x->Nw * sizeof(float));
+    freebytes(x->input, x->Nw * sizeof(float));
+    freebytes(x->output, x->Nw * sizeof(float));
+    freebytes(x->buffer, x->N * sizeof(float));
 }
 /*
 void makewindows( float *H, float *A, float *S, int Nw, int N, int I )

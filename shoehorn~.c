@@ -156,9 +156,9 @@ void shoehorn_dsp(t_shoehorn *x, t_signal **sp)
   long i;
   t_int **sigvec;
   int pointer_count = x->inChans + x->outChans + 2;
-  sigvec  = (t_int **) calloc(pointer_count, sizeof(t_int *));
+  sigvec  = (t_int **) getbytes(pointer_count * sizeof(t_int *));
   for(i = 0; i < pointer_count; i++) {
-    sigvec[i] = (t_int *) calloc(sizeof(t_int),1);
+    sigvec[i] = (t_int *) getbytes(sizeof(t_int) * 1);
   }
   sigvec[0] = (t_int *)x; // first pointer is to the object
   sigvec[pointer_count - 1] = (t_int *)sp[0]->s_n; // last pointer is to vector size (N)
@@ -166,5 +166,5 @@ void shoehorn_dsp(t_shoehorn *x, t_signal **sp)
     sigvec[i] = (t_int *)sp[i-1]->s_vec;
   }
   dsp_addv(shoehorn_perform, pointer_count, (t_int *)sigvec);
-  free(sigvec);
+  freebytes(sigvec, pointer_count * sizeof(t_int *));
 }
