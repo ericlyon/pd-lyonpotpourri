@@ -4,7 +4,7 @@ LyonPotpourri is a collection of externals developed for the creation and perfor
 
 The Pd platform tends toward minimalism. Therefore, it is particularly advantageous for Pd users to become adept at designing their own externals. It is hoped that in addition to the utility of specific externals in this collection, the source code will be helpful for computer musicians who wish to learn how to write their own externals. For further guidance on that subject, please see my book “Designing Audio Objects for Max/MSP and Pd.”
 
-LyonPotpourri is Copyright Eric Lyon, 1999-2022, and is covered under the MIT license. Please see the accompanying License file for details. 
+LyonPotpourri is Copyright Eric Lyon, 1999-2023, and is covered under the MIT license. Please see the accompanying License file for details. 
 
 
 **Object Listing**
