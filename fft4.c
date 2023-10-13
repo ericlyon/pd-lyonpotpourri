@@ -7,14 +7,11 @@ void lpp_init_rdft(int n, int *ip, float *w)
   int nw,
     nc;
 
-  void  makewt(int nw, int *ip, float *w);
-  void  makect(int nc, int *ip, float *c);
-
   nw = n >> 2;
-  makewt(nw, ip, w);
+  lpp_makewt(nw, ip, w);
 
   nc = n >> 2;
-  makect(nc, ip, w + nw);
+  lpp_makect(nc, ip, w + nw);
 
   return;
 }

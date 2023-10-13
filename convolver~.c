@@ -682,9 +682,6 @@ void init_rdft(int n, int *ip, float *w)
     int nw,
     nc;
     
-    //  void  makewt(int nw, int *ip, float *w);
-    //  void  makect(int nc, int *ip, float *c);
-    
     nw = n >> 2;
     lpp_makewt(nw, ip, w);
     
@@ -961,7 +958,7 @@ void rftsub(int n, float *a, int nc, float *c)
 }
 
 
-void makewt(int nw, int *ip, float *w)
+void lpp_makewt(int nw, int *ip, float *w)
 {
     //    void bitrv2(int n, int *ip, float *a);
     int nwh, j;
@@ -989,7 +986,7 @@ void makewt(int nw, int *ip, float *w)
 }
 
 
-void makect(int nc, int *ip, float *c)
+void lpp_makect(int nc, int *ip, float *c)
 {
     int nch, j;
     float delta;

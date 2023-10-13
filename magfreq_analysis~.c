@@ -14,8 +14,8 @@ static void rdft(int n, int isgn, float *a, int *ip, float *w);
 static void bitrv2(int n, int *ip, float *a);
 static void cftsub(int n, float *a, float *w);
 static void rftsub(int n, float *a, int nc, float *c);
-static void makewt(int nw, int *ip, float *w);
-static void makect(int nc, int *ip, float *c);
+static void lpp_makewt(int nw, int *ip, float *w);
+static void lpp_makect(int nc, int *ip, float *c);
 static void makehanning( float *H, float *A, float *S, int Nw, int N, int I,int odd );
 static int power_of_two(int test);
 
@@ -569,14 +569,11 @@ void init_rdft(int n, int *ip, float *w)
   int    nw,
     nc;
 
-  void    makewt(int nw, int *ip, float *w);
-  void    makect(int nc, int *ip, float *c);
-
   nw = n >> 2;
-  makewt(nw, ip, w);
+  lpp_makewt(nw, ip, w);
 
   nc = n >> 2;
-  makect(nc, ip, w + nw);
+  lpp_makect(nc, ip, w + nw);
 
   return;
 }
@@ -848,7 +845,7 @@ void rftsub(int n, float *a, int nc, float *c)
 }
 
 
-void makewt(int nw, int *ip, float *w)
+void lpp_makewt(int nw, int *ip, float *w)
 {
     void bitrv2(int n, int *ip, float *a);
     int nwh, j;
@@ -876,7 +873,7 @@ void makewt(int nw, int *ip, float *w)
 }
 
 
-void makect(int nc, int *ip, float *c)
+void lpp_makect(int nc, int *ip, float *c)
 {
     int nch, j;
     float delta;
