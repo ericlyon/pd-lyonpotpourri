@@ -300,7 +300,7 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
         
         //SETFLOAT(&newsize, (float) target_frames);
         // typedmess((void *) x->dest->b, gensym("sizeinsamps"),1, &newsize);
-        garray_resize(x->dest->b,(float)target_frames );
+        garray_resize_long(x->dest->b,target_frames );
         post("%s: destination buffer was too small and has been resized",OBJECT_NAME);
         convolver_attach_buffers( x );
     }
