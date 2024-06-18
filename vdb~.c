@@ -6,9 +6,9 @@ static t_class *vdb_class;
 
 typedef struct
 {
-    float coef;
-    float cutoff;
-    float x1;
+    t_float coef;
+    t_float cutoff;
+    t_float x1;
 } t_lpf;
 
 typedef struct {
@@ -23,21 +23,21 @@ typedef struct _vdb
 {
     
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     
-    float sr;
+    t_float sr;
     t_lpf lpf;
     short filter;
     //
-    float speed;
-    float feedback;
-    float delay_time;
-    float delay_samps;
-    float maxdelay; // maximum delay in seconds (cannot be larger than buffer)
+    t_float speed;
+    t_float feedback;
+    t_float delay_time;
+    t_float delay_samps;
+    t_float maxdelay; // maximum delay in seconds (cannot be larger than buffer)
     long maxdelay_len; // framelength of usable region of buffer
     long len; // framelength of buffer
     long phs; // current phase
-    float tap;
+    t_float tap;
     short *connections;
     short feedback_protect;
     short mute;
@@ -150,7 +150,7 @@ void vdb_filter(t_vdb *x, t_floatarg t)
 
 void vdb_coef(t_vdb *x, t_floatarg f)
 {
-    x->lpf.coef = (float)f;
+    x->lpf.coef = (t_float)f;
 }
 
 void vdb_show(t_vdb *x)
@@ -169,23 +169,23 @@ t_int *vdb_perform(t_int *w)
     t_vdb *x = (t_vdb *)(w[1]);
     int n;
     
-    float fdelay;
-    float insamp; //, insamp2;
-    float outsamp;
-    float frac;
+    t_float fdelay;
+    t_float insamp; //, insamp2;
+    t_float outsamp;
+    t_float frac;
     t_word *delay_line = x->b_samples;
     
     int phs = x->phs;
     long maxdelay_len = x->maxdelay_len;
     
-    float feedback = x->feedback;
+    t_float feedback = x->feedback;
     short *connections = x->connections;
-    float sr = x->sr;
+    t_float sr = x->sr;
     short feedback_protect = x->feedback_protect;
     short interpolate = x->interpolate;
     short inf_hold = x->inf_hold;
     short infhold_buffer_rollout = x->infhold_buffer_rollout;
-    float x1,x2;
+    t_float x1,x2;
     int idelay;
     int dphs,dphs1,dphs2;
     long b_nchans = x->b_nchans;

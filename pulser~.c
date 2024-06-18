@@ -13,18 +13,18 @@ typedef struct _pulser
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   int components;
-  float global_gain;
-  float *wavetab;
+  t_float global_gain;
+  t_float *wavetab;
 
-  float *phases;
-  float frequency;
-  float pulsewidth;
-  float si_fac;
+  t_float *phases;
+  t_float frequency;
+  t_float pulsewidth;
+  t_float si_fac;
   short mute;
   short connected[4];
-  float sr;
+  t_float sr;
 } t_pulser;
 
 static void *pulser_new(t_symbol *s, int argc, t_atom *argv);
@@ -57,18 +57,18 @@ void pulser_harmonics(t_pulser *x, t_floatarg c)
     return;
   }
   x->components = c;
-  x->global_gain = 1.0 / (float) x->components ;
+  x->global_gain = 1.0 / (t_float) x->components ;
   // reset phases too?
 }
 
 void pulser_free(t_pulser *x)
 {
     /*
-     x->phases = (float *) getbytes(MAX_COMPONENTS * sizeof(float));
-     x->wavetab = (float *) getbytes(FUNC_LEN * sizeof(float));
+     x->phases = (t_float *) getbytes(MAX_COMPONENTS * sizeof(t_float));
+     x->wavetab = (t_float *) getbytes(FUNC_LEN * sizeof(t_float));
      */
-  freebytes(x->phases,MAX_COMPONENTS * sizeof(float));
-  freebytes(x->wavetab,FUNC_LEN * sizeof(float));
+  freebytes(x->phases,MAX_COMPONENTS * sizeof(t_float));
+  freebytes(x->wavetab,FUNC_LEN * sizeof(t_float));
 }
 
 void *pulser_new(t_symbol *s, int argc, t_atom *argv)
@@ -94,18 +94,18 @@ void *pulser_new(t_symbol *s, int argc, t_atom *argv)
   if( argc > 1 )
     x->components = atom_getfloatarg(1,argc,argv);
 
-  x->si_fac = ((float)FUNC_LEN/x->sr) ;
+  x->si_fac = ((t_float)FUNC_LEN/x->sr) ;
 
   if(x->components <= 0 || x->components > MAX_COMPONENTS) {
     pd_error(0, "%d is an illegal number of components, setting to 8",x->components );
     x->components = 8;
   }
-  x->global_gain = 1.0 / (float) x->components ;
-  x->phases = (float *) getbytes(MAX_COMPONENTS * sizeof(float));
-  x->wavetab = (float *) getbytes(FUNC_LEN * sizeof(float));
+  x->global_gain = 1.0 / (t_float) x->components ;
+  x->phases = (t_float *) getbytes(MAX_COMPONENTS * sizeof(t_float));
+  x->wavetab = (t_float *) getbytes(FUNC_LEN * sizeof(t_float));
 
   for(i = 0 ; i < FUNC_LEN; i++) {
-    x->wavetab[i] = sin(TWOPI * ((float)i/(float) FUNC_LEN)) ;
+    x->wavetab[i] = sin(TWOPI * ((t_float)i/(t_float) FUNC_LEN)) ;
   }
   return (x);
 }
@@ -115,10 +115,10 @@ t_int *pulser_perform(t_int *w)
 {
 
   int i,j;
-  float gain;
-  float incr;
+  t_float gain;
+  t_float incr;
 
-  float outsamp;
+  t_float outsamp;
   int lookdex;
   t_pulser *x = (t_pulser *) (w[1]);
   t_float *frequency_vec = (t_float *)(w[2]);
@@ -127,14 +127,14 @@ t_int *pulser_perform(t_int *w)
   int n = (int) w[5];
 
 
-  float *wavetab = x->wavetab;
-  float si_fac = x->si_fac;
+  t_float *wavetab = x->wavetab;
+  t_float si_fac = x->si_fac;
 
-  float *phases = x->phases;
+  t_float *phases = x->phases;
   int components = x->components;
-  float global_gain = x->global_gain;
-  float pulsewidth = x->pulsewidth;
-  float frequency = x->frequency;
+  t_float global_gain = x->global_gain;
+  t_float pulsewidth = x->pulsewidth;
+  t_float frequency = x->frequency;
   short *connected = x->connected;
 
   if( x->mute )
@@ -166,7 +166,7 @@ t_int *pulser_perform(t_int *w)
 
     for( i = 0, j = 1; i < components; i++, j++ ) {
 
-      lookdex = (float)FUNC_LEN_OVER2 * pulsewidth * (float)j;
+      lookdex = (t_float)FUNC_LEN_OVER2 * pulsewidth * (t_float)j;
 
       while( lookdex >= FUNC_LEN ) {
         lookdex -= FUNC_LEN;
@@ -174,7 +174,7 @@ t_int *pulser_perform(t_int *w)
 
       gain = wavetab[ lookdex ] ;
 
-      phases[i] += incr * (float) j;
+      phases[i] += incr * (t_float) j;
       while( phases[i] < 0.0 ) {
         phases[i] += FUNC_LEN;
       }
@@ -202,7 +202,7 @@ void pulser_dsp(t_pulser *x, t_signal **sp)
 
   if(x->sr != sp[0]->s_sr) {
     x->sr = sp[0]->s_sr;
-    x->si_fac = ((float)FUNC_LEN/x->sr);
+    x->si_fac = ((t_float)FUNC_LEN/x->sr);
     for(i=0;i<MAX_COMPONENTS;i++) {
       x->phases[i] = 0.0;
     }

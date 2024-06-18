@@ -10,10 +10,10 @@ typedef struct _distortion
 {
 
   t_object x_obj;
-  float x_f;
-  float knee;
-  float cut;
-  float rescale ;
+  t_float x_f;
+  t_float knee;
+  t_float cut;
+  t_float rescale ;
   short mute ;
   short case1;
 } t_distortion;
@@ -66,16 +66,16 @@ void *distortion_new(t_floatarg knee, t_floatarg cut)
 t_int *distortion1_perform(t_int *w)
 {
 
-  float rectified_sample, in_sample;
+  t_float rectified_sample, in_sample;
 
   t_distortion *x = (t_distortion *) (w[1]);
-  float *in = (t_float *)(w[2]);
-  float *out = (t_float *)(w[5]);
+  t_float *in = (t_float *)(w[2]);
+  t_float *out = (t_float *)(w[5]);
   int n = (int)(w[6]);
 
-  float knee = x->knee;
-  float cut = x->cut;
-  float rescale = x->rescale;
+  t_float knee = x->knee;
+  t_float cut = x->cut;
+  t_float rescale = x->rescale;
 
 
   if( x->mute ) {
@@ -107,19 +107,19 @@ t_int *distortion1_perform(t_int *w)
 t_int *distortion2_perform(t_int *w)
 {
 
-  float rectified_sample, in_sample;
+  t_float rectified_sample, in_sample;
 
   t_distortion *x = (t_distortion *) (w[1]);
-  float *in = (t_float *)(w[2]);
-  float *data1 = (t_float *)(w[3]);
-  float *data2 = (t_float *)(w[4]);
-  float *out = (t_float *)(w[5]);
+  t_float *in = (t_float *)(w[2]);
+  t_float *data1 = (t_float *)(w[3]);
+  t_float *data2 = (t_float *)(w[4]);
+  t_float *out = (t_float *)(w[5]);
   int n = (int)(w[6]);
   //  double fabs();
 
-  float knee = x->knee;
-  float cut = x->cut;
-  float rescale = x->rescale;
+  t_float knee = x->knee;
+  t_float cut = x->cut;
+  t_float rescale = x->rescale;
 
 
   if( x->mute ) {
@@ -159,19 +159,19 @@ t_int *distortion2_perform(t_int *w)
 t_int *distortion3_perform(t_int *w)
 {
 
-  float rectified_sample, in_sample;
+  t_float rectified_sample, in_sample;
 
   t_distortion *x = (t_distortion *) (w[1]);
-  float *in = (t_float *)(w[2]);
-  float *data1 = (t_float *)(w[3]);
-  float *data2 = (t_float *)(w[4]);
-  float *out = (t_float *)(w[5]);
+  t_float *in = (t_float *)(w[2]);
+  t_float *data1 = (t_float *)(w[3]);
+  t_float *data2 = (t_float *)(w[4]);
+  t_float *out = (t_float *)(w[5]);
   int n = (int)(w[6]);
   //  double fabs();
 
-  float knee = x->knee;
-  float cut = x->cut;
-  float rescale = x->rescale;
+  t_float knee = x->knee;
+  t_float cut = x->cut;
+  t_float rescale = x->rescale;
   short case1 = x->case1;
 
   if( x->mute ) {

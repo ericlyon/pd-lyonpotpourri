@@ -9,17 +9,17 @@ typedef struct _chopper
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   t_symbol *l_sym;
   long l_chan;
-  float increment;
+  t_float increment;
   double fbindex;
-  float buffer_duration;
-  float minseg;
-  float maxseg;
-  float segdur;
-  float minincr;
-  float maxincr;
+  t_float buffer_duration;
+  t_float minseg;
+  t_float maxseg;
+  t_float segdur;
+  t_float minincr;
+  t_float maxincr;
   int loop_samps;
   int samps_to_go ;
   int loop_start;
@@ -27,9 +27,9 @@ typedef struct _chopper
   int taper_samps;
   int loop_min_samps;
   int loop_max_samps;
-  float R;
-  float ldev;
-  float st_dev ;
+  t_float R;
+  t_float ldev;
+  t_float st_dev ;
   int lock_loop;
   int force_new_loop;
   int framesize;
@@ -38,24 +38,24 @@ typedef struct _chopper
   int setup_chans;
   int *stored_starts;
   int *stored_samps;
-  float *stored_increments;
+  t_float *stored_increments;
   short preempt;
   short loop_engaged;
   short data_recalled;
   short initialize_loop;
   short fixed_increment_on;
-  float fixed_increment;
-  float retro_odds;
-  float fade_level;
+  t_float fixed_increment;
+  t_float retro_odds;
+  t_float fade_level;
   int transp_loop_samps;
-  float taper_duration;
+  t_float taper_duration;
   short lock_terminated;
   int preempt_samps;
   int preempt_count;
   short recalling_loop;
-  float jitter_factor;
-  float rdur_factor;
-  float rinc_factor;
+  t_float jitter_factor;
+  t_float rdur_factor;
+  t_float rinc_factor;
   short increment_adjusts_loop ;
   short loop_adjust_inverse;
   long b_frames;
@@ -84,7 +84,7 @@ static void chopper_taper(t_chopper *x, t_floatarg f);
 static void chopper_fixed_increment(t_chopper *x, t_floatarg f);
 static void chopper_lockme(t_chopper *x, t_floatarg n);
 static void chopper_force_new(t_chopper *x);
-static float chopper_boundrand(float min, float max);
+static t_float chopper_boundrand(t_float min, t_float max);
 //static void chopper_assist(t_chopper *x, void *b, long m, long a, char *s);
 //static void chopper_dblclick(t_chopper *x);
 static void chopper_show_loop(t_chopper *x);
@@ -111,7 +111,7 @@ t_symbol *ps_buffer;
 
 void chopper_testrand(t_chopper *x)
 {
-  float rval = chopper_boundrand(0.0, 1.0);
+  t_float rval = chopper_boundrand(0.0, 1.0);
   post("random btwn 0.0 1.0: %f",rval);
 }
 
@@ -168,8 +168,8 @@ void chopper_adjust_inverse(t_chopper *x, t_floatarg toggle)
 
 void chopper_fixed_increment(t_chopper *x, t_floatarg f)
 {
-  float new_samps = 0;
-  float rectf;
+  t_float new_samps = 0;
+  t_float rectf;
 
   x->fixed_increment = f;
   if( f ) {
@@ -183,9 +183,9 @@ void chopper_fixed_increment(t_chopper *x, t_floatarg f)
   if( x->lock_loop && rectf > 0.0 ) {
 
     if( x->loop_adjust_inverse ) {
-      new_samps = (float) x->loop_samps * rectf ;
+      new_samps = (t_float) x->loop_samps * rectf ;
     } else {
-      new_samps = (float) x->loop_samps / rectf ;
+      new_samps = (t_float) x->loop_samps / rectf ;
     }
     if( f > 0 ) {
       if( x->loop_start + new_samps >= x->framesize ) {
@@ -321,7 +321,7 @@ void chopper_taper(t_chopper *x, t_floatarg f)
   f /= 1000.0;
 
   if( f > 0 ) {
-    x->taper_samps = (float) x->R * f ;
+    x->taper_samps = (t_float) x->R * f ;
   }
   if( x->taper_samps < 2 )
     x->taper_samps = 2;
@@ -403,9 +403,9 @@ void chopper_free(t_chopper *x)
 
 void chopper_jitterme(t_chopper *x)
 {
-  float new_start;
-  float jitter_factor = x->jitter_factor;
-  new_start = (1.0 + chopper_boundrand(-jitter_factor, jitter_factor) ) * (float) x->loop_start ;
+  t_float new_start;
+  t_float jitter_factor = x->jitter_factor;
+  new_start = (1.0 + chopper_boundrand(-jitter_factor, jitter_factor) ) * (t_float) x->loop_start ;
 
   if( new_start < 0 ) {
 //    pd_error(0, "jitter loop %d out of range", new_start);
@@ -422,10 +422,10 @@ void chopper_jitterme(t_chopper *x)
 
 void chopper_rdurme(t_chopper *x)
 {
-  float new_dur;
-  float rdur_factor = x->rdur_factor;
+  t_float new_dur;
+  t_float rdur_factor = x->rdur_factor;
 
-  new_dur = (1.0 + chopper_boundrand( -rdur_factor, rdur_factor)) * (float) x->transp_loop_samps;
+  new_dur = (1.0 + chopper_boundrand( -rdur_factor, rdur_factor)) * (t_float) x->transp_loop_samps;
   if( new_dur > x->loop_max_samps )
     new_dur = x->loop_max_samps;
   if( new_dur < x->loop_min_samps )
@@ -436,10 +436,10 @@ void chopper_rdurme(t_chopper *x)
 
 void chopper_rincme(t_chopper *x )
 {
-  float new_inc = 0;
+  t_float new_inc = 0;
 //  int count = 0;
   int new_samps;
-  float rinc_factor = x->rinc_factor;
+  t_float rinc_factor = x->rinc_factor;
 
   /* test generate a new increment */
   new_inc = (1.0 + chopper_boundrand( 0.0, rinc_factor)) ;
@@ -459,7 +459,7 @@ void chopper_rincme(t_chopper *x )
   }
 
   if(x->increment_adjusts_loop) {
-    new_samps = (float) x->transp_loop_samps / new_inc ;
+    new_samps = (t_float) x->transp_loop_samps / new_inc ;
   } else {
     new_samps = x->transp_loop_samps;
   }
@@ -482,24 +482,24 @@ void chopper_randloop( t_chopper *x )
 {
   int framesize = x->b_frames;//test
 //  long bindex = x->fbindex;
-  float segdur = x->segdur;
+  t_float segdur = x->segdur;
   int loop_start = x->loop_start;
   int loop_samps = x->loop_samps;
   int transp_loop_samps = x->transp_loop_samps;
   int samps_to_go = x->samps_to_go;
-  float increment = x->increment;
+  t_float increment = x->increment;
 //  int taper_samps = x->taper_samps ;
-//  float taper_duration = x->taper_duration;
-  float minincr = x->minincr;
-  float maxincr = x->maxincr;
-  float minseg = x->minseg;
-  float maxseg = x->maxseg;
-  float buffer_duration = x->buffer_duration;
-  float R = x->R;
-  float fixed_increment = x->fixed_increment;
+//  t_float taper_duration = x->taper_duration;
+  t_float minincr = x->minincr;
+  t_float maxincr = x->maxincr;
+  t_float minseg = x->minseg;
+  t_float maxseg = x->maxseg;
+  t_float buffer_duration = x->buffer_duration;
+  t_float R = x->R;
+  t_float fixed_increment = x->fixed_increment;
 
   short fixed_increment_on = x->fixed_increment_on;
-  float retro_odds = x->retro_odds;
+  t_float retro_odds = x->retro_odds;
 
   if(fixed_increment_on) {
     increment = fixed_increment;
@@ -543,7 +543,7 @@ void chopper_randloop( t_chopper *x )
 t_int *chopper_pd_perform(t_int *w)
 {
   int bindex;
-  float sample1, m1, m2;
+  t_float sample1, m1, m2;
   t_chopper *x = (t_chopper *)(w[1]);
   t_float *out1 = (t_float *)(w[2]);
   int n = (int) w[3];
@@ -553,24 +553,24 @@ t_int *chopper_pd_perform(t_int *w)
   t_word *tab = x->b_samples;
   long b_frames = x->b_frames;
   long nc = x->b_nchans;
-  float segdur = x->segdur;
+  t_float segdur = x->segdur;
   int taper_samps = x->taper_samps ;
-  float taper_duration = x->taper_duration;
-  float minseg = x->minseg;
-  float maxseg = x->maxseg;
+  t_float taper_duration = x->taper_duration;
+  t_float minseg = x->minseg;
+  t_float maxseg = x->maxseg;
   int lock_loop = x->lock_loop;
   int force_new_loop = x->force_new_loop;
-  float R = x->R;
+  t_float R = x->R;
   short initialize_loop = x->initialize_loop;
-  float fade_level = x->fade_level;
+  t_float fade_level = x->fade_level;
   short preempt = x->preempt;
   int preempt_count = x->preempt_count;
   int preempt_samps = x->preempt_samps;
   short recalling_loop = x->recalling_loop;
-  float preempt_gain;
-  float jitter_factor = x->jitter_factor;
-  float rdur_factor = x->rdur_factor;
-  float rinc_factor = x->rinc_factor;
+  t_float preempt_gain;
+  t_float jitter_factor = x->jitter_factor;
+  t_float rdur_factor = x->rdur_factor;
+  t_float rinc_factor = x->rinc_factor;
 
   if(x->mute) {
     while(n--) { *out1++ = 0.0; }
@@ -591,12 +591,12 @@ t_int *chopper_pd_perform(t_int *w)
 
   if(x->framesize != b_frames) {
     x->framesize = b_frames ;
-    x->buffer_duration = (float)  b_frames / R ;
+    x->buffer_duration = (t_float)  b_frames / R ;
     initialize_loop = 1;
   }
   else if(x->buffer_duration <= 0.0) { /* THIS WILL HAPPEN THE FIRST TIME */
     x->framesize = b_frames ;
-    x->buffer_duration = (float)  b_frames / R ;
+    x->buffer_duration = (t_float)  b_frames / R ;
     initialize_loop = 1;
 //  post("initializing from perform method");
   }
@@ -623,7 +623,7 @@ t_int *chopper_pd_perform(t_int *w)
         bindex = x->fbindex ;
         x->fbindex += x->increment;
         --preempt_count;
-        preempt_gain = fade_level  * ((float) preempt_count / (float) preempt_samps);
+        preempt_gain = fade_level  * ((t_float) preempt_count / (t_float) preempt_samps);
         *out1++ = tab[bindex].w_float * preempt_gain;
         if( preempt_count <= 0) {
           bindex = x->fbindex = x->loop_start;
@@ -640,7 +640,7 @@ t_int *chopper_pd_perform(t_int *w)
         if( preempt && preempt_samps > x->samps_to_go ){ /* PREEMPT FADE */
 
           --preempt_count;
-          preempt_gain = fade_level  * ( (float) preempt_count / (float) preempt_samps );
+          preempt_gain = fade_level  * ( (t_float) preempt_count / (t_float) preempt_samps );
           bindex = x->fbindex ;
           x->fbindex += x->increment;
 
@@ -668,10 +668,10 @@ t_int *chopper_pd_perform(t_int *w)
             x->samps_to_go = x->transp_loop_samps;
           }
           if( x->samps_to_go > x->transp_loop_samps - taper_samps ) {
-            fade_level =  (float)(x->transp_loop_samps - x->samps_to_go)/(float)taper_samps ;
+            fade_level =  (t_float)(x->transp_loop_samps - x->samps_to_go)/(t_float)taper_samps ;
             *out1++ = tab[bindex].w_float * fade_level;
           } else if( x->samps_to_go < taper_samps ) {
-            fade_level = (float)(x->samps_to_go)/(float)taper_samps;
+            fade_level = (t_float)(x->samps_to_go)/(t_float)taper_samps;
             *out1++ = tab[bindex].w_float * fade_level;
           } else {
             fade_level = 1.0;
@@ -717,11 +717,11 @@ t_int *chopper_pd_perform(t_int *w)
           sample1 = m1 * tab[bindex].w_float + m2 * tab[bindex + 1].w_float;
         }
         if( x->samps_to_go > x->transp_loop_samps - taper_samps ) {
-          fade_level =  (float)(x->transp_loop_samps - x->samps_to_go)/(float)taper_samps ;
+          fade_level =  (t_float)(x->transp_loop_samps - x->samps_to_go)/(t_float)taper_samps ;
           *out1++ = sample1 * fade_level;
         }
         else if( x->samps_to_go < taper_samps ) {
-          fade_level = (float)(x->samps_to_go)/(float)taper_samps;
+          fade_level = (t_float)(x->samps_to_go)/(t_float)taper_samps;
           *out1++ = sample1 * fade_level;
         }
         else {
@@ -736,7 +736,7 @@ t_int *chopper_pd_perform(t_int *w)
       bindex = x->fbindex ;
       x->fbindex += x->increment;
       --preempt_count;
-      preempt_gain = fade_level  * ( (float) preempt_count / (float) preempt_samps );
+      preempt_gain = fade_level  * ( (t_float) preempt_count / (t_float) preempt_samps );
 
       *out1++ = tab[bindex].w_float * preempt_gain;
       if( preempt_count <= 0) {
@@ -766,11 +766,11 @@ t_int *chopper_pd_perform(t_int *w)
         x->fbindex += x->increment;
 
         if( x->samps_to_go > x->transp_loop_samps - taper_samps ) {
-          fade_level =  (float)(x->transp_loop_samps - x->samps_to_go)/(float)taper_samps ;
+          fade_level =  (t_float)(x->transp_loop_samps - x->samps_to_go)/(t_float)taper_samps ;
           *out1++ = tab[bindex].w_float * fade_level;
         }
         else if(x->samps_to_go < taper_samps) {
-          fade_level = (float)(x->samps_to_go)/(float)taper_samps;
+          fade_level = (t_float)(x->samps_to_go)/(t_float)taper_samps;
           *out1++ = tab[bindex].w_float * fade_level;
         }
         else {
@@ -901,7 +901,7 @@ void chopper_dsp(t_chopper *x, t_signal **sp)
 }
 
 
-float chopper_boundrand(float min, float max)
+t_float chopper_boundrand(t_float min, t_float max)
 {
-  return min + (max-min) * ((float) (rand() % RAND_MAX)/(float)RAND_MAX);
+  return min + (max-min) * ((t_float) (rand() % RAND_MAX)/(t_float)RAND_MAX);
 }

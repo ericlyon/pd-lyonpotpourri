@@ -13,11 +13,11 @@ static t_class *rtrig_class;
 typedef struct
 {
   int attack_count; // number of triggers per flam event
-  float *attack_times; // trigger times in seconds
+  t_float *attack_times; // trigger times in seconds
   int *attack_points; // trigger times in samples
   int fdex; // current flam
-  float gainatten; // attenuation factor
-  float amp; // current amp
+  t_float gainatten; // attenuation factor
+  t_float amp; // current amp
   int atks;// number of attacks per flam
   long counter; // internal clock
   short active; // flag that flam is turned on
@@ -29,11 +29,11 @@ typedef struct _rtrig
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   short mute;
-  float min;
-  float max;
-  float odds;
+  t_float min;
+  t_float max;
+  t_float odds;
 
 } t_rtrig;
 
@@ -68,17 +68,17 @@ void rtrig_mute(t_rtrig *x, t_floatarg tog)
 
 void rtrig_min(t_rtrig *x, t_floatarg v)
 {
-  x->min = (float) v;
+  x->min = (t_float) v;
 }
 
 void rtrig_max(t_rtrig *x, t_floatarg v)
 {
-  x->max = (float) v;
+  x->max = (t_float) v;
 }
 
 void rtrig_odds(t_rtrig *x, t_floatarg v)
 {
-  x->odds = (float) v;
+  x->odds = (t_float) v;
 }
 
 
@@ -106,23 +106,23 @@ t_int *rtrig_perform(t_int *w)
 {
 
   t_rtrig *x = (t_rtrig *) (w[1]);
-  float *out_vec = (t_float *)(w[2]);
+  t_float *out_vec = (t_float *)(w[2]);
   int n = (int) w[3];
 
-  float rval;
-  float min = x->min;
-  float max = x->max;
-  float odds = x->odds;
+  t_float rval;
+  t_float min = x->min;
+  t_float max = x->max;
+  t_float odds = x->odds;
 
   if(x->mute) {
-    memset( (void *)out_vec, 0, n * sizeof(float) );
+    memset( (void *)out_vec, 0, n * sizeof(t_float) );
     return (w+4);
   }
 
   while( n-- ) {
-    rval = (float) rand() / (float) RAND_MAX2;
+    rval = (t_float) rand() / (t_float) RAND_MAX2;
     if(rval < odds) {
-      rval = min + (max-min) * ((float) rand() / (float) RAND_MAX2);
+      rval = min + (max-min) * ((t_float) rand() / (t_float) RAND_MAX2);
       *out_vec++ = rval;
     } else {
       *out_vec++ = 0.0;

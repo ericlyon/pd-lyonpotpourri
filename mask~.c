@@ -10,7 +10,7 @@ static t_class *mask_class;
 
 typedef struct
 {
-  float *pat; // mask pattern
+  t_float *pat; // mask pattern
   int length;// length of pattern
 } t_maskpat;
 
@@ -24,7 +24,7 @@ typedef struct
 typedef struct _mask
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   short mute;// stops all computation (try z-disable)
   short gate; // continues masking but inhibits all output
   short phaselock; // indicates all patterns are the same size and use the same phase count
@@ -36,7 +36,7 @@ typedef struct _mask
   int *stored_masks;// a list of patterns stored
   int pattern_count;//how many patterns are stored
   short noloop;// flag to play pattern only once
-  float *in_vec;//copy space for input to avoid dreaded vector sharing override
+  t_float *in_vec;//copy space for input to avoid dreaded vector sharing override
 } t_mask;
 
 static void *mask_new(t_symbol *msg, int argc, t_atom *argv);
@@ -210,7 +210,7 @@ void mask_addmask(t_mask *x, t_symbol *msg, int argc, t_atom *argv)
     return;
   }
   if(x->masks[location].pat == NULL) {
-    x->masks[location].pat = (float *) getbytes(MAXLEN * sizeof(float));
+    x->masks[location].pat = (t_float *) getbytes(MAXLEN * sizeof(t_float));
     x->stored_masks[x->pattern_count++] = location;
   } else {
     //    post("replacing pattern stored at location %d", location);
@@ -227,7 +227,7 @@ void mask_free(t_mask *x)
 {
     int i;
     for(i=0;i<x->pattern_count;i++){
-        freebytes(x->masks[i].pat, MAXLEN * sizeof(float));
+        freebytes(x->masks[i].pat, MAXLEN * sizeof(t_float));
     }
     freebytes(x->masks,MAXMASKS * sizeof(t_maskpat));
     freebytes(x->stored_masks, MAXMASKS * sizeof(int));
@@ -261,8 +261,8 @@ void *mask_new(t_symbol *msg, int argc, t_atom *argv)
   }
   if(argc > 0) {
     //  post("reading initial mask from argument list, with %d members",argc);
-    x->masks[0].pat = (float *) getbytes(MAXLEN * sizeof(float));
-    //    post("allocated %d bytes for this pattern", MAXLEN * sizeof(float));
+    x->masks[0].pat = (t_float *) getbytes(MAXLEN * sizeof(t_float));
+    //    post("allocated %d bytes for this pattern", MAXLEN * sizeof(t_float));
     x->masks[0].length = argc;
     for(i=0; i<argc; i++) {
       x->masks[0].pat[i] = atom_getfloatarg(i,argc,argv);
@@ -286,8 +286,8 @@ t_int *mask_perform(t_int *w)
 {
   int i;
   t_mask *x = (t_mask *) (w[1]);
-  float *inlet = (t_float *) (w[2]);
-  float *outlet = (t_float *) (w[3]);
+  t_float *inlet = (t_float *) (w[2]);
+  t_float *outlet = (t_float *) (w[3]);
   int n = (int) w[4];
 
   int phase = x->phase;
@@ -297,7 +297,7 @@ t_int *mask_perform(t_int *w)
   int current_mask = x->current_mask;
   t_maskpat *masks = x->masks;
   t_sequence sequence = x->sequence;
-  float *in_vec = x->in_vec;
+  t_float *in_vec = x->in_vec;
 
 
   if( x->mute || current_mask < 0) {

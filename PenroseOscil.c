@@ -2,25 +2,25 @@
 #include "PenroseOscil.h"
 
 
-float frequencyToIncrement( float samplingRate, float frequency, int bufferLength ) {
-  return (frequency / samplingRate) * (float) bufferLength;
+t_float frequencyToIncrement( t_float samplingRate, t_float frequency, int bufferLength ) {
+  return (frequency / samplingRate) * (t_float) bufferLength;
 }
 
-void makeSineBuffer( float *buffer, int bufferLength ) {
+void makeSineBuffer( t_float *buffer, int bufferLength ) {
   int   i;
-  float myTwoPi = 8. * atan(1.);
+  t_float myTwoPi = 8. * atan(1.);
 
   for ( i=0; i <= bufferLength; i++ )
-    *(buffer+i) = sin( myTwoPi * ((float) i / (float) bufferLength) );
+    *(buffer+i) = sin( myTwoPi * ((t_float) i / (t_float) bufferLength) );
 
   return;
 }
 
 
-float bufferOscil( float *phase, float increment, float *buffer,
+t_float bufferOscil( t_float *phase, t_float increment, t_float *buffer,
                    int bufferLength )
 {
-  float sample;
+  t_float sample;
 
   while ( *phase > bufferLength )
     *phase -= bufferLength;

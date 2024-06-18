@@ -9,9 +9,9 @@ static t_class *vdp_class;
 
 typedef struct
 {
-  float coef;
-  float cutoff;
-  float x1;
+  t_float coef;
+  t_float cutoff;
+  t_float x1;
 } t_lpf;
 
 typedef struct {
@@ -26,25 +26,25 @@ typedef struct _vdp
 {
 
   t_object x_obj;
-  float x_f;
-  float sr;
+  t_float x_f;
+  t_float sr;
 
   t_lpf lpf;
   short filter;
 
-  float speed;
-  float feedback;
-  float delay_time;
-  float delay_samps;
-  float maxdel;
+  t_float speed;
+  t_float feedback;
+  t_float delay_time;
+  t_float delay_samps;
+  t_float maxdel;
 
   t_float *delay_line ;
-  float *write_ptr; // location to write current input
-  float *startmem; // first address in delay line
-  float *endmem; // last address to read in delay line
+  t_float *write_ptr; // location to write current input
+  t_float *startmem; // first address in delay line
+  t_float *endmem; // last address to read in delay line
   int len;
   int phs;
-  float tap;
+  t_float tap;
   short connections[4];
 
   short feedback_protect;
@@ -55,7 +55,7 @@ typedef struct _vdp
   t_guffer *destbuf; /* for copying to another buffer */
   /* tapering */
   long taper_count;
-  float taper_feedback;
+  t_float taper_feedback;
 } t_vdp;
 
 static t_int *vdp_perform(t_int *w);
@@ -115,7 +115,7 @@ void vdp_filter(t_vdp *x, t_floatarg t)
 
 void vdp_coef(t_vdp *x, t_floatarg f)
 {
-  x->lpf.coef = (float)f;
+  x->lpf.coef = (t_float)f;
 }
 
 void vdp_show(t_vdp *x)
@@ -138,26 +138,26 @@ t_int *vdp_perform(t_int *w)
   t_float *output = (t_float *)(w[5]);
   int n = (int) w[6];
 
-  float fdelay;
-  float insamp;
-  float outsamp = 0.0;
-  float frac;
-  float *write_ptr = x->write_ptr;
-  float *read_ptr;
-  float *startmem = x->startmem;
-  float *endmem = x->endmem;
+  t_float fdelay;
+  t_float insamp;
+  t_float outsamp = 0.0;
+  t_float frac;
+  t_float *write_ptr = x->write_ptr;
+  t_float *read_ptr;
+  t_float *startmem = x->startmem;
+  t_float *endmem = x->endmem;
   int len = x->len;
-  float tap = x->tap;
-  float feedback = x->feedback;
-  float delay_samps = x->delay_samps;
+  t_float tap = x->tap;
+  t_float feedback = x->feedback;
+  t_float delay_samps = x->delay_samps;
   short *connections = x->connections;
-  float sr = x->sr;
-  float msr = sr * 0.001;
+  t_float sr = x->sr;
+  t_float msr = sr * 0.001;
   short feedback_protect = x->feedback_protect;
   short interpolate = x->interpolate;
   t_lpf lpf = x->lpf;
   short filter = x->filter;
-  float x1,x2;
+  t_float x1,x2;
   int idelay;
 
   short inf_hold = x->inf_hold;
@@ -169,7 +169,7 @@ t_int *vdp_perform(t_int *w)
     /* while(n--) {
      *output++ = 0.0;
      } */
-    memset( (char *)output, 0, n * sizeof(float) );
+    memset( (char *)output, 0, n * sizeof(t_float) );
     return (w+7);
   }
 
@@ -363,7 +363,7 @@ void vdp_init(t_vdp *x,short initialized)
 
   x->write_ptr = x->startmem;
   /*
-    post("startmem %d endmem %d len %d diff %d diffback %d", x->startmem, x->endmem, x->len, x->endmem - x->startmem, ( x->endmem - x->startmem) /sizeof(float));
+    post("startmem %d endmem %d len %d diff %d diffback %d", x->startmem, x->endmem, x->len, x->endmem - x->startmem, ( x->endmem - x->startmem) /sizeof(t_float));
   */
 }
 

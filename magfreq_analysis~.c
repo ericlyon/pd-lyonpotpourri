@@ -7,16 +7,16 @@
 #define MAX_N2 8192
 #define MAX_Nw 16384
 
-static void convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor );
-static void fold( float *I, float *W, int Nw, float *O, int N, int n );
-static void init_rdft(int n, int *ip, float *w);
-static void rdft(int n, int isgn, float *a, int *ip, float *w);
-static void bitrv2(int n, int *ip, float *a);
-static void cftsub(int n, float *a, float *w);
-static void rftsub(int n, float *a, int nc, float *c);
-static void lpp_makewt(int nw, int *ip, float *w);
-static void lpp_makect(int nc, int *ip, float *c);
-static void makehanning( float *H, float *A, float *S, int Nw, int N, int I,int odd );
+static void convert(t_float *S, t_float *C, int N2, t_float *lastphase, t_float fundamental, t_float factor );
+static void fold( t_float *I, t_float *W, int Nw, t_float *O, int N, int n );
+static void init_rdft(int n, int *ip, t_float *w);
+static void rdft(int n, int isgn, t_float *a, int *ip, t_float *w);
+static void bitrv2(int n, int *ip, t_float *a);
+static void cftsub(int n, t_float *a, t_float *w);
+static void rftsub(int n, t_float *a, int nc, t_float *c);
+static void lpp_makewt(int nw, int *ip, t_float *w);
+static void lpp_makect(int nc, int *ip, t_float *c);
+static void makehanning( t_float *H, t_float *A, t_float *S, int Nw, int N, int I,int odd );
 static int power_of_two(int test);
 
 static t_class *magfreq_analysis_class;
@@ -26,8 +26,8 @@ static t_class *magfreq_analysis_class;
 typedef struct _magfreq_analysis
 {
     t_object x_obj;
-    float x_f;
-    float R;
+    t_float x_f;
+    t_float R;
     int N;
     int N2;
     int Nw;
@@ -35,41 +35,41 @@ typedef struct _magfreq_analysis
     int D;
     int i;
     int inCount;
-    float *Wanal;
-    float *Wsyn;
-    float *input;
-    float *Hwin;
-    float *buffer;
-    float *channel;
-    float *output;
+    t_float *Wanal;
+    t_float *Wsyn;
+    t_float *input;
+    t_float *Hwin;
+    t_float *buffer;
+    t_float *channel;
+    t_float *output;
     // for convert
-    float *c_lastphase_in;
-    float *c_lastphase_out;
-    float c_fundamental;
-    float c_factor_in;
-    float c_factor_out;
+    t_float *c_lastphase_in;
+    t_float *c_lastphase_out;
+    t_float c_fundamental;
+    t_float c_factor_in;
+    t_float c_factor_out;
     // for oscbank
     int NP;
-    float P;
+    t_float P;
     int L;
     int first;
-    float Iinv;
-    float *lastamp;
-    float *lastfreq;
-    float *index;
-    float *table;
-    float myPInc;
-    float ffac;
+    t_float Iinv;
+    t_float *lastamp;
+    t_float *lastfreq;
+    t_float *index;
+    t_float *table;
+    t_float myPInc;
+    t_float ffac;
     //
-    float lofreq;
-    float hifreq;
+    t_float lofreq;
+    t_float hifreq;
     int lo_bin;
     int hi_bin;
-    float topfreq;
-    float synt;
+    t_float topfreq;
+    t_float synt;
     // for fast fft
-    float mult;
-    float *trigland;
+    t_float mult;
+    t_float *trigland;
     int *bitshuffle;
     //
     int bypass_state;
@@ -149,26 +149,26 @@ void magfreq_analysis_fftinfo(t_magfreq_analysis *x)
 }
 
 void magfreq_analysis_free(t_magfreq_analysis *x ) {
-    freebytes(x->c_lastphase_in,(MAX_N2+1) * sizeof(float));
-    freebytes(x->c_lastphase_out,(MAX_N2+1) * sizeof(float));
-    freebytes(x->trigland,MAX_N * 2 * sizeof( float ));
+    freebytes(x->c_lastphase_in,(MAX_N2+1) * sizeof(t_float));
+    freebytes(x->c_lastphase_out,(MAX_N2+1) * sizeof(t_float));
+    freebytes(x->trigland,MAX_N * 2 * sizeof( t_float ));
     freebytes(x->bitshuffle,MAX_N * 2 * sizeof( int ));
-    freebytes(x->Wanal,(MAX_Nw) * sizeof(float));
-    freebytes(x->Wsyn,(MAX_Nw) * sizeof(float));
-    freebytes(x->input,MAX_Nw * sizeof(float));
-    freebytes(x->Hwin,(MAX_Nw) * sizeof(float));
-    freebytes(x->buffer,MAX_N * sizeof(float));
-    freebytes(x->channel,(MAX_N+2) * sizeof(float));
-    freebytes(x->output,MAX_Nw * sizeof(float));
-    freebytes(x->lastamp,(MAX_N+1) * sizeof(float));
-    freebytes(x->lastfreq,(MAX_N+1) * sizeof(float));
-    freebytes(x->index,(MAX_N+1) * sizeof(float));
-    freebytes(x->table,x->L * sizeof(float));
+    freebytes(x->Wanal,(MAX_Nw) * sizeof(t_float));
+    freebytes(x->Wsyn,(MAX_Nw) * sizeof(t_float));
+    freebytes(x->input,MAX_Nw * sizeof(t_float));
+    freebytes(x->Hwin,(MAX_Nw) * sizeof(t_float));
+    freebytes(x->buffer,MAX_N * sizeof(t_float));
+    freebytes(x->channel,(MAX_N+2) * sizeof(t_float));
+    freebytes(x->output,MAX_Nw * sizeof(t_float));
+    freebytes(x->lastamp,(MAX_N+1) * sizeof(t_float));
+    freebytes(x->lastfreq,(MAX_N+1) * sizeof(t_float));
+    freebytes(x->index,(MAX_N+1) * sizeof(t_float));
+    freebytes(x->table,x->L * sizeof(t_float));
 }
 
 void magfreq_analysis_highfreq(t_magfreq_analysis *x, t_floatarg f)
 {
-    float curfreq;
+    t_float curfreq;
     
     if(f < x->lofreq) {
         pd_error(0, "current minimum is %f",x->lofreq);
@@ -188,7 +188,7 @@ void magfreq_analysis_highfreq(t_magfreq_analysis *x, t_floatarg f)
 
 void magfreq_analysis_lowfreq(t_magfreq_analysis *x, t_floatarg f)
 {
-    float curfreq;
+    t_float curfreq;
     
     if(f > x->hifreq) {
         pd_error(0, "current maximum is %f",x->lofreq);
@@ -210,7 +210,7 @@ void magfreq_analysis_lowfreq(t_magfreq_analysis *x, t_floatarg f)
 void magfreq_analysis_init(t_magfreq_analysis *x, short initialized)
 {
     int i;
-    float curfreq;
+    t_float curfreq;
     x->R = sys_getsr();
     x->D = sys_getblksize();
    
@@ -235,49 +235,49 @@ void magfreq_analysis_init(t_magfreq_analysis *x, short initialized)
     x->Nw2 = x->Nw / 2;
     x->inCount = -(x->Nw);
     x->bypass_state = 0;
-    x->mult = 1. / (float) x->N;
+    x->mult = 1. / (t_float) x->N;
     x->pitch_connected = 0;
     x->synt_connected = 0;
     x->L = 8192 ;
-    x->c_fundamental =  x->R/(float)( (x->N2)<<1 );
-    x->c_factor_in =  x->R/((float)x->D * TWOPI);
-    x->c_factor_out = TWOPI * (float)  x->D / (float) x->R;
-    x->Iinv = 1./(float)x->D;
+    x->c_fundamental =  x->R/(t_float)( (x->N2)<<1 );
+    x->c_factor_in =  x->R/((t_float)x->D * TWOPI);
+    x->c_factor_out = TWOPI * (t_float)  x->D / (t_float) x->R;
+    x->Iinv = 1./(t_float)x->D;
     x->myPInc = x->P*x->L/x->R;
-    x->ffac = x->P * PI/(float)x->N;
+    x->ffac = x->P * PI/(t_float)x->N;
 
     if(!initialized) {
-        x->Wanal = (float *) getbytes( (MAX_Nw) * sizeof(float));
-        x->Wsyn = (float *) getbytes( (MAX_Nw) * sizeof(float));
-        x->Hwin = (float *) getbytes( (MAX_Nw) * sizeof(float));
-        x->input = (float *) getbytes(MAX_Nw * sizeof(float) );
-        x->output = (float *) getbytes(MAX_Nw * sizeof(float) );
-        x->buffer = (float *) getbytes(MAX_N * sizeof(float) );
-        x->channel = (float *) getbytes( (MAX_N+2) * sizeof(float) );
+        x->Wanal = (t_float *) getbytes( (MAX_Nw) * sizeof(t_float));
+        x->Wsyn = (t_float *) getbytes( (MAX_Nw) * sizeof(t_float));
+        x->Hwin = (t_float *) getbytes( (MAX_Nw) * sizeof(t_float));
+        x->input = (t_float *) getbytes(MAX_Nw * sizeof(t_float) );
+        x->output = (t_float *) getbytes(MAX_Nw * sizeof(t_float) );
+        x->buffer = (t_float *) getbytes(MAX_N * sizeof(t_float) );
+        x->channel = (t_float *) getbytes( (MAX_N+2) * sizeof(t_float) );
         x->bitshuffle = (int *) getbytes(MAX_N * 2 * sizeof( int ) );
-        x->trigland = (float *) getbytes(MAX_N * 2 * sizeof( float ) );
-        x->c_lastphase_in = (float *) getbytes( (MAX_N2+1) * sizeof(float) );
-        x->c_lastphase_out = (float *) getbytes( (MAX_N2+1) * sizeof(float) );
-        x->lastamp = (float *) getbytes( (MAX_N+1) * sizeof(float) );
-        x->lastfreq = (float *) getbytes( (MAX_N+1) * sizeof(float) );
-        x->index = (float *) getbytes( (MAX_N+1) * sizeof(float) );
-        x->table = (float *) getbytes( x->L * sizeof(float) );
+        x->trigland = (t_float *) getbytes(MAX_N * 2 * sizeof( t_float ) );
+        x->c_lastphase_in = (t_float *) getbytes( (MAX_N2+1) * sizeof(t_float) );
+        x->c_lastphase_out = (t_float *) getbytes( (MAX_N2+1) * sizeof(t_float) );
+        x->lastamp = (t_float *) getbytes( (MAX_N+1) * sizeof(t_float) );
+        x->lastfreq = (t_float *) getbytes( (MAX_N+1) * sizeof(t_float) );
+        x->index = (t_float *) getbytes( (MAX_N+1) * sizeof(t_float) );
+        x->table = (t_float *) getbytes( x->L * sizeof(t_float) );
         x->P = 1.0;
-        x->ffac = x->P * PI/(float)MAX_N;
+        x->ffac = x->P * PI/(t_float)MAX_N;
         x->mute = 0;
         //    x->threshgen = .0001;
     }
 /*
-    memset((char *)x->input,0,x->Nw * sizeof(float));
-    memset((char *)x->output,0,x->Nw * sizeof(float));
-    memset((char *)x->c_lastphase_in,0,(x->N2+1) * sizeof(float));
-    memset((char *)x->c_lastphase_out,0,(x->N2+1) * sizeof(float));
-    memset((char *)x->lastamp,0,(x->N+1) * sizeof(float));
-    memset((char *)x->lastfreq,0,(x->N+1) * sizeof(float));
-    memset((char *)x->index,0,(x->N+1) * sizeof(float));
+    memset((char *)x->input,0,x->Nw * sizeof(t_float));
+    memset((char *)x->output,0,x->Nw * sizeof(t_float));
+    memset((char *)x->c_lastphase_in,0,(x->N2+1) * sizeof(t_float));
+    memset((char *)x->c_lastphase_out,0,(x->N2+1) * sizeof(t_float));
+    memset((char *)x->lastamp,0,(x->N+1) * sizeof(t_float));
+    memset((char *)x->lastfreq,0,(x->N+1) * sizeof(t_float));
+    memset((char *)x->index,0,(x->N+1) * sizeof(t_float));
 */
     for ( i = 0; i < x->L; i++ ) {
-        x->table[i] = (float) x->N * cos((float)i * TWOPI / (float)x->L);
+        x->table[i] = (t_float) x->N * cos((t_float)i * TWOPI / (t_float)x->L);
     }
     init_rdft( x->N, x->bitshuffle, x->trigland);
     
@@ -357,17 +357,17 @@ t_int *magfreq_analysis_perform(t_int *w)
     int Nw = x->Nw;
     int N = x->N ;
     int N2 = x-> N2;
-    float fundamental = x->c_fundamental;
-    float factor_in =  x->c_factor_in;
+    t_float fundamental = x->c_fundamental;
+    t_float factor_in =  x->c_factor_in;
     int *bitshuffle = x->bitshuffle;
-    float *trigland = x->trigland;
-    float *lastphase_in = x->c_lastphase_in;
+    t_float *trigland = x->trigland;
+    t_float *lastphase_in = x->c_lastphase_in;
     
     
-    float *Wanal = x->Wanal;
-    float *input = x->input;;
-    float *buffer = x->buffer;
-    float *channel = x->channel;
+    t_float *Wanal = x->Wanal;
+    t_float *input = x->input;;
+    t_float *buffer = x->buffer;
+    t_float *channel = x->channel;
     in = on = x->inCount ;
     
     
@@ -464,10 +464,10 @@ int power_of_two(int test)
   return 0;
 }
 
-void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
+void makehanning( t_float *H, t_float *A, t_float *S, int Nw, int N, int I, int odd )
 {
  int i;
- float sum ;
+ t_float sum ;
  
  
  if (odd) {
@@ -483,7 +483,7 @@ void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
  }
      
     if ( Nw > N ) {
-     float x ;
+     t_float x ;
 
     x = -(Nw - 1)/2. ;
     for ( i = 0 ; i < Nw ; i++, x += 1. )
@@ -497,8 +497,8 @@ void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
     sum += A[i] ;
 
     for ( i = 0 ; i < Nw ; i++ ) {
-     float afac = 2./sum ;
-     float sfac = Nw > N ? 1./afac : afac ;
+     t_float afac = 2./sum ;
+     t_float sfac = Nw > N ? 1./afac : afac ;
     A[i] *= afac ;
     S[i] *= sfac ;
     }
@@ -511,7 +511,7 @@ void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
     }
 }
 
-void fold( float *I, float *W, int Nw, float *O, int N, int n )
+void fold( t_float *I, t_float *W, int Nw, t_float *O, int N, int n )
 
 {
  
@@ -531,15 +531,15 @@ void fold( float *I, float *W, int Nw, float *O, int N, int n )
 }
 
 
-void convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor )
+void convert(t_float *S, t_float *C, int N2, t_float *lastphase, t_float fundamental, t_float factor )
 {
-  float     phase,
+  t_float     phase,
         phasediff;
   int         real,
         imag,
         amp,
         freq;
-  float     a,
+  t_float     a,
         b;
   int         i;
     for ( i = 0; i <= N2; i++ ) {
@@ -563,7 +563,7 @@ void convert(float *S, float *C, int N2, float *lastphase, float fundamental, fl
     }
 }
 // more libraries
-void init_rdft(int n, int *ip, float *w)
+void init_rdft(int n, int *ip, t_float *w)
 {
 
   int    nw,
@@ -579,18 +579,18 @@ void init_rdft(int n, int *ip, float *w)
 }
 
 
-void rdft(int n, int isgn, float *a, int *ip, float *w)
+void rdft(int n, int isgn, t_float *a, int *ip, t_float *w)
 {
 
   int        j,
         nw,
         nc;
 
-  float        xi;
+  t_float        xi;
 
-  void        bitrv2(int n, int *ip, float *a),
-        cftsub(int n, float *a, float *w),
-        rftsub(int n, float *a, int nc, float *c);
+  void        bitrv2(int n, int *ip, t_float *a),
+        cftsub(int n, t_float *a, t_float *w),
+        rftsub(int n, t_float *a, int nc, t_float *c);
 
     
   nw = ip[0];
@@ -635,10 +635,10 @@ void rdft(int n, int isgn, float *a, int *ip, float *w)
 }
 
 
-void bitrv2(int n, int *ip, float *a)
+void bitrv2(int n, int *ip, t_float *a)
 {
   int j, jj1, k, k1, l, m, m2;
-  float xr, xi;
+  t_float xr, xi;
     
   ip[0] = 0;
   l = n;
@@ -697,11 +697,11 @@ void bitrv2(int n, int *ip, float *a)
 }
 
 
-void cftsub(int n, float *a, float *w)
+void cftsub(int n, t_float *a, t_float *w)
 {
   int j, jj1, j2, j3, k, k1, ks, l, m;
-  float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
-  float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
+  t_float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
+  t_float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
     
   l = 2;
 
@@ -820,10 +820,10 @@ void cftsub(int n, float *a, float *w)
 }
 
 
-void rftsub(int n, float *a, int nc, float *c)
+void rftsub(int n, t_float *a, int nc, t_float *c)
 {
   int j, k, kk, ks;
-  float wkr, wki, xr, xi, yr, yi;
+  t_float wkr, wki, xr, xi, yr, yi;
     
   ks = (nc << 2) / n;
   kk = 0;
@@ -845,11 +845,11 @@ void rftsub(int n, float *a, int nc, float *c)
 }
 
 
-void lpp_makewt(int nw, int *ip, float *w)
+void lpp_makewt(int nw, int *ip, t_float *w)
 {
-    void bitrv2(int n, int *ip, float *a);
+    void bitrv2(int n, int *ip, t_float *a);
     int nwh, j;
-    float delta, x, y;
+    t_float delta, x, y;
     
     ip[0] = nw;
     ip[1] = 1;
@@ -873,10 +873,10 @@ void lpp_makewt(int nw, int *ip, float *w)
 }
 
 
-void lpp_makect(int nc, int *ip, float *c)
+void lpp_makect(int nc, int *ip, t_float *c)
 {
     int nch, j;
-    float delta;
+    t_float delta;
     
     ip[1] = nc;
     if (nc > 1) {

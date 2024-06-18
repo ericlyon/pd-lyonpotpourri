@@ -19,42 +19,42 @@ typedef struct
   int vector_size;
   int i;
   int in_count;
-  float *Wanal;
-  float *Wsyn;
-  float *input_buffer;
-  float *Hwin;
-  float *complex_spectrum;
-  float *interleaved_spectrum;
-  float *output_buffer;
+  t_float *Wanal;
+  t_float *Wsyn;
+  t_float *input_buffer;
+  t_float *Hwin;
+  t_float *complex_spectrum;
+  t_float *interleaved_spectrum;
+  t_float *output_buffer;
   // for convert
-  float *c_lastphase_in;
-  float *c_lastphase_out;
-  float c_fundamental;
-  float c_factor_in;
-  float c_factor_out;
-  float P;
+  t_float *c_lastphase_in;
+  t_float *c_lastphase_out;
+  t_float c_fundamental;
+  t_float c_factor_in;
+  t_float c_factor_out;
+  t_float P;
   int table_length;
-  float table_si;
+  t_float table_si;
   int first;
-  float i_vector_size;
-  float *lastamp;
-  float *lastfreq;
-  float *index;
-  float *table;
-  float pitch_increment;
+  t_float i_vector_size;
+  t_float *lastamp;
+  t_float *lastfreq;
+  t_float *index;
+  t_float *table;
+  t_float pitch_increment;
 
   int lo_bin;
   int hi_bin;
-  float synthesis_threshold;
+  t_float synthesis_threshold;
 
   int overlap;
   int winfac;
-  float user_lofreq;
-  float user_hifreq;
-  float curfreq;
+  t_float user_lofreq;
+  t_float user_hifreq;
+  t_float curfreq;
   // faster FFT
-  float mult;
-  float *trigland;
+  t_float mult;
+  t_float *trigland;
   int *bitshuffle;
 
 } t_oscbank;
@@ -73,23 +73,23 @@ typedef struct _splitbank
   int *bin_tmp;
   int ramp_frames;
   int frames_left;
-  float frame_duration;
+  t_float frame_duration;
   int vector_size;
   int table_offset;
   int bin_offset;
-  float *last_mag;
-  float *current_mag;
+  t_float *last_mag;
+  t_float *current_mag;
   int *last_binsplit;
   int *current_binsplit;
   int **stored_binsplits;
   short *stored_slots;
-  float *in_amps;
+  t_float *in_amps;
   short new_distribution;
   short interpolation_completed;
 //    short bypass;
   short initialize;
   short manual_override;
-  float manual_control_value;
+  t_float manual_control_value;
   short mute;
   short powerfade;
   int channel_count;
@@ -118,36 +118,36 @@ static void splitbank_mute( t_splitbank *x, t_floatarg toggle );
 static void splitbank_fftinfo( t_splitbank *x);
 static void splitbank_free( t_splitbank *x );
 static void splitbank_overlap( t_splitbank *x, t_floatarg ofac );
-static void splitbank_spliti( t_splitbank *x,  float *dest_mag, int start, int end, float oldfrac);
-static void splitbank_split(t_splitbank *x, int *binsplit, float *dest_mag, int start, int end );
+static void splitbank_spliti( t_splitbank *x,  t_float *dest_mag, int start, int end, t_float oldfrac);
+static void splitbank_split(t_splitbank *x, int *binsplit, t_float *dest_mag, int start, int end );
 static int splitbank_closestPowerOfTwo(int p);
 static void fftease_obank_analyze( t_oscbank *x ) ;
-static void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int overlap,
+static void fftease_obank_initialize ( t_oscbank *x, t_float lo_freq, t_float hi_freq, int overlap,
                                 int R, int vector_size, int N);
 // static void fftease_obank_transpose( t_oscbank *x );
 static void fftease_obank_synthesize( t_oscbank *x );
 static void fftease_obank_destroy( t_oscbank *x );
-static void fftease_shiftin( t_oscbank *x, float *input );
-static void fftease_shiftout( t_oscbank *x, float *output );
-static void fftease_obank_topfreq( t_oscbank *x, float topfreq );
-static void fftease_obank_bottomfreq( t_oscbank *x, float bottomfreq );
+static void fftease_shiftin( t_oscbank *x, t_float *input );
+static void fftease_shiftout( t_oscbank *x, t_float *output );
+static void fftease_obank_topfreq( t_oscbank *x, t_float topfreq );
+static void fftease_obank_bottomfreq( t_oscbank *x, t_float bottomfreq );
 
 
-static void rfft( float *x, int N, int forward );
-static void cfft( float *x, int NC, int forward );
-static void bitreverse( float *x, int N );
-static void fold( float *I, float *W, int Nw, float *O, int N, int n );
-static void init_rdft(int n, int *ip, float *w);
-static void rdft(int n, int isgn, float *a, int *ip, float *w);
-static void bitrv2(int n, int *ip, float *a);
-static void cftsub(int n, float *a, float *w);
-static void rftsub(int n, float *a, int nc, float *c);
-static void lpp_makewt(int nw, int *ip, float *w);
-static void lpp_makect(int nc, int *ip, float *c);
-static void makewindows( float *H, float *A, float *S, int Nw, int N, int I );
-static void makehamming( float *H, float *A, float *S, int Nw, int N, int I,int odd );
-static void makehanning( float *H, float *A, float *S, int Nw, int N, int I,int odd );
-static void convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor );
+static void rfft( t_float *x, int N, int forward );
+static void cfft( t_float *x, int NC, int forward );
+static void bitreverse( t_float *x, int N );
+static void fold( t_float *I, t_float *W, int Nw, t_float *O, int N, int n );
+static void init_rdft(int n, int *ip, t_float *w);
+static void rdft(int n, int isgn, t_float *a, int *ip, t_float *w);
+static void bitrv2(int n, int *ip, t_float *a);
+static void cftsub(int n, t_float *a, t_float *w);
+static void rftsub(int n, t_float *a, int nc, t_float *c);
+static void lpp_makewt(int nw, int *ip, t_float *w);
+static void lpp_makect(int nc, int *ip, t_float *c);
+static void makewindows( t_float *H, t_float *A, t_float *S, int Nw, int N, int I );
+static void makehamming( t_float *H, t_float *A, t_float *S, int Nw, int N, int I,int odd );
+static void makehanning( t_float *H, t_float *A, t_float *S, int Nw, int N, int I,int odd );
+static void convert(t_float *S, t_float *C, int N2, t_float *lastphase, t_float fundamental, t_float factor );
 
 //////////
 void splitbank_tilde_setup(void) {
@@ -208,11 +208,11 @@ void splitbank_free( t_splitbank *x )
         freebytes(x->list_data, (x->N + 2) * sizeof(t_atom)) ;
         freebytes(x->current_binsplit, x->N2 * sizeof(int));
         freebytes(x->last_binsplit, x->N2 * sizeof(int));
-        freebytes(x->current_mag, x->N2 * sizeof(float));
-        freebytes(x->last_mag, x->N2 * sizeof(float));
+        freebytes(x->current_mag, x->N2 * sizeof(t_float));
+        freebytes(x->last_mag, x->N2 * sizeof(t_float));
         freebytes(x->bin_tmp, x->N2 * sizeof(int));
         freebytes(x->stored_slots, x->N2 * sizeof(short));
-        freebytes(x->in_amps, (x->N +2) * sizeof(float));
+        freebytes(x->in_amps, (x->N +2) * sizeof(t_float));
         for( i = 0; i < MAXSTORE; i++ ) {
             freebytes(x->stored_binsplits[i], x->N2 * sizeof(int));
         }
@@ -352,16 +352,16 @@ t_int *splitbank_perform(t_int *w)
 {
 
   int i,j;
-  float frac = 0.0;
+  t_float frac = 0.0;
   t_splitbank *x = (t_splitbank *) (w[1]);
 
   int channel_count = x->channel_count;
-  float *input;
-  float *synthesis_threshold;
-  float *t_offset;
-  float *b_offset;
-  float *manual_control;
-  float *sync = (t_float *)(w[(channel_count * 2) + 7]);
+  t_float *input;
+  t_float *synthesis_threshold;
+  t_float *t_offset;
+  t_float *b_offset;
+  t_float *manual_control;
+  t_float *sync = (t_float *)(w[(channel_count * 2) + 7]);
   int n = (int) w[(channel_count * 2) + 8];
 
   int N2 = x->N2;
@@ -373,8 +373,8 @@ t_int *splitbank_perform(t_int *w)
   int *current_binsplit = x->current_binsplit;
   int *last_binsplit = x->last_binsplit;
 
-  float *in_amps = x->in_amps;
-  float manual_control_value = x->manual_control_value;
+  t_float *in_amps = x->in_amps;
+  t_float manual_control_value = x->manual_control_value;
 
   long counter = x->counter;
   long countdown_samps = x->countdown_samps;
@@ -479,7 +479,7 @@ t_int *splitbank_perform(t_int *w)
     }
     frac = 1.0;
   } else {
-    frac = (float) counter / (float) countdown_samps;
+    frac = (t_float) counter / (t_float) countdown_samps;
 
     for(i = 0; i < channel_count; i++) {
       splitbank_spliti( x, obanks[i]->interleaved_spectrum,
@@ -593,7 +593,7 @@ void splitbank_setstate (t_splitbank *x, t_symbol *msg, int argc, t_atom *argv) 
 }
 
 void splitbank_ramptime (t_splitbank *x, t_symbol *msg, int argc, t_atom *argv) {
-  float rampdur;
+  t_float rampdur;
   rampdur = atom_getfloatarg(0,argc,argv) * 0.001;
   x->countdown_samps = rampdur * x->R;
   x->counter = 0;
@@ -684,12 +684,12 @@ void splitbank_showstate (t_splitbank *x ) {
   }
   }
 */
-void splitbank_split(t_splitbank *x, int *binsplit, float *dest_mag, int start, int end )
+void splitbank_split(t_splitbank *x, int *binsplit, t_float *dest_mag, int start, int end )
 {
   int i;
   int bindex;
   int n = x->N2;
-  float *in_amps = x->in_amps;
+  t_float *in_amps = x->in_amps;
   int table_offset = x->table_offset;
   int bin_offset = x->bin_offset;
 
@@ -706,20 +706,20 @@ void splitbank_split(t_splitbank *x, int *binsplit, float *dest_mag, int start, 
 }
 
 
-void splitbank_spliti( t_splitbank *x, float *dest_mag, int start, int end, float oldfrac)
+void splitbank_spliti( t_splitbank *x, t_float *dest_mag, int start, int end, t_float oldfrac)
 {
   int i;
   int bindex;
   int *current_binsplit = x->current_binsplit;
   int *last_binsplit = x->last_binsplit;
-  float *current_mag = x->current_mag;
-  float *last_mag = x->last_mag;
-  float *in_amps = x->in_amps;
+  t_float *current_mag = x->current_mag;
+  t_float *last_mag = x->last_mag;
+  t_float *in_amps = x->in_amps;
   int bin_offset = x->bin_offset;
   int table_offset = x->table_offset;
   int n = x->N2;
-  float newfrac;
-  float phase;
+  t_float newfrac;
+  t_float phase;
 
 
   if( oldfrac < 0 )
@@ -819,8 +819,8 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
     x->last_binsplit = getbytes(x->N2 * sizeof(int));
     x->current_binsplit = getbytes(x->N2 * sizeof(int));
     x->bin_tmp = getbytes(x->N2 * sizeof(int));
-    x->last_mag = getbytes(x->N2 * sizeof(float));
-    x->current_mag = getbytes(x->N2 * sizeof(float));
+    x->last_mag = getbytes(x->N2 * sizeof(t_float));
+    x->current_mag = getbytes(x->N2 * sizeof(t_float));
     x->stored_slots = getbytes(x->N2 * sizeof(short));
     x->stored_binsplits = getbytes(MAXSTORE * sizeof(int *));
     for( i = 0; i < MAXSTORE; i++ ) {
@@ -835,7 +835,7 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
       fftease_obank_initialize(obanks[i], lo_freq, hi_freq, overlap, R, vector_size,x->N);
     }
 
-    x->in_amps = getbytes((x->N +2) * sizeof(float));
+    x->in_amps = getbytes((x->N +2) * sizeof(t_float));
     x->initialize = 0;
   }
   x->hopsamps = x->N / x->overlap;
@@ -847,25 +847,25 @@ void splitbank_dsp(t_splitbank *x, t_signal **sp)
 /**************************************************/
 void fftease_obank_destroy( t_oscbank *x )
 {
-  freebytes(x->Wanal, x->Nw * sizeof(float));
-    freebytes(x->Wsyn, x->Nw * sizeof(float));
-    freebytes(x->Hwin, x->Nw * sizeof(float));
-    freebytes(x->complex_spectrum, x->N * sizeof(float));
-    freebytes(x->interleaved_spectrum, (x->N + 2) * sizeof(float));
-    freebytes(x->input_buffer, x->Nw * sizeof(float));
-    freebytes(x->output_buffer, x->Nw * sizeof(float));
-    freebytes(x->c_lastphase_in, (x->N2+1) * sizeof(float));
-    freebytes(x->c_lastphase_out, (x->N2+1) * sizeof(float));
-    freebytes(x->lastamp, (x->N+1) * sizeof(float));
-    freebytes(x->lastfreq, (x->N+1) * sizeof(float));
-    freebytes(x->index, (x->N+1) * sizeof(float));
-    freebytes(x->table, x->table_length * sizeof(float));
+  freebytes(x->Wanal, x->Nw * sizeof(t_float));
+    freebytes(x->Wsyn, x->Nw * sizeof(t_float));
+    freebytes(x->Hwin, x->Nw * sizeof(t_float));
+    freebytes(x->complex_spectrum, x->N * sizeof(t_float));
+    freebytes(x->interleaved_spectrum, (x->N + 2) * sizeof(t_float));
+    freebytes(x->input_buffer, x->Nw * sizeof(t_float));
+    freebytes(x->output_buffer, x->Nw * sizeof(t_float));
+    freebytes(x->c_lastphase_in, (x->N2+1) * sizeof(t_float));
+    freebytes(x->c_lastphase_out, (x->N2+1) * sizeof(t_float));
+    freebytes(x->lastamp, (x->N+1) * sizeof(t_float));
+    freebytes(x->lastfreq, (x->N+1) * sizeof(t_float));
+    freebytes(x->index, (x->N+1) * sizeof(t_float));
+    freebytes(x->table, x->table_length * sizeof(t_float));
     freebytes(x->bitshuffle, (x->N * 2) * sizeof(int));
-    freebytes(x->trigland, (x->N * 2) * sizeof(float));
+    freebytes(x->trigland, (x->N * 2) * sizeof(t_float));
   free(x);
 }
 /**************************************************/
-void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int overlap,
+void fftease_obank_initialize ( t_oscbank *x, t_float lo_freq, t_float hi_freq, int overlap,
                                 int R, int vector_size, int N)
 {
   int i;
@@ -888,24 +888,24 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
   x->user_hifreq = hi_freq;
 
   x->synthesis_threshold = .000001;
-  x->table_si = (float) x->table_length/ (float) x->R;
-  x->Wanal = (float *) getbytes(x->Nw * sizeof(float));
-  x->Wsyn = (float *) getbytes(x->Nw * sizeof(float));
-  x->Hwin = (float *) getbytes(x->Nw * sizeof(float));
-  x->complex_spectrum = (float *) getbytes(x->N * sizeof(float));
-  x->interleaved_spectrum = (float *) getbytes((x->N + 2) * sizeof(float));
-  x->input_buffer = (float *) getbytes(x->Nw * sizeof(float));
-  x->output_buffer = (float *) getbytes(x->Nw * sizeof(float));
-  x->c_lastphase_in = (float *) getbytes((x->N2+1) * sizeof(float));
-  x->c_lastphase_out = (float *) getbytes((x->N2+1) * sizeof(float));
-  x->lastamp = (float *) getbytes((x->N+1) * sizeof(float));
-  x->lastfreq = (float *) getbytes((x->N+1) * sizeof(float));
-  x->index = (float *) getbytes((x->N+1) * sizeof(float) );
-  x->table = (float *) getbytes(x->table_length * sizeof(float));
+  x->table_si = (t_float) x->table_length/ (t_float) x->R;
+  x->Wanal = (t_float *) getbytes(x->Nw * sizeof(t_float));
+  x->Wsyn = (t_float *) getbytes(x->Nw * sizeof(t_float));
+  x->Hwin = (t_float *) getbytes(x->Nw * sizeof(t_float));
+  x->complex_spectrum = (t_float *) getbytes(x->N * sizeof(t_float));
+  x->interleaved_spectrum = (t_float *) getbytes((x->N + 2) * sizeof(t_float));
+  x->input_buffer = (t_float *) getbytes(x->Nw * sizeof(t_float));
+  x->output_buffer = (t_float *) getbytes(x->Nw * sizeof(t_float));
+  x->c_lastphase_in = (t_float *) getbytes((x->N2+1) * sizeof(t_float));
+  x->c_lastphase_out = (t_float *) getbytes((x->N2+1) * sizeof(t_float));
+  x->lastamp = (t_float *) getbytes((x->N+1) * sizeof(t_float));
+  x->lastfreq = (t_float *) getbytes((x->N+1) * sizeof(t_float));
+  x->index = (t_float *) getbytes((x->N+1) * sizeof(t_float) );
+  x->table = (t_float *) getbytes(x->table_length * sizeof(t_float));
   x->bitshuffle = (int *) getbytes((x->N * 2) * sizeof(int));
-  x->trigland = (float *) getbytes((x->N * 2) * sizeof(float));
+  x->trigland = (t_float *) getbytes((x->N * 2) * sizeof(t_float));
 
-  x->mult = 1. / (float) x->N;
+  x->mult = 1. / (t_float) x->N;
 
   for( i = 0; i < x->N2 + 1; i++) {
     x->c_lastphase_in[i] = x->c_lastphase_out[i] = 0.0;
@@ -923,8 +923,8 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
   makehanning( x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->vector_size, 0);
 
 
-  x->c_fundamental =  (float) x->R/(float)x->N ;
-  x->c_factor_in =  (float) x->R/((float)x->vector_size * TWOPI);
+  x->c_fundamental =  (t_float) x->R/(t_float)x->N ;
+  x->c_factor_in =  (t_float) x->R/((t_float)x->vector_size * TWOPI);
   x->c_factor_out = 1.0 / x->c_factor_in;
 
 
@@ -951,7 +951,7 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
     x->hi_bin = x->N2 ;
 
   for ( i = 0; i < x->table_length; i++ ) {
-    x->table[i] = (float) x->N * cos(  (float)i * TWOPI / (float)x->table_length );
+    x->table[i] = (t_float) x->N * cos(  (t_float)i * TWOPI / (t_float)x->table_length );
   }
 
   x->P = 1.0 ;
@@ -967,7 +967,7 @@ void fftease_obank_initialize ( t_oscbank *x, float lo_freq, float hi_freq, int 
   */
 }
 /**************************************************/
-void  fftease_obank_topfreq( t_oscbank *x, float topfreq )
+void  fftease_obank_topfreq( t_oscbank *x, t_float topfreq )
 {
   if( topfreq < x->c_fundamental ) {
     topfreq = OSCBANK_DEFAULT_TOPFREQ ;
@@ -983,7 +983,7 @@ void  fftease_obank_topfreq( t_oscbank *x, float topfreq )
     x->hi_bin = x->N2 ;
 }
 /**************************************************/
-void  fftease_obank_bottomfreq( t_oscbank *x, float bottomfreq )
+void  fftease_obank_bottomfreq( t_oscbank *x, t_float bottomfreq )
 {
 
 
@@ -1007,12 +1007,12 @@ void  fftease_obank_analyze( t_oscbank *x )
 
 }
 /**************************************************/
-void fftease_shiftin( t_oscbank *x, float *input )
+void fftease_shiftin( t_oscbank *x, t_float *input )
 {
   int i;
   int vector_size = x->vector_size;
   int Nw = x->Nw;
-  float *input_buffer = x->input_buffer;
+  t_float *input_buffer = x->input_buffer;
 
   for ( i = 0 ; i < (Nw - vector_size) ; i++ ) {
     input_buffer[i] = input_buffer[i + vector_size];
@@ -1023,13 +1023,13 @@ void fftease_shiftin( t_oscbank *x, float *input )
 
 }
 /**************************************************/
-void fftease_shiftout( t_oscbank *x, float *output )
+void fftease_shiftout( t_oscbank *x, t_float *output )
 {
   int i;
   int vector_size = x->vector_size;
   int Nw = x->Nw;
-  float *output_buffer = x->output_buffer;
-  float mult = x->mult;
+  t_float *output_buffer = x->output_buffer;
+  t_float mult = x->mult;
 
   for ( i = 0; i < vector_size; i++ ) {
     *output++ = output_buffer[i] * mult;
@@ -1047,22 +1047,22 @@ void fftease_shiftout( t_oscbank *x, float *output )
 void fftease_obank_synthesize( t_oscbank *x )
 {
   int amp, chan, freq;
-  float    a,ainc,f,finc,address;
+  t_float    a,ainc,f,finc,address;
   int n;
 
-  float synthesis_threshold = x->synthesis_threshold;
-  float *lastfreq = x->lastfreq;
-  float *lastamp = x->lastamp;
+  t_float synthesis_threshold = x->synthesis_threshold;
+  t_float *lastfreq = x->lastfreq;
+  t_float *lastamp = x->lastamp;
   int table_length = x->table_length;
-  float *output_buffer = x->output_buffer;
+  t_float *output_buffer = x->output_buffer;
   int vector_size = x->vector_size;
-  float i_vector_size = x->i_vector_size;
+  t_float i_vector_size = x->i_vector_size;
   int lo_bin = x->lo_bin;
   int hi_bin = x->hi_bin;
-  float *interleaved_spectrum = x->interleaved_spectrum;
-  float pitch_increment = x->pitch_increment;
-  float *index = x->index;
-  float *table = x->table;
+  t_float *interleaved_spectrum = x->interleaved_spectrum;
+  t_float pitch_increment = x->pitch_increment;
+  t_float *index = x->index;
+  t_float *table = x->table;
 
   for ( chan = lo_bin; chan < hi_bin; chan++ ) {
 
@@ -1090,7 +1090,7 @@ void fftease_obank_synthesize( t_oscbank *x )
   }
 }
 ////////////////////////
-void init_rdft(int n, int *ip, float *w)
+void init_rdft(int n, int *ip, t_float *w)
 {
 
   int nw,
@@ -1106,18 +1106,18 @@ void init_rdft(int n, int *ip, float *w)
 }
 
 
-void rdft(int n, int isgn, float *a, int *ip, float *w)
+void rdft(int n, int isgn, t_float *a, int *ip, t_float *w)
 {
 
   int   j,
     nw,
     nc;
 
-  float   xi;
+  t_float   xi;
 
-  void    bitrv2(int n, int *ip, float *a),
-    cftsub(int n, float *a, float *w),
-    rftsub(int n, float *a, int nc, float *c);
+  void    bitrv2(int n, int *ip, t_float *a),
+    cftsub(int n, t_float *a, t_float *w),
+    rftsub(int n, t_float *a, int nc, t_float *c);
 
 
   nw = ip[0];
@@ -1162,10 +1162,10 @@ void rdft(int n, int isgn, float *a, int *ip, float *w)
 }
 
 
-void bitrv2(int n, int *ip, float *a)
+void bitrv2(int n, int *ip, t_float *a)
 {
   int j, j1, k, k1, l, m, m2;
-  float xr, xi;
+  t_float xr, xi;
 
   ip[0] = 0;
   l = n;
@@ -1224,11 +1224,11 @@ void bitrv2(int n, int *ip, float *a)
 }
 
 
-void cftsub(int n, float *a, float *w)
+void cftsub(int n, t_float *a, t_float *w)
 {
   int j, j1, j2, j3, k, k1, ks, l, m;
-  float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
-  float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
+  t_float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
+  t_float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
 
   l = 2;
 
@@ -1347,10 +1347,10 @@ void cftsub(int n, float *a, float *w)
 }
 
 
-void rftsub(int n, float *a, int nc, float *c)
+void rftsub(int n, t_float *a, int nc, t_float *c)
 {
   int j, k, kk, ks;
-  float wkr, wki, xr, xi, yr, yi;
+  t_float wkr, wki, xr, xi, yr, yi;
 
   ks = (nc << 2) / n;
   kk = 0;
@@ -1372,11 +1372,11 @@ void rftsub(int n, float *a, int nc, float *c)
 }
 
 
-void lpp_makewt(int nw, int *ip, float *w)
+void lpp_makewt(int nw, int *ip, t_float *w)
 {
-  void bitrv2(int n, int *ip, float *a);
+  void bitrv2(int n, int *ip, t_float *a);
   int nwh, j;
-  float delta, x, y;
+  t_float delta, x, y;
 
   ip[0] = nw;
   ip[1] = 1;
@@ -1400,10 +1400,10 @@ void lpp_makewt(int nw, int *ip, float *w)
 }
 
 
-void lpp_makect(int nc, int *ip, float *c)
+void lpp_makect(int nc, int *ip, t_float *c)
 {
   int nch, j;
-  float delta;
+  t_float delta;
 
   ip[1] = nc;
   if (nc > 1) {
@@ -1417,19 +1417,19 @@ void lpp_makect(int nc, int *ip, float *c)
     }
   }
 }
-void convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor )
+void convert(t_float *S, t_float *C, int N2, t_float *lastphase, t_float fundamental, t_float factor )
 {
-  float   phase,
+  t_float   phase,
     phasediff;
   int     real,
     imag,
     amp,
     freq;
-  float   a,
+  t_float   a,
     b;
   int     i;
 
-  /*  float myTWOPI, myPI; */
+  /*  t_float myTWOPI, myPI; */
   /*  double sin(), cos(), atan(), hypot();*/
 
   /*  myTWOPI = 8.*atan(1.);
@@ -1456,7 +1456,7 @@ void convert(float *S, float *C, int N2, float *lastphase, float fundamental, fl
     C[freq] = phasediff*factor + i*fundamental;
   }
 }
-void fold( float *I, float *W, int Nw, float *O, int N, int n )
+void fold( t_float *I, t_float *W, int Nw, t_float *O, int N, int n )
 {
   int i;
 
@@ -1473,10 +1473,10 @@ void fold( float *I, float *W, int Nw, float *O, int N, int n )
   }
 }
 
-void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
+void makehanning( t_float *H, t_float *A, t_float *S, int Nw, int N, int I, int odd )
 {
   int i;
-  float sum ;
+  t_float sum ;
 
 
   if (odd) {
@@ -1492,7 +1492,7 @@ void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
   }
 
   if ( Nw > N ) {
-    float x ;
+    t_float x ;
 
     x = -(Nw - 1)/2. ;
     for ( i = 0 ; i < Nw ; i++, x += 1. )
@@ -1506,8 +1506,8 @@ void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
     sum += A[i] ;
 
   for ( i = 0 ; i < Nw ; i++ ) {
-    float afac = 2./sum ;
-    float sfac = Nw > N ? 1./afac : afac ;
+    t_float afac = 2./sum ;
+    t_float sfac = Nw > N ? 1./afac : afac ;
     A[i] *= afac ;
     S[i] *= sfac ;
   }

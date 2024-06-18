@@ -9,23 +9,23 @@ typedef struct _granola
 {
     
     t_object x_obj;
-    float x_f;
-    float *gbuf;
+    t_float x_f;
+    t_float *gbuf;
     long grainsamps;
     long grainsamps_old;
     long buflen; // length of buffer
     long buflen_old;
     int maxgrainsamps; // set maximum delay in ms.
-    float grain_duration; // user grain duration in seconds
-    float sr;
-    float *grainenv;
+    t_float grain_duration; // user grain duration in seconds
+    t_float sr;
+    t_float *grainenv;
     long gpt1; // grain pointer 1
     long gpt2; // grain pointer 2
     long gpt3; // grain pointer 3
-    float phs1; // phase 1
-    float phs2; // phase 2
-    float phs3; // phase 3
-    float incr;
+    t_float phs1; // phase 1
+    t_float phs2; // phase 2
+    t_float phs3; // phase 3
+    t_float incr;
     long curdel;
     short mute_me;
     short iconnect;
@@ -62,8 +62,8 @@ void granola_float(t_granola *x, double f) {
 */
 void granola_dsp_free(t_granola *x)
 {
-    freebytes(x->gbuf,x->buflen * sizeof(float));
-    freebytes(x->grainenv,x->grainsamps * sizeof(float));
+    freebytes(x->gbuf,x->buflen * sizeof(t_float));
+    freebytes(x->grainenv,x->grainsamps * sizeof(t_float));
 }
 
 
@@ -92,7 +92,7 @@ void granola_size(t_granola *x, t_floatarg newsize) {
     x->grainsamps = newsamps; // will use for shrinkage
     x->buflen = x->grainsamps * 4;
     for(i = 0; i < x->grainsamps; i++ ) {
-        x->grainenv[i] = .5 + (-.5 * cos( TWOPI * ((float)i/(float)x->grainsamps) ) );
+        x->grainenv[i] = .5 + (-.5 * cos( TWOPI * ((t_float)i/(t_float)x->grainsamps) ) );
     }
     x->gpt1 = 0;
     x->gpt2 = x->grainsamps / 3.;
@@ -136,19 +136,19 @@ void granola_init(t_granola *x)
     x->buflen = x->grainsamps * 4;
     // first time only
     if(x->gbuf == NULL) {
-        x->gbuf = (float *) getbytes(x->buflen * sizeof(float));
-        x->grainenv = (float *) getbytes(x->grainsamps * sizeof(float));
+        x->gbuf = (t_float *) getbytes(x->buflen * sizeof(t_float));
+        x->grainenv = (t_float *) getbytes(x->grainsamps * sizeof(t_float));
         x->incr = .5;
         x->mute_me = 0;
     }
     // or realloc if necessary
     // *resizebytes(void *x, size_t oldsize, size_t newsize);
     else {
-        x->gbuf = (float *) resizebytes(x->gbuf, x->buflen_old * sizeof(float), x->buflen * sizeof(float));
-        x->grainenv = (float *) resizebytes(x->grainenv, x->grainsamps_old * sizeof(float), x->grainsamps * sizeof(float));
+        x->gbuf = (t_float *) resizebytes(x->gbuf, x->buflen_old * sizeof(t_float), x->buflen * sizeof(t_float));
+        x->grainenv = (t_float *) resizebytes(x->grainenv, x->grainsamps_old * sizeof(t_float), x->grainsamps * sizeof(t_float));
     }
     for(i = 0; i < x->grainsamps; i++ ) {
-        x->grainenv[i] = .5 + (-.5 * cos(TWOPI * ((float)i/(float)x->grainsamps)));
+        x->grainenv[i] = .5 + (-.5 * cos(TWOPI * ((t_float)i/(t_float)x->grainsamps)));
     }
     x->gpt1 = 0;
     x->gpt2 = x->grainsamps / 3.;
@@ -162,9 +162,9 @@ void granola_init(t_granola *x)
 
 t_int *granola_perform(t_int *w)
 {
-    float  outsamp ;
+    t_float  outsamp ;
     int iphs_a, iphs_b;
-    float frac;
+    t_float frac;
     
     
     /****/
@@ -177,15 +177,15 @@ t_int *granola_perform(t_int *w)
     long gpt1 = x->gpt1;
     long gpt2 = x->gpt2;
     long gpt3 = x->gpt3;
-    float phs1 = x->phs1;
-    float phs2 = x->phs2;
-    float phs3 = x->phs3;
+    t_float phs1 = x->phs1;
+    t_float phs2 = x->phs2;
+    t_float phs3 = x->phs3;
     long curdel = x->curdel;
     long buflen = x->buflen;
     long grainsamps = x->grainsamps;
-    float *grainenv = x->grainenv;
-    float *gbuf = x->gbuf;
-    float incr = x->incr;
+    t_float *grainenv = x->grainenv;
+    t_float *gbuf = x->gbuf;
+    t_float incr = x->incr;
     
     if( x->mute_me ) {
         while( n-- ) {

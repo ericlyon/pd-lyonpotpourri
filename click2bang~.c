@@ -7,7 +7,7 @@ static t_class *click2bang_class;
 typedef struct _click2bang
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   void *bang;
   void *clock;
 } t_click2bang;

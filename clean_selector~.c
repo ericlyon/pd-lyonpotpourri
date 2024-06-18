@@ -10,20 +10,20 @@ typedef struct _clean_selector
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   // Variables Here
   short input_chans;
   short active_chan;
   short last_chan;
   int samps_to_fade;
   int fadesamps;
-  float fadetime;
-  float pi_over_two;
+  t_float fadetime;
+  t_float pi_over_two;
   short fadetype;
   short *connected_list;
-  float **bulk ; // array to point to all input audio channels
-  float sr;
-  float vs;
+  t_float **bulk ; // array to point to all input audio channels
+  t_float sr;
+  t_float vs;
   int inlet_count;
 } t_clean_selector;
 
@@ -110,7 +110,7 @@ void clean_selector_dsp_free(t_clean_selector *x)
 
 void clean_selector_fadetime(t_clean_selector *x, t_floatarg f)
 {
-  float fades = (float)f / 1000.0;
+  t_float fades = (t_float)f / 1000.0;
 
   if( fades < .0001 || fades > 1000.0 ) {
     pd_error(0, "fade time is constrained to 0.1 - 1000000, but you wanted %f",f );
@@ -133,11 +133,11 @@ t_int *clean_selector_perform(t_int *w)
   short active_chan = x->active_chan;
   short last_chan = x->last_chan;
   int samps_to_fade = x->samps_to_fade;
-  float m1, m2;
-  float **bulk = x->bulk;
-  float pi_over_two = x->pi_over_two;
+  t_float m1, m2;
+  t_float **bulk = x->bulk;
+  t_float pi_over_two = x->pi_over_two;
   short fadetype = x->fadetype;
-  float phase;
+  t_float phase;
   int inlet_count = x->inlet_count;
 
   for ( i = 0; i < inlet_count; i++ ) {
@@ -151,7 +151,7 @@ t_int *clean_selector_perform(t_int *w)
     while( n-- ) {
       if ( samps_to_fade >= 0 ) {
         if( fadetype == CS_POWER ) {
-          phase = pi_over_two * (1.0 - (samps_to_fade / (float) fadesamps)) ;
+          phase = pi_over_two * (1.0 - (samps_to_fade / (t_float) fadesamps)) ;
           m1 = sin( phase );
           m2 = cos( phase );
           --samps_to_fade;

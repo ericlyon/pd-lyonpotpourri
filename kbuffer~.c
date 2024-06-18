@@ -8,24 +8,24 @@ typedef struct _kbuffer
 {
 
   t_object x_obj;
-  float x_f;
-  float ksrate;
-  float srate;
-  float si;
-  float phase;
-  float duration;
+  t_float x_f;
+  t_float ksrate;
+  t_float srate;
+  t_float si;
+  t_float phase;
+  t_float duration;
   int iphase;
   int lastphase;
   int length;
-  float *data;
-  float fval;
-  float lastval;
+  t_float *data;
+  t_float fval;
+  t_float lastval;
   short record_flag;
   short play_flag;
   short dump_flag;
   short loop_flag;
-  float sync ;
-  float speed ;
+  t_float sync ;
+  t_float speed ;
   short in_connected;
   int memsize;
 } t_kbuffer;
@@ -75,9 +75,9 @@ void kbuffer_size(t_kbuffer *x, t_floatarg ms) {
   if(ms < 1)
     ms = 1;
   x->duration = ms / 1000.0 ;
-  x->memsize = x->ksrate * x->duration * sizeof(float);
+  x->memsize = x->ksrate * x->duration * sizeof(t_float);
   x->length = x->duration * x->ksrate ;
-  x->data = (float*) realloc(x->data,x->memsize*sizeof(float));
+  x->data = (t_float*) realloc(x->data,x->memsize*sizeof(t_float));
   for( i = 0; i < x->length; i++) {
     x->data[i] = 0.0;
   }
@@ -88,10 +88,10 @@ void kbuffer_ksrate(t_kbuffer *x, t_floatarg ksrate) {
   if( ksrate < 1 )
     ksrate = 1 ;
   x->ksrate = ksrate ;
-  x->memsize = x->ksrate * x->duration * sizeof(float);
+  x->memsize = x->ksrate * x->duration * sizeof(t_float);
   x->length = x->duration * x->ksrate ;
   x->si = x->ksrate / x->srate;
-  x->data = (float*) realloc(x->data,x->memsize*sizeof(float));
+  x->data = (t_float*) realloc(x->data,x->memsize*sizeof(t_float));
   for( i = 0; i < x->length; i++) {
     x->data[i] = 0.0;
   }
@@ -154,7 +154,7 @@ void kbuffer_loop(t_kbuffer *x) {
 }
 
 void kbuffer_dsp_free(t_kbuffer *x) {
-  freebytes(x->data, x->memsize * sizeof(float));
+  freebytes(x->data, x->memsize * sizeof(t_float));
 }
 
 t_int *kbuffer_perform(t_int *w)
@@ -172,13 +172,13 @@ t_int *kbuffer_perform(t_int *w)
   int length = x->length;
   int iphase = x->iphase;
   int lastphase = x->lastphase;
-  float phase = x->phase;
-  float *data = x->data;
-  float si = x->si;
-  float speed = x->speed;
-  float sample;
+  t_float phase = x->phase;
+  t_float *data = x->data;
+  t_float si = x->si;
+  t_float speed = x->speed;
+  t_float sample;
   short in_connected = x->in_connected;
-  float fval = x->fval;
+  t_float fval = x->fval;
   /*********************/
 
   while( n-- ) {
@@ -199,7 +199,7 @@ t_int *kbuffer_perform(t_int *w)
         lastphase = iphase ;
         data[ iphase ] = sample ;
       }
-      *sync_out++ = phase / (float) length ;
+      *sync_out++ = phase / (t_float) length ;
       *out++ = sample ; // mirror input to output
     } else if ( play_flag ) {
       iphase = phase;
@@ -214,7 +214,7 @@ t_int *kbuffer_perform(t_int *w)
       else {
         *out++ = data[ iphase ] ;
       }
-      *sync_out++ = phase / (float) length ;
+      *sync_out++ = phase / (t_float) length ;
     }
     else if ( loop_flag ) {
       iphase = phase;
@@ -225,7 +225,7 @@ t_int *kbuffer_perform(t_int *w)
         phase = iphase = length - 1;
       }
       *out++ = data[ iphase ] ;
-      *sync_out++ = phase / (float) length ;
+      *sync_out++ = phase / (t_float) length ;
 
     }
     else if ( dump_flag ) {
@@ -286,9 +286,9 @@ void kbuffer_init(t_kbuffer *x,short initialized)
     x->loop_flag = 0;
     x->fval = 0;
     x->speed = 1.0 ;
-    x->memsize = x->ksrate * x->duration * sizeof(float);
+    x->memsize = x->ksrate * x->duration * sizeof(t_float);
     x->length = x->duration * x->ksrate;
-    x->data = (float *) getbytes(x->memsize * sizeof(float));
+    x->data = (t_float *) getbytes(x->memsize * sizeof(t_float));
   }
   x->si = x->ksrate / x->srate;
 }

@@ -7,8 +7,8 @@ static t_class *clickhold_class;
 typedef struct _clickhold
 {
   t_object x_obj;
-  float x_f;
-  float hold_value;
+  t_float x_f;
+  t_float hold_value;
 } t_clickhold;
 
 static void *clickhold_new(void);
@@ -40,7 +40,7 @@ t_int *clickhold_perform(t_int *w)
   t_float *out_vec = (t_float *)(w[3]);
   int n = (int) w[4];
 
-  float hold_value = x->hold_value;
+  t_float hold_value = x->hold_value;
 
   while( n-- ) {
     if(*in_vec) {

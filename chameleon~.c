@@ -1,4 +1,4 @@
-#import "MSPd.h"
+#include "MSPd.h"
 #include "chameleon_pd.h"
 #include "stdlib.h"
 /* Pure Data version of chameleon */
@@ -94,10 +94,10 @@ static void clip(double *x, double min, double max);
 /*function prototypes*/
 
 static void putsine (double *arr, long len);
-static float boundrand(float min, float max);
+static t_float boundrand(t_float min, t_float max);
 static void mycombset(double loopt,double rvt,int init,double *a,double srate);
 static double mycomb(double samp,double *a);
-static void setweights(float *a, int len);
+static void setweights(t_float *a, int len);
 static void  delset2(double *a,int *l,double xmax, double srate);
 static void  delset3(double *a,int *l,double xmax,double srate, double alloc_max);
 static void delput2(double x,double *a,int *l);
@@ -115,7 +115,7 @@ static double allpass(double samp,double *a);
 static void init_reverb_data(double *a);
 static void init_ellipse_data(double **a);
 static void killdc( double *inbuf, int in_frames, int channels, t_chameleon *x);
-// static void setExpFlamFunc(float *arr, int flen, float v1,float v2,float alpha);
+// static void setExpFlamFunc(t_float *arr, int flen, t_float v1,t_float v2,t_float alpha);
 static void setflamfunc1(double *arr, int flen);
 static void funcgen1(double *outArray, int outlen, double duration, double outMin, double outMax,
               double speed1, double speed2, double gain1, double gain2, double *phs1, double *phs2,
@@ -135,7 +135,7 @@ static void feed1(double *inbuf, double *outbuf, int in_frames, int out_frames,i
            double *functab2,double *functab3,double *functab4,int funclen,
            double duration, double maxDelay, t_chameleon *x);
 static void reverb1me(double *in, double *out, int inFrames, int out_frames, int nchans, int channel, double revtime, double dry, t_chameleon *x);
-// static void atom_arg_getfloat(float *c, long idx, long ac, t_atom *av);
+// static void atom_arg_getfloat(t_float *c, long idx, long ac, t_atom *av);
 
 /* Main Pure Data code */
 
@@ -196,8 +196,8 @@ void chameleon_report(t_chameleon *x){
     for(i = 0; i < MAX_SLOTS; i++){
         if( slots[i].pcount > 0 ){
             SETSYMBOL(data+data_index, loadslot); data_index++;
-            SETFLOAT(data+data_index, (float)i); data_index++;
-            SETFLOAT(data+data_index, (float)slots[i].pcount); data_index++;
+            SETFLOAT(data+data_index, (t_float)i); data_index++;
+            SETFLOAT(data+data_index, (t_float)slots[i].pcount); data_index++;
             for(j = 0; j < slots[i].pcount; j++){
                 SETFLOAT(data+data_index, slots[i].params[j]); data_index++;
             }
@@ -402,7 +402,7 @@ void *chameleon_new(t_symbol *msg, short argc, t_atom *argv)
     membytes += (x->sinelen + 1) * sizeof(double);
     x->params = (double *) getbytes(MAX_PARAMETERS * sizeof(double));
     membytes += MAX_PARAMETERS * sizeof(double);
-    x->odds = (float *) getbytes(64 * sizeof(float));
+    x->odds = (t_float *) getbytes(64 * sizeof(t_float));
     x->distortion_length = 32768;
     x->distortion_function = (double *) getbytes(x->distortion_length * sizeof(double));
     membytes += x->distortion_length * sizeof(double);
@@ -601,7 +601,7 @@ void *chameleon_new(t_symbol *msg, short argc, t_atom *argv)
         x->resonadsr_units[i].adsr = (CMIXADSR *)getbytes(sizeof(CMIXADSR));
         membytes += sizeof(CMIXADSR);
         x->resonadsr_units[i].adsr->func = (double *)getbytes(8192 * sizeof(double));
-        membytes += 8192 * sizeof(float);
+        membytes += 8192 * sizeof(t_float);
         x->resonadsr_units[i].adsr->len = 8192;
     }
     
@@ -700,7 +700,7 @@ void *chameleon_new(t_symbol *msg, short argc, t_atom *argv)
 
 void chameleon_memory(t_chameleon *x)
 {
-    post("Memory allocation for this instance of chameleon~ is %.2f MBytes",(float)x->membytes/1000000.0);
+    post("Memory allocation for this instance of chameleon~ is %.2f MBytes",(t_float)x->membytes/1000000.0);
 }
 
 void chameleon_dsp_free(t_chameleon *x)
@@ -711,7 +711,7 @@ void chameleon_dsp_free(t_chameleon *x)
     freebytes(x->data,1024 * sizeof(t_atom));
     freebytes(x->sinewave,(x->sinelen + 1) * sizeof(double));
     freebytes(x->params,MAX_PARAMETERS * sizeof(double));
-    freebytes(x->odds,64 * sizeof(float));
+    freebytes(x->odds,64 * sizeof(t_float));
     
     // free combs
     for(i= 0; i < max_dsp_units; i++){
@@ -1016,8 +1016,8 @@ t_int *chameleon_perform(t_int *w)
     }
     // HERE GOES THE OUTPUT. Downgrade Chameleon doubles to Pd single-precision floats
     for(i = 0; i < n; i++){
-        outchanL[i] = (float) chan1[i];
-        outchanR[i] = (float) chan2[i];
+        outchanL[i] = (t_float) chan1[i];
+        outchanR[i] = (t_float) chan2[i];
     }
 panic:
     ;
@@ -1841,7 +1841,7 @@ void chameleon_recall_parameters_exec(t_chameleon *x)
         }
     }
     
-//    events = floor( boundrand( (float)minproc, (float) maxproc) );
+//    events = floor( boundrand( (t_float)minproc, (t_float) maxproc) );
 
     x->pcount = pcount;
 }
@@ -1849,12 +1849,12 @@ void chameleon_recall_parameters_exec(t_chameleon *x)
 void chameleon_set_parameters_exec(t_chameleon *x)
 {
     long max_dsp_units = x->max_dsp_units;
-    float rval;
+    t_float rval;
     int events;
     int i, j;
     int ftype;
     double cf, bw;//, bw;
-    float *odds = x->odds;
+    t_float *odds = x->odds;
     int maxproc  = x->max_process_per_note;
     int minproc = x->min_process_per_note;
     double delay, revtime;
@@ -1905,7 +1905,7 @@ void chameleon_set_parameters_exec(t_chameleon *x)
         return;
     }
     
-    events = floor( boundrand( (float)minproc, (float) maxproc) );
+    events = floor( boundrand( (t_float)minproc, (t_float) maxproc) );
 
     pcount = 0;
     if( DEBUG_CHAMELEON ){
@@ -2229,7 +2229,7 @@ void chameleon_set_parameters_exec(t_chameleon *x)
 
 void chameleon_dsp(t_chameleon *x, t_signal **sp)
 {
-    float samplerate;
+    t_float samplerate;
     x->vs = sp[0]->s_n;
     samplerate = sys_getsr();
     // post("chameleon - dsp blocksize %d, and sample rate %f", x->vs, samplerate);
@@ -2525,9 +2525,9 @@ void putsine (double *arr, long len)
 }
 
 
-float boundrand(float min, float max)
+t_float boundrand(t_float min, t_float max)
 {
-    return min + (max-min) * ((float)rand()/MY_MAX);
+    return min + (max-min) * ((t_float)rand()/MY_MAX);
 }
 
 
@@ -2557,9 +2557,9 @@ double mycomb(double samp,double *a)
     return(temp);
 }
 
-void setweights(float *a, int len)
+void setweights(t_float *a, int len)
 {
-    float sum = 0.0;
+    t_float sum = 0.0;
     int i;
     for(i=0;i<len;i++)
         sum += a[i];
@@ -2576,7 +2576,7 @@ void setweights(float *a, int len)
 
 void  delset2(double *a,int *l,double xmax, double srate)
 {
-    /* delay initialization.  a is address of float array, l is size-2 int
+    /* delay initialization.  a is address of t_float array, l is size-2 int
      * array for bookkeeping variables, xmax, is maximum expected delay */
     
     int i;
@@ -2590,7 +2590,7 @@ void  delset2(double *a,int *l,double xmax, double srate)
 
 void  delset3(double *a,int *l,double xmax,double srate, double alloc_max)
 {
-    /* delay initialization.  a is address of float array, l is size-2 int
+    /* delay initialization.  a is address of t_float array, l is size-2 int
      * array for bookkeeping variables, xmax, is maximum expected delay */
     
     int i;
@@ -2608,7 +2608,7 @@ void  delset3(double *a,int *l,double xmax,double srate, double alloc_max)
 void delput2(double x,double *a,int *l)
 {
     
-    /* put value in delay line. See delset. x is float */
+    /* put value in delay line. See delset. x is t_float */
     
     if( ((*l) >= 0)  && ((*l) < *(l+1)) ){
         *(a + (*l)++) = x;
@@ -2635,14 +2635,14 @@ double dliget2(double *a,double wait,int *l,double srate)
     return(*(a+i) + frac * (*(a+im1) - *(a+i)));
 }
 
-void butset(float *a)
+void butset(t_float *a)
 {
     a[6] = a[7] = 0.0;
 }
 
 void lobut(double *a, double cutoff, double SR)
 {
-    register float     c;
+    register t_float     c;
     
     c = 1.0 / tan( PI * cutoff / SR);
     a[1] = 1.0 / ( 1.0 + ROOT2 * c + c * c);
@@ -2655,7 +2655,7 @@ void lobut(double *a, double cutoff, double SR)
 
 void hibut(double *a, double cutoff, double SR)
 {
-    register float    c;
+    register t_float    c;
     
     c = tan( PI * cutoff / SR);
     a[1] = 1.0 / ( 1.0 + ROOT2 * c + c * c);
@@ -2669,7 +2669,7 @@ void hibut(double *a, double cutoff, double SR)
 
 void bpbut(double *a, double formant, double bandwidth, double SR)
 {
-    register float  c, d;
+    register t_float  c, d;
     
     c = 1.0 / tan( PI * bandwidth / SR);
     d = 2.0 * cos( 2.0 * PI * formant / SR);
@@ -2758,7 +2758,7 @@ void setflamfunc1(double *arr, int flen)
 }
 
 
-void setExpFlamFunc(float *arr, int flen, float v1,float v2,float alpha)
+void setExpFlamFunc(t_float *arr, int flen, t_float v1,t_float v2,t_float alpha)
 {
     int i;
 //    double exp();
@@ -2767,7 +2767,7 @@ void setExpFlamFunc(float *arr, int flen, float v1,float v2,float alpha)
         alpha = .00000001 ;
     
     for ( i = 0; i < flen; i++){
-        *(arr + i) = v1 + (v2-v1) * ((1-exp((float)i*alpha/((float)flen-1.)))/(1-exp(alpha)));
+        *(arr + i) = v1 + (v2-v1) * ((1-exp((t_float)i*alpha/((t_float)flen-1.)))/(1-exp(alpha)));
     }
 }
 
@@ -2798,7 +2798,7 @@ void normtab(double *inarr,double *outarr, double min, double max, int len)
 {
     int i;
     
-    float imin=9999999999., imax=-9999999999.;
+    t_float imin=9999999999., imax=-9999999999.;
     
     for(i = 0; i < len ; i++){
         if( imin > inarr[i] )
@@ -2900,7 +2900,7 @@ void do_compdist(double *in,double *out,int sampFrames,int nchans,int channel,
     
     int i;
     
-    float rectsamp;
+    t_float rectsamp;
     
     for( i = channel ; i < sampFrames * nchans; i+= nchans )
     {
@@ -2975,28 +2975,28 @@ void buildadsr(CMIXADSR *a)
     }
     
     for( i = 0 ; i < segs[0]; i++ ){
-        m1 = 1.-(float)i/(float)(segs[0]);
+        m1 = 1.-(t_float)i/(t_float)(segs[0]);
         m2 = 1. - m1;
         *(func +i ) = f1 * m1 + f2 * m2;
     }
     ipoint = i;
     
     for( i = 0 ; i < segs[1]; i++ ){
-        m1 = 1.-(float)i/(float)(segs[1]);
+        m1 = 1.-(t_float)i/(t_float)(segs[1]);
         m2 = 1. - m1;
         *(func + i + ipoint) = f2 * m1 + f3 * m2;
     }
     ipoint += i;
     
     for( i = 0 ; i < segs[2]; i++ ){
-        m1 = 1.-(float)i/(float)(segs[2]);
+        m1 = 1.-(t_float)i/(t_float)(segs[2]);
         m2 = 1. - m1;
         *(func + i + ipoint) = f3;
     }
     ipoint += i;
     
     for( i = 0 ; i < segs[3]; i++ ){
-        m1 = 1.-(float)i/(float)(segs[3]);
+        m1 = 1.-(t_float)i/(t_float)(segs[3]);
         m2 = 1. - m1;
         *(func + ipoint + i) = f3 * m1 + f4 * m2;
     }
@@ -3010,7 +3010,7 @@ void ringmod(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     double *sinewave = x->sinewave;
     int sinelen = x->sinelen;
     double *params = x->params;
-    float srate = x->sr;
+    t_float srate = x->sr;
     long vs = x->vs;
     int i;
     double phase = 0.0;
@@ -3043,7 +3043,7 @@ void ringmod4(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     double *sinewave = x->sinewave;
     int sinelen = x->sinelen;
     double *params = x->params;
-    float srate = x->sr;
+    t_float srate = x->sr;
     long vs = x->vs;
     int i;
     double phase = 0.0;
@@ -3350,7 +3350,7 @@ void slidecomb(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     int *dv1, *dv2;        /* cmix bookkeeping */
     double delsamp1 = 0, delsamp2 = 0;
     double m1, m2;
-    double delay_time;
+    double delay_time = -1.;
     double *params = x->params;
     double srate = x->sr;
     double *delayline1;
@@ -3420,7 +3420,7 @@ void slideflam(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     int *dv1, *dv2;        /* cmix bookkeeping */
     double delsamp1 = 0, delsamp2 = 0;
     double m1, m2;
-    double delay_time;
+    double delay_time = -1.;
     double *params = x->params;
     double srate = x->sr;
     double *delayline1;
@@ -3561,7 +3561,7 @@ void bendy(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
 
 void reverb1(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
 {
-    float revtime;
+    t_float revtime;
     double *params = x->params;
     long vs = x->vs;
     int reverb1_count;
@@ -3666,7 +3666,7 @@ void feed1me(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     double delsamp1b=0, delsamp2b=0 ;
     double delay1, delay2, feedback1, feedback2;
     double funcSi, funcPhs;
-    double putsamp;
+    double putsamp = 0.;
     double duration;
     long ddl_func_len = (long) (x->sr * MAX_MINI_DELAY);
     
@@ -3912,13 +3912,13 @@ void ringfeed(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
 void resonadsr(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
 {
     int i;
-    float bwfac;
+    t_float bwfac;
     double *q1, *q2;
-    float cf, bw;
-    float si;
+    t_float cf, bw;
+    t_float si;
     double phase;
     double *params = x->params;
-    float srate = x->sr;
+    t_float srate = x->sr;
     long vs = x->vs;
     int resonadsr_count;
     double a,d,r,v1,v2,v3,v4,notedur;
@@ -3983,7 +3983,7 @@ void stv(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     int i;
     /* main variables */
     double *params = x->params;
-    float srate = x->sr;
+    t_float srate = x->sr;
     long vs = x->vs;
     int stv_count;
 

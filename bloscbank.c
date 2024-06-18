@@ -1,12 +1,12 @@
 
 #include "fftease.h"
 
-void bloscbank( float *S, float *O, int D, float iD, float *lf, float *la, float *index, float *tab,
-                int len, float synt, int lo, int hi )
+void bloscbank( t_float *S, t_float *O, int D, t_float iD, t_float *lf, t_float *la, t_float *index, t_float *tab,
+                int len, t_float synt, int lo, int hi )
 {
   int    amp,freq,chan, i;
 
-  float    a,ainc,f,finc,address;
+  t_float    a,ainc,f,finc,address;
 
   for ( chan = lo; chan < hi; chan++ ) {
 

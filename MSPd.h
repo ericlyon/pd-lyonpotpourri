@@ -29,7 +29,7 @@
 
 
 #include "m_pd.h"
-// #define t_floatarg float
+// #define t_floatarg t_float
 #define t_double double
 
 #define atom_getsymarg atom_getsymbolarg
@@ -46,7 +46,7 @@
 #endif
 
 /*** MSP helper functions **/
-void atom_arg_getfloat(float *c, long idx, long ac, t_atom *av);
+void atom_arg_getfloat(t_float *c, long idx, long ac, t_atom *av);
 void atom_arg_getsym(t_symbol **c, long idx, long ac, t_atom *av);
 
 // #define potpourri_announce(objname)  post("( %s )\t%s",objname,LYONPOTPOURRI_MSG)

@@ -21,22 +21,22 @@ static t_class *player_class;
 
 typedef struct
 {
-  float phase; // current phase in frames
-  float gain; // gain for this note
+  t_float phase; // current phase in frames
+  t_float gain; // gain for this note
   short status;// status of this event slot
-  float increment;// first increment noted (only if using static increments)
+  t_float increment;// first increment noted (only if using static increments)
 } t_event;
 
 typedef struct _player
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   t_symbol *wavename; // name of waveform buffer
-  float sr; // sampling rate
+  t_float sr; // sampling rate
   short hosed; // buffers are bad
-  float fadeout; // fadeout time in sample frames (if truncation)
-  float sync; // input from groove sync signal
-  float increment; // read increment
+  t_float fadeout; // fadeout time in sample frames (if truncation)
+  t_float sync; // input from groove sync signal
+  t_float increment; // read increment
   short direction; // forwards or backwards
   int most_recent_event; // position in array where last note was initiated
   long b_nchans; // channels of buffer
@@ -68,7 +68,7 @@ static t_int *player_perform_hosed1(t_int *w);
 // static t_int *pd_player(t_int *w);
 
 static void player_dsp(t_player *x, t_signal **sp);
-// static float player_boundrand(float min, float max);
+// static t_float player_boundrand(t_float min, t_float max);
 static void player_dsp_free(t_player *x);
 //static void player_float(t_player *x, double f);
 // static void player_interpolation(t_player *x, t_float f);
@@ -174,8 +174,8 @@ void player_init(t_player *x,short initialized)
     for(i = 0; i < x->overlap_max; i++) {
       x->events[i].status = INACTIVE;
     }
-    // x->increment_vec = realloc(x->increment_vec, x->vs * sizeof(float));
-    // x->trigger_vec = realloc(x->trigger_vec, x->vs * sizeof(float));
+    // x->increment_vec = realloc(x->increment_vec, x->vs * sizeof(t_float));
+    // x->trigger_vec = realloc(x->trigger_vec, x->vs * sizeof(t_float));
   }
 
 }
@@ -217,10 +217,10 @@ t_int *player_perform_hosed1(t_int *w)
 {
 
   //  t_player *x = (t_player *) (w[1]);
-  float *outchan = (t_float *)(w[4]);
+  t_float *outchan = (t_float *)(w[4]);
   int n = (int) w[5];
 
-  memset((void *)outchan,0,sizeof(float) * n);
+  memset((void *)outchan,0,sizeof(t_float) * n);
   return(w+6);
 }
 
@@ -228,13 +228,13 @@ t_int *player_perform_hosed2(t_int *w)
 {
 
   //  t_player *x = (t_player *) (w[1]);
-  float *out1 = (t_float *)(w[4]);
-  float *out2 = (t_float *)(w[5]);
+  t_float *out1 = (t_float *)(w[4]);
+  t_float *out2 = (t_float *)(w[5]);
   int n = (int) w[6];
 
   //  while(n--) *outchan++ = 0.0;
-  memset((void *)out1,0,sizeof(float) * n);
-  memset((void *)out2,0,sizeof(float) * n);
+  memset((void *)out1,0,sizeof(t_float) * n);
+  memset((void *)out2,0,sizeof(t_float) * n);
   return(w+7);
 }
 
@@ -252,11 +252,11 @@ t_int *player_perform_mono_interpol(t_int *w)
   long b_nchans;
   t_event *events = x->events;
 
-  float increment = x->increment;
+  t_float increment = x->increment;
   int overlap_max = x->overlap_max;
   int iphase;
-  float fphase;
-  float gain;
+  t_float fphase;
+  t_float gain;
   short insert_success;
   int new_insert;
   int i,j,k;
@@ -264,16 +264,16 @@ t_int *player_perform_mono_interpol(t_int *w)
   t_float *increment_vec = x->increment_vec;
   short bail;
   short static_increment = x->static_increment;
-  float maxphase;
-  float frac;
+  t_float maxphase;
+  t_float frac;
   int theft_candidate;
   int flimit;
-  float samp1, samp2;
+  t_float samp1, samp2;
   long b_frames;
-  float vincrement;
+  t_float vincrement;
 
   if(x->mute || x->hosed) {
-    memset((void *)outchan,0,sizeof(float) * n);
+    memset((void *)outchan,0,sizeof(t_float) * n);
     return(w+6);
   }
   player_setbuf(x, x->wavename);
@@ -283,7 +283,7 @@ t_int *player_perform_mono_interpol(t_int *w)
 
   if(! x->b_valid) {
     player_stop(x);
-    memset((void *)outchan,0,sizeof(float) * n);
+    memset((void *)outchan,0,sizeof(t_float) * n);
     return(w+6);
   }
 
@@ -309,7 +309,7 @@ t_int *player_perform_mono_interpol(t_int *w)
     }
   }
   if(bail) {
-    memset((void *)outchan,0,sizeof(float) * n);
+    memset((void *)outchan,0,sizeof(t_float) * n);
     return(w+6);
   }
 
@@ -317,7 +317,7 @@ t_int *player_perform_mono_interpol(t_int *w)
 
   vincrement = increment_vec[0];
 
-  memset((void *)outchan,0,sizeof(float) * n);
+  memset((void *)outchan,0,sizeof(t_float) * n);
   flimit = (b_frames - 1) * 2;
   for(i = 0; i < overlap_max; i++) {
     if(events[i].status == ACTIVE) {
@@ -467,9 +467,9 @@ t_int *player_perform_mono_interpol(t_int *w)
 
 
 
-float player_boundrand(float min, float max)
+t_float player_boundrand(t_float min, t_float max)
 {
-  return min + (max-min) * ((float) (rand() % RAND_MAX)/ (float) RAND_MAX);
+  return min + (max-min) * ((t_float) (rand() % RAND_MAX)/ (t_float) RAND_MAX);
 }
 
 

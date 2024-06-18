@@ -52,7 +52,7 @@ typedef struct _stutter
   int *stored_starts;
   int *stored_samps;
   long b_valid;
-  //float *b_samples;
+  //t_float *b_samples;
   t_word *b_samples;
   long b_frames;
 } t_stutter;
@@ -79,12 +79,12 @@ static void stutter_taper(t_stutter *x,  t_floatarg f);
 static void stutter_min_echo(t_stutter *x,  t_floatarg f);
 static void stutter_max_echo(t_stutter *x,  t_floatarg f);
 static void stutter_minmax_echo(t_stutter *x,  t_floatarg minf, t_floatarg maxf);
-static float boundrand(float min, float max);
+static t_float boundrand(t_float min, t_float max);
 static void stutter_init(t_stutter *x,short initialized);
 //static void stutter_info(t_stutter *x);
 //static void stutter_version(t_stutter *x);
 static void stutter_setarray(t_stutter *x);
-static float erand(void);
+static t_float erand(void);
 
 t_symbol *ps_buffer;
 
@@ -192,7 +192,7 @@ t_int *stutter_perform(t_int *w)
 
     if( x->framesize != b_frames ) {
       x->framesize = b_frames;
-      x->buffer_duration = (float)  b_frames / (float) x->R ;
+      x->buffer_duration = (t_float)  b_frames / (t_float) x->R ;
     }
 
     while( n-- ) {
@@ -203,10 +203,10 @@ t_int *stutter_perform(t_int *w)
       }
       theSample = tab[ b_index ].w_float;
       if( samps_to_go > loop_samps - taper_samps ) {
-        *out1++ = theSample * ( (float)(loop_samps - samps_to_go)/(float)taper_samps );
+        *out1++ = theSample * ( (t_float)(loop_samps - samps_to_go)/(t_float)taper_samps );
         ++b_index;
       } else if( samps_to_go < taper_samps ) {
-        *out1++ = theSample * ( (float)(samps_to_go)/(float)taper_samps );
+        *out1++ = theSample * ( (t_float)(samps_to_go)/(t_float)taper_samps );
         ++b_index;
 
       } else {
@@ -220,9 +220,9 @@ t_int *stutter_perform(t_int *w)
           sdev = -sdev;
         }
         if(  ( --echos <= 0 ) && ( ! lock_loop ) ) {
-          echos = (int)boundrand((float)x->min_echo,(float)x->max_echo);
+          echos = (int)boundrand((t_float)x->min_echo,(t_float)x->max_echo);
           samps_to_go = loop_samps =
-            loop_min_samps + ( erand() * (float)(loop_max_samps-loop_min_samps) ) ;
+            loop_min_samps + ( erand() * (t_float)(loop_max_samps-loop_min_samps) ) ;
           loop_start = erand() * (b_frames - loop_samps) ;
         } else {
           loop_samps += sdev;
@@ -261,12 +261,12 @@ t_int *stutter_perform(t_int *w)
   }
 }
 
-float erand(void) {
+t_float erand(void) {
   static int im = 6075 ;
   static int ia = 106 ;
   static int ic = 1283 ;
   rand_state = (rand_state * ia +  ic) % im ;
-  return ( (float) rand_state / (float) im );
+  return ( (t_float) rand_state / (t_float) im );
 }
 
 void stutter_info(t_stutter *x)
@@ -276,8 +276,8 @@ void stutter_info(t_stutter *x)
 
 void stutter_new_loop(t_stutter *x)
 {
-  x->echos = (int)boundrand((float)x->min_echo,(float)x->max_echo);
-  x->samps_to_go = x->loop_samps = boundrand((float)x->loop_min_samps,(float)x->loop_max_samps);
+  x->echos = (int)boundrand((t_float)x->min_echo,(t_float)x->max_echo);
+  x->samps_to_go = x->loop_samps = boundrand((t_float)x->loop_min_samps,(t_float)x->loop_max_samps);
   x->loop_start = boundrand(0.0,1.0) * (x->framesize - x->loop_samps) ;
 }
 
@@ -316,7 +316,7 @@ void stutter_recall_loop(t_stutter *x, t_floatarg loop_b_index)
 
 void stutter_set_loop(t_stutter *x, t_symbol *msg, int argc, t_atom *argv)
 {
-  float temp;
+  t_float temp;
   atom_arg_getfloat(&temp, 0, argc, argv);
   x->loop_start = temp;
   atom_arg_getfloat(&temp, 0, argc, argv);
@@ -418,9 +418,9 @@ void *stutter_new(t_symbol *msg, int argc, t_atom *argv)
   return x;
 }
 
-float boundrand(float min, float max)
+t_float boundrand(t_float min, t_float max)
 {
-  return min + (max-min) * ((float)rand()/RAND_MAX);
+  return min + (max-min) * ((t_float)rand()/RAND_MAX);
 }
 
 void stutter_taper(t_stutter *x,  t_floatarg f)
@@ -472,15 +472,15 @@ void stutter_init(t_stutter *x,short initialized)
   int i;
 
   if(!initialized) {
-    x->loop_min_samps = x->loop_min_duration * (float)x->R;
-    x->loop_max_samps = x->loop_max_duration * (float)x->R;
+    x->loop_min_samps = x->loop_min_duration * (t_float)x->R;
+    x->loop_max_samps = x->loop_max_duration * (t_float)x->R;
     x->samps_to_go = x->loop_samps = x->loop_min_samps +
-      (erand() * (float)(x->loop_max_samps-x->loop_min_samps) ) ;
+      (erand() * (t_float)(x->loop_max_samps-x->loop_min_samps) ) ;
 
     x->loop_start = 0;
     x->min_echo = 2;
     x->max_echo = 12;
-    x->echos = (int) boundrand((float)x->min_echo,(float)x->max_echo);
+    x->echos = (int) boundrand((t_float)x->min_echo,(t_float)x->max_echo);
     x->b_index = x->loop_start ;
     x->samps_to_go = x->loop_samps;
     x->taper_samps = x->R * x->taper_duration;
@@ -498,10 +498,10 @@ void stutter_init(t_stutter *x,short initialized)
       x->stored_samps[i] = 0;
     }
   } else {
-    x->loop_min_samps = x->loop_min_duration * (float)x->R;
-    x->loop_max_samps = x->loop_max_duration * (float)x->R;
+    x->loop_min_samps = x->loop_min_duration * (t_float)x->R;
+    x->loop_max_samps = x->loop_max_duration * (t_float)x->R;
     x->samps_to_go = x->loop_samps = x->loop_min_samps +
-      (erand() * (float)(x->loop_max_samps - x->loop_min_samps)) ;
+      (erand() * (t_float)(x->loop_max_samps - x->loop_min_samps)) ;
     x->loop_start = 0;
     x->b_index = x->loop_start;
     x->samps_to_go = x->loop_samps;

@@ -7,16 +7,16 @@
 static t_class *killdc_class;
 
 typedef struct {
-  float ps[4][MAXSECTS];
-  float c[4][MAXSECTS];
+  t_float ps[4][MAXSECTS];
+  t_float c[4][MAXSECTS];
   int nsects ;
-  float xnorm;
+  t_float xnorm;
 } COEFS ;
 
 typedef struct _killdc
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
 
   COEFS fdata;
 } t_killdc;
@@ -82,10 +82,10 @@ void *killdc_new(t_symbol *s)
 t_int *killdc_perform(t_int *w)
 {
   t_float *in1,*out;
-  float sample ;
+  t_float sample ;
   int n;
   int m;
-  float op;
+  t_float op;
   //  int lcount = 0;
   /********/
   t_killdc *x = (t_killdc *) (w[1]);

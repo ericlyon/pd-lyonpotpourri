@@ -10,7 +10,7 @@ static t_class *epluribus_class;
 typedef struct _epluribus
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   int incount; // how many inlets (must be at least 2)
   short inverse; // flag to look for minimum instead
 } t_epluribus;

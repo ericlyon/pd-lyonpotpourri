@@ -29,25 +29,25 @@ typedef struct _oscil
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   int table_length;
-  float *wavetable;
+  t_float *wavetable;
   int harmonic_count;
-  float *harmonic_weights;
-  float *harmonic_phases;
+  t_float *harmonic_weights;
+  t_float *harmonic_phases;
   double phase;
   double phase_offset;
   double si_factor;
   double si;
   int bl_harms;
-  float piotwo;
-  float twopi;
-  float sr;
+  t_float piotwo;
+  t_float twopi;
+  t_float sr;
   short mute;
   short connected[4];
-  float *old_wavetable;
+  t_float *old_wavetable;
   short dirty;
-  float fade_ms;
+  t_float fade_ms;
   int fade_samples;
   int fade_countdown;
   short fadetype;
@@ -104,7 +104,7 @@ void oscil_list (t_oscil *x, t_symbol *msg, int argc, t_atom *argv)
 {
   short i;
   int harmonic_count = 0;
-  float *harmonic_weights = x->harmonic_weights;
+  t_float *harmonic_weights = x->harmonic_weights;
   for (i=0; i < argc; i++) {
     harmonic_weights[harmonic_count] = atom_getfloatarg(i, argc, argv);
     ++harmonic_count;
@@ -117,8 +117,8 @@ void oscil_amph(t_oscil *x, t_symbol *msg, int argc, t_atom *argv)
 {
   short i;
   int harmonic_count = 0;
-  float *harmonic_weights = x->harmonic_weights;
-  float *harmonic_phases = x->harmonic_phases;
+  t_float *harmonic_weights = x->harmonic_weights;
+  t_float *harmonic_phases = x->harmonic_phases;
   if(argc < 1) {
     return;
   }
@@ -185,7 +185,7 @@ void oscil_interpolate(t_oscil *x, t_floatarg flag)
 
 void *oscil_new(t_symbol *s, int argc, t_atom *argv)
 {
-  float init_freq;
+  t_float init_freq;
   t_symbol *init_waveform_symbol;
 
   t_oscil *x = (t_oscil *)pd_new(oscil_class);
@@ -255,11 +255,11 @@ void *oscil_new(t_symbol *s, int argc, t_atom *argv)
   x->twopi = 8.0 * atan(1.0);
 
 
-  x->old_wavetable = (float *) t_getbytes( x->table_length * sizeof(float) );
+  x->old_wavetable = (t_float *) t_getbytes( x->table_length * sizeof(t_float) );
 
-  x->wavetable = (float *) t_getbytes( x->table_length * sizeof(float) );
-  x->harmonic_weights = (float *) t_getbytes( OSCIL_MAXIMUM_HARMONICS * sizeof(float) );
-  x->harmonic_phases = (float *) t_getbytes( OSCIL_MAXIMUM_HARMONICS * sizeof(float) );
+  x->wavetable = (t_float *) t_getbytes( x->table_length * sizeof(t_float) );
+  x->harmonic_weights = (t_float *) t_getbytes( OSCIL_MAXIMUM_HARMONICS * sizeof(t_float) );
+  x->harmonic_phases = (t_float *) t_getbytes( OSCIL_MAXIMUM_HARMONICS * sizeof(t_float) );
   x->phase = 0;
   x->mute = 0;
   x->dirty = 0;
@@ -268,7 +268,7 @@ void *oscil_new(t_symbol *s, int argc, t_atom *argv)
     x->sr = 44100;
     pd_error(0, "zero sampling rate - set to 44100");
   }
-  x->si_factor = (float) x->table_length / x->sr;
+  x->si_factor = (t_float) x->table_length / x->sr;
   x->si = init_freq * x->si_factor ;
   x->fade_countdown = 0;
   x->fade_ms = 50. ;
@@ -298,18 +298,18 @@ void *oscil_new(t_symbol *s, int argc, t_atom *argv)
 
 void build_amph_waveform( t_oscil *x )
 {
-  float rescale;
+  t_float rescale;
   int i, j;
-  float max = 0.0;
-  float *wavetable = x->wavetable;
-  float *old_wavetable = x->old_wavetable;
-  float *harmonic_weights = x->harmonic_weights;
-  float *harmonic_phases = x->harmonic_phases;
+  t_float max = 0.0;
+  t_float *wavetable = x->wavetable;
+  t_float *old_wavetable = x->old_wavetable;
+  t_float *harmonic_weights = x->harmonic_weights;
+  t_float *harmonic_phases = x->harmonic_phases;
   int harmonic_count = x->harmonic_count;
   int table_length = x->table_length;
-  float twopi = x->twopi;
-  //  float testsum = 0.0;
-  float addphase;
+  t_float twopi = x->twopi;
+  //  t_float testsum = 0.0;
+  t_float addphase;
 
   if( x->fade_in_progress ) {
     // pd_error(0, "Crossfade in progress. Cannot generate waveform");
@@ -332,7 +332,7 @@ void build_amph_waveform( t_oscil *x )
     old_wavetable[i] = wavetable[i];
     }
   */
-  memcpy(old_wavetable, wavetable, table_length * sizeof(float) );
+  memcpy(old_wavetable, wavetable, table_length * sizeof(t_float) );
 
   x->dirty = 1 ;
 
@@ -347,7 +347,7 @@ void build_amph_waveform( t_oscil *x )
       //      post("amp %f phase %f twopi phase %f",harmonic_weights[i],harmonic_phases[i],addphase);
       for( j = 0; j < table_length; j++ ) {
         wavetable[j] +=
-          harmonic_weights[i] * sin( twopi * ((float)i * ((float)j/(float)table_length)) + addphase ) ;
+          harmonic_weights[i] * sin( twopi * ((t_float)i * ((t_float)j/(t_float)table_length)) + addphase ) ;
       }
     }
   }
@@ -377,16 +377,16 @@ void build_amph_waveform( t_oscil *x )
 }
 
 void build_waveform( t_oscil *x ) {
-  float rescale;
+  t_float rescale;
   int i, j;
-  float max = 0.0;
-  float *wavetable = x->wavetable;
-  float *old_wavetable = x->old_wavetable;
-  float *harmonic_weights = x->harmonic_weights;
+  t_float max = 0.0;
+  t_float *wavetable = x->wavetable;
+  t_float *old_wavetable = x->old_wavetable;
+  t_float *harmonic_weights = x->harmonic_weights;
   int harmonic_count = x->harmonic_count;
   int table_length = x->table_length;
-  float twopi = x->twopi;
-  //  float testsum = 0.0;
+  t_float twopi = x->twopi;
+  //  t_float testsum = 0.0;
 
   if( x->fade_in_progress ) {
     // pd_error(0, "Crossfade in progress. Cannot generate waveform");
@@ -409,7 +409,7 @@ void build_waveform( t_oscil *x ) {
     old_wavetable[i] = wavetable[i];
     }
   */
-  memcpy(old_wavetable, wavetable, table_length * sizeof(float) );
+  memcpy(old_wavetable, wavetable, table_length * sizeof(t_float) );
 
   x->dirty = 1 ;
 
@@ -421,7 +421,7 @@ void build_waveform( t_oscil *x ) {
   for( i = 1 ; i < harmonic_count; i++ ) {
     if( harmonic_weights[i] ) {
       for( j = 0; j < table_length; j++ ) {
-        wavetable[j] += harmonic_weights[i] * sin( twopi * ( (float) i * ((float) j /(float)table_length)) ) ;
+        wavetable[j] += harmonic_weights[i] * sin( twopi * ( (t_float) i * ((t_float) j /(t_float)table_length)) ) ;
       }
     }
   }
@@ -464,19 +464,19 @@ t_int *oscil_perform_interpolate(t_int *w)
   double phase = x->phase;
   double phase_offset = x->phase_offset;
   int table_length = x->table_length;
-  float *wavetable = x->wavetable;
-  float *old_wavetable = x->old_wavetable;
+  t_float *wavetable = x->wavetable;
+  t_float *old_wavetable = x->old_wavetable;
   short *connected = x->connected ;
   int fade_countdown = x->fade_countdown;
   int iphase, iphase2;
   int fade_samples = x->fade_samples;
   short fadetype = x->fadetype;
-  float m1, m2;
-  float frac;
+  t_float m1, m2;
+  t_float frac;
   double fphase;
-  float sample1, sample2, outsamp1, outsamp2;
+  t_float sample1, sample2, outsamp1, outsamp2;
 
-  float piotwo = x->piotwo;
+  t_float piotwo = x->piotwo;
 
   if( x->mute ) {
     while (n--) {
@@ -491,7 +491,7 @@ t_int *oscil_perform_interpolate(t_int *w)
         si = *freq_vec++ * si_factor;
 
       if(connected[1]) {
-        phase_offset = (float)table_length * *phase_vec++;
+        phase_offset = (t_float)table_length * *phase_vec++;
 
       }
 
@@ -523,7 +523,7 @@ t_int *oscil_perform_interpolate(t_int *w)
         sample2 = old_wavetable[ iphase2 ];
         outsamp2 = sample1 + frac * (sample2 - sample1);
 
-        m2 = (float) fade_countdown / (float) fade_samples ;
+        m2 = (t_float) fade_countdown / (t_float) fade_samples ;
         m1 = 1.0 - m2 ;
         --fade_countdown;
         if( fadetype == 1 ) {
@@ -558,7 +558,7 @@ t_int *oscil_perform_interpolate(t_int *w)
         si = *freq_vec++ * si_factor;
 
       if(connected[1]) {
-        phase_offset = (float)table_length * *phase_vec++;
+        phase_offset = (t_float)table_length * *phase_vec++;
 
       }
 
@@ -574,7 +574,7 @@ t_int *oscil_perform_interpolate(t_int *w)
         *out++ = old_wavetable[ iphase ] ;
       }
       else if( fade_countdown ) {
-        m2 = (float) fade_countdown / (float) fade_samples ;
+        m2 = (t_float) fade_countdown / (t_float) fade_samples ;
         m1 = 1.0 - m2 ;
         --fade_countdown;
         if( fadetype == 1 ) {
@@ -623,15 +623,15 @@ static t_int *oscil_perform(t_int *w)
   double phase = x->phase;
   double phase_offset = x->phase_offset;
   int table_length = x->table_length;
-  float *wavetable = x->wavetable;
-  float *old_wavetable = x->old_wavetable;
+  t_float *wavetable = x->wavetable;
+  t_float *old_wavetable = x->old_wavetable;
   short *connected = x->connected ;
   int fade_countdown = x->fade_countdown;
   int iphase;
   int fade_samples = x->fade_samples;
   short fadetype = x->fadetype;
-  float m1, m2;
-  float piotwo = x->piotwo;
+  t_float m1, m2;
+  t_float piotwo = x->piotwo;
 
   if( x->mute ) {
     while (n--) {
@@ -645,7 +645,7 @@ static t_int *oscil_perform(t_int *w)
       si = *freq_vec++ * si_factor;
 
     if(connected[1]) {
-      phase_offset = (float)table_length * *phase_vec++;
+      phase_offset = (t_float)table_length * *phase_vec++;
 
     }
 
@@ -661,7 +661,7 @@ static t_int *oscil_perform(t_int *w)
       *out++ = old_wavetable[ iphase ] ;
     }
     else if( fade_countdown ) {
-      m2 = (float) fade_countdown / (float) fade_samples ;
+      m2 = (t_float) fade_countdown / (t_float) fade_samples ;
       m1 = 1.0 - m2 ;
       --fade_countdown;
       if( fadetype == 1 ) {
@@ -697,12 +697,12 @@ static t_int *oscil_perform(t_int *w)
 void oscil_sawtooth(t_oscil *x)
 {
   int i;
-  float sign = 1.0;
+  t_float sign = 1.0;
 
   x->harmonic_weights[0] = 0.0; // DC
   x->harmonic_count = x->bl_harms;
   for( i = 1 ; i < x->bl_harms; i++ ) {
-    x->harmonic_weights[i] = sign * 1.0/(float)i;
+    x->harmonic_weights[i] = sign * 1.0/(t_float)i;
     sign *= -1. ;
   }
   build_waveform(x);
@@ -710,11 +710,11 @@ void oscil_sawtooth(t_oscil *x)
 void oscil_triangle(t_oscil *x)
 {
   int i;
-  float sign = 1.0;
+  t_float sign = 1.0;
   x->harmonic_weights[0] = 0.0; // DC
   x->harmonic_count = x->bl_harms;
   for( i = 1 ; i < x->bl_harms; i += 2 ) {
-    x->harmonic_weights[i] = sign * 1.0/((float)i * (float)i);
+    x->harmonic_weights[i] = sign * 1.0/((t_float)i * (t_float)i);
     x->harmonic_weights[i + 1] = 0.0;
     sign *= -1;
   }
@@ -735,7 +735,7 @@ void oscil_square(t_oscil *x)
   x->harmonic_weights[0] = 0.0; // DC
   x->harmonic_count = x->bl_harms;
   for( i = 1 ; i < x->bl_harms  ; i += 2 ) {
-    x->harmonic_weights[i] = 1.0/(float)i;
+    x->harmonic_weights[i] = 1.0/(t_float)i;
     x->harmonic_weights[i + 1] = 0.0;
   }
   build_waveform(x);
@@ -755,10 +755,10 @@ void oscil_buzz(t_oscil *x)
 void oscil_dsp_free(t_oscil *x)
 {
 
-  t_freebytes(x->wavetable, x->table_length * sizeof(float));
-  t_freebytes(x->old_wavetable, x->table_length * sizeof(float));
-  t_freebytes(x->harmonic_weights, OSCIL_MAXIMUM_HARMONICS * sizeof(float));
-  t_freebytes(x->harmonic_phases, OSCIL_MAXIMUM_HARMONICS * sizeof(float));
+  t_freebytes(x->wavetable, x->table_length * sizeof(t_float));
+  t_freebytes(x->old_wavetable, x->table_length * sizeof(t_float));
+  t_freebytes(x->harmonic_weights, OSCIL_MAXIMUM_HARMONICS * sizeof(t_float));
+  t_freebytes(x->harmonic_phases, OSCIL_MAXIMUM_HARMONICS * sizeof(t_float));
 }
 
 void oscil_dsp(t_oscil *x, t_signal **sp)
@@ -773,7 +773,7 @@ void oscil_dsp(t_oscil *x, t_signal **sp)
     }
     x->si *= sp[0]->s_sr / x->sr ;
     x->sr = sp[0]->s_sr;
-    x->si_factor = (float) x->table_length / x->sr;
+    x->si_factor = (t_float) x->table_length / x->sr;
   }
 
   x->connected[0] = 1;

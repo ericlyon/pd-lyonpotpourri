@@ -10,7 +10,7 @@ static t_class *samm_class;
 typedef struct _samm
 {
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     double tempo; /* current tempo */
     double onebeat_samps; /* number of samples for a single beat */
     double *beats; /* amount of beats for each active tempo outlet */
@@ -18,7 +18,7 @@ typedef struct _samm
     double *metro_beatdurs;/* number of beats for each metro time interval */
     double *metro;/* current countdown for each time interval */
     int metro_count; /* number of metronomes to keep track of */
-    float sr; /* current sampling rate */
+    t_float sr; /* current sampling rate */
     short pause;
     short mute;
     // Pd only */
@@ -336,7 +336,7 @@ void samm_init(t_samm *x,short initialized)
 t_int *samm_perform(t_int *w)
 {
     int i, j, k;
-    //  float outval;
+    //  t_float outval;
     t_samm *x = (t_samm *) (w[1]);
     t_float *inlet = (t_float *) (w[2]);
     t_float *beat_outlet;
@@ -345,7 +345,7 @@ t_int *samm_perform(t_int *w)
     
     int metro_count = x->metro_count;
     double *metro = x->metro;
-    float *trigger_vec = x->trigger_vec;
+    t_float *trigger_vec = x->trigger_vec;
     short pause = x->pause;
     
     n = (int) w[metro_count + 3];

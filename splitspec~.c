@@ -22,11 +22,11 @@ typedef struct _splitspec
   t_float *t_offset_loc;
   t_float *b_offset_loc;
   t_float *manual_control_loc;
-  float frame_duration;
+  t_float frame_duration;
   int table_offset;
   int bin_offset;
-  float *last_mag;
-  float *current_mag;
+  t_float *last_mag;
+  t_float *current_mag;
   int *last_binsplit;
   int *current_binsplit;
   int **stored_binsplits;
@@ -39,8 +39,8 @@ typedef struct _splitspec
   long countdown_samps; // samps for a given fadetime
   long counter;
   int overlap_factor; // compensate for overlap in fade
-  float sr;
-  float fl_phase; // show phase as float
+  t_float sr;
+  t_float fl_phase; // show phase as t_float
   int hopsamps; // number of samples to hop
   int channel_count; // number of channels to split
   t_clock *phase_clock;
@@ -65,10 +65,10 @@ static void splitspec_overlap( t_splitspec *x, t_floatarg factor);
 static void splitspec_store( t_splitspec *x, t_floatarg floc);
 static void splitspec_recall( t_splitspec *x, t_floatarg floc);
 static void splitspeci( int *current_binsplit, int *last_binsplit, int bin_offset, int table_offset,
-                 float *current_mag, float *last_mag, float *inmag, float *dest_mag, int start, int end, int n,
-                 float oldfrac, float newfrac );
+                 t_float *current_mag, t_float *last_mag, t_float *inmag, t_float *dest_mag, int start, int end, int n,
+                 t_float oldfrac, t_float newfrac );
 static void splitspec( int *binsplit, int bin_offset, int table_offset,
-                float *inmag, float *dest_mag, int start, int end, int n );
+                t_float *inmag, t_float *dest_mag, int start, int end, int n );
 
 static void splitspec_dsp_free( t_splitspec *x );
 
@@ -234,8 +234,8 @@ void splitspec_dsp_free( t_splitspec *x ) {
 }
 
 void splitspeci( int *current_binsplit, int *last_binsplit, int bin_offset, int table_offset,
-                 float *current_mag, float *last_mag, float *inmag, float *dest_mag, int start, int end, int n,
-                 float oldfrac, float newfrac )
+                 t_float *current_mag, t_float *last_mag, t_float *inmag, t_float *dest_mag, int start, int end, int n,
+                 t_float oldfrac, t_float newfrac )
 {
   int i;
   int bindex;
@@ -262,7 +262,7 @@ void splitspeci( int *current_binsplit, int *last_binsplit, int bin_offset, int 
 }
 
 void splitspec( int *binsplit, int bin_offset, int table_offset,
-                float *inmag, float *dest_mag, int start, int end, int n )
+                t_float *inmag, t_float *dest_mag, int start, int end, int n )
 {
   int i;
   int bindex;
@@ -386,11 +386,11 @@ t_int *splitspec_perform(t_int *w)
   t_splitspec *x = (t_splitspec *) (w[1]);
   int channel_count = x->channel_count;
 
-  float *inmag = (t_float *)(w[2]);
-  float *inphase = (t_float *)(w[3]);
-  float *t_offset = (t_float *)(w[4]);
-  float *b_offset = (t_float *)(w[5]);
-  float *manual_control = (t_float *)(w[6]);
+  t_float *inmag = (t_float *)(w[2]);
+  t_float *inphase = (t_float *)(w[3]);
+  t_float *t_offset = (t_float *)(w[4]);
+  t_float *b_offset = (t_float *)(w[5]);
+  t_float *manual_control = (t_float *)(w[6]);
 
   t_float **magvecs = x->magvecs;
   t_float **phasevecs = x->phasevecs;
@@ -401,11 +401,11 @@ t_int *splitspec_perform(t_int *w)
 
   int *current_binsplit = x->current_binsplit;
   int *last_binsplit = x->last_binsplit;
-  float *last_mag = x->last_mag;
-  float *current_mag = x->current_mag;
+  t_float *last_mag = x->last_mag;
+  t_float *current_mag = x->current_mag;
   long counter = x->counter;
   long countdown_samps = x->countdown_samps;
-  float frac, oldgain, newgain;
+  t_float frac, oldgain, newgain;
   t_float *inmag_loc = x->inmag_loc;
   t_float *inphase_loc = x->inphase_loc;
   t_float *t_offset_loc = x->t_offset_loc;
@@ -500,7 +500,7 @@ t_int *splitspec_perform(t_int *w)
     frac = 1.0;
   } else {
     // do interpolation
-    frac = (float) counter / (float) countdown_samps;
+    frac = (t_float) counter / (t_float) countdown_samps;
     oldgain = cos( frac * PIOVERTWO );
     newgain = sin( frac * PIOVERTWO );
     for(j = 0; j < channel_count; j++) {
@@ -519,7 +519,7 @@ t_int *splitspec_perform(t_int *w)
   }
 
   x->fl_phase = frac;
-  clock_delay(x->phase_clock,0.0); // send current phase to float outlet
+  clock_delay(x->phase_clock,0.0); // send current phase to t_float outlet
   x->counter = counter;
   return (w + next_ptr);
 }
@@ -595,7 +595,7 @@ void splitspec_setstate (t_splitspec *x, t_symbol *msg, int argc, t_atom *argv) 
 }
 
 void splitspec_ramptime (t_splitspec *x, t_symbol *msg, int argc, t_atom *argv) {
-  float rampdur;
+  t_float rampdur;
 
   rampdur = atom_getfloatarg(0,argc,argv) * 0.001; // convert from milliseconds
   x->countdown_samps = rampdur * x->sr;
@@ -615,7 +615,7 @@ void splitspec_showstate (t_splitspec *x ) {
 
   if(! x->initialize) {
     for( i = 0; i < x->N2; i++ ) {
-      SETFLOAT(list_data+count,(float)x->current_binsplit[i]);
+      SETFLOAT(list_data+count,(t_float)x->current_binsplit[i]);
       ++count;
     }
     outlet_list(x->list_outlet,0,x->N2,list_data);
@@ -666,14 +666,14 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
     //       post("FFT size is %d, N2 is %d",x->N, x->N2);
     //R = sys_getsr();
 //        post("sampling rate: %f, vector thinks it is: %f", sys_getsr(), sp[0]->s_sr);
-    //funda = R / (2. * (float) x->N) ;
+    //funda = R / (2. * (t_float) x->N) ;
 
     if(x->initialize) {
       x->list_data = (t_atom *) getbytes((x->N + 2) * sizeof(t_atom));
       x->last_binsplit = (int *) getbytes( x->N2 * sizeof(int));
       x->current_binsplit = (int *) getbytes( x->N2 * sizeof(int));
-      x->last_mag = (float *) getbytes(x->N2 * sizeof(float)) ;
-      x->current_mag = (float *) getbytes(x->N2 * sizeof(float)) ;
+      x->last_mag = (t_float *) getbytes(x->N2 * sizeof(t_float)) ;
+      x->current_mag = (t_float *) getbytes(x->N2 * sizeof(t_float)) ;
       x->stored_slots = (short *) getbytes(x->N2 * sizeof(short));
       x->stored_binsplits = (int **) getbytes(MAXSTORE * sizeof(int *));
       for( i = 0; i < MAXSTORE; i++ ) {
@@ -685,8 +685,8 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
       x->list_data = (t_atom *) resizebytes((void *)x->list_data,(x->N_old + 2) * sizeof(t_atom), (x->N + 2) * sizeof(t_atom));
       x->last_binsplit = (int *) resizebytes((void *)x->last_binsplit,x->N2_old * sizeof(int), x->N2 * sizeof(int));
       x->current_binsplit = (int *) resizebytes((void *)x->current_binsplit,x->N2_old * sizeof(int), x->N2 * sizeof(int));
-      x->last_mag = (float *) resizebytes((void *)x->last_mag,x->N2_old * sizeof(float), x->N2 * sizeof(float));
-      x->current_mag = (float *) resizebytes((void *)x->current_mag,x->N2_old * sizeof(float), x->N2 * sizeof(float));
+      x->last_mag = (t_float *) resizebytes((void *)x->last_mag,x->N2_old * sizeof(t_float), x->N2 * sizeof(t_float));
+      x->current_mag = (t_float *) resizebytes((void *)x->current_mag,x->N2_old * sizeof(t_float), x->N2 * sizeof(t_float));
       x->stored_slots = (short *) resizebytes((void *)x->stored_slots,x->N2_old * sizeof(short), x->N2 * sizeof(short));
       for( i = 0; i < MAXSTORE; i++ ) {
         x->stored_binsplits[i] = (int *) resizebytes((void *)x->stored_binsplits[i],x->N2_old * sizeof(int), x->N2 * sizeof(int));
@@ -699,7 +699,7 @@ void splitspec_dsp(t_splitspec *x, t_signal **sp)
       }
     }
 
-    x->frame_duration = (float) sp[0]->s_n / sp[0]->s_sr;
+    x->frame_duration = (t_float) sp[0]->s_n / sp[0]->s_sr;
 
     splitspec_scramble( x );
     for( i = 0; i < x->N2; i++ ) {

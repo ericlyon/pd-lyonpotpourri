@@ -27,28 +27,28 @@ typedef struct _buffy {
 typedef struct _convolver
 {
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     t_buffy *impulse; // impulse buffer
     t_buffy *source; // source buffer
     t_buffy *dest; // output buffer
     void *bang; // completion bang
-    float sr;
+    t_float sr;
     // convolution stuff
-    float *tbuf;
-    float *sbuf;
-    float *filt;
+    t_float *tbuf;
+    t_float *sbuf;
+    t_float *filt;
     long N;
     long N2;
     long last_N;
     // for fast fft
-    float mult;
-    float *trigland;
+    t_float mult;
+    t_float *trigland;
     int *bitshuffle;
     short static_memory; // flag to avoid dynamic memory manipulation
 } t_convolver;
 
 
-static float boundrand(float min, float max);
+static t_float boundrand(t_float min, t_float max);
 static void convolver_setbuf(t_buffy *trybuf);
 static void *convolver_new(t_symbol *msg, int argc, t_atom *argv);
 static t_int *convolver_perform(t_int *w);
@@ -58,11 +58,11 @@ static void convolver_spikeimp(t_convolver *x, t_floatarg density);
 static void convolver_convolve(t_convolver *x);
 static void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *argv);
 static void convolver_noiseimp(t_convolver *x, t_floatarg curve);
-static void rfft( float *x, int N, int forward );
-static void cfft( float *x, int NC, int forward );
-static void rdft(int n, int isgn, float *a, int *ip, float *w);
-static void bitreverse( float *x, int N );
-static void init_rdft(int n, int *ip, float *w);
+static void rfft( t_float *x, int N, int forward );
+static void cfft( t_float *x, int NC, int forward );
+static void rdft(int n, int isgn, t_float *a, int *ip, t_float *w);
+static void bitreverse( t_float *x, int N );
+static void init_rdft(int n, int *ip, t_float *w);
 static void convolver_static_memory(t_convolver *x, t_floatarg toggle);
 
 void convolver_tilde_setup(void) {
@@ -80,11 +80,11 @@ void convolver_static_memory(t_convolver *x, t_floatarg toggle)
 {
     
     long memcount = 0;
-    float *tbuf = x->tbuf;
-    float *sbuf = x->sbuf;
-    float *filt = x->filt;
+    t_float *tbuf = x->tbuf;
+    t_float *sbuf = x->sbuf;
+    t_float *filt = x->filt;
     int *bitshuffle = x->bitshuffle;
-    float *trigland = x->trigland;
+    t_float *trigland = x->trigland;
     t_buffy *impulse = x->impulse;
     long N, N2;
     
@@ -103,22 +103,22 @@ void convolver_static_memory(t_convolver *x, t_floatarg toggle)
         
         post("%s: memory is now static - do not reload your impulse buffer",OBJECT_NAME);
         
-        if ((sbuf = (float *) getbytes((N+2) * sizeof(float))) == NULL)
+        if ((sbuf = (t_float *) getbytes((N+2) * sizeof(t_float))) == NULL)
             pd_error(0, "%s: insufficient memory", OBJECT_NAME);
-        memcount += (N+2) * sizeof(float);
-        if ((tbuf = (float *) getbytes(N2 * sizeof(float))) == NULL)
+        memcount += (N+2) * sizeof(t_float);
+        if ((tbuf = (t_float *) getbytes(N2 * sizeof(t_float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
-        memcount += (N2) * sizeof(float);
-        if ((filt = (float *) getbytes((N+2) * sizeof(float))) == NULL)
+        memcount += (N2) * sizeof(t_float);
+        if ((filt = (t_float *) getbytes((N+2) * sizeof(t_float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
-        memcount += (N+2) * sizeof(float);
+        memcount += (N+2) * sizeof(t_float);
         if( (bitshuffle = (int *) getbytes((N*2) * sizeof(int))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
-        memcount += (N2) * sizeof(float);
-        if( (trigland = (float *) getbytes((N*2) * sizeof(float))) == NULL)
+        memcount += (N2) * sizeof(t_float);
+        if( (trigland = (t_float *) getbytes((N*2) * sizeof(t_float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
-        memcount += (N2) * sizeof(float);
-        post("%s: allocated %f Megabytes for %s", OBJECT_NAME, (float)memcount / 1000000.0, impulse->myname->s_name);
+        memcount += (N2) * sizeof(t_float);
+        post("%s: allocated %f Megabytes for %s", OBJECT_NAME, (t_float)memcount / 1000000.0, impulse->myname->s_name);
         x->N = N;
         x->N2 = N2;
     }
@@ -176,24 +176,24 @@ void convolver_convolve(t_convolver *x)
 
 void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *argv)
 {
-    float *tbuf = x->tbuf;
-    float *sbuf = x->sbuf;
-    float *filt = x->filt;
+    t_float *tbuf = x->tbuf;
+    t_float *sbuf = x->sbuf;
+    t_float *filt = x->filt;
     long N = x->N;
     long N2 = x->N2;
     long i, j, ip, ip1;
     long ifr_cnt = 0, ofr_cnt = 0;
     int target_frames = 2;
     short copacetic; // loop enabler
-    float a,b,temp,max=0.0,gain=1.0; //,thresh=.0000000001,fmag;
+    t_float a,b,temp,max=0.0,gain=1.0; //,thresh=.0000000001,fmag;
     int readframes, writeframes;
     t_buffy *impulse = x->impulse;
     t_buffy *source = x->source;
     t_buffy *dest = x->dest;
     int *bitshuffle = x->bitshuffle;
-    float *trigland = x->trigland;
+    t_float *trigland = x->trigland;
     long source_chan, impulse_chan, dest_chan;
-    float rescale = 0.5 / (float) N;
+    t_float rescale = 0.5 / (t_float) N;
     (void)msg;
     //  t_atom newsize;
     
@@ -235,19 +235,19 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     
     // post("size of N for convolution is %d", N);
     if(! x->static_memory ) {
-        if ((sbuf = (float *) getbytes((N+2) * sizeof(float))) == NULL)
+        if ((sbuf = (t_float *) getbytes((N+2) * sizeof(t_float))) == NULL)
             pd_error(0, "%s: insufficient memory", OBJECT_NAME);
-        if ((tbuf = (float *) getbytes(N2 * sizeof(float))) == NULL)
+        if ((tbuf = (t_float *) getbytes(N2 * sizeof(t_float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
-        if ((filt = (float *) getbytes((N+2) * sizeof(float))) == NULL)
+        if ((filt = (t_float *) getbytes((N+2) * sizeof(t_float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
         if( (bitshuffle = (int *) getbytes((N*2) * sizeof(int))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
-        if( (trigland = (float *) getbytes((N*2) * sizeof(float))) == NULL)
+        if( (trigland = (t_float *) getbytes((N*2) * sizeof(t_float))) == NULL)
             pd_error(0, "%s: insufficient memory",OBJECT_NAME);
     }
     
-    x->mult = 1. / (float) N;
+    x->mult = 1. / (t_float) N;
     x->last_N = N;
     init_rdft(N, bitshuffle, trigland);
     
@@ -298,9 +298,9 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     if( dest->b_frames < target_frames) {
         
         
-        //SETFLOAT(&newsize, (float) target_frames);
+        //SETFLOAT(&newsize, (t_float) target_frames);
         // typedmess((void *) x->dest->b, gensym("sizeinsamps"),1, &newsize);
-        garray_resize(x->dest->b,(float)target_frames );
+        garray_resize_long(x->dest->b,target_frames );
         post("%s: destination buffer was too small and has been resized",OBJECT_NAME);
         convolver_attach_buffers( x );
     }
@@ -384,11 +384,11 @@ void convolver_convolvechans(t_convolver *x, t_symbol *msg, int argc, t_atom *ar
     //  return;
     
     if(! x->static_memory ) {
-        freebytes(sbuf,(N+2) * sizeof(float));
-        freebytes(tbuf,N2 * sizeof(float));
-        freebytes(filt,(N+2) * sizeof(float));
+        freebytes(sbuf,(N+2) * sizeof(t_float));
+        freebytes(tbuf,N2 * sizeof(t_float));
+        freebytes(filt,(N+2) * sizeof(t_float));
         freebytes(bitshuffle,(N*2) * sizeof(int));
-        freebytes(trigland,(N*2) * sizeof(float));
+        freebytes(trigland,(N*2) * sizeof(t_float));
     } else {
         x->N = N;
         x->N2 =  N2;
@@ -402,13 +402,13 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
 {
     long b_frames;
     t_word *b_samples;
-    float sr = x->sr;
+    t_float sr = x->sr;
     int i;
     int count;
     //  int position;
-    float guess;
-    float level = 1.0, endLevel = 0.001;
-    float grow, a1, a2, b1;
+    t_float guess;
+    t_float level = 1.0, endLevel = 0.001;
+    t_float grow, a1, a2, b1;
     
     if(fabs(curve) < 0.001) {
         curve = 0.001;
@@ -424,7 +424,7 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
         return;
     }
     // zero out buffer
-    //dur = (float) b_frames / sr;
+    //dur = (t_float) b_frames / sr;
     count = b_frames;
     if(b_frames < 20) {
         post("impulse buffer too small!");
@@ -432,7 +432,7 @@ void convolver_noiseimp(t_convolver *x, t_floatarg curve)
     }
     
     
-    //  memset((char *)b_samples, 0, b_nchans * b_frames * sizeof(float));
+    //  memset((char *)b_samples, 0, b_nchans * b_frames * sizeof(t_float));
     // return;
     
     level = 1.0;
@@ -460,12 +460,12 @@ void convolver_spikeimp(t_convolver *x, t_floatarg density)
     long b_nchans;
     long b_frames;
     t_word *b_samples;
-    float sr = x->sr;
+    t_float sr = x->sr;
     int i, j;
     int count;
     int position;
-    float gain, guess;
-    float dur;
+    t_float gain, guess;
+    t_float dur;
     
     // let's be current
     convolver_attach_buffers(x);
@@ -478,9 +478,9 @@ void convolver_spikeimp(t_convolver *x, t_floatarg density)
         return;
     }
     // zero out buffer
-    dur = (float) b_frames / sr;
+    dur = (t_float) b_frames / sr;
     count = density * dur;
-    // memset((char *)b_samples, 0, b_nchans * b_frames * sizeof(float));
+    // memset((char *)b_samples, 0, b_nchans * b_frames * sizeof(t_float));
     // assume mono forever
     for(i = 0; i < b_frames; i++){
         b_samples[i].w_float = 0.0;
@@ -507,9 +507,9 @@ void convolver_spikeimp(t_convolver *x, t_floatarg density)
     outlet_bang(x->bang);
 }
 
-float boundrand(float min, float max)
+t_float boundrand(t_float min, t_float max)
 {
-    return min + (max-min) * ((float) (rand() % RAND_MAX)/ (float) RAND_MAX);
+    return min + (max-min) * ((t_float) (rand() % RAND_MAX)/ (t_float) RAND_MAX);
 }
 
 
@@ -584,11 +584,11 @@ void convolver_dsp_free(t_convolver *x)
     freebytes(x->source, sizeof(t_buffy));
     freebytes(x->dest, sizeof(t_buffy));
     if( x->static_memory ) {
-        freebytes(x->sbuf, (N+2) * sizeof(float));
-        freebytes(x->tbuf, N2 * sizeof(float));
-        freebytes(x->filt, (N+2) * sizeof(float));
+        freebytes(x->sbuf, (N+2) * sizeof(t_float));
+        freebytes(x->tbuf, N2 * sizeof(t_float));
+        freebytes(x->filt, (N+2) * sizeof(t_float));
         freebytes(x->bitshuffle, (N*2) * sizeof(int));
-        freebytes(x->trigland, (N*2) * sizeof(float));
+        freebytes(x->trigland, (N*2) * sizeof(t_float));
        //  outlet_bang(x->bang);
     }
 }
@@ -606,10 +606,10 @@ void convolver_dsp_free(t_convolver *x)
 
 
 
-void cfft( float *x, int NC, int forward )
+void cfft( t_float *x, int NC, int forward )
 
 {
-    float   wr,wi,
+    t_float   wr,wi,
     wpr,wpi,
     theta,
     scale;
@@ -631,7 +631,7 @@ void cfft( float *x, int NC, int forward )
         wr = 1.;
         wi = 0.;
         for ( m = 0; m < mmax; m += 2 ) {
-            register float rtemp, itemp;
+            register t_float rtemp, itemp;
             for ( i = m; i < ND; i += delta ) {
                 j = i + mmax;
                 rtemp = wr*x[j] - wi*x[j+1];
@@ -649,19 +649,19 @@ void cfft( float *x, int NC, int forward )
     /* scale output */
     
     scale = forward ? 1./ND : 2.;
-    { register float *xi=x, *xe=x+ND;
+    { register t_float *xi=x, *xe=x+ND;
         while ( xi < xe )
             *xi++ *= scale;
     }
 }
 
-/* bitreverse places float array x containing N/2 complex values
+/* bitreverse places t_float array x containing N/2 complex values
  into bit-reversed order */
 
-void bitreverse( float *x, int N )
+void bitreverse( t_float *x, int N )
 
 {
-    float   rtemp,itemp;
+    t_float   rtemp,itemp;
     int     i,j,
     m;
     
@@ -676,7 +676,7 @@ void bitreverse( float *x, int N )
     }
 }
 
-void init_rdft(int n, int *ip, float *w)
+void init_rdft(int n, int *ip, t_float *w)
 {
     
     int nw,
@@ -692,18 +692,18 @@ void init_rdft(int n, int *ip, float *w)
 }
 
 
-void rdft(int n, int isgn, float *a, int *ip, float *w)
+void rdft(int n, int isgn, t_float *a, int *ip, t_float *w)
 {
     
     int   j,
     nw,
     nc;
     
-    float   xi;
+    t_float   xi;
     
-    // void   bitrv2(int n, int *ip, float *a),
-    //    cftsub(int n, float *a, float *w),
-    //    rftsub(int n, float *a, int nc, float *c);
+    // void   bitrv2(int n, int *ip, t_float *a),
+    //    cftsub(int n, t_float *a, t_float *w),
+    //    rftsub(int n, t_float *a, int nc, t_float *c);
     
     
     nw = ip[0];
@@ -748,10 +748,10 @@ void rdft(int n, int isgn, float *a, int *ip, float *w)
 }
 
 
-void bitrv2(int n, int *ip, float *a)
+void bitrv2(int n, int *ip, t_float *a)
 {
     int j, jj1, k, k1, l, m, m2;
-    float xr, xi;
+    t_float xr, xi;
     
     ip[0] = 0;
     l = n;
@@ -810,11 +810,11 @@ void bitrv2(int n, int *ip, float *a)
 }
 
 
-void cftsub(int n, float *a, float *w)
+void cftsub(int n, t_float *a, t_float *w)
 {
     int j, jj1, j2, j3, k, k1, ks, l, m;
-    float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
-    float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
+    t_float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
+    t_float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
     
     l = 2;
     
@@ -933,10 +933,10 @@ void cftsub(int n, float *a, float *w)
 }
 
 
-void rftsub(int n, float *a, int nc, float *c)
+void rftsub(int n, t_float *a, int nc, t_float *c)
 {
     int j, k, kk, ks;
-    float wkr, wki, xr, xi, yr, yi;
+    t_float wkr, wki, xr, xi, yr, yi;
     
     ks = (nc << 2) / n;
     kk = 0;
@@ -958,11 +958,11 @@ void rftsub(int n, float *a, int nc, float *c)
 }
 
 
-void lpp_makewt(int nw, int *ip, float *w)
+void lpp_makewt(int nw, int *ip, t_float *w)
 {
-    //    void bitrv2(int n, int *ip, float *a);
+    //    void bitrv2(int n, int *ip, t_float *a);
     int nwh, j;
-    float delta, x, y;
+    t_float delta, x, y;
     
     ip[0] = nw;
     ip[1] = 1;
@@ -986,10 +986,10 @@ void lpp_makewt(int nw, int *ip, float *w)
 }
 
 
-void lpp_makect(int nc, int *ip, float *c)
+void lpp_makect(int nc, int *ip, t_float *c)
 {
     int nch, j;
-    float delta;
+    t_float delta;
     
     ip[1] = nc;
     if (nc > 1) {

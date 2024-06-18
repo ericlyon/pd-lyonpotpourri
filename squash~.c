@@ -19,26 +19,26 @@ typedef struct _squash
   int N2;
   int incnt;
   int outcnt;
-  float *Wanal;
-  float *Wsyn;
-  float *Hwin;
-  float *buffer;
-  float *input;
-  float *output;
-  float thresh;
-  float ratio;
-  float nt;
-  float nmult;
+  t_float *Wanal;
+  t_float *Wsyn;
+  t_float *Hwin;
+  t_float *buffer;
+  t_float *input;
+  t_float *output;
+  t_float thresh;
+  t_float ratio;
+  t_float nt;
+  t_float nmult;
   short mute;
 } t_squash;
 
 
-//static float boundrand(float min, float max);
+//static t_float boundrand(t_float min, t_float max);
 static void *squash_new(t_symbol *msg, int argc, t_atom *argv);
 static void squash_mute(t_squash *x, t_floatarg toggle);
 //static void squash_assist (t_squash *x, void *b, long msg, long arg, char *dst);
 //static void squash_dsp_free(t_squash *x);
-static double squash_squat( float *buffer, float thresh, float ratio, float nt, float nmult, int N );
+static double squash_squat( t_float *buffer, t_float thresh, t_float ratio, t_float nt, t_float nmult, int N );
 static void squash_mute(t_squash *x, t_floatarg f);
 static void squash_thresh(t_squash *x, t_floatarg f);
 static void squash_nt(t_squash *x, t_floatarg f);
@@ -49,12 +49,12 @@ static void squash_free(t_squash *x);
 static void squash_dsp(t_squash *x, t_signal **sp);
 
 
-static void overlapadd( float *I, int N, float *W, float *O, int Nw, int n );
-static void fold( float *I, float *W, int Nw, float *O, int N, int n );
+static void overlapadd( t_float *I, int N, t_float *W, t_float *O, int Nw, int n );
+static void fold( t_float *I, t_float *W, int Nw, t_float *O, int N, int n );
 /*
-void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd );
-void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd );
-void makewindows( float *H, float *A, float *S, int Nw, int N, int I );
+void makehanning( t_float *H, t_float *A, t_float *S, int Nw, int N, int I, int odd );
+void makehamming( t_float *H, t_float *A, t_float *S, int Nw, int N, int I, int odd );
+void makewindows( t_float *H, t_float *A, t_float *S, int Nw, int N, int I );
 */
 
 void squash_tilde_setup(void) {
@@ -81,12 +81,12 @@ void *squash_new(t_symbol *msg, int argc, t_atom *argv)
   x->Nw = x->N;
   x->N2 = x->N / 2;
   x->incnt = - x->Nw;
-  x->Wanal = (float *) getbytes(x->Nw * sizeof(float));
-  x->Wsyn = (float *) getbytes(x->Nw *  sizeof(float));
-  x->Hwin = (float *) getbytes(x->Nw * sizeof(float));
-  x->input = (float *) getbytes(x->Nw * sizeof(float));
-  x->output = (float *) getbytes(x->Nw * sizeof(float));
-  x->buffer = (float *) getbytes(x->N * sizeof(float));
+  x->Wanal = (t_float *) getbytes(x->Nw * sizeof(t_float));
+  x->Wsyn = (t_float *) getbytes(x->Nw *  sizeof(t_float));
+  x->Hwin = (t_float *) getbytes(x->Nw * sizeof(t_float));
+  x->input = (t_float *) getbytes(x->Nw * sizeof(t_float));
+  x->output = (t_float *) getbytes(x->Nw * sizeof(t_float));
+  x->buffer = (t_float *) getbytes(x->N * sizeof(t_float));
   lpp_makehanning(x->Hwin, x->Wanal, x->Wsyn, x->Nw, x->N, x->D, 0);
   x->thresh = 0.1;
   x->ratio = 1.;
@@ -99,25 +99,25 @@ void *squash_new(t_symbol *msg, int argc, t_atom *argv)
 
 void squash_free(t_squash *x)
 {
-    freebytes(x->Wanal, x->Nw * sizeof(float));
-    freebytes(x->Wsyn, x->Nw *  sizeof(float));
-    freebytes(x->Hwin, x->Nw * sizeof(float));
-    freebytes(x->input, x->Nw * sizeof(float));
-    freebytes(x->output, x->Nw * sizeof(float));
-    freebytes(x->buffer, x->N * sizeof(float));
+    freebytes(x->Wanal, x->Nw * sizeof(t_float));
+    freebytes(x->Wsyn, x->Nw *  sizeof(t_float));
+    freebytes(x->Hwin, x->Nw * sizeof(t_float));
+    freebytes(x->input, x->Nw * sizeof(t_float));
+    freebytes(x->output, x->Nw * sizeof(t_float));
+    freebytes(x->buffer, x->N * sizeof(t_float));
 }
 /*
-void makewindows( float *H, float *A, float *S, int Nw, int N, int I )
+void makewindows( t_float *H, t_float *A, t_float *S, int Nw, int N, int I )
 
 {
   int i ;
-  float sum ;
+  t_float sum ;
 
   for ( i = 0 ; i < Nw ; i++ )
     H[i] = A[i] = S[i] = 0.54 - 0.46*cos( TWOPI*i/(Nw - 1) ) ;
 
   if ( Nw > N ) {
-    float x ;
+    t_float x ;
 
     x = -(Nw - 1)/2. ;
     for ( i = 0 ; i < Nw ; i++, x += 1. )
@@ -132,8 +132,8 @@ void makewindows( float *H, float *A, float *S, int Nw, int N, int I )
     sum += A[i] ;
 
   for ( i = 0 ; i < Nw ; i++ ) {
-    float afac = 2./sum ;
-    float sfac = Nw > N ? 1./afac : afac ;
+    t_float afac = 2./sum ;
+    t_float sfac = Nw > N ? 1./afac : afac ;
     A[i] *= afac ;
     S[i] *= sfac ;
   }
@@ -149,11 +149,11 @@ void makewindows( float *H, float *A, float *S, int Nw, int N, int I )
 
 
 
-void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
+void makehamming( t_float *H, t_float *A, t_float *S, int Nw, int N, int I, int odd )
 
 {
   int i;
-  float sum ;
+  t_float sum ;
 
 
 
@@ -170,7 +170,7 @@ void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
   }
 
   if ( Nw > N ) {
-    float x ;
+    t_float x ;
 
     x = -(Nw - 1)/2. ;
     for ( i = 0 ; i < Nw ; i++, x += 1. )
@@ -184,8 +184,8 @@ void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
     sum += A[i] ;
 
   for ( i = 0 ; i < Nw ; i++ ) {
-    float afac = 2./sum ;
-    float sfac = Nw > N ? 1./afac : afac ;
+    t_float afac = 2./sum ;
+    t_float sfac = Nw > N ? 1./afac : afac ;
     A[i] *= afac ;
     S[i] *= sfac ;
   }
@@ -200,10 +200,10 @@ void makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
 
 
 
-void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
+void makehanning( t_float *H, t_float *A, t_float *S, int Nw, int N, int I, int odd )
 {
   int i;
-  float sum ;
+  t_float sum ;
 
 
   if (odd) {
@@ -219,7 +219,7 @@ void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
   }
 
   if ( Nw > N ) {
-    float x ;
+    t_float x ;
 
     x = -(Nw - 1)/2. ;
     for ( i = 0 ; i < Nw ; i++, x += 1. )
@@ -233,8 +233,8 @@ void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
     sum += A[i] ;
 
   for ( i = 0 ; i < Nw ; i++ ) {
-    float afac = 2./sum ;
-    float sfac = Nw > N ? 1./afac : afac ;
+    t_float afac = 2./sum ;
+    t_float sfac = Nw > N ? 1./afac : afac ;
     A[i] *= afac ;
     S[i] *= sfac ;
   }
@@ -252,7 +252,7 @@ void makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
 
 */
 
-void overlapadd( float *I, int N, float *W, float *O, int Nw, int n )
+void overlapadd( t_float *I, int N, t_float *W, t_float *O, int Nw, int n )
 {
   int i ;
   while ( n < 0 )
@@ -265,7 +265,7 @@ void overlapadd( float *I, int N, float *W, float *O, int Nw, int n )
   }
 }
 
-void fold( float *I, float *W, int Nw, float *O, int N, int n )
+void fold( t_float *I, t_float *W, int Nw, t_float *O, int N, int n )
 
 {
   int i;
@@ -288,44 +288,44 @@ void squash_mute(t_squash *x, t_floatarg f) {
 }
 
 void squash_thresh(t_squash *x, t_floatarg f) {
-  x->thresh = (float)f;
+  x->thresh = (t_float)f;
 }
 
 void squash_nt(t_squash *x, t_floatarg f) {
-  x->nt = (float)f;
+  x->nt = (t_float)f;
 }
 
 void squash_ratio(t_squash *x, t_floatarg f) {
-  x->ratio = (float)f;
+  x->ratio = (t_float)f;
 }
 
 void squash_nmult(t_squash *x, t_floatarg f) {
-  x->nmult = (float)f;
+  x->nmult = (t_float)f;
 }
 
 t_int *squash_perform(t_int *w)
 {
   t_squash *x = (t_squash *) (w[1]);
-  float *in = (t_float *)(w[2]);
-  float *out = (t_float *)(w[3]);
+  t_float *in = (t_float *)(w[2]);
+  t_float *out = (t_float *)(w[3]);
   int n = (int) w[4];
 
   int j;
-  float *input = x->input;
-  float *output = x->output;
+  t_float *input = x->input;
+  t_float *output = x->output;
   int D = x->D;
   int Nw = x->Nw;
   int N = x->N;
-  float *buffer = x->buffer;
-  float *Wanal = x->Wanal;
-  float *Wsyn = x->Wsyn;
-  float thresh = x->thresh;
-  float ratio = x->ratio;
-  float nt = x->nt;
-  float nmult = x->nmult;
+  t_float *buffer = x->buffer;
+  t_float *Wanal = x->Wanal;
+  t_float *Wsyn = x->Wsyn;
+  t_float thresh = x->thresh;
+  t_float ratio = x->ratio;
+  t_float nt = x->nt;
+  t_float nmult = x->nmult;
 
   if(x->mute) {
-    memset((void *)out, 0, n * sizeof(float) );
+    memset((void *)out, 0, n * sizeof(t_float) );
     return w + 5;
   }
 
@@ -368,12 +368,12 @@ void squash_dsp(t_squash *x, t_signal **sp)
 
 /*  compression/expansion routine! */
 
-double squash_squat( float *buffer, float thresh, float ratio, float nt, float nmult, int N )
+double squash_squat( t_float *buffer, t_float thresh, t_float ratio, t_float nt, t_float nmult, int N )
 {
   register int    i;
   double    rms = 0.;
-  float   dbthr;
-  register float  mult;
+  t_float   dbthr;
+  register t_float  mult;
 
   dbthr = 10. * log10(thresh);
 
@@ -381,7 +381,7 @@ double squash_squat( float *buffer, float thresh, float ratio, float nt, float n
   for ( i=0; i < N; i++ )
     rms += ( *(buffer+i) * *(buffer+i) );
 
-  rms = sqrt(rms/(float)N);
+  rms = sqrt(rms/(t_float)N);
   if (rms < nt && ratio < 1.)
     mult = nmult;
   else

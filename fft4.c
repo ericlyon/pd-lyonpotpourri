@@ -1,7 +1,7 @@
 #include <math.h>
 #include "fftease.h"
 
-void lpp_init_rdft(int n, int *ip, float *w)
+void lpp_init_rdft(int n, int *ip, t_float *w)
 {
 
   int nw,
@@ -17,18 +17,18 @@ void lpp_init_rdft(int n, int *ip, float *w)
 }
 
 
-void lpp_rdft(int n, int isgn, float *a, int *ip, float *w)
+void lpp_rdft(int n, int isgn, t_float *a, int *ip, t_float *w)
 {
 
   int   j,
     nw,
     nc;
 
-  float   xi;
+  t_float   xi;
 /*
-  void    bitrv2(int n, int *ip, float *a),
-    cftsub(int n, float *a, float *w),
-    rftsub(int n, float *a, int nc, float *c);
+  void    bitrv2(int n, int *ip, t_float *a),
+    cftsub(int n, t_float *a, t_float *w),
+    rftsub(int n, t_float *a, int nc, t_float *c);
 */
 
   nw = ip[0];
@@ -73,10 +73,10 @@ void lpp_rdft(int n, int isgn, float *a, int *ip, float *w)
 }
 
 
-void lpp_bitrv2(int n, int *ip, float *a)
+void lpp_bitrv2(int n, int *ip, t_float *a)
 {
   int j, j1, k, k1, l, m, m2;
-  float xr, xi;
+  t_float xr, xi;
 
   ip[0] = 0;
   l = n;
@@ -135,11 +135,11 @@ void lpp_bitrv2(int n, int *ip, float *a)
 }
 
 
-void lpp_cftsub(int n, float *a, float *w)
+void lpp_cftsub(int n, t_float *a, t_float *w)
 {
   int j, j1, j2, j3, k, k1, ks, l, m;
-  float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
-  float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
+  t_float wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
+  t_float x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
 
   l = 2;
 
@@ -258,10 +258,10 @@ void lpp_cftsub(int n, float *a, float *w)
 }
 
 
-void lpp_rftsub(int n, float *a, int nc, float *c)
+void lpp_rftsub(int n, t_float *a, int nc, t_float *c)
 {
   int j, k, kk, ks;
-  float wkr, wki, xr, xi, yr, yi;
+  t_float wkr, wki, xr, xi, yr, yi;
 
   ks = (nc << 2) / n;
   kk = 0;
@@ -283,11 +283,11 @@ void lpp_rftsub(int n, float *a, int nc, float *c)
 }
 
 
-void lpp_makewt(int nw, int *ip, float *w)
+void lpp_makewt(int nw, int *ip, t_float *w)
 {
-//  void bitrv2(int n, int *ip, float *a);
+//  void bitrv2(int n, int *ip, t_float *a);
   int nwh, j;
-  float delta, x, y;
+  t_float delta, x, y;
 
   ip[0] = nw;
   ip[1] = 1;
@@ -311,10 +311,10 @@ void lpp_makewt(int nw, int *ip, float *w)
 }
 
 
-void lpp_makect(int nc, int *ip, float *c)
+void lpp_makect(int nc, int *ip, t_float *c)
 {
   int nch, j;
-  float delta;
+  t_float delta;
 
   ip[1] = nc;
   if (nc > 1) {

@@ -11,14 +11,14 @@
    analysis channel; decimation rate D and sampling rate R are used
    to render these frequency values directly in Hz. */
 
-void lpp_convert(float *S, float *C, int N2, float *lastphase, float fundamental, float factor )
+void lpp_convert(t_float *S, t_float *C, int N2, t_float *lastphase, t_float fundamental, t_float factor )
 {
-  float   phase, phasediff;
+  t_float   phase, phasediff;
   int     real, imag, amp,freq;
-  float   a, b;
+  t_float   a, b;
   int     i;
 
-/*  float myTWOPI, myPI; */
+/*  t_float myTWOPI, myPI; */
 /*  double sin(), cos(), atan(), hypot();*/
 
 /*  myTWOPI = 8.*atan(1.);

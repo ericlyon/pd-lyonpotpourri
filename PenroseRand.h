@@ -1,3 +1,3 @@
 
-float rrand(int *seed);
-float prand(int *seed);
+t_float rrand(int *seed);
+t_float prand(int *seed);

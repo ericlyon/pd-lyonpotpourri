@@ -1,9 +1,9 @@
 #include "fftease.h"
 
-void leanconvert( float *S, float *C, int N2 )
+void leanconvert( t_float *S, t_float *C, int N2 )
 {
   int    real, imag, amp, phase;
-  float  a, b;
+  t_float  a, b;
   int    i;
   double hypot(), atan2();
 

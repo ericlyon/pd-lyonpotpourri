@@ -20,7 +20,7 @@ typedef struct _dynss
   t_double freq; // frequency
   long counter; // count samples
   long period_samples; // how many samples in a period
-  float srate; // sampling rate
+  t_float srate; // sampling rate
   long current_point; // which point are we on
   t_double *values;
   long *point_breaks;
@@ -35,7 +35,7 @@ static void *dynss_new(void);
 static t_int *dynss_perform(t_int *w);
 static void dynss_dsp(t_dynss *x, t_signal **sp);
 static void version(void);
-static float boundrand(float min, float max);
+static t_float boundrand(t_float min, t_float max);
 static void dynss_init(t_dynss *x,short initialized);
 static void dynss_devx(t_dynss *x, t_floatarg f);
 static void dynss_devy(t_dynss *x, t_floatarg f);
@@ -150,15 +150,15 @@ void *dynss_new(void)
 }
 
 
-float boundrand(float min, float max)
+t_float boundrand(t_float min, t_float max)
 {
-  return min + (max-min) * ((float) (rand() % RAND_MAX)/ (float) RAND_MAX);
+  return min + (max-min) * ((t_float) (rand() % RAND_MAX)/ (t_float) RAND_MAX);
 }
 
 void dynss_init(t_dynss *x,short initialized)
 {
   int i,j;
-  float findex;
+  t_float findex;
   long point_count = x->point_count;
   t_double *values = x->values;
   t_double *norm_breaks = x->norm_breaks;
@@ -195,7 +195,7 @@ void dynss_init(t_dynss *x,short initialized)
     }
     // now generate sample break points;
     for(i = 0; i < point_count; i++) {
-      point_breaks[i] = (long) ( (float)x->period_samples * norm_breaks[i] );
+      point_breaks[i] = (long) ( (t_float)x->period_samples * norm_breaks[i] );
       // post("%i %f %f",point_breaks[i], norm_breaks[i], values[i]);
     }
     // set y deviation maxes
@@ -213,9 +213,9 @@ void dynss_init(t_dynss *x,short initialized)
 t_int *dynss_perform(t_int *w)
 {
   //int i, j, k;
-  //  float outval;
+  //  t_float outval;
   int i,j;
-  float findex1,findex2;
+  t_float findex1,findex2;
   t_dynss *x = (t_dynss *) (w[1]);
 //  t_float *inlet = (t_float *) (w[2]);
   t_float *outlet = (t_float *) (w[3]);
@@ -229,9 +229,9 @@ t_int *dynss_perform(t_int *w)
   long period_samples = x->period_samples;
   long current_point = x->current_point;
   long point_count = x->point_count;
-  float sample;
-  float frak;
-  float dev, newval;
+  t_float sample;
+  t_float frak;
+  t_float dev, newval;
   long segsamps;
 
   while(n--) {
@@ -250,7 +250,7 @@ t_int *dynss_perform(t_int *w)
         frak = 0.0;
       }
       else {
-        frak = (float)(counter - point_breaks[current_point]) / (float)segsamps;
+        frak = (t_float)(counter - point_breaks[current_point]) / (t_float)segsamps;
         //post("frak %f counter %d point break %d diff %d",frak, counter, point_breaks[current_point],counter - point_breaks[current_point] );
         if( frak < 0.0 || frak > 1.0 ) {
           post("bad fraction: %f",frak);
@@ -310,7 +310,7 @@ t_int *dynss_perform(t_int *w)
 
       // now generate sample breaks
       for(i = 0; i < point_count; i++) {
-        point_breaks[i] = (long) ( (float)period_samples * norm_breaks[i] );
+        point_breaks[i] = (long) ( (t_float)period_samples * norm_breaks[i] );
       }
     }
     *outlet++ = sample;

@@ -8,16 +8,16 @@
 static t_class *granulesf_class;
 
 typedef struct {
-  float amplitude;
-  float panL;
-  float panR;
+  t_float amplitude;
+  t_float panL;
+  t_float panR;
   long delay; // samples to wait until event starts
   long duration;// length in samples of event
-  float phase; // phase for frequency oscillator
-  float ephase; // phase for envelope
-  float si; // sampling increment for frequency
-  float esi; // sampling increment for envelope
-  float endframe;//boundary frame (extremes are 0 or size-1); approach depends on sign of si
+  t_float phase; // phase for frequency oscillator
+  t_float ephase; // phase for envelope
+  t_float si; // sampling increment for frequency
+  t_float esi; // sampling increment for envelope
+  t_float endframe;//boundary frame (extremes are 0 or size-1); approach depends on sign of si
   short active;//status of this slot (inactives are available for new grains)
 } t_grain;
 
@@ -32,44 +32,44 @@ typedef struct _granulesf
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   t_pdbuffer *wavebuf; // holds waveform samples
   t_pdbuffer *windowbuf; // holds window samples
   t_symbol *wavename; // name of waveform buffer
   t_symbol *windowname; // name of window buffer
 
-  float sr; // sampling rate
+  t_float sr; // sampling rate
   short mute;
   short hosed; // buffers are bad
   /* Global grain data*/
   long events; // number of events in a block
   long horizon; // length of block for random events
-  float min_incr; // minimum frequency for a grain
-  float max_incr; // maximum frequency for a grain
-  float minpan; // minimum pan for a grain
-  float maxpan; // maximum pan for a grain
-  float minamp; // minimum amplitude for a grain
-  float maxamp; // maximum amplitude for a grain
-  float mindur; // minimum duration for a grain
-  float maxdur; // maximum duration for a grain
+  t_float min_incr; // minimum frequency for a grain
+  t_float max_incr; // maximum frequency for a grain
+  t_float minpan; // minimum pan for a grain
+  t_float maxpan; // maximum pan for a grain
+  t_float minamp; // minimum amplitude for a grain
+  t_float maxamp; // maximum amplitude for a grain
+  t_float mindur; // minimum duration for a grain
+  t_float maxdur; // maximum duration for a grain
   t_grain *grains; // stores grain data
-  float *pitchscale; // contains a frequency grid for pitch constraint
+  t_float *pitchscale; // contains a frequency grid for pitch constraint
   int pitchsteps; // number of members in scale
-  float transpose; // factor for scaling all pitches
-  float pitch_deviation; // factor to adjust scaled pitches
+  t_float transpose; // factor for scaling all pitches
+  t_float pitch_deviation; // factor to adjust scaled pitches
   short steady; // toggles pulsed rhythmic activity
-  float lowblock_increment; //lowest allowed frequency
-  float highblock_increment;// highest allowed frequency
-  float mindur_ms;//store duration in ms
-  float maxdur_ms;//ditto
-  float horizon_ms;//ditto
+  t_float lowblock_increment; //lowest allowed frequency
+  t_float highblock_increment;// highest allowed frequency
+  t_float mindur_ms;//store duration in ms
+  t_float maxdur_ms;//ditto
+  t_float horizon_ms;//ditto
   short constrain_scale;//flag to only use bounded portion of scale rather than all of it
   short nopan;//stereo channels go straight out, mono goes to center
   long minskip;//minimum inskip in samples (default = zero)
   long maxskip;//maximum inskip in samples (default = maximum possible given dur/increment of note)
   long b_nchans;//channels in buffer (always 1 for Pd, at least today)
   long b_frames;//frames in waveform buffer
-  float retro_odds;//odds to play sample backwards
+  t_float retro_odds;//odds to play sample backwards
   short interpolate;//flag to interpolate samples - on by default
   short interpolate_envelope;//flag to interpolate envelope
 } t_granulesf;
@@ -88,7 +88,7 @@ static void granulesf_pitchdev(t_granulesf *x, t_floatarg d);
 static void granulesf_lowblock(t_granulesf *x, t_floatarg f);
 static void granulesf_highblock(t_granulesf *x, t_floatarg f);
 static void granulesf_events(t_granulesf *x, t_floatarg e);
-static float granulesf_boundrand(float min, float max);
+static t_float granulesf_boundrand(t_float min, t_float max);
 static void *granulesf_grist(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
 static void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
 static void *granulesf_setscale(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv);
@@ -98,7 +98,7 @@ static void granulesf_steady(t_granulesf *x, t_floatarg toggle);
 static void granulesf_constrain_scale(t_granulesf *x, t_floatarg toggle);
 static void granulesf_dsp_free(t_granulesf *x);
 static void granulesf_init(t_granulesf *x,short initialized);
-static void granulesf_constrain(int *index_min, int *index_max, float min_incr, float max_incr, float *scale, int steps);
+static void granulesf_constrain(int *index_min, int *index_max, t_float min_incr, t_float max_incr, t_float *scale, int steps);
 static void granulesf_interpolate(t_granulesf *x, t_floatarg toggle);
 static void granulesf_nopan(t_granulesf *x, t_floatarg toggle);
 static void granulesf_retro_odds(t_granulesf *x, t_floatarg o);
@@ -222,7 +222,7 @@ void granulesf_transpose(t_granulesf *x, t_floatarg t)
 void *granulesf_setscale(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
 {
   int i;
-  float *pitchscale = x->pitchscale;
+  t_float *pitchscale = x->pitchscale;
   if( argc >= MAXSCALE ) {
     pd_error(0, "%d is the maximum size scale", MAXSCALE);
     return 0;
@@ -238,7 +238,7 @@ void *granulesf_setscale(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
   return 0;
 }
 
-void granulesf_constrain(int *index_min, int *index_max, float min_incr, float max_incr, float *scale, int steps)
+void granulesf_constrain(int *index_min, int *index_max, t_float min_incr, t_float max_incr, t_float *scale, int steps)
 {
   int imax = steps - 1;
   int imin = 0;
@@ -272,33 +272,33 @@ void granulesf_pitchspray(t_granulesf *x)
   long eframes = x->windowbuf->b_frames;
   long minskip = x->minskip;
   long maxskip = x->maxskip;
-  float retro_odds = x->retro_odds;
+  t_float retro_odds = x->retro_odds;
   long horizon = x->horizon; // length of block for random events
-  float mindur = x->mindur;
-  float maxdur = x->maxdur;
-  float min_incr = x->min_incr; // minimum frequency for a grain
-  float max_incr = x->max_incr; // maximum frequency for a grain
-  float minpan = x->minpan; // minimum pan for a grain
-  float maxpan = x->maxpan; // maximum pan for a grain
-  float minamp = x->minamp; // minimum amplitude for a grain
-  float maxamp = x->maxamp; // maximum amplitude for a grain
-  float transpose = x->transpose; // pitch scalar
-  float lowblock_increment = x->lowblock_increment;
-  float highblock_increment = x->highblock_increment;
+  t_float mindur = x->mindur;
+  t_float maxdur = x->maxdur;
+  t_float min_incr = x->min_incr; // minimum frequency for a grain
+  t_float max_incr = x->max_incr; // maximum frequency for a grain
+  t_float minpan = x->minpan; // minimum pan for a grain
+  t_float maxpan = x->maxpan; // maximum pan for a grain
+  t_float minamp = x->minamp; // minimum amplitude for a grain
+  t_float maxamp = x->maxamp; // maximum amplitude for a grain
+  t_float transpose = x->transpose; // pitch scalar
+  t_float lowblock_increment = x->lowblock_increment;
+  t_float highblock_increment = x->highblock_increment;
   short steady = x->steady;
-  float pitch_deviation = x->pitch_deviation;
-  float pdev = 0;
-  float pdev_invert = 0;
-  //  float pscale;
-  float pan;
+  t_float pitch_deviation = x->pitch_deviation;
+  t_float pdev = 0;
+  t_float pdev_invert = 0;
+  //  t_float pscale;
+  t_float pan;
   int index_min, index_max;
   int steps = x->pitchsteps;
-  float *scale = x->pitchscale;
+  t_float *scale = x->pitchscale;
   int windex;
   short inserted = 0;
   short constrain_scale = x->constrain_scale;
   t_grain *grains = x->grains;
-  float tmp;
+  t_float tmp;
 
   if( steps < 2 ) {
     pd_error(0, "scale is undefined");
@@ -313,9 +313,9 @@ void granulesf_pitchspray(t_granulesf *x)
     for(j = 0; j < MAXGRAINS; j++ ) {
       if(!grains[j].active) {
         if(steady) {
-          grains[j].delay = (float)(i * horizon) / (float) x->events ;
+          grains[j].delay = (t_float)(i * horizon) / (t_float) x->events ;
         } else {
-          grains[j].delay = granulesf_boundrand(0.0,(float) horizon);
+          grains[j].delay = granulesf_boundrand(0.0,(t_float) horizon);
         }
         grains[j].duration = (long) granulesf_boundrand(mindur, maxdur);
         grains[j].phase = 0.0;
@@ -329,14 +329,14 @@ void granulesf_pitchspray(t_granulesf *x)
 
         if(constrain_scale) {
           granulesf_constrain(&index_min,&index_max,min_incr, max_incr, scale, steps);
-          windex = (int) granulesf_boundrand((float)index_min, (float)index_max);
+          windex = (int) granulesf_boundrand((t_float)index_min, (t_float)index_max);
         } else {
-          windex = (int) granulesf_boundrand(0.0, (float)(steps));
+          windex = (int) granulesf_boundrand(0.0, (t_float)(steps));
         }
         grains[j].si = transpose * scale[windex];
         //  post("windex %d scale[w] %f transpose %f si %f",windex, scale[windex], transpose, grains[j].si );
         grainframes = grains[j].duration * grains[j].si;
-        grains[j].esi =  (float) eframes / (float) grains[j].duration;
+        grains[j].esi =  (t_float) eframes / (t_float) grains[j].duration;
 
         if( pitch_deviation ) {
           grains[j].si *= granulesf_boundrand(pdev_invert,pdev);
@@ -371,10 +371,10 @@ void granulesf_pitchspray(t_granulesf *x)
           grains[j].endframe = grainframes - 1;
         } else {
           if(maxskip > b_frames - grainframes) {
-            grains[j].phase = granulesf_boundrand((float)minskip, (float) (b_frames - grainframes));
+            grains[j].phase = granulesf_boundrand((t_float)minskip, (t_float) (b_frames - grainframes));
             //post("1. minskip %d maxskip %d",minskip,b_frames - grainframes);
           } else {
-            grains[j].phase = granulesf_boundrand((float)minskip, (float)maxskip);
+            grains[j].phase = granulesf_boundrand((t_float)minskip, (t_float)maxskip);
             //post("2. minskip %d maxskip %d",minskip,maxskip);
           }
           grains[j].endframe = grains[j].phase + grainframes - 1;
@@ -409,25 +409,25 @@ void granulesf_spray(t_granulesf *x)
   long eframes = x->windowbuf->b_frames;
   long b_frames = x->wavebuf->b_frames;
   //  long b_nchans = x->wavebuf->b_nchans;
-  //  float sr = x->sr;
+  //  t_float sr = x->sr;
   long horizon = x->horizon; // length of block for random events
-  float mindur = x->mindur;
-  float maxdur = x->maxdur;
-  float min_incr = x->min_incr; // minimum incr for a grain (must be positive!)
-  float max_incr = x->max_incr; // maximum incr for a grain (must be positive!)
-  float minpan = x->minpan; // minimum pan for a grain
-  float maxpan = x->maxpan; // maximum pan for a grain
-  float minamp = x->minamp; // minimum amplitude for a grain
-  float maxamp = x->maxamp; // maximum amplitude for a grain
-  float transpose = x->transpose; // pitch scalar
+  t_float mindur = x->mindur;
+  t_float maxdur = x->maxdur;
+  t_float min_incr = x->min_incr; // minimum incr for a grain (must be positive!)
+  t_float max_incr = x->max_incr; // maximum incr for a grain (must be positive!)
+  t_float minpan = x->minpan; // minimum pan for a grain
+  t_float maxpan = x->maxpan; // maximum pan for a grain
+  t_float minamp = x->minamp; // minimum amplitude for a grain
+  t_float maxamp = x->maxamp; // maximum amplitude for a grain
+  t_float transpose = x->transpose; // pitch scalar
   long minskip = x->minskip;
   long maxskip = x->maxskip;
   short steady = x->steady;
-  float retro_odds = x->retro_odds;
-  float pan;
+  t_float retro_odds = x->retro_odds;
+  t_float pan;
   t_grain *grains = x->grains;
   short inserted;
-  float tmp;
+  t_float tmp;
 
   for( i = 0; i < x->events; i++ ) {
     inserted = 0;
@@ -435,9 +435,9 @@ void granulesf_spray(t_granulesf *x)
       if(!grains[j].active) {
         grains[j].active = 1;
         if(steady) {
-          grains[j].delay = (float)(i * horizon) / (float) x->events ;
+          grains[j].delay = (t_float)(i * horizon) / (t_float) x->events ;
         } else {
-          grains[j].delay = granulesf_boundrand(0.0,(float) horizon);
+          grains[j].delay = granulesf_boundrand(0.0,(t_float) horizon);
         }
         grains[j].duration = (long) granulesf_boundrand(mindur, maxdur);//frames for this grain
         grains[j].ephase = 0.0;
@@ -449,8 +449,8 @@ void granulesf_spray(t_granulesf *x)
         grains[j].si = transpose * granulesf_boundrand(min_incr, max_incr);
 
         grainframes = grains[j].duration * grains[j].si;//frames to be read from buffer
-        // grains[j].esi =  (float) eframes / (float) grainframes;
-        grains[j].esi =  (float) eframes / (float) grains[j].duration;
+        // grains[j].esi =  (t_float) eframes / (t_float) grainframes;
+        grains[j].esi =  (t_float) eframes / (t_float) grains[j].duration;
         if(grainframes >= b_frames ) {
           pd_error(0, "grain size %.0ld is too long for buffer which is %ld",grainframes, b_frames);
           grains[j].active = 0;
@@ -462,10 +462,10 @@ void granulesf_spray(t_granulesf *x)
           grains[j].endframe = grainframes - 1;
         } else {
           if(maxskip > b_frames - grainframes) {
-            grains[j].phase = granulesf_boundrand((float)minskip, (float) (b_frames - grainframes));
+            grains[j].phase = granulesf_boundrand((t_float)minskip, (t_float) (b_frames - grainframes));
             //post("1. minskip %d maxskip %d",minskip,b_frames - grainframes);
           } else {
-            grains[j].phase = granulesf_boundrand((float)minskip, (float)maxskip);
+            grains[j].phase = granulesf_boundrand((t_float)minskip, (t_float)maxskip);
             //post("2. minskip %d maxskip %d",minskip,maxskip);
           }
           grains[j].endframe = grains[j].phase + grainframes - 1;
@@ -496,12 +496,12 @@ void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
 {
   short inserted;
   int j;
-  float duration, incr, amplitude, pan;
+  t_float duration, incr, amplitude, pan;
   t_grain *grains;
   long eframes;
   long frames;
-  float sr;
-  float skip;
+  t_float sr;
+  t_float skip;
 
   grains = x->grains;
   eframes = x->windowbuf->b_frames;
@@ -548,7 +548,7 @@ void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
       grains[j].amplitude = amplitude * .707;
       grains[j].panL = amplitude * cos(pan * PIOVERTWO);
       grains[j].panR = amplitude * sin(pan * PIOVERTWO);
-      grains[j].esi =  (float)eframes / (float)grains[j].duration;
+      grains[j].esi =  (t_float)eframes / (t_float)grains[j].duration;
       grains[j].si = incr;
       grains[j].active = 1;
       return 0;
@@ -560,9 +560,9 @@ void *granulesf_grain(t_granulesf *x, t_symbol *msg, int argc, t_atom *argv)
 
 }
 
-float granulesf_boundrand(float min, float max)
+t_float granulesf_boundrand(t_float min, t_float max)
 {
-  return min + (max-min) * ((float) (rand() % RAND_MAX)/ (float) RAND_MAX);
+  return min + (max-min) * ((t_float) (rand() % RAND_MAX)/ (t_float) RAND_MAX);
 }
 
 
@@ -575,7 +575,7 @@ void *granulesf_new(t_symbol *msg, int argc, t_atom *argv)
   x->wavebuf = (t_pdbuffer*)getbytes(sizeof(t_pdbuffer));
   x->windowbuf = (t_pdbuffer*)getbytes(sizeof(t_pdbuffer));
   srand(time(0)); //need "seed" message
-  x->pitchscale = (float *) getbytes(MAXSCALE * sizeof(float));
+  x->pitchscale = (t_float *) getbytes(MAXSCALE * sizeof(t_float));
   x->grains = (t_grain *) getbytes(MAXGRAINS * sizeof(t_grain));
 
   // default names
@@ -748,8 +748,8 @@ void granulesf_setbuf(t_granulesf *x, t_symbol *wavename, t_symbol *windowname)
 t_int *granulesf_performhose(t_int *w)
 {
   //  t_granulesf *x = (t_granulesf *) (w[1]);
-  float *outputL = (t_float *)(w[3]);
-  float *outputR = (t_float *)(w[4]);
+  t_float *outputL = (t_float *)(w[3]);
+  t_float *outputR = (t_float *)(w[4]);
   int n = (int) w[5];
   while(n--) *outputL++ = *outputR++ = 0;
   return (w+6);
@@ -758,9 +758,9 @@ t_int *granulesf_performhose(t_int *w)
 t_int *granulesf_perform_no_interpolation(t_int *w)
 {
   t_granulesf *x = (t_granulesf *) (w[1]);
-  //  float *in = (t_float *)(w[2]); // ignoring input
-  float *outputL = (t_float *)(w[3]);
-  float *outputR = (t_float *)(w[4]);
+  //  t_float *in = (t_float *)(w[2]); // ignoring input
+  t_float *outputL = (t_float *)(w[3]);
+  t_float *outputR = (t_float *)(w[4]);
   int n = (int) w[5];
 
   t_pdbuffer *wavebuf = x->wavebuf;
@@ -771,14 +771,14 @@ t_int *granulesf_perform_no_interpolation(t_int *w)
   long b_nchans = x->b_nchans;
   long b_frames = wavebuf->b_frames;
   short nopan = x->nopan;
-  float sample1, sample2;
-  float envelope;
-  float amplitude;
-  float panL, panR;
-  float si;
-  float esi;
-  float phase;
-  float ephase;
+  t_float sample1, sample2;
+  t_float envelope;
+  t_float amplitude;
+  t_float panL, panR;
+  t_float si;
+  t_float esi;
+  t_float phase;
+  t_float ephase;
   long delay;
   long eframes = windowbuf->b_frames;
   long current_index;
@@ -883,9 +883,9 @@ t_int *granulesf_perform_no_interpolation(t_int *w)
 t_int *granulesf_perform(t_int *w)
 {
   t_granulesf *x = (t_granulesf *) (w[1]);
-  //  float *in = (t_float *)(w[2]); // ignoring input
-  float *outputL = (t_float *)(w[3]);
-  float *outputR = (t_float *)(w[4]);
+  //  t_float *in = (t_float *)(w[2]); // ignoring input
+  t_float *outputL = (t_float *)(w[3]);
+  t_float *outputR = (t_float *)(w[4]);
   int n = (int) w[5];
 
   t_pdbuffer *wavebuf = x->wavebuf;
@@ -897,19 +897,19 @@ t_int *granulesf_perform(t_int *w)
   long b_frames = wavebuf->b_frames;
   short nopan = x->nopan;
   short interpolate_envelope = x->interpolate_envelope;
-  float sample1, sample2;
-  float envelope;
-  float amplitude;
-  float panL, panR;
-  float si;
-  float esi;
-  float phase;
-  float ephase;
+  t_float sample1, sample2;
+  t_float envelope;
+  t_float amplitude;
+  t_float panL, panR;
+  t_float si;
+  t_float esi;
+  t_float phase;
+  t_float ephase;
   long delay;
   long eframes = windowbuf->b_frames;
   long current_index;
-  float tsmp1, tsmp2;
-  float frac;
+  t_float tsmp1, tsmp2;
+  t_float frac;
   int i,j;
 
   if( x->mute ) {
@@ -1041,7 +1041,7 @@ t_int *granulesf_perform(t_int *w)
 void granulesf_dsp_free(t_granulesf *x)
 {
   freebytes(x->grains, MAXGRAINS * sizeof(t_grain));
-  freebytes(x->pitchscale, MAXSCALE * sizeof(float));
+  freebytes(x->pitchscale, MAXSCALE * sizeof(t_float));
 }
 
 void granulesf_dsp(t_granulesf *x, t_signal **sp)

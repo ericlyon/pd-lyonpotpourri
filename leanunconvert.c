@@ -6,7 +6,7 @@
    in output array S; sampling rate R and interpolation factor
    I are used to recompute phase values from frequencies */
 
-void leanunconvert( float *C, float *S, int N2 )
+void leanunconvert( t_float *C, t_float *S, int N2 )
 
 {
   double cos(), sin();

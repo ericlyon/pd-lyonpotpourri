@@ -7,12 +7,12 @@ static t_class *adsr_class;
 typedef struct _adsr
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   // Variables Here
-  float a;
-  float d;
-  float s;
-  float r;
+  t_float a;
+  t_float d;
+  t_float s;
+  t_float r;
   int ebreak1;
   int ebreak2;
   int ebreak3;
@@ -24,16 +24,16 @@ typedef struct _adsr
   int dsamps_last;
   int ssamps_last;
   int rsamps_last;
-  float tempo;
-  float egain1;
-  float egain2;
+  t_float tempo;
+  t_float egain1;
+  t_float egain2;
   int tempomode;
   int beat_subdiv;
   int tsamps;
   int counter;
-  float srate;
+  t_float srate;
   short manual_override;
-  float click_gain; // input click sets volume too
+  t_float click_gain; // input click sets volume too
   short mute;
 } t_adsr;
 
@@ -55,7 +55,7 @@ static void adsr_set_gain2(t_adsr *x, t_floatarg f);
 // static void set_tempo(t_adsr *x, t_floatarg f);
 static void adsr_mute(t_adsr *x, t_floatarg f);
 
-//void atom_arg_getfloat(float *c, long idx, long ac, t_atom *av);
+//void atom_arg_getfloat(t_float *c, long idx, long ac, t_atom *av);
 //void atom_arg_getsym(t_symbol **c, long idx, long ac, t_atom *av);
 
 void adsr_tilde_setup(void) {
@@ -259,17 +259,17 @@ t_int *adsr_perform(t_int *w)
   int ebreak1 = x->ebreak1;
   int ebreak2 = x->ebreak2;
   int ebreak3 = x->ebreak3;
-  float egain1 = x->egain1;
-  float egain2 = x->egain2;
+  t_float egain1 = x->egain1;
+  t_float egain2 = x->egain2;
   int asamps = x->asamps;
   int dsamps = x->dsamps;
   int ssamps = x->ssamps;
   int rsamps = x->rsamps;
   //  short manual_override = x->manual_override;
-  float click_gain = x->click_gain;
-  float etmp;
-  float env_val;
-  float input_val;
+  t_float click_gain = x->click_gain;
+  t_float etmp;
+  t_float env_val;
+  t_float input_val;
   /*********************************************/
   if(x->mute) {
     while(n--) *out++ = 0.0;
@@ -284,15 +284,15 @@ t_int *adsr_perform(t_int *w)
 
 
     if( counter < ebreak1 ) {
-      env_val = (float) counter / (float) asamps;
+      env_val = (t_float) counter / (t_float) asamps;
     } else if (counter < ebreak2) {
-      etmp = (float) (counter - ebreak1) / (float) dsamps;
+      etmp = (t_float) (counter - ebreak1) / (t_float) dsamps;
       env_val = (1.0 - etmp) + (egain1 * etmp);
     } else if (counter < ebreak3) {
-      etmp = (float) (counter - ebreak2) / (float) ssamps;
+      etmp = (t_float) (counter - ebreak2) / (t_float) ssamps;
       env_val = (egain1 * (1.0 - etmp)) + (egain2 * etmp);
     } else if( counter < tsamps ) {
-      env_val = ((float)(tsamps-counter)/(float)rsamps) * egain2 ;
+      env_val = ((t_float)(tsamps-counter)/(t_float)rsamps) * egain2 ;
     } else {
       env_val = 0.0;
     }
