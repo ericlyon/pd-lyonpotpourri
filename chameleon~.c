@@ -3350,7 +3350,7 @@ void slidecomb(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     int *dv1, *dv2;        /* cmix bookkeeping */
     double delsamp1 = 0, delsamp2 = 0;
     double m1, m2;
-    double delay_time;
+    double delay_time = -1.;
     double *params = x->params;
     double srate = x->sr;
     double *delayline1;
@@ -3420,7 +3420,7 @@ void slideflam(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     int *dv1, *dv2;        /* cmix bookkeeping */
     double delsamp1 = 0, delsamp2 = 0;
     double m1, m2;
-    double delay_time;
+    double delay_time = -1.;
     double *params = x->params;
     double srate = x->sr;
     double *delayline1;
@@ -3666,7 +3666,7 @@ void feed1me(t_chameleon *x, long *pcount, t_double *buf1, t_double *buf2)
     double delsamp1b=0, delsamp2b=0 ;
     double delay1, delay2, feedback1, feedback2;
     double funcSi, funcPhs;
-    double putsamp;
+    double putsamp = 0.;
     double duration;
     long ddl_func_len = (long) (x->sr * MAX_MINI_DELAY);
     
