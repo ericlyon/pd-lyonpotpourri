@@ -16,30 +16,30 @@ typedef struct _flanjah
   t_object x_obj;
   t_float x_f;
   //
-  float *sinetab;
-  float si_factor;
-  float osc1_phs;
-  float osc1_si;
-  float si1;
-  float osc2_phs;
-  float osc2_si;
-  float si2;
+  t_float *sinetab;
+  t_float si_factor;
+  t_float osc1_phs;
+  t_float osc1_si;
+  t_float si1;
+  t_float osc2_phs;
+  t_float osc2_si;
+  t_float si2;
   //
-  float speed1;
-  float speed2;
-  float feedback;
-  float maxdel;
-  float depth;
+  t_float speed1;
+  t_float speed2;
+  t_float feedback;
+  t_float maxdel;
+  t_float depth;
   //
-  float *ddl1 ;
+  t_float *ddl1 ;
   int ddl1_len;
   int ddl1_phs;
-  float *ddl2 ;
+  t_float *ddl2 ;
   int ddl2_len;
   int ddl2_phs;
   //
-  float tap1;
-  float tap2;
+  t_float tap1;
+  t_float tap2;
   //
   int feedback_connected;
   int speed1_connected;
@@ -48,7 +48,7 @@ typedef struct _flanjah
   short connected[8];
   int feedback_protect;
   short mute;
-  float sr;
+  t_float sr;
 } t_flanjah;
 
 t_int *flanjah_perform(t_int *w);
@@ -85,9 +85,9 @@ void flanjah_report( t_flanjah *x ) {
 }
 
 void flanjah_dsp_free( t_flanjah *x ) {
-  freebytes(x->sinetab, F_LEN * sizeof(float));
-  freebytes(x->ddl1, (x->ddl1_len + 2) * sizeof(float));
-  freebytes(x->ddl2, (x->ddl2_len + 2) * sizeof(float));
+  freebytes(x->sinetab, F_LEN * sizeof(t_float));
+  freebytes(x->ddl1, (x->ddl1_len + 2) * sizeof(t_float));
+  freebytes(x->ddl2, (x->ddl2_len + 2) * sizeof(t_float));
 }
 
 
@@ -101,34 +101,34 @@ t_int *flanjah_perform(t_int *w)
   t_float *depth_vec = (t_float *)(w[6]);
   t_float *out1 = (t_float *)(w[7]);
   int n = (int) w[8];
-  float fdelay1, fdelay2;
+  t_float fdelay1, fdelay2;
   int idelay1, idelay2;
-  float insamp1;//, insamp2;
-  float frac;
+  t_float insamp1;//, insamp2;
+  t_float frac;
   int index1, index2;
-  float m1, m2;
+  t_float m1, m2;
   //
-  float osc2_phs = x->osc2_phs;
+  t_float osc2_phs = x->osc2_phs;
   int ddl2_len = x->ddl2_len;
-  float osc2_si = x->osc2_si;
-  float *ddl2 = x->ddl2;
+  t_float osc2_si = x->osc2_si;
+  t_float *ddl2 = x->ddl2;
   int ddl2_phs = x->ddl2_phs;
-  float *ddl1 = x->ddl1;
-  float *sinetab = x->sinetab;
+  t_float *ddl1 = x->ddl1;
+  t_float *sinetab = x->sinetab;
   int ddl1_phs = x->ddl1_phs;
   int ddl1_len = x->ddl1_len;
-  float osc1_phs = x->osc1_phs;
-  float osc1_si = x->osc1_si;
-  float tap1 = x->tap1;
-  float tap2 = x->tap2;
-  float feedback = x->feedback;
+  t_float osc1_phs = x->osc1_phs;
+  t_float osc1_si = x->osc1_si;
+  t_float tap1 = x->tap1;
+  t_float tap2 = x->tap2;
+  t_float feedback = x->feedback;
   int feedback_connected = x->feedback_connected;
   int speed1_connected = x->speed1_connected;
   int speed2_connected = x->speed2_connected;
   int depth_connected = x->depth_connected;
-  float si_factor = x->si_factor;
+  t_float si_factor = x->si_factor;
   int feedback_protect = x->feedback_protect;
-  float depth_factor = x->depth;
+  t_float depth_factor = x->depth;
   /**********************/
 
   if( x->mute ) {
@@ -169,8 +169,8 @@ t_int *flanjah_perform(t_int *w)
       depth_factor = 1.;
     }
 
-    fdelay1 = sinetab[ (int) osc1_phs ] * (float) ddl1_len * depth_factor;
-    fdelay2 = sinetab[ (int) osc2_phs ] * (float) ddl2_len * depth_factor;
+    fdelay1 = sinetab[ (int) osc1_phs ] * (t_float) ddl1_len * depth_factor;
+    fdelay2 = sinetab[ (int) osc2_phs ] * (t_float) ddl2_len * depth_factor;
 
     // DSP Proper
 
@@ -266,7 +266,7 @@ void flanjah_init(t_flanjah *x,short initialized)
     pd_error(0, "above maximum of 360 seconds");
   }
 
-  x->si_factor = (float)F_LEN / x->sr;
+  x->si_factor = (t_float)F_LEN / x->sr;
   x->ddl1_len = x->maxdel * x->sr ;
   x->ddl1_phs = 0;
   x->ddl2_len = x->maxdel * x->sr ;
@@ -278,15 +278,15 @@ void flanjah_init(t_flanjah *x,short initialized)
 
   x->tap1 = x->tap2 = 0;
   if(!initialized) {
-    x->ddl1 = (float *) getbytes((x->ddl1_len + 2) * sizeof(float));
-    x->ddl2 = (float *) getbytes((x->ddl2_len + 2) * sizeof(float));
-    x->sinetab = (float *) getbytes(F_LEN * sizeof(float));
+    x->ddl1 = (t_float *) getbytes((x->ddl1_len + 2) * sizeof(t_float));
+    x->ddl2 = (t_float *) getbytes((x->ddl2_len + 2) * sizeof(t_float));
+    x->sinetab = (t_float *) getbytes(F_LEN * sizeof(t_float));
     for( i = 0; i < F_LEN ; i++ ) {
-      x->sinetab[i] = 0.51 - 0.47 * cos( TWOPI * (float) i / (float) F_LEN);
+      x->sinetab[i] = 0.51 - 0.47 * cos( TWOPI * (t_float) i / (t_float) F_LEN);
     }
   } else {
-    x->ddl1 = (float *) realloc(x->ddl1,(x->ddl1_len + 2) * sizeof(float));
-    x->ddl2 = (float *) realloc(x->ddl2,(x->ddl2_len + 2) * sizeof(float));
+    x->ddl1 = (t_float *) realloc(x->ddl1,(x->ddl1_len + 2) * sizeof(t_float));
+    x->ddl2 = (t_float *) realloc(x->ddl2,(x->ddl2_len + 2) * sizeof(t_float));
   }
 }
 

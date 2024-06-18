@@ -10,22 +10,22 @@
    positive frequency spectrum arranged as before, and replaces it with
    2*N real values.  N MUST be a power of 2. */
 
-void lpp_rfft( float *x, int N, int forward )
+void lpp_rfft( t_float *x, int N, int forward )
 
 {
-  float   c1,c2,
+  t_float   c1,c2,
     h1r,h1i,
     h2r,h2i,
     wr,wi,
     wpr,wpi,
     temp,
     theta;
-  float   xr,xi;
+  t_float   xr,xi;
   int     i,
     i1,i2,i3,i4,
     N2p1;
   static int  first = 1;
-/*float PI, TWOPI;*/
+/*t_float PI, TWOPI;*/
 //  void cfft();
 
   if ( first ) {
@@ -84,17 +84,17 @@ void lpp_rfft( float *x, int N, int forward )
     lpp_cfft( x, N, forward );
 }
 
-/* cfft replaces float array x containing NC complex values
-   (2*NC float values alternating real, imagininary, etc.)
+/* cfft replaces t_float array x containing NC complex values
+   (2*NC t_float values alternating real, imagininary, etc.)
    by its Fourier transform if forward is true, or by its
    inverse Fourier transform if forward is false, using a
    recursive Fast Fourier transform method due to Danielson
    and Lanczos.  NC MUST be a power of 2. */
 
-void lpp_cfft( float *x, int NC, int forward )
+void lpp_cfft( t_float *x, int NC, int forward )
 
 {
-  float   wr,wi,
+  t_float   wr,wi,
     wpr,wpi,
     theta,
     scale;
@@ -116,7 +116,7 @@ void lpp_cfft( float *x, int NC, int forward )
     wr = 1.;
     wi = 0.;
     for ( m = 0; m < mmax; m += 2 ) {
-      register float rtemp, itemp;
+      register t_float rtemp, itemp;
       for ( i = m; i < ND; i += delta ) {
         j = i + mmax;
         rtemp = wr*x[j] - wi*x[j+1];
@@ -134,19 +134,19 @@ void lpp_cfft( float *x, int NC, int forward )
 /* scale output */
 
   scale = forward ? 1./ND : 2.;
-  { register float *xi=x, *xe=x+ND;
+  { register t_float *xi=x, *xe=x+ND;
     while ( xi < xe )
       *xi++ *= scale;
   }
 }
 
-/* bitreverse places float array x containing N/2 complex values
+/* bitreverse places t_float array x containing N/2 complex values
    into bit-reversed order */
 
-void lpp_bitreverse( float *x, int N )
+void lpp_bitreverse( t_float *x, int N )
 
 {
-  float   rtemp,itemp;
+  t_float   rtemp,itemp;
   int     i,j,
     m;
 

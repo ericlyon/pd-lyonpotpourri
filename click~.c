@@ -7,7 +7,7 @@ typedef struct _click
   t_object x_obj;
   t_float x_f;
   void *float_outlet;
-  float float_value;
+  t_float float_value;
   long status;
 } t_click;
 

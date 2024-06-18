@@ -21,19 +21,19 @@ typedef struct _bvplay
   t_guffer *wavebuf; // store needed buffer or garray data
 
   long object_chans; // number of channels for a given instantiation
-  float taper_dur;
+  t_float taper_dur;
   int R;
   int framesize;
-  float *notedata;
+  t_float *notedata;
   int active;
-  float buffer_duration;
+  t_float buffer_duration;
   int taper_frames;
-  float amp;
+  t_float amp;
   int start_frame;
   int note_frames;
   int end_frame;
-  float increment;
-  float findex;
+  t_float increment;
+  t_float findex;
   int index ;
   short verbose;
   short mute;
@@ -67,7 +67,7 @@ void bvplay_tilde_setup(void)
 void bvplay_taper(t_bvplay *x, t_floatarg t)
 {
   if(t>0) {
-    x->taper_dur = (float)t/1000.0;
+    x->taper_dur = (t_float)t/1000.0;
     x->taper_frames = x->R * x->taper_dur;
   }
 }
@@ -145,19 +145,19 @@ t_int *bvplay_perform_mono(t_int *w)
   int n = (int) w[3];
   t_word *tab;
   long iindex = x->index;
-  float findex = x->findex;
+  t_float findex = x->findex;
   int end_frame = x->end_frame;
-  float increment = x->increment;
+  t_float increment = x->increment;
   int start_frame = x->start_frame;
   int taper_frames = x->taper_frames;
-  float noteamp = x->amp;
-  float frac, amp;
+  t_float noteamp = x->amp;
+  t_float frac, amp;
   /**********************/
   bvplay_set(x,x->sfname);
 
   if(!x->wavebuf->b_valid) {
     post("invalid buffer");
-    memset(out, 0, sizeof(float) * n);
+    memset(out, 0, sizeof(t_float) * n);
     return (w+4);
   }
   tab = x->wavebuf->b_samples;
@@ -169,9 +169,9 @@ t_int *bvplay_perform_mono(t_int *w)
         // envelope
         if( increment > 0 ) {
           if( findex < start_frame + taper_frames ) {
-            amp = noteamp * ((findex - (float) start_frame) / (float) taper_frames );
+            amp = noteamp * ((findex - (t_float) start_frame) / (t_float) taper_frames );
           } else if ( findex > end_frame - taper_frames) {
-            amp = noteamp * (((float)end_frame - findex) / (float) taper_frames);
+            amp = noteamp * (((t_float)end_frame - findex) / (t_float) taper_frames);
           } else {
             amp = noteamp;
           }
@@ -249,7 +249,7 @@ void *bvplay_new(t_symbol *s, t_floatarg taperdur)
     pd_error(0, "zero sampling rate - set to 44100");
     x->R = 44100;
   }
-  x->notedata = (float *) getbytes(4 * sizeof(float));
+  x->notedata = (t_float *) getbytes(4 * sizeof(t_float));
   x->wavebuf = (t_guffer *) getbytes(1 * sizeof(t_guffer));
   x->taper_dur = taperdur;
   x->taper_frames = x->R * x->taper_dur;
@@ -266,7 +266,7 @@ void *bvplay_new(t_symbol *s, t_floatarg taperdur)
 
 void bvplay_dsp_free(t_bvplay *x)
 {
-  freebytes(x->notedata, 4 * sizeof(float));
+  freebytes(x->notedata, 4 * sizeof(t_float));
   freebytes(x->wavebuf, 1 * sizeof(t_guffer));
 }
 

@@ -71,24 +71,24 @@ void quadpan_free(t_quadpan *x)
 
 t_int *quadpan_perform(t_int *w)
 {
-  float gain1, gain2, gain3, gain4;
-  float xval, yval;
-  float xsquared, ysquared, ix, iy, ixsquared, iysquared;
+  t_float gain1, gain2, gain3, gain4;
+  t_float xval, yval;
+  t_float xsquared, ysquared, ix, iy, ixsquared, iysquared;
   int i;
 
   t_quadpan *x = (t_quadpan *) (w[1]);
-  float *in = x->in;
-  float *Xin = x->Xin;
-  float *Yin = x->Yin;
+  t_float *in = x->in;
+  t_float *Xin = x->Xin;
+  t_float *Yin = x->Yin;
 
-  float *in_loc = (t_float *)(w[2]);
-  float *Xin_loc = (t_float *)(w[3]);
-  float *Yin_loc = (t_float *)(w[4]);
+  t_float *in_loc = (t_float *)(w[2]);
+  t_float *Xin_loc = (t_float *)(w[3]);
+  t_float *Yin_loc = (t_float *)(w[4]);
 
-  float *out1 = (t_float *)(w[5]);
-  float *out2 = (t_float *)(w[6]);
-  float *out3 = (t_float *)(w[7]);
-  float *out4 = (t_float *)(w[8]);
+  t_float *out1 = (t_float *)(w[5]);
+  t_float *out2 = (t_float *)(w[6]);
+  t_float *out3 = (t_float *)(w[7]);
+  t_float *out4 = (t_float *)(w[8]);
   int n = (int)(w[9]);
 
   // copy buffers to avoid writeovers in shared memory

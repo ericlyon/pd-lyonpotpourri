@@ -381,7 +381,7 @@ void function_addsyn(t_function *x, t_symbol *msg, int argc, t_atom *argv)
     b_samples = x->b_samples;
     b_frames = x->b_frames;
     amp = atom_getfloatarg(0,argc,argv);
-    // post("harmonic: 0, weight: %.12f", (float)amp);
+    // post("harmonic: 0, weight: %.12f", (t_float)amp);
     for(i=0;i<b_frames;i++) {
         b_samples[i].w_float = amp;
     }

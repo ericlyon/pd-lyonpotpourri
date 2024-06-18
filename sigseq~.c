@@ -16,28 +16,28 @@ typedef struct _sigseq
   t_float x_f;
 
   // Variables Here
-  float *sequence;
-  float *trigger_vec; // stores vector with trigger click
+  t_float *sequence;
+  t_float *trigger_vec; // stores vector with trigger click
   int seq_len;
   int seq_ptr;// position in sequence
   short bang_ptr;
-  float tempo;
+  t_float tempo;
   int beat_subdiv;
   int tsamps;
   int counter;
-  float val;
+  t_float val;
   void *mybang;
   void *m_outlet; // NEW
   void *m_clock; // NEW
-  float flat_gain;
-  float last_val;
+  t_float flat_gain;
+  t_float last_val;
   short retro_state;
   short rand_state;
   // ADSR
-  float a;
-  float d;
-  float s;
-  float r;
+  t_float a;
+  t_float d;
+  t_float s;
+  t_float r;
   int ebreak1;
   int ebreak2;
   int ebreak3;
@@ -45,13 +45,13 @@ typedef struct _sigseq
   int dsamps;
   int ssamps;
   int rsamps;
-  float egain;
+  t_float egain;
   int do_envelope;
   int bang_on;
   short mute;
   int rval;
   int method; //synthesis method to use
-  float sr;
+  t_float sr;
 } t_sigseq;
 
 static void *sigseq_new(t_symbol *s, int argc, t_atom *argv);
@@ -138,7 +138,7 @@ void sigseq_report(t_sigseq *x)
 void sigseq_readfile(t_sigseq *x, t_symbol *filename)
 {
   FILE *fp;
-  float data;
+  t_float data;
   post("requested path: %s", filename->s_name);
   fp = fopen(filename->s_name, "r");
   if( fp == NULL ) {
@@ -182,13 +182,13 @@ void sigseq_banggate(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 
 void sigseq_tempo(t_sigseq *x, t_symbol *msg, int argc, t_atom *argv)
 {
-  float beatdur;
+  t_float beatdur;
 
   x->tempo = atom_getfloatarg(0,argc,argv);
   if(!x->tempo)
     x->tempo = 120;
 
-  beatdur = (60. / x->tempo ) / (float) x->beat_subdiv ;
+  beatdur = (60. / x->tempo ) / (t_float) x->beat_subdiv ;
   x->tsamps = x->sr * beatdur;
 
   x->asamps = x->sr * x->a;
@@ -234,13 +234,13 @@ void *sigseq_new(t_symbol *s, int argc, t_atom *argv)
 
 void sigseq_init(t_sigseq *x,short initialized)
 {
-  float beatdur;
+  t_float beatdur;
   int asamp, dsamp, ssamp, rsamp;
   //  int i;
 
   if(!initialized) {
-    x->sequence = (float *) t_getbytes(MAX_SEQ * sizeof(float));
-    x->trigger_vec = (float *) t_getbytes(MAX_VEC * sizeof(float));
+    x->sequence = (t_float *) t_getbytes(MAX_SEQ * sizeof(t_float));
+    x->trigger_vec = (t_float *) t_getbytes(MAX_VEC * sizeof(t_float));
     x->seq_len = 3;
     x->seq_ptr = 0;
     x->bang_ptr = 0;
@@ -259,7 +259,7 @@ void sigseq_init(t_sigseq *x,short initialized)
     x->mute = 0;
   }
 
-  beatdur = (60. / x->tempo ) / (float) x->beat_subdiv;
+  beatdur = (60. / x->tempo ) / (t_float) x->beat_subdiv;
   x->tsamps = x->sr * beatdur;
   x->counter = x->tsamps ;
   x->last_val = 666.6661;
@@ -344,19 +344,19 @@ t_int *sigseq_perform(t_int *w)
   t_float *adsr = (t_float *)(w[4]);
   int n = (int) w[5];
   /*********************************************/
-  float *sequence = x->sequence;
+  t_float *sequence = x->sequence;
   int seq_len = x->seq_len;
   int seq_ptr = x->seq_ptr;
   int tsamps = x->tsamps;
   int counter = x->counter;
-  float val = x->val;
-  float last_val = x->last_val;
+  t_float val = x->val;
+  t_float last_val = x->last_val;
   int ebreak1 = x->ebreak1;
   int ebreak2 = x->ebreak2;
   int ebreak3 = x->ebreak3;
-  float egain = x->egain;
-  float env_val;
-  float flat_gain = x->flat_gain;
+  t_float egain = x->egain;
+  t_float env_val;
+  t_float flat_gain = x->flat_gain;
   int do_envelope = x->do_envelope;
   int asamps = x->asamps;
   int dsamps = x->dsamps;
@@ -366,9 +366,9 @@ t_int *sigseq_perform(t_int *w)
   short bang_ptr = x->bang_ptr;
   short retro_state = x->retro_state;
   short rand_state = x->rand_state;
-  float etmp;
+  t_float etmp;
   //  short bang_me_now = 0 ;
-  float trand;
+  t_float trand;
   /*********************************************/
   if(x->mute) {
     while (n--) {
@@ -382,7 +382,7 @@ t_int *sigseq_perform(t_int *w)
         counter = 0;
         bang_ptr = (bang_ptr + 1) % seq_len ;
         if (rand_state) {
-          trand = (float) ( rand() % 32768 / 32768.0) * (float) seq_len;
+          trand = (t_float) ( rand() % 32768 / 32768.0) * (t_float) seq_len;
           x->rval = trand ;
           seq_ptr = x->rval % seq_len;
 
@@ -408,14 +408,14 @@ t_int *sigseq_perform(t_int *w)
       *out++ = val;
       if( do_envelope ) {
         if( counter < ebreak1 ) {
-          env_val = (float) counter / (float) asamps;
+          env_val = (t_float) counter / (t_float) asamps;
         } else if (counter < ebreak2) {
-          etmp = (float) (counter - ebreak1) / (float) dsamps;
+          etmp = (t_float) (counter - ebreak1) / (t_float) dsamps;
           env_val = (1.0 - etmp) + (egain * etmp);
         } else if (counter < ebreak3) {
           env_val = egain;
         } else {
-          env_val = ((float)(tsamps-counter)/(float)rsamps) * egain ;
+          env_val = ((t_float)(tsamps-counter)/(t_float)rsamps) * egain ;
         }
         *adsr++ = env_val;
       } else {
@@ -447,19 +447,19 @@ t_int *sigseq_perform_clickin(t_int *w)
   t_float *adsr = (t_float *)(w[4]);
   int n = (int) w[5];
   /*********************************************/
-  float *sequence = x->sequence;
+  t_float *sequence = x->sequence;
   int seq_len = x->seq_len;
   int seq_ptr = x->seq_ptr;
   int tsamps = x->tsamps;
   int counter = x->counter;
-  //  float val = x->val;
-  float last_val = x->last_val;
+  //  t_float val = x->val;
+  t_float last_val = x->last_val;
   int ebreak1 = x->ebreak1;
   int ebreak2 = x->ebreak2;
   int ebreak3 = x->ebreak3;
-  float egain = x->egain;
-  float env_val;
-  float flat_gain = x->flat_gain;
+  t_float egain = x->egain;
+  t_float env_val;
+  t_float flat_gain = x->flat_gain;
   int do_envelope = x->do_envelope;
   int asamps = x->asamps;
   int dsamps = x->dsamps;
@@ -469,10 +469,10 @@ t_int *sigseq_perform_clickin(t_int *w)
   short bang_ptr = x->bang_ptr;
   short retro_state = x->retro_state;
   short rand_state = x->rand_state;
-  float *trigger_vec = x->trigger_vec;
-  float etmp;
+  t_float *trigger_vec = x->trigger_vec;
+  t_float etmp;
   //  short bang_me_now = 0 ;
-  float trand;
+  t_float trand;
   int i;
   /*********************************************/
   if(x->mute) {
@@ -491,7 +491,7 @@ t_int *sigseq_perform_clickin(t_int *w)
       //     bang_ptr = (bang_ptr + 1) % seq_len ;
 
       if (rand_state) {
-        trand = (float) ( rand() % 32768 / 32768.0) * (float) seq_len;
+        trand = (t_float) ( rand() % 32768 / 32768.0) * (t_float) seq_len;
         x->rval = trand ;
         x->seq_ptr = x->rval % seq_len;
 
@@ -516,14 +516,14 @@ t_int *sigseq_perform_clickin(t_int *w)
     out[i] = x->val;
     if( do_envelope ) {
       if( counter < ebreak1 ) {
-        env_val = (float) counter / (float) asamps;
+        env_val = (t_float) counter / (t_float) asamps;
       } else if (counter < ebreak2) {
-        etmp = (float) (counter - ebreak1) / (float) dsamps;
+        etmp = (t_float) (counter - ebreak1) / (t_float) dsamps;
         env_val = (1.0 - etmp) + (egain * etmp);
       } else if (counter < ebreak3) {
         env_val = egain;
       } else if(counter < tsamps) {
-        env_val = ((float)(tsamps-counter)/(float)rsamps) * egain ;
+        env_val = ((t_float)(tsamps-counter)/(t_float)rsamps) * egain ;
       } else {
         env_val = 0;
       }
@@ -547,8 +547,8 @@ t_int *sigseq_perform_clickin(t_int *w)
 
 void sigseq_free(t_sigseq *x)
 {
-    t_freebytes(x->sequence, MAX_SEQ * sizeof(float));
-    t_freebytes(x->trigger_vec, MAX_VEC * sizeof(float));
+    t_freebytes(x->sequence, MAX_SEQ * sizeof(t_float));
+    t_freebytes(x->trigger_vec, MAX_VEC * sizeof(t_float));
     clock_free(x->m_clock);
 }
 

@@ -2,24 +2,24 @@
 
 void lpp_transpose(t_bashfest *x, int slot, int *pcount)
 {
-    float *inbuf;
-    float *outbuf;
+    t_float *inbuf;
+    t_float *outbuf;
     int i;
     int iphs = 0;
     int ip2;
-    float m1, m2;
-    float phs = 0;
+    t_float m1, m2;
+    t_float phs = 0;
     int out_frames;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
-    float *params = x->params;
-    //  float srate = x->sr;
+    t_float *params = x->params;
+    //  t_float srate = x->sr;
     int buflen = x->buf_samps;
     int halfbuffer = x->halfbuffer;
     int buf_frames = x->buf_frames;
-    float tfac;
+    t_float tfac;
     
     ++(*pcount);
     tfac = params[ (*pcount)++ ];
@@ -30,7 +30,7 @@ void lpp_transpose(t_bashfest *x, int slot, int *pcount)
     outbuf = x->events[slot].workbuffer + out_start;
     
     //  fprintf(stderr,"TRANSPOSE: in %d out %d\n", w->in_start, w->out_start);
-    out_frames = (float) in_frames / tfac ;
+    out_frames = (t_float) in_frames / tfac ;
     if( out_frames > buf_frames / 2 ) {
         out_frames = buf_frames / 2 ;
     }
@@ -61,22 +61,22 @@ void lpp_transpose(t_bashfest *x, int slot, int *pcount)
 
 void lpp_ringmod(t_bashfest *x, int slot, int *pcount)
 {
-    float *sinewave = x->sinewave;
-    float *inbuf, *outbuf;
+    t_float *sinewave = x->sinewave;
+    t_float *inbuf, *outbuf;
     int sinelen = x->sinelen;
     int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     //  int in_frames = x->events[slot].sample_frames;
     int buflen = x->buf_samps;
     int halfbuffer = x->halfbuffer;
     int i;
-    float phase = 0.0;
-    float si;
-    float rmodFreq;
+    t_float phase = 0.0;
+    t_float si;
+    t_float rmodFreq;
     
     ++(*pcount);
     rmodFreq = params[(*pcount)++];
@@ -88,7 +88,7 @@ void lpp_ringmod(t_bashfest *x, int slot, int *pcount)
     outbuf = x->events[slot].workbuffer + out_start;
     
     
-    si = ((float) sinelen / srate) * rmodFreq ;
+    si = ((t_float) sinelen / srate) * rmodFreq ;
     
     //  inbuf = inbuf + in_start ;
     
@@ -110,13 +110,13 @@ void lpp_retrograde(t_bashfest *x, int slot, int *pcount)
     
     int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
-    //  float *params = x->params;
-    //  float srate = x->sr;
+    //  t_float *params = x->params;
+    //  t_float srate = x->sr;
     int i ;
     int swap1, swap2;
-    float tmpsamp;
+    t_float tmpsamp;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -129,7 +129,7 @@ void lpp_retrograde(t_bashfest *x, int slot, int *pcount)
     inbuf = x->events[slot].workbuffer + in_start;
     outbuf = x->events[slot].workbuffer + out_start;
     
-    memcpy(outbuf, inbuf, in_frames * channels * sizeof(float) );
+    memcpy(outbuf, inbuf, in_frames * channels * sizeof(t_float) );
     
     if( channels == 1 ) {
         for(i = 0; i < (frames/2)  ; i++ ) {
@@ -164,20 +164,20 @@ void lpp_retrograde(t_bashfest *x, int slot, int *pcount)
 void lpp_comber(t_bashfest *x, int slot, int *pcount)
 {
     int channels = x->events[slot].out_channels;
-    float *params = x->params;
-    float srate = x->sr;
-    float *delayline1 = x->delayline1;
-    float *delayline2 = x->delayline2;
-    float max_delay = x->maxdelay ;
+    t_float *params = x->params;
+    t_float srate = x->sr;
+    t_float *delayline1 = x->delayline1;
+    t_float *delayline2 = x->delayline2;
+    t_float max_delay = x->maxdelay ;
     int buf_frames = x->buf_frames;
     int out_frames ;
-    float overhang, revtime, delay ;
+    t_float overhang, revtime, delay ;
     int i;
     int fade_frames;
-    float fadegain;
+    t_float fadegain;
     int fadestart;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -231,7 +231,7 @@ void lpp_comber(t_bashfest *x, int slot, int *pcount)
     fade_frames = COMBFADE * srate;
     fadestart = (out_frames - fade_frames) * channels ;
     for( i = 0; i < fade_frames * channels; i += channels ) {
-        fadegain = 1.0 - (float) i / (float) (fade_frames * channels)  ;
+        fadegain = 1.0 - (t_float) i / (t_float) (fade_frames * channels)  ;
         *(inbuf + fadestart + i) *= fadegain;
         if(channels == 2) {
             *(inbuf + fadestart + i + 1) *= fadegain;
@@ -248,31 +248,31 @@ void lpp_comber(t_bashfest *x, int slot, int *pcount)
 void lpp_flange(t_bashfest *x, int slot, int *pcount)
 {
     int i;
-    float si;
-    float mindel, maxdel;
-    float fac1, fac2;
+    t_float si;
+    t_float mindel, maxdel;
+    t_float fac1, fac2;
     int dv1[2], dv2[2]; /* cmix bookkeeping */
-    float delsamp1, delsamp2 ;
-    float delay_time;
-    //  float dliget2();
-    float speed, feedback, phase, minres, maxres;
-    float hangover ;
+    t_float delsamp1, delsamp2 ;
+    t_float delay_time;
+    //  t_float dliget2();
+    t_float speed, feedback, phase, minres, maxres;
+    t_float hangover ;
     int hangframes ;
     
-    //  float *inbuf = x->events[slot].workbuffer;
+    //  t_float *inbuf = x->events[slot].workbuffer;
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     //  int buflen = x->buf_samps;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     //  int in_start = x->events[slot].in_start;
-    float *delayline1 = x->delayline1;
-    float *delayline2 = x->delayline2;
-    float max_delay = x->maxdelay ;
-    float *sinewave = x->sinewave;
+    t_float *delayline1 = x->delayline1;
+    t_float *delayline2 = x->delayline2;
+    t_float max_delay = x->maxdelay ;
+    t_float *sinewave = x->sinewave;
     int sinelen = x->sinelen ;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -312,7 +312,7 @@ void lpp_flange(t_bashfest *x, int slot, int *pcount)
     }
     
     
-    si = ((float) sinelen/srate) * speed ;
+    si = ((t_float) sinelen/srate) * speed ;
     
     if( phase > 1.0 ) {
         phase = 0;
@@ -370,12 +370,12 @@ void lpp_butterme(t_bashfest *x, int slot, int *pcount)
 {
     
     int ftype;
-    float cutoff, cf, bw;
+    t_float cutoff, cf, bw;
     int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
-    float *params = x->params;
-    float srate = x->sr;
-    float *inbuf, *outbuf;
+    t_float *params = x->params;
+    t_float srate = x->sr;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     //  int in_frames = x->events[slot].sample_frames;
@@ -414,18 +414,18 @@ void lpp_butterme(t_bashfest *x, int slot, int *pcount)
 
 void lpp_truncateme(t_bashfest *x, int slot, int *pcount)
 {
-    float shortdur ;
+    t_float shortdur ;
     int out_frames;
     int i;
-    float fadegain ;
+    t_float fadegain ;
     int fade_frames;
     int fadestart;
-    float fadeout;
+    t_float fadeout;
     int channels = x->events[slot].out_channels;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start;
     int out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -458,12 +458,12 @@ void lpp_truncateme(t_bashfest *x, int slot, int *pcount)
         fade_frames = out_frames;
     }
     
-    memcpy(outbuf, inbuf, in_frames * sizeof(float) );
+    memcpy(outbuf, inbuf, in_frames * sizeof(t_float) );
     
     fadestart = (out_frames - fade_frames) * channels ;
     
     for( i = 0; i < fade_frames * channels; i += channels ) {
-        fadegain = 1.0 - (float) i / (float) (fade_frames * channels)  ;
+        fadegain = 1.0 - (t_float) i / (t_float) (fade_frames * channels)  ;
         outbuf[fadestart + i]   *= fadegain;
         if( channels == 2 ) {
             outbuf[ fadestart + i + 1] *= fadegain;
@@ -479,21 +479,21 @@ void lpp_truncateme(t_bashfest *x, int slot, int *pcount)
 void lpp_sweepreson(t_bashfest *x, int slot, int *pcount)
 {
     int i;
-    float bwfac;
-    float minfreq, maxfreq, speed, phase;
-    float q1[5], q2[5];
-    float cf, bw;
-    float si;
-    float fac1, fac2;
-    //  float inmax, outmax, rescale ;
+    t_float bwfac;
+    t_float minfreq, maxfreq, speed, phase;
+    t_float q1[5], q2[5];
+    t_float cf, bw;
+    t_float si;
+    t_float fac1, fac2;
+    //  t_float inmax, outmax, rescale ;
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
-    float *params = x->params;
-    float srate = x->sr;
-    float *sinewave = x->sinewave;
+    t_float *params = x->params;
+    t_float srate = x->sr;
+    t_float *sinewave = x->sinewave;
     int sinelen = x->sinelen ;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -512,7 +512,7 @@ void lpp_sweepreson(t_bashfest *x, int slot, int *pcount)
     inbuf = x->events[slot].workbuffer + in_start;
     outbuf = x->events[slot].workbuffer + out_start;
     
-    si = ((float) sinelen / srate) * speed ;
+    si = ((t_float) sinelen / srate) * speed ;
     
     if( phase > 1.0 ) {
         phase = 0;
@@ -564,28 +564,28 @@ void lpp_sweepreson(t_bashfest *x, int slot, int *pcount)
 
 void lpp_slidecomb(t_bashfest *x, int slot, int *pcount)
 {
-    float overhang, feedback, delay1, delay2;
+    t_float overhang, feedback, delay1, delay2;
     int i;
     int fade_frames;
-    float fadegain;
+    t_float fadegain;
     int fadestart;
     int dv1[2], dv2[2];   /* cmix bookkeeping */
-    float delsamp1 = 0, delsamp2 = 0;
-    float m1, m2;
-    float delay_time;
+    t_float delsamp1 = 0, delsamp2 = 0;
+    t_float m1, m2;
+    t_float delay_time;
     int out_frames ;
     
     int channels = x->events[slot].out_channels;
     int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
-    //  float *sinewave = x->sinewave;
+    t_float *params = x->params;
+    t_float srate = x->sr;
+    //  t_float *sinewave = x->sinewave;
     //  int sinelen = x->sinelen ;
-    float max_delay = x->maxdelay;
-    float *delayline1 = x->delayline1;
-    float *delayline2 = x->delayline2;
+    t_float max_delay = x->maxdelay;
+    t_float *delayline1 = x->delayline1;
+    t_float *delayline2 = x->delayline2;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -620,7 +620,7 @@ void lpp_slidecomb(t_bashfest *x, int slot, int *pcount)
     
     
     for( i = 0; i < in_frames*channels; i += channels) {
-        m2 = (float) i / (float) (out_frames * channels) ;
+        m2 = (t_float) i / (t_float) (out_frames * channels) ;
         m1 = 1. - m2;
         delay_time = delay1 * m1 + delay2 * m2 ;
         lpp_delput2(*inbuf +delsamp1*feedback, delayline1, dv1);
@@ -634,7 +634,7 @@ void lpp_slidecomb(t_bashfest *x, int slot, int *pcount)
     }
     
     for( i = in_frames * channels; i < out_frames*channels; i += channels) {
-        m2 = (float) i / (float) (out_frames * channels) ;
+        m2 = (t_float) i / (t_float) (out_frames * channels) ;
         m1 = 1. - m2;
         delay_time = delay1 * m1 + delay2 * m2 ;
         lpp_delput2( delsamp1*feedback, delayline1, dv1);
@@ -648,7 +648,7 @@ void lpp_slidecomb(t_bashfest *x, int slot, int *pcount)
     fade_frames = COMBFADE * srate;
     fadestart = (out_frames - fade_frames) * channels ;
     for( i = 0; i < fade_frames * channels; i += channels ) {
-        fadegain = 1.0 - (float) i / (float) (fade_frames * channels)  ;
+        fadegain = 1.0 - (t_float) i / (t_float) (fade_frames * channels)  ;
         *(outbuf + fadestart + i) *= fadegain;
         if( channels == 2 ) {
             *(outbuf + fadestart + i + 1) *= fadegain;
@@ -664,17 +664,17 @@ void lpp_slidecomb(t_bashfest *x, int slot, int *pcount)
 void lpp_reverb1(t_bashfest *x, int slot, int *pcount)
 {
     
-    float revtime, overhang;
+    t_float revtime, overhang;
     int channel_to_compute;
-    float drygain;
+    t_float drygain;
     int out_frames;
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -716,19 +716,19 @@ void lpp_ellipseme(t_bashfest *x, int slot, int *pcount)
 {
     int i,j;
     int nsects;
-    float xnorm;
+    t_float xnorm;
     int filtercode ;
-    float *fltdata;
+    t_float *fltdata;
     
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     //  int buf_frames = x->buf_frames;
-    float *params = x->params;
-    //  float srate = x->sr;
-    float **flts = x->ellipse_data;
+    t_float *params = x->params;
+    //  t_float srate = x->sr;
+    t_float **flts = x->ellipse_data;
     LSTRUCT *eel = x->eel;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -762,31 +762,31 @@ void lpp_ellipseme(t_bashfest *x, int slot, int *pcount)
 void lpp_feed1me(t_bashfest *x, int slot, int *pcount)
 {
     //  int i;
-    float mindelay, maxdelay, speed1, speed2;
-    float phz1 = .13, phz2 = .251;
-    float dur;
-    float minfeedback = .1, maxfeedback = .7;
-    float desired_dur;
-    float overhang;
+    t_float mindelay, maxdelay, speed1, speed2;
+    t_float phz1 = .13, phz2 = .251;
+    t_float dur;
+    t_float minfeedback = .1, maxfeedback = .7;
+    t_float desired_dur;
+    t_float overhang;
     /* main variables */
     
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     int out_frames;
     /* process specific */
     int flen = x->feedfunclen ;
-    float *func1 = x->feedfunc1;
-    float *func2 = x->feedfunc2;
-    float *func3 = x->feedfunc3;
-    float *func4 = x->feedfunc4;
-    float my_max_delay = x->max_mini_delay;
-    float *sinewave = x->sinewave;
+    t_float *func1 = x->feedfunc1;
+    t_float *func2 = x->feedfunc2;
+    t_float *func3 = x->feedfunc3;
+    t_float *func4 = x->feedfunc4;
+    t_float my_max_delay = x->max_mini_delay;
+    t_float *sinewave = x->sinewave;
     int sinelen = x->sinelen ;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -818,19 +818,19 @@ void lpp_feed1me(t_bashfest *x, int slot, int *pcount)
     lpp_funcgen1( func1, flen, desired_dur, mindelay, maxdelay,
              speed1, speed2, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
     
-    phz1 /= (float) flen; phz2 /= (float) flen;
+    phz1 /= (t_float) flen; phz2 /= (t_float) flen;
     
     
     lpp_funcgen1( func2, flen, desired_dur, mindelay*.5, maxdelay*2.0,
              speed1*1.25, speed2*.75, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
     
-    phz1 /= (float) flen; phz2 /= (float) flen;
+    phz1 /= (t_float) flen; phz2 /= (t_float) flen;
     
     
     lpp_funcgen1( func3, flen, desired_dur, minfeedback, maxfeedback,
              speed1*.35, speed2*1.25, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
     
-    phz1 /= (float) flen; phz2 /= (float) flen;
+    phz1 /= (t_float) flen; phz2 /= (t_float) flen;
     
     lpp_funcgen1( func4,flen, desired_dur, minfeedback, maxfeedback,
              speed1*.55, speed2*2.25, 1.0, 1.0, &phz1, &phz2, sinewave, sinelen);
@@ -847,22 +847,22 @@ void lpp_flam1(t_bashfest *x, int slot, int *pcount)
 {
     //  int channel_to_compute;
     int attacks;
-    float gain2;
-    float gainatten;
-    float delay;
-    float gain = 1.0;
+    t_float gain2;
+    t_float gainatten;
+    t_float delay;
+    t_float gain = 1.0;
     int i, j, k, delaysamps, delayoffset = 0;
-    //  float inputmax;
+    //  t_float inputmax;
     int delay_frames;
     /* main variables */
-    float *inbuf;
-    float *outbuf;
+    t_float *inbuf;
+    t_float *outbuf;
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     int buflen = x->buf_samps;
     int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -888,7 +888,7 @@ void lpp_flam1(t_bashfest *x, int slot, int *pcount)
     
     delay_frames = srate * delay + 0.5;
     delaysamps = channels * delay_frames;
-    out_frames = in_frames + (srate * delay * (float) (attacks - 1));
+    out_frames = in_frames + (srate * delay * (t_float) (attacks - 1));
     if( out_frames > buf_frames / 2 ) {
         out_frames = buf_frames / 2 ;
     }
@@ -924,33 +924,33 @@ void lpp_flam2(t_bashfest *x, int slot, int *pcount)
 {
     //  int channel_to_compute;
     int attacks;
-    float gain2;
-    float gainatten;
-    float delay1,delay2;
-    float gain = 1.0;
+    t_float gain2;
+    t_float gainatten;
+    t_float delay1,delay2;
+    t_float gain = 1.0;
     int i, j, k, delaysamps, delayoffset = 0;
     int f_endpoint;
-    //  float inputmax, outputmax, rescale;
+    //  t_float inputmax, outputmax, rescale;
     int delay_frames;
-    float now = 0.0;
+    t_float now = 0.0;
     int findex;
-    float inval;
-    float curdelay;
+    t_float inval;
+    t_float curdelay;
     /* main variables */
-    float *inbuf;
-    float *outbuf;
+    t_float *inbuf;
+    t_float *outbuf;
     int out_frames;
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     int buflen = x->buf_samps;
     int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
     int halfbuffer = x->halfbuffer;
-    float *flamfunc1 = x->flamfunc1;
+    t_float *flamfunc1 = x->flamfunc1;
     int flamfunclen = x->flamfunc1len;
     /* process specific */
     
@@ -970,7 +970,7 @@ void lpp_flam2(t_bashfest *x, int slot, int *pcount)
     outbuf = x->events[slot].workbuffer + out_start;
     
     for( i = 0; i < attacks - 1; i++ ) {
-        findex = ((float)i/(float)attacks) * (float)flamfunclen ;
+        findex = ((t_float)i/(t_float)attacks) * (t_float)flamfunclen ;
         inval = flamfunc1[findex];
         curdelay = lpp_mapp(inval, 0., 1., delay2, delay1);
         now += curdelay;
@@ -987,7 +987,7 @@ void lpp_flam2(t_bashfest *x, int slot, int *pcount)
     f_endpoint = in_frames;
     // first time delay_offset is zero
     for( i = 0; i < attacks; i++ ) {
-        findex = ((float)i/(float)attacks) * (float)flamfunclen ;
+        findex = ((t_float)i/(t_float)attacks) * (t_float)flamfunclen ;
         inval = flamfunc1[findex];
         curdelay = lpp_mapp(inval, 0., 1., delay2, delay1);
         
@@ -1019,33 +1019,33 @@ void lpp_flam2(t_bashfest *x, int slot, int *pcount)
 void lpp_expflam(t_bashfest *x, int slot, int *pcount)
 {
     int attacks;
-    float gain2;
-    float gainatten;
-    float delay1,delay2;
-    float gain = 1.0;
+    t_float gain2;
+    t_float gainatten;
+    t_float delay1,delay2;
+    t_float gain = 1.0;
     int i, j, k, delaysamps, delayoffset = 0, f_endpoint;
-    //  float inputmax, outputmax, rescale;
+    //  t_float inputmax, outputmax, rescale;
     int delay_frames;
-    float now = 0.0;
+    t_float now = 0.0;
     //  int findex;
-    //  float inval;
-    float curdelay;
-    float slope;
+    //  t_float inval;
+    t_float curdelay;
+    t_float slope;
     /* main variables */
-    float *inbuf;
-    float *outbuf;
+    t_float *inbuf;
+    t_float *outbuf;
     int out_frames;
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     int buflen = x->buf_samps;
     int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
     int halfbuffer = x->halfbuffer;
-    float *expfunc = x->feedfunc1;
+    t_float *expfunc = x->feedfunc1;
     //  int funclen = x->feedfunclen;
     /* process specific */
     
@@ -1111,27 +1111,27 @@ void lpp_expflam(t_bashfest *x, int slot, int *pcount)
 
 void lpp_comb4(t_bashfest *x, int slot, int *pcount)
 {
-    float overhang, revtime ;
+    t_float overhang, revtime ;
     int i, j, k;
     int fadeFrames;
-    float fadegain;
+    t_float fadegain;
     int fadestart;
-    float input_sample;
-    float rez;
+    t_float input_sample;
+    t_float rez;
     /* main variables */
     
     int out_frames;
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     
     /* process specific */
     CMIXCOMB *combies = x->combies;
-    float maxloop = x->max_comb_lpt;
+    t_float maxloop = x->max_comb_lpt;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -1191,7 +1191,7 @@ void lpp_comb4(t_bashfest *x, int slot, int *pcount)
     fadeFrames = COMBFADE * srate; // ok - this is just the fadeout
     fadestart = (out_frames - fadeFrames) * channels ;
     for( i = 0; i < fadeFrames * channels; i += channels ) {
-        fadegain = 1.0 - (float) i / (float) (fadeFrames * channels)  ;
+        fadegain = 1.0 - (t_float) i / (t_float) (fadeFrames * channels)  ;
         *(outbuf + fadestart + i) *= fadegain;
         if( channels == 2 ) {
             *(outbuf + fadestart + i + 1) *= fadegain;
@@ -1206,23 +1206,23 @@ void lpp_comb4(t_bashfest *x, int slot, int *pcount)
 
 void lpp_compdist(t_bashfest *x, int slot, int *pcount)
 {
-    float cutoff, maxmult;
+    t_float cutoff, maxmult;
     int lookupflag;
     int channel_to_compute;
-    float maxamp;
+    t_float maxamp;
     /* main variables */
     
     //  int out_frames;
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     //  int buf_frames = x->buf_frames;
-    float *params = x->params;
-    //  float srate = x->sr;
+    t_float *params = x->params;
+    //  t_float srate = x->sr;
     /* function specific */
     int range = x->tf_len;
-    float *table = x->transfer_function;
+    t_float *table = x->transfer_function;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -1256,29 +1256,29 @@ void lpp_compdist(t_bashfest *x, int slot, int *pcount)
 
 void lpp_ringfeed(t_bashfest *x, int slot, int *pcount)
 {
-    float overhang;
+    t_float overhang;
     int i, j;
     int fade_frames;
-    float fadegain;
+    t_float fadegain;
     int fadestart;
-    float input_sample;
-    float rez ;
+    t_float input_sample;
+    t_float rez ;
     /* main variables */
     int out_frames;
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     /* function specific */
-    float *sinewave = x->sinewave;
+    t_float *sinewave = x->sinewave;
     int sinelen = x->sinelen ;
     CMIXCOMB *combies = x->combies;
     CMIXRESON *resies = x->resies;
     CMIXOSC oscar = x->oscar;
-    float maxloop = x->max_comb_lpt;
+    t_float maxloop = x->max_comb_lpt;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -1293,7 +1293,7 @@ void lpp_ringfeed(t_bashfest *x, int slot, int *pcount)
     
     oscar.func = sinewave;
     oscar.len = sinelen;
-    oscar.si = params[(*pcount)++] * ((float)oscar.len / srate);
+    oscar.si = params[(*pcount)++] * ((t_float)oscar.len / srate);
     oscar.phs = 0;
     rez = params[(*pcount)++] ;
     if( rez > 0 )
@@ -1349,7 +1349,7 @@ void lpp_ringfeed(t_bashfest *x, int slot, int *pcount)
     fade_frames = COMBFADE * srate;
     fadestart = (out_frames - fade_frames) * channels ;
     for( i = 0; i < fade_frames * channels; i += channels ) {
-        fadegain = 1.0 - (float) i / (float) (fade_frames * channels)  ;
+        fadegain = 1.0 - (t_float) i / (t_float) (fade_frames * channels)  ;
         *(outbuf + fadestart + i) *= fadegain;
         if( channels == 2 ) {
             *(outbuf + fadestart + i + 1) *= fadegain;
@@ -1364,12 +1364,12 @@ void lpp_ringfeed(t_bashfest *x, int slot, int *pcount)
 void lpp_resonadsr(t_bashfest *x, int slot, int *pcount)
 {
     int i;
-    float bwfac;
-    float q1[5], q2[5];
-    float cf, bw;
-    float si;
-    float notedur;
-    float phase = 0.;
+    t_float bwfac;
+    t_float q1[5], q2[5];
+    t_float cf, bw;
+    t_float si;
+    t_float notedur;
+    t_float phase = 0.;
     //  int j = 0;
     /* main variables */
     
@@ -1377,11 +1377,11 @@ void lpp_resonadsr(t_bashfest *x, int slot, int *pcount)
     //  int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     //  int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     int in_frames = x->events[slot].sample_frames;
@@ -1391,7 +1391,7 @@ void lpp_resonadsr(t_bashfest *x, int slot, int *pcount)
     /* function specific */
     CMIXADSR *a = x->adsr;
     int funclen = a->len;
-    float *adsrfunc = a->func;
+    t_float *adsrfunc = a->func;
     
     ++(*pcount);
     a->a = params[(*pcount)++];
@@ -1407,13 +1407,13 @@ void lpp_resonadsr(t_bashfest *x, int slot, int *pcount)
     inbuf = x->events[slot].workbuffer + in_start;
     outbuf = x->events[slot].workbuffer + out_start;
     
-    notedur = (float) in_frames / srate ;
+    notedur = (t_float) in_frames / srate ;
     a->s = notedur - (a->a+a->d+a->r);
     if( a->s <= 0.0 ) {
         a->a=a->d=a->s=a->r= notedur/ 4. ;
     }
     lpp_buildadsr(a);
-    si = ((float) funclen / srate) / notedur ;
+    si = ((t_float) funclen / srate) / notedur ;
     
     phase = 0;
     
@@ -1450,23 +1450,23 @@ void lpp_stv(t_bashfest *x, int slot, int *pcount)
     int frames = x->events[slot].sample_frames;
     int channels = x->events[slot].out_channels;
     //  int buf_frames = x->buf_frames;
-    float *params = x->params;
-    float srate = x->sr;
+    t_float *params = x->params;
+    t_float srate = x->sr;
     /* function specific */
-    float *sinewave = x->sinewave;
+    t_float *sinewave = x->sinewave;
     int sinelen = x->sinelen ;
-    float *delayline1 = x->delayline1;
-    float *delayline2 = x->delayline2;
-    float max_delay = x->maxdelay ;
+    t_float *delayline1 = x->delayline1;
+    t_float *delayline2 = x->delayline2;
+    t_float max_delay = x->maxdelay ;
     CMIXOSC osc1, osc2; // put into main object structure
-    float mindel, maxdel;
-    float fac1, fac2;
+    t_float mindel, maxdel;
+    t_float fac1, fac2;
     int dv1[2], dv2[2]; /* cmix bookkeeping */
-    float delay_time;
-    float speed1, speed2, depth ;
-    //  float max;
+    t_float delay_time;
+    t_float speed1, speed2, depth ;
+    //  t_float max;
     
-    float *inbuf, *outbuf;
+    t_float *inbuf, *outbuf;
     int in_start = x->events[slot].in_start;
     int out_start = x->events[slot].out_start;
     //  int in_frames = x->events[slot].sample_frames;
@@ -1497,13 +1497,13 @@ void lpp_stv(t_bashfest *x, int slot, int *pcount)
     
     osc1.func = sinewave;
     osc1.len = sinelen;
-    osc1.si = ((float) sinelen / srate ) * speed1 ;
+    osc1.si = ((t_float) sinelen / srate ) * speed1 ;
     osc1.phs = 0;
     osc1.amp = fac2;
     
     osc2.func = sinewave;
     osc2.len = sinelen;
-    osc2.si = ((float) sinelen / srate ) * speed2 ;
+    osc2.si = ((t_float) sinelen / srate ) * speed2 ;
     osc2.phs = 0;
     osc2.amp = fac2;
     

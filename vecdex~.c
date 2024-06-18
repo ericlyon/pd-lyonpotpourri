@@ -11,7 +11,7 @@ static t_class *vecdex_class;
 typedef struct _vecdex {
   t_object obj;
   t_float x_f;
-//    float top;
+//    t_float top;
 } t_vecdex;
 
 #define OBJECT_NAME "vecdex~"

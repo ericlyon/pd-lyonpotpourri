@@ -13,10 +13,10 @@ typedef struct _waveshape
     t_object x_obj;
     t_float x_f;
     int flen;
-    float *wavetab;
-    float *tempeh; // work function
+    t_float *wavetab;
+    t_float *tempeh; // work function
     int hcount;
-    float *harms;
+    t_float *harms;
     short mute;
 } t_waveshape;
 
@@ -25,7 +25,7 @@ static t_int *waveshape_perform(t_int *w);
 static void waveshape_dsp(t_waveshape *x, t_signal **sp);
 static void waveshape_list (t_waveshape *x, t_symbol *msg, int argc, t_atom *argv);
 static void update_waveshape_function( t_waveshape *x );
-//float mapp();
+//t_float mapp();
 static void waveshape_mute(t_waveshape *x, t_floatarg tog);
 static void waveshape_free(t_waveshape *x);
 
@@ -43,9 +43,9 @@ void waveshape_tilde_setup(void) {
 
 void waveshape_free(t_waveshape *x)
 {
-    freebytes(x->wavetab, x->flen * sizeof(float));
-    freebytes(x->tempeh, x->flen * sizeof(float));
-    freebytes(x->harms, ws_MAXHARMS * sizeof(float));
+    freebytes(x->wavetab, x->flen * sizeof(t_float));
+    freebytes(x->tempeh, x->flen * sizeof(t_float));
+    freebytes(x->harms, ws_MAXHARMS * sizeof(t_float));
 }
 
 
@@ -77,9 +77,9 @@ void *waveshape_new(void)
     outlet_new(&x->x_obj, gensym("signal"));
     
     x->flen = 65536;
-    x->wavetab = (float *) getbytes(x->flen * sizeof(float));
-    x->tempeh = (float *) getbytes(x->flen * sizeof(float));
-    x->harms = (float *) getbytes(ws_MAXHARMS * sizeof(float));
+    x->wavetab = (t_float *) getbytes(x->flen * sizeof(t_float));
+    x->tempeh = (t_float *) getbytes(x->flen * sizeof(t_float));
+    x->harms = (t_float *) getbytes(ws_MAXHARMS * sizeof(t_float));
     
     x->hcount = 4;
     x->harms[0] = 0;
@@ -92,17 +92,17 @@ void *waveshape_new(void)
 }
 
 void update_waveshape_function( t_waveshape *x ) {
-    float point;
+    t_float point;
     int i, j;
-    float min, max;
+    t_float min, max;
     for( i = 0; i < x->flen; i++ ) {
         x->tempeh[i] = 0;
     }
     for( i = 0 ; i < x->hcount; i++ ) {
         if( x->harms[i] > 0.0 ) {
             for( j = 0; j < x->flen; j++ ) {
-                point = -1.0 + 2.0 * ( (float) j / (float) x->flen) ;
-                x->tempeh[j] += x->harms[i] * cos( (float) i * acos( point ) );
+                point = -1.0 + 2.0 * ( (t_float) j / (t_float) x->flen) ;
+                x->tempeh[j] += x->harms[i] * cos( (t_float) i * acos( point ) );
             }
         }
     }
@@ -130,7 +130,7 @@ void update_waveshape_function( t_waveshape *x ) {
 
 t_int *waveshape_perform(t_int *w)
 {
-    float insamp; // , waveshape, ingain ;
+    t_float insamp; // , waveshape, ingain ;
     int windex ;
     
     t_waveshape *x = (t_waveshape *) (w[1]);
@@ -138,7 +138,7 @@ t_int *waveshape_perform(t_int *w)
     t_float *out = (t_float *)(w[3]);
     int n = (int) w[4];
     int flenm1 = x->flen - 1;
-    float *wavetab = x->wavetab;
+    t_float *wavetab = x->wavetab;
     
     if(x->mute) {
         while(n--) {
@@ -155,7 +155,7 @@ t_int *waveshape_perform(t_int *w)
         else if(insamp < -1.0) {
             insamp = -1.0;
         }
-        windex = ((insamp + 1.0)/2.0) * (float)flenm1 ;
+        windex = ((insamp + 1.0)/2.0) * (t_float)flenm1 ;
         *out++ = wavetab[windex] ;
     }
     

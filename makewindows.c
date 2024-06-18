@@ -1,16 +1,16 @@
 #include "fftease.h"
 
-void lpp_makewindows( float *H, float *A, float *S, int Nw, int N, int I )
+void lpp_makewindows( t_float *H, t_float *A, t_float *S, int Nw, int N, int I )
 
 {
   int i ;
-  float sum ;
+  t_float sum ;
 
   for ( i = 0 ; i < Nw ; i++ )
     H[i] = A[i] = S[i] = 0.54 - 0.46*cos( TWOPI*i/(Nw - 1) ) ;
 
   if ( Nw > N ) {
-    float x ;
+    t_float x ;
 
     x = -(Nw - 1)/2. ;
     for ( i = 0 ; i < Nw ; i++, x += 1. )
@@ -25,8 +25,8 @@ void lpp_makewindows( float *H, float *A, float *S, int Nw, int N, int I )
     sum += A[i] ;
 
   for ( i = 0 ; i < Nw ; i++ ) {
-    float afac = 2./sum ;
-    float sfac = Nw > N ? 1./afac : afac ;
+    t_float afac = 2./sum ;
+    t_float sfac = Nw > N ? 1./afac : afac ;
     A[i] *= afac ;
     S[i] *= sfac ;
   }
@@ -39,11 +39,11 @@ void lpp_makewindows( float *H, float *A, float *S, int Nw, int N, int I )
   }
 }
 
-void lpp_makehamming( float *H, float *A, float *S, int Nw, int N, int I, int odd )
+void lpp_makehamming( t_float *H, t_float *A, t_float *S, int Nw, int N, int I, int odd )
 
 {
   int i;
-  float sum ;
+  t_float sum ;
 
 
 
@@ -60,7 +60,7 @@ void lpp_makehamming( float *H, float *A, float *S, int Nw, int N, int I, int od
   }
 
   if ( Nw > N ) {
-    float x ;
+    t_float x ;
 
     x = -(Nw - 1)/2. ;
     for ( i = 0 ; i < Nw ; i++, x += 1. )
@@ -74,8 +74,8 @@ void lpp_makehamming( float *H, float *A, float *S, int Nw, int N, int I, int od
     sum += A[i] ;
 
   for ( i = 0 ; i < Nw ; i++ ) {
-    float afac = 2./sum ;
-    float sfac = Nw > N ? 1./afac : afac ;
+    t_float afac = 2./sum ;
+    t_float sfac = Nw > N ? 1./afac : afac ;
     A[i] *= afac ;
     S[i] *= sfac ;
   }
@@ -89,10 +89,10 @@ void lpp_makehamming( float *H, float *A, float *S, int Nw, int N, int I, int od
 }
 
 
-void lpp_makehanning( float *H, float *A, float *S, int Nw, int N, int I, int odd )
+void lpp_makehanning( t_float *H, t_float *A, t_float *S, int Nw, int N, int I, int odd )
 {
   int i;
-  float sum ;
+  t_float sum ;
 
 
   if (odd) {
@@ -108,7 +108,7 @@ void lpp_makehanning( float *H, float *A, float *S, int Nw, int N, int I, int od
   }
 
   if ( Nw > N ) {
-    float x ;
+    t_float x ;
 
     x = -(Nw - 1)/2. ;
     for ( i = 0 ; i < Nw ; i++, x += 1. )
@@ -122,8 +122,8 @@ void lpp_makehanning( float *H, float *A, float *S, int Nw, int N, int I, int od
     sum += A[i] ;
 
   for ( i = 0 ; i < Nw ; i++ ) {
-    float afac = 2./sum ;
-    float sfac = Nw > N ? 1./afac : afac ;
+    t_float afac = 2./sum ;
+    t_float sfac = Nw > N ? 1./afac : afac ;
     A[i] *= afac ;
     S[i] *= sfac ;
   }

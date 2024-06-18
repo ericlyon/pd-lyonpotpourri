@@ -11,7 +11,7 @@ static t_class *windowvec_class;
 typedef struct _windowvec {
   t_object obj;
   t_float x_f;
-  float *envelope;
+  t_float *envelope;
   long vecsize;
   long oldbytes;
 } t_windowvec;
@@ -61,7 +61,7 @@ t_int *windowvec_perform(t_int *w)
   t_float *output = (t_float *) (w[3]);
   int n = (int) w[4];
   int i;
-  float *envelope = x->envelope;
+  t_float *envelope = x->envelope;
 
   /* Apply a Hann window to the input vector */
 
@@ -74,23 +74,23 @@ t_int *windowvec_perform(t_int *w)
 void windowvec_dsp(t_windowvec *x, t_signal **sp, short *count)
 {
   int i;
-  float twopi = 8. * atan(1);
+  t_float twopi = 8. * atan(1);
   if(x->vecsize != sp[0]->s_n) {
     x->vecsize = sp[0]->s_n;
 
     /* Allocate memory */
 
     if(x->envelope == NULL) {
-      x->envelope = (float *) getbytes(x->vecsize * sizeof(float));
+      x->envelope = (t_float *) getbytes(x->vecsize * sizeof(t_float));
     } else {
-      x->envelope = (float *) resizebytes(x->envelope, x->oldbytes, x->vecsize * sizeof(float));
+      x->envelope = (t_float *) resizebytes(x->envelope, x->oldbytes, x->vecsize * sizeof(t_float));
     }
-    x->oldbytes = x->vecsize * sizeof(float);
+    x->oldbytes = x->vecsize * sizeof(t_float);
 
     /* Generate a Hann window */
 
     for(i = 0 ; i < x->vecsize; i++) {
-      x->envelope[i] = - 0.5 * cos(twopi * (i / (float)x->vecsize)) + 0.5;
+      x->envelope[i] = - 0.5 * cos(twopi * (i / (t_float)x->vecsize)) + 0.5;
     }
   }
   dsp_add(windowvec_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, (t_int)sp[0]->s_n);

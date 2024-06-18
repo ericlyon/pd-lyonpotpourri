@@ -6,7 +6,7 @@
 
 #include "fftease.h"
 
-void overlapadd( float *I, int N, float *W, float *O, int Nw, int n )
+void overlapadd( t_float *I, int N, t_float *W, t_float *O, int Nw, int n )
 
 {
   int i ;

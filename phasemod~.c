@@ -12,16 +12,16 @@ typedef struct _phasemod
   t_object x_obj;
   t_float x_f;
   t_float x_val;
-  float mygain;
-  float *wavetab;
-  float phs;
-  float bendphs;
-  float frequency;
-  float alpha;
+  t_float mygain;
+  t_float *wavetab;
+  t_float phs;
+  t_float bendphs;
+  t_float frequency;
+  t_float alpha;
   short mute;
   short connections[4];
-  float si_fac;
-  float sr;
+  t_float si_fac;
+  t_float sr;
 } t_phasemod;
 
 static void *phasemod_new(t_symbol *s, int argc, t_atom *argv);
@@ -53,10 +53,10 @@ void phasemod_assist (t_phasemod *x, void *b, long msg, long arg, char *dst)
   if (msg==1) {
     switch (arg) {
     case 0:
-      sprintf(dst,"(signal/float) Frequency ");
+      sprintf(dst,"(signal/t_float) Frequency ");
       break;
     case 1:
-      sprintf(dst,"(signal/float) Slope Factor ");
+      sprintf(dst,"(signal/t_float) Slope Factor ");
       break;
     }
   } else if (msg==2) {
@@ -89,7 +89,7 @@ void *phasemod_new(t_symbol *s, int argc, t_atom *argv)
 t_int *phasemod_perform(t_int *w)
 {
 
-  float phs;
+  t_float phs;
 
   t_phasemod *x = (t_phasemod *) (w[1]);
   t_float *frequency_vec = (t_float *)(w[2]);
@@ -98,12 +98,12 @@ t_int *phasemod_perform(t_int *w)
   int n = (int) w[5];
 
   short *connections = x->connections;
-  float bendphs = x->bendphs;
-  float *wavetab = x->wavetab;
-  float si_fac = x->si_fac;
+  t_float bendphs = x->bendphs;
+  t_float *wavetab = x->wavetab;
+  t_float si_fac = x->si_fac;
 
-  float incr = x->frequency * si_fac ;
-  float alpha = x->alpha;
+  t_float incr = x->frequency * si_fac ;
+  t_float alpha = x->alpha;
 
   if( x->mute ) {
     while(n--) {

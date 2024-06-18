@@ -12,9 +12,9 @@ static t_class *dmach_class;
 
 typedef struct
 {
-  float trigger_point;
-  float increment;
-  float amplitude;
+  t_float trigger_point;
+  t_float increment;
+  t_float amplitude;
 } t_attack;
 
 typedef struct
@@ -27,8 +27,8 @@ typedef struct
 
 typedef struct
 {
-  float beats; // how many beats in this pattern
-  float dsamps; //duration of pattern in samples
+  t_float beats; // how many beats in this pattern
+  t_float dsamps; //duration of pattern in samples
   t_drumline *drumlines;
 } t_pattern;
 
@@ -39,19 +39,19 @@ typedef struct _dmach
   t_float x_f;
 
   short mute; // global mute
-  float clocker; // global sample counter clock
-  float tempo;
-  float tempo_factor; // multiplier to get actual beat duration
+  t_float clocker; // global sample counter clock
+  t_float tempo;
+  t_float tempo_factor; // multiplier to get actual beat duration
   t_pattern *patterns; // contains all drum patterns
   short *stored_patterns;// which locations contain a pattern
-  float *gtranspose;// transpose factor for each individual drum slot
-  float *gains; // gain factor for each individual drum slot
-  float *current_increment;// maintains increment for sustained output
+  t_float *gtranspose;// transpose factor for each individual drum slot
+  t_float *gains; // gain factor for each individual drum slot
+  t_float *current_increment;// maintains increment for sustained output
   int this_pattern; // number of current pattern
   int next_pattern; // number of pattern to call at end of current pattern
-  float global_gain;
-  float global_transpose;
-  float sr;
+  t_float global_gain;
+  t_float global_transpose;
+  t_float sr;
   int drum_count; // number of drum slots to instantiate
   int outlet_count; // number of outlets on object
   short virgin; // no patterns stored - turn off performance
@@ -61,7 +61,7 @@ typedef struct _dmach
   int *sequence; // contains the sequence of bars to play
   int sequence_length; // how many bars are stored in sequence
   int seqptr; // keep track of current sequencer position
-  float zeroalias; // use this to send a coded "zero" message (i.e. bar number is zero)
+  t_float zeroalias; // use this to send a coded "zero" message (i.e. bar number is zero)
   t_atom *listdata; // for list output
   void *listraw_outlet;// send a list
   short clickincr; //flag that click increment is on (i.e. no sample and hold)
@@ -239,10 +239,10 @@ void dmach_loopsequence(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 void dmach_gain(t_dmach *x, t_floatarg slotf, t_floatarg new_gain_factor)
 {
   int slot = slotf;
-  //  float ratio;
-  //  float gain_factor;
+  //  t_float ratio;
+  //  t_float gain_factor;
   //  short *stored_patterns = x->stored_patterns;
-  float *gains = x->gains;
+  t_float *gains = x->gains;
   //  t_pattern *p = x->patterns;
   int drum_count = x->drum_count;
   //  int i,j,k;
@@ -263,7 +263,7 @@ void dmach_gain(t_dmach *x, t_floatarg slotf, t_floatarg new_gain_factor)
 void dmach_transpose(t_dmach *x, t_floatarg slotf, t_floatarg new_transpose_factor)
 {
   int slot = slotf;
-  float *gtranspose = x->gtranspose;
+  t_float *gtranspose = x->gtranspose;
   int drum_count = x->drum_count;
 
   if(slot < 0 || slot > drum_count - 1) {
@@ -331,13 +331,13 @@ void dmach_arm(t_dmach *x, t_floatarg pnf)
 
 void dmach_tempo(t_dmach *x, t_floatarg new_tempo)
 {
-  float ratio;
+  t_float ratio;
   int i, j, k;
   short *stored_patterns = x->stored_patterns;
   t_pattern *p = x->patterns;
   int drum_count = x->drum_count;
-  float sr = x->sr;
-  float tempo_factor = x->tempo_factor;
+  t_float sr = x->sr;
+  t_float tempo_factor = x->tempo_factor;
   if(new_tempo <= 0.0) {
     pd_error(0, "tempo must be greater than zero, but was %f",new_tempo);
     return;
@@ -402,9 +402,9 @@ void dmach_printraw(t_dmach *x, t_floatarg fn)
   t_pattern *p = x->patterns;
   t_attack *ptr;
   int drum_count = x->drum_count;
-  float normalized_trigger;
-  float tempo_factor = x->tempo_factor;
-  float sr = x->sr;
+  t_float normalized_trigger;
+  t_float tempo_factor = x->tempo_factor;
+  t_float sr = x->sr;
 
   if(pnum < 0 || pnum > MAX_PATTERNS-1) {
     pd_error(0, "illegal pattern number: %d",pnum);
@@ -444,9 +444,9 @@ void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   t_pattern *p = x->patterns;
   t_attack *ptr;
   int drum_count = x->drum_count;
-  float normalized_trigger;
-  float tempo_factor = x->tempo_factor;
-  float sr = x->sr;
+  t_float normalized_trigger;
+  t_float tempo_factor = x->tempo_factor;
+  t_float sr = x->sr;
   int ldex = 0;
   t_atom *listdata = x->listdata;
 
@@ -475,14 +475,14 @@ void dmach_listraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 
   SETSYMBOL(listdata + ldex, gensym("readraw")); ++ldex;
 
-  SETFLOAT(listdata + ldex, (float)pnum);  ++ldex;
+  SETFLOAT(listdata + ldex, (t_float)pnum);  ++ldex;
   SETFLOAT(listdata + ldex, p[pnum].beats);  ++ldex;
 
   for(j = 0; j < drum_count; j++) {
     if(p[pnum].drumlines[j].active) {
       ptr = p[pnum].drumlines[j].attacks;
-      SETFLOAT(listdata + ldex, (float)j); ++ldex;
-      SETFLOAT(listdata + ldex, (float)(p[pnum].drumlines[j].attack_count)); ++ldex;
+      SETFLOAT(listdata + ldex, (t_float)j); ++ldex;
+      SETFLOAT(listdata + ldex, (t_float)(p[pnum].drumlines[j].attack_count)); ++ldex;
 
       for(i = 0; i < p[pnum].drumlines[j].attack_count; i++) {
         normalized_trigger = ptr->trigger_point / (tempo_factor * sr);
@@ -554,8 +554,8 @@ void dmach_readraw(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
   t_pattern *p = x->patterns;
   t_attack *ptr;
   //  int drum_count = x->drum_count;
-  float tempo_factor = x->tempo_factor;
-  float sr = x->sr;
+  t_float tempo_factor = x->tempo_factor;
+  t_float sr = x->sr;
   short mutein;
 
   mutein = x->mute;
@@ -603,19 +603,19 @@ void dmach_slotamps(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 {
   int pdex,i;
   int slot = 0;
-  float beatseg;
-  //  float tmpbeats;
-  float subdiv;
-  float beat_samps;
-  float tempo_factor;
+  t_float beatseg;
+  //  t_float tmpbeats;
+  t_float subdiv;
+  t_float beat_samps;
+  t_float tempo_factor;
   int attack_count;
   int local_attacks;
-  float trigger_point;
-  float val;
+  t_float trigger_point;
+  t_float val;
   int pnum;
   t_pattern *p = x->patterns;
-  float tempo = x->tempo;
-  float sr = x->sr;
+  t_float tempo = x->tempo;
+  t_float sr = x->sr;
   t_attack *tmpatks = x->tmpatks;
 
 
@@ -695,19 +695,19 @@ void dmach_slotampsfull(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 {
   int pdex,i;
   int slot = 0;
-  float beatseg;
-  float tmpbeats;
-  float subdiv;
-  float beat_samps;
-  float tempo_factor;
+  t_float beatseg;
+  t_float tmpbeats;
+  t_float subdiv;
+  t_float beat_samps;
+  t_float tempo_factor;
   int attack_count;
   int local_attacks;
-  float trigger_point;
-  float val;
+  t_float trigger_point;
+  t_float val;
   int pnum;
   t_pattern *p = x->patterns;
-  float tempo = x->tempo;
-  float sr = x->sr;
+  t_float tempo = x->tempo;
+  t_float sr = x->sr;
 
   if(argc > MAX_ATTACKS + 1) {
     post("%s: %d is too long an atk message",OBJECT_NAME,argc);
@@ -820,19 +820,19 @@ void dmach_store(t_dmach *x, t_symbol *s, int argc, t_atom *argv)
 {
   int pdex,i;
   int slot = 0;
-  float beatseg;
-  float tmpbeats;
-  float subdiv;
-  float beat_samps;
-  float tempo_factor = x->tempo_factor;
+  t_float beatseg;
+  t_float tmpbeats;
+  t_float subdiv;
+  t_float beat_samps;
+  t_float tempo_factor = x->tempo_factor;
   int attack_count;
   int local_attacks;
-  float trigger_point;
-  float val;
+  t_float trigger_point;
+  t_float val;
   int pnum;
   t_pattern *p = x->patterns;
-  float tempo = x->tempo;
-  float sr = x->sr;
+  t_float tempo = x->tempo;
+  t_float sr = x->sr;
 
 
 
@@ -944,9 +944,9 @@ void dmach_dsp_free( t_dmach *x )
   /* need some freeing action here! */
   freebytes(x->patterns,MAX_PATTERNS * sizeof(t_pattern));
   freebytes(x->stored_patterns,MAX_PATTERNS * sizeof(short));
-  freebytes(x->current_increment,x->drum_count * sizeof(float));
-  freebytes(x->gtranspose,x->drum_count * sizeof(float));
-  freebytes(x->gains,x->drum_count * sizeof(float));
+  freebytes(x->current_increment,x->drum_count * sizeof(t_float));
+  freebytes(x->gtranspose,x->drum_count * sizeof(t_float));
+  freebytes(x->gains,x->drum_count * sizeof(t_float));
   freebytes(x->sequence,1024 * sizeof(int));
   freebytes(x->listdata,1024 * sizeof(t_atom));
   freebytes(x->connected,1024 * sizeof(short));
@@ -994,9 +994,9 @@ void *dmach_new(t_symbol *s, int argc, t_atom *argv)
   x->listraw_outlet = outlet_new(&x->x_obj, gensym("list"));
   x->patterns = (t_pattern *) getbytes(MAX_PATTERNS * sizeof(t_pattern));
   x->stored_patterns = (short *) getbytes(MAX_PATTERNS * sizeof(short));
-  x->current_increment = (float *) getbytes(x->drum_count * sizeof(float)); // for sample + hold of increment
-  x->gtranspose = (float *) getbytes(x->drum_count * sizeof(float));
-  x->gains = (float *) getbytes(x->drum_count * sizeof(float));
+  x->current_increment = (t_float *) getbytes(x->drum_count * sizeof(t_float)); // for sample + hold of increment
+  x->gtranspose = (t_float *) getbytes(x->drum_count * sizeof(t_float));
+  x->gains = (t_float *) getbytes(x->drum_count * sizeof(t_float));
   x->sequence = (int *) getbytes(1024 * sizeof(int));
   x->listdata = (t_atom *) getbytes(1024 * sizeof(t_atom));
   x->connected = (short *) getbytes(1024 * sizeof(short));
@@ -1056,9 +1056,9 @@ t_int *dmach_perform(t_int *w)
   int this_pattern = x->this_pattern;
   int next_pattern = x->next_pattern;
   t_pattern *p = x->patterns;
-  float *current_increment = x->current_increment;
-  float clocker = x->clocker;
-  float dsamps = p[this_pattern].dsamps;
+  t_float *current_increment = x->current_increment;
+  t_float clocker = x->clocker;
+  t_float dsamps = p[this_pattern].dsamps;
   int drum_count = x->drum_count;
   int adex;
   /* sequence stuff */
@@ -1070,18 +1070,18 @@ t_int *dmach_perform(t_int *w)
   int sequence_length = x->sequence_length;
   short *connected = x->connected;
   short *muted = x->muted;
-  float *gtranspose = x->gtranspose;
-  float *gains = x->gains;
+  t_float *gtranspose = x->gtranspose;
+  t_float *gains = x->gains;
 
   /* clean pnum click outlet */
-  memset((void *)sync, 0, n * sizeof(float));
+  memset((void *)sync, 0, n * sizeof(t_float));
 
   if( x->mute || x->virgin ) {
     for(i = 0; i < drum_count; i++) {
       if(connected[i * 2 + 1]) {
         // post("cleaning outlet pair %d", i);
         trig_outlet = (t_float *) w[i * 2 + 3];
-        memset((void *)trig_outlet, 0, n * sizeof(float));
+        memset((void *)trig_outlet, 0, n * sizeof(t_float));
       }
     }
     return w + (outlet_count + 4);
@@ -1091,7 +1091,7 @@ t_int *dmach_perform(t_int *w)
   for(i = 0; i < drum_count; i++) {
     if(connected[i * 2 + 1]) {
       trig_outlet = (t_float *) w[i * 2 + 3];
-      memset((void *)trig_outlet, 0, n * sizeof(float));
+      memset((void *)trig_outlet, 0, n * sizeof(t_float));
     }
   }
 
@@ -1137,7 +1137,7 @@ t_int *dmach_perform(t_int *w)
       sync[j] = 0;
     }
     for(i = 0; i < drum_count; i++) {
-      // float locamp;
+      // t_float locamp;
       if(p[this_pattern].drumlines[i].active && ! muted[i]) {
         trig_outlet = (t_float *) w[i * 2 + 3];
         incr_outlet = (t_float *) w[i * 2 + 4];

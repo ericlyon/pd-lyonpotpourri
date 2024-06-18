@@ -216,7 +216,7 @@ typedef struct _slot {
 typedef struct _chameleon {
     t_object x_obj;
     t_float x_f;
-    float sr; // sampling rate
+    t_float sr; // sampling rate
     long vs;//Max/MSP vector size
     long vecsize; // Max signal vector size
     long pcount; // number of parameters
@@ -224,7 +224,7 @@ typedef struct _chameleon {
     double fadeout; // fadeout time in sample frames (if truncation)
     t_double *chan1buf; // work vector buffer inside of perform routine
     t_double *chan2buf; // work vector buffer inside of perform routine
-    float *odds;// odds for each process happening
+    t_float *odds;// odds for each process happening
     int max_process_per_note;//what it says
     int min_process_per_note;//ditto
     int new_slot;//position for newest note

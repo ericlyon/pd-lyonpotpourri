@@ -13,11 +13,11 @@ static t_class *expflam_class;
 typedef struct
 {
   int attack_count; // number of triggers per flam event
-  float *attack_times; // trigger times in seconds
+  t_float *attack_times; // trigger times in seconds
   int *attack_points; // trigger times in samples
   int fdex; // current flam
-  float gainatten; // attenuation factor
-  float amp; // current amp
+  t_float gainatten; // attenuation factor
+  t_float amp; // current amp
   int atks;// number of attacks per flam
   long counter; // internal clock
   short active; // flag that flam is turned on
@@ -31,14 +31,14 @@ typedef struct _expflam
   t_object x_obj;
   t_float x_f;
   t_flam *flams; // contain flams
-  float start_delay; // initial flam delay
-  float end_delay;// end delay
-  float atten; // attenuation factor
-  float slope;// slope of curve
+  t_float start_delay; // initial flam delay
+  t_float end_delay;// end delay
+  t_float atten; // attenuation factor
+  t_float slope;// slope of curve
   int atks;// number of attacks per flam
-  float sr;
-  float *trigvec; // hold input vector (to protect from memory sharing)
-  float *bypvec; // ditto for flamgate vector
+  t_float sr;
+  t_float *trigvec; // hold input vector (to protect from memory sharing)
+  t_float *bypvec; // ditto for flamgate vector
   short flamall; // flag to put a flam on everything
   short bypass; // flag to copy input to output without flam
   short flamgate_connected; // flag that a flamgate logical signal is connected to inlet 2
@@ -100,12 +100,12 @@ void *expflam_new(void)
   outlet_new(&x->x_obj, gensym("signal"));
   x->flams = (t_flam *) getbytes(MAXFLAMS * sizeof(t_flam));
   for(i = 0; i < MAXFLAMS; i++) {
-    x->flams[i].attack_times = (float *) getbytes(MAXATTACKS * sizeof(float));
+    x->flams[i].attack_times = (t_float *) getbytes(MAXATTACKS * sizeof(t_float));
     x->flams[i].attack_points = (int *) getbytes(MAXATTACKS * sizeof(int));
   }
 
-  x->trigvec = (float *) getbytes(8192 * sizeof(float)); // maximum vector size
-  x->bypvec = (float *) getbytes(8192 * sizeof(float)); // maximum vector size
+  x->trigvec = (t_float *) getbytes(8192 * sizeof(t_float)); // maximum vector size
+  x->bypvec = (t_float *) getbytes(8192 * sizeof(t_float)); // maximum vector size
   x->sr = sys_getsr();
   x->start_delay = .025;
   x->end_delay = 0.1;
@@ -147,10 +147,10 @@ void expflam_free(t_expflam *x)
 {
   int i;
 
-  freebytes(x->trigvec, 8192 * sizeof(float));
-  freebytes(x->bypvec, 8192 * sizeof(float));
+  freebytes(x->trigvec, 8192 * sizeof(t_float));
+  freebytes(x->bypvec, 8192 * sizeof(t_float));
   for(i = 0; i < MAXFLAMS; i++) {
-    freebytes(x->flams[i].attack_times, MAXATTACKS * sizeof(float));
+    freebytes(x->flams[i].attack_times, MAXATTACKS * sizeof(t_float));
     freebytes(x->flams[i].attack_points, MAXATTACKS * sizeof(int));
   }
   freebytes(x->flams, MAXFLAMS * sizeof(t_flam));
@@ -161,32 +161,32 @@ t_int *expflam_perform(t_int *w)
 {
   int i,j,k;
   t_expflam *x = (t_expflam *) (w[1]);
-  float *in_vec = (t_float *)(w[2]);
-  float *in2_vec = (t_float *)(w[3]);
-  float *out_vec = (t_float *)(w[4]);
+  t_float *in_vec = (t_float *)(w[2]);
+  t_float *in2_vec = (t_float *)(w[3]);
+  t_float *out_vec = (t_float *)(w[4]);
   int n = (int) w[5];
 
-  float *trigvec = x->trigvec;
-  float *flamgate_vec = x->bypvec;
+  t_float *trigvec = x->trigvec;
+  t_float *flamgate_vec = x->bypvec;
   t_flam *flams = x->flams;
   int atks = x->atks;
-  float atten = x->atten;
-  float slope = x->slope;
-  float start_delay = x->start_delay;
-  float end_delay = x->end_delay;
-  float sr = x->sr;
+  t_float atten = x->atten;
+  t_float slope = x->slope;
+  t_float start_delay = x->start_delay;
+  t_float end_delay = x->end_delay;
+  t_float sr = x->sr;
   short flamgate_connected = x->flamgate_connected;
   short flamall = x->flamall;
 
   /* in flamgate mode copy input to output and return */
   if(x->bypass) {
-    memcpy( (void *)out_vec, (void *)in_vec, n * sizeof(float) );
+    memcpy( (void *)out_vec, (void *)in_vec, n * sizeof(t_float) );
     return (w+6);
   }
   /* copy input vectors */
-  memcpy( (void *)flamgate_vec, (void *)in2_vec, n * sizeof(float) );// the order of these mcopies matters
-  memcpy( (void *)trigvec, (void *)in_vec, n * sizeof(float) );
-  memcpy( (void *)out_vec, (void *)in_vec, n * sizeof(float) );// copy triggers to output for a start
+  memcpy( (void *)flamgate_vec, (void *)in2_vec, n * sizeof(t_float) );// the order of these mcopies matters
+  memcpy( (void *)trigvec, (void *)in_vec, n * sizeof(t_float) );
+  memcpy( (void *)out_vec, (void *)in_vec, n * sizeof(t_float) );// copy triggers to output for a start
 
   /* look for activation triggers */
   for(i = 0; i < n; i++) {
@@ -211,7 +211,7 @@ t_int *expflam_perform(t_int *w)
         flams[j].atks = atks;
 
         for(k = 1; k < atks; k++) {
-          flams[j].attack_times[k] = start_delay + (end_delay - start_delay) * ((1.0 - exp((float)k * slope/((float)atks-1.0)))/(1.0-exp(slope)));
+          flams[j].attack_times[k] = start_delay + (end_delay - start_delay) * ((1.0 - exp((t_float)k * slope/((t_float)atks-1.0)))/(1.0-exp(slope)));
           flams[j].attack_times[k] += flams[j].attack_times[k - 1];
           flams[j].attack_points[k] = flams[j].attack_times[k] * sr + i;
         }

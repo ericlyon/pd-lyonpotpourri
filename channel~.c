@@ -61,7 +61,7 @@ t_int *channel_perform(t_int *w)
   t_float *out_vec = (t_float *)(w[3]);
   int n = (int) w[4];
   int channel = x->channel;
-  float value;
+  t_float value;
 
   if(channel < 0 || channel > n) {
     return w + 5;

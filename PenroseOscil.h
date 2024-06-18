@@ -1,8 +1,8 @@
 
-float frequencyToIncrement( float samplingRate, float frequency,
+t_float frequencyToIncrement( t_float samplingRate, t_float frequency,
                             int bufferLength );
 
-void makeSineBuffer( float *buffer, int bufferLength );
+void makeSineBuffer( t_float *buffer, int bufferLength );
 
-float bufferOscil( float *phase, float increment, float *buffer,
+t_float bufferOscil( t_float *phase, t_float increment, t_float *buffer,
                    int bufferLength );

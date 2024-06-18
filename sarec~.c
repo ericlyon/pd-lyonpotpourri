@@ -24,14 +24,14 @@ typedef struct _sarec
     int overdub; // 0 ? write over track, 1: overdub into track
     int *armed_chans; // 1, armed, 0, protected
     long counter; // sample counter
-    float sync; // position in recording
+    t_float sync; // position in recording
     long start_frame; // start time in samples
     long end_frame; // end time in samples
     long fadesamps; // number of samples for fades on PUNCH mode
     long regionsamps; // use for fade
     int channel_count; // number of channels (hopefully!) in buffer
-    float sr;
-    float syncphase;
+    t_float sr;
+    t_float syncphase;
     t_symbol *bufname; // name of recording buffer
     t_garray *recbuf;
 } t_sarec;
@@ -137,8 +137,8 @@ t_int *sarec_perform(t_int *w)
     long fadesamps = x->fadesamps;
     long regionsamps = x->regionsamps;
     int clickval;
-    float frak;
-    float goin_up, goin_down;
+    t_float frak;
+    t_float goin_up, goin_down;
     long counter_msf;
     sync = (t_float *) (w[3 + channel_count]);
     n = (int) w[4 + channel_count];
@@ -216,7 +216,7 @@ t_int *sarec_perform(t_int *w)
                     if( counter_msf < fadesamps ) {
                         
                         // fade in
-                        frak = (float)counter_msf / (float)fadesamps;
+                        frak = (t_float)counter_msf / (t_float)fadesamps;
                         goin_up = sin(PIOVERTWO * frak);
                         goin_down = cos(PIOVERTWO * frak);
                         //post("fadein: %d, up: %f, down: %f", counter_msf, goin_up, goin_down);
@@ -224,10 +224,10 @@ t_int *sarec_perform(t_int *w)
                         (samples[ (counter * channel_count) + j].w_float * goin_down)
                         + (record_inlet[i] * goin_up);
                     } else if ( counter_msf >= (regionsamps - fadesamps) ) {
-                        frak = (float) (regionsamps - counter_msf) / (float) fadesamps;
+                        frak = (t_float) (regionsamps - counter_msf) / (t_float) fadesamps;
                         // fade out
                         
-                        // frak = (float)counter_msf / (float)fadesamps;
+                        // frak = (t_float)counter_msf / (t_float)fadesamps;
                         goin_up = cos(PIOVERTWO * frak);
                         goin_down = sin(PIOVERTWO * frak);
                         //post("fadeout: %d, up: %f, down: %f", counter_msf, goin_up, goin_down);
@@ -244,7 +244,7 @@ t_int *sarec_perform(t_int *w)
             counter++;
         }
         
-        sync[i] = (float) counter / (float) b_frames;
+        sync[i] = (t_float) counter / (t_float) b_frames;
     }
     if(status) {
         x->display_counter += n;
@@ -315,7 +315,7 @@ void sarec_region(t_sarec *x, t_floatarg start_time, t_floatarg end_time)
 {
     long b_frames = x->b_frames;
     long start_frame, end_frame;
-    float sr = x->sr;
+    t_float sr = x->sr;
     // convert milliseconds to samples:
     start_frame = (long) (sr * 0.001 * start_time );
     end_frame = (long) (sr * 0.001 * end_time );

@@ -1,6 +1,6 @@
 
 #include "MSPd.h"
-void atom_arg_getfloat(float *c, long idx, long ac, t_atom *av)
+void atom_arg_getfloat(t_float *c, long idx, long ac, t_atom *av)
 {
   if (c&&ac&&av&&(idx<ac)) {
     *c = atom_getfloat(av+idx);

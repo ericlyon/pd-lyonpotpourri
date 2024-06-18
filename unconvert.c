@@ -2,11 +2,11 @@
 
 
 
-void unconvert( float *C, float *S, int N2, float *lastphase, float fundamental, float factor )
+void unconvert( t_float *C, t_float *S, int N2, t_float *lastphase, t_float fundamental, t_float factor )
 
 {
   int i, real, imag, amp, freq;
-  float mag, phase;
+  t_float mag, phase;
   double sin(), cos();
 
   for ( i = 0; i <= N2; i++ ) {
