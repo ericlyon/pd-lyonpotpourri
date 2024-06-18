@@ -1,4 +1,4 @@
-#import "MSPd.h"
+#include "MSPd.h"
 #include "chameleon_pd.h"
 #include "stdlib.h"
 /* Pure Data version of chameleon */
