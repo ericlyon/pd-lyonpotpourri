@@ -10,7 +10,7 @@ static t_class *counter_class;
 typedef struct _counter
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   long current;
   long min;
   long max;

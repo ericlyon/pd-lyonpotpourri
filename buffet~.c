@@ -27,7 +27,7 @@ typedef struct {
 typedef struct _buffet
 {
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     t_symbol *wavename; // name of waveform buffer
     t_guffer *wavebuf; // holds waveform samples
     t_guffer *destbuf; // for copying to another buffer

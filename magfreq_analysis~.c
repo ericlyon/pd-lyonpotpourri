@@ -26,7 +26,7 @@ static t_class *magfreq_analysis_class;
 typedef struct _magfreq_analysis
 {
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     float R;
     int N;
     int N2;

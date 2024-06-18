@@ -215,7 +215,7 @@ typedef struct _slot {
 
 typedef struct _chameleon {
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     float sr; // sampling rate
     long vs;//Max/MSP vector size
     long vecsize; // Max signal vector size

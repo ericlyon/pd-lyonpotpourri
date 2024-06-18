@@ -29,7 +29,7 @@ typedef struct _rtrig
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   short mute;
   float min;
   float max;

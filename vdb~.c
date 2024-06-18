@@ -23,7 +23,7 @@ typedef struct _vdb
 {
     
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     
     float sr;
     t_lpf lpf;

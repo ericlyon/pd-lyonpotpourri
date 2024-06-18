@@ -7,7 +7,7 @@ typedef struct _channel
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   void *float_outlet;
   int channel;
 } t_channel;

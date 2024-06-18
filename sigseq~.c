@@ -13,7 +13,7 @@ typedef struct _sigseq
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
 
   // Variables Here
   float *sequence;

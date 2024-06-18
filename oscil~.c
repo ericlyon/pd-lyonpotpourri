@@ -29,7 +29,7 @@ typedef struct _oscil
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   int table_length;
   float *wavetable;
   int harmonic_count;

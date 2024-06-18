@@ -7,7 +7,7 @@ static t_class *markov_class;
 typedef struct _markov
 {
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     // for markov
     int event_count;
     int maximum_length;

@@ -9,7 +9,7 @@ typedef struct _granola
 {
     
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     float *gbuf;
     long grainsamps;
     long grainsamps_old;

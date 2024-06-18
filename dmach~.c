@@ -36,7 +36,7 @@ typedef struct _dmach
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
 
   short mute; // global mute
   float clocker; // global sample counter clock

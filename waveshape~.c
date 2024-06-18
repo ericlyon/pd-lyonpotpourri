@@ -11,7 +11,7 @@ typedef struct _waveshape
 {
     
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     int flen;
     float *wavetab;
     float *tempeh; // work function

@@ -32,7 +32,7 @@ typedef struct _granule
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   t_pdbuffer *wavebuf; // holds waveform samples
   t_pdbuffer *windowbuf; // holds window samples
   t_symbol *wavename; // name of waveform buffer

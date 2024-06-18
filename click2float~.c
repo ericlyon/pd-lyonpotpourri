@@ -8,7 +8,7 @@ typedef struct _click2float
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   void *float_outlet;
   void *clock;
   double float_value;

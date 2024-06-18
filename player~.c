@@ -30,7 +30,7 @@ typedef struct
 typedef struct _player
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   t_symbol *wavename; // name of waveform buffer
   float sr; // sampling rate
   short hosed; // buffers are bad

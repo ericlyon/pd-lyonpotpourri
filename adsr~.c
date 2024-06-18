@@ -7,7 +7,7 @@ static t_class *adsr_class;
 typedef struct _adsr
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   // Variables Here
   float a;
   float d;

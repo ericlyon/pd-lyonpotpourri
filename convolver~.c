@@ -27,7 +27,7 @@ typedef struct _buffy {
 typedef struct _convolver
 {
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     t_buffy *impulse; // impulse buffer
     t_buffy *source; // source buffer
     t_buffy *dest; // output buffer

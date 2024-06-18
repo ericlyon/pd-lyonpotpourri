@@ -67,7 +67,7 @@ typedef struct
 typedef struct _bashfest
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   float sr; // sampling rate
   t_symbol *wavename; // name of waveform buffer
   short hosed; // buffers are bad

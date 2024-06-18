@@ -10,7 +10,7 @@ static t_class *samm_class;
 typedef struct _samm
 {
     t_object x_obj;
-    float x_f;
+    t_float x_f;
     double tempo; /* current tempo */
     double onebeat_samps; /* number of samples for a single beat */
     double *beats; /* amount of beats for each active tempo outlet */

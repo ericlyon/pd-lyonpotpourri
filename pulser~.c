@@ -13,7 +13,7 @@ typedef struct _pulser
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   int components;
   float global_gain;
   float *wavetab;

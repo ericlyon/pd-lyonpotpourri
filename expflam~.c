@@ -29,7 +29,7 @@ typedef struct _expflam
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   t_flam *flams; // contain flams
   float start_delay; // initial flam delay
   float end_delay;// end delay

@@ -24,7 +24,7 @@ typedef struct
 typedef struct _mask
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   short mute;// stops all computation (try z-disable)
   short gate; // continues masking but inhibits all output
   short phaselock; // indicates all patterns are the same size and use the same phase count

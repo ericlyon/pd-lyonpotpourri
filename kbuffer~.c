@@ -8,7 +8,7 @@ typedef struct _kbuffer
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   float ksrate;
   float srate;
   float si;

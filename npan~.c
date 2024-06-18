@@ -10,7 +10,7 @@ typedef struct _npan
   t_object x_obj;
   double pi_over_two;
   double twopi;
-  float x_f;
+  t_float x_f;
   int outcount;
   t_float *input_locvec;
   t_float *panner_locvec;

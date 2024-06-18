@@ -10,7 +10,7 @@ typedef struct _clean_selector
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   // Variables Here
   short input_chans;
   short active_chan;

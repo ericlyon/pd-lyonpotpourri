@@ -10,7 +10,7 @@ typedef struct _distortion
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   float knee;
   float cut;
   float rescale ;

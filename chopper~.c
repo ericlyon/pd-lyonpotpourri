@@ -9,7 +9,7 @@ typedef struct _chopper
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   t_symbol *l_sym;
   long l_chan;
   float increment;

@@ -14,7 +14,7 @@ typedef struct _flanjah
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   //
   float *sinetab;
   float si_factor;

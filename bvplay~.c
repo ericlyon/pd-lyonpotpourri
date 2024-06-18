@@ -16,7 +16,7 @@ typedef struct _bvplay
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   t_symbol *sfname; // name of soundfile
   t_guffer *wavebuf; // store needed buffer or garray data
 

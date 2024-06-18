@@ -10,7 +10,7 @@ typedef struct _phasemod
 {
 
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   t_float x_val;
   float mygain;
   float *wavetab;

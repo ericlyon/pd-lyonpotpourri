@@ -5,7 +5,7 @@ static t_class *click_class;
 typedef struct _click
 {
   t_object x_obj;
-  float x_f;
+  t_float x_f;
   void *float_outlet;
   float float_value;
   long status;
