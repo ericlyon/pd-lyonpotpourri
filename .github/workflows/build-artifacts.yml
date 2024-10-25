@@ -13,7 +13,7 @@ jobs:
   Linux-amd64-Build:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Download pd-Sources 
       run: | 
@@ -37,7 +37,7 @@ jobs:
   Linux-i386-Build:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: install mutiarch
       run: |
         sudo apt install gcc-multilib -y
@@ -65,7 +65,7 @@ jobs:
   Linux-arm-Builds:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: install arm-mutiarch
       run: |
         sudo apt update
@@ -81,6 +81,7 @@ jobs:
       run: | 
         make CC=arm-linux-gnueabihf-gcc PDDIR=./pure-data/ PDLIBDIR=./out extension=l_arm install
         make CC=aarch64-linux-gnu-gcc PDDIR=./pure-data/ PDLIBDIR=./out extension=l_arm64 install
+    
     - name: Upload Zip
       uses: actions/upload-artifact@v4
       with:
@@ -95,7 +96,7 @@ jobs:
      runs-on: windows-latest
      timeout-minutes: 25
      steps:
-     - uses: actions/checkout@v3
+     - uses: actions/checkout@v4
 
      - if: runner.os == 'Windows'
        name: "Install mingw"
@@ -133,7 +134,7 @@ jobs:
      runs-on: windows-latest
      timeout-minutes: 25
      steps:
-     - uses: actions/checkout@v3
+     - uses: actions/checkout@v4
 
      - if: runner.os == 'Windows'
        name: "Install mingw"
@@ -170,7 +171,7 @@ jobs:
   macOS-Universal:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Download pd-Sources 
       run: | 
